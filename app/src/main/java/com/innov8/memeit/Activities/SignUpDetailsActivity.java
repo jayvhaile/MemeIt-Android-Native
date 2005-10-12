@@ -73,8 +73,6 @@ public class SignUpDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
-                        .setAspectRatio(1,1)
-
                         .start(activity);
             }
         });
@@ -127,11 +125,13 @@ public class SignUpDetailsActivity extends AppCompatActivity {
                 User user=new User(name,image_url.toString());
                 MemeItUsers.getInstance().updateMyData(user, new OnCompleteListener<User>() {
                     @Override
-                    public void onSuccess(User body) {
+                    public void onSuccess(ResponseBody body) {
+                        Log.d("memeitc", "onSuccess: ");
                         startActivity(new Intent(SignUpDetailsActivity.this,MainActivity.class));
                     }
                     @Override
                     public void onFailure(Error error) {
+                        Log.d("memeitc", "failer: ");
                         Toast.makeText(SignUpDetailsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });*/

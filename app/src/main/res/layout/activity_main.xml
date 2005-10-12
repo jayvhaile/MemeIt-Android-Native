@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,80 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:elevation="6dp"
-        tools:visibility="visible">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_centerVertical="true"
-                    app:srcCompat="@drawable/ic_menu_black_24dp"
-                    android:tint="#303030" />
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="?attr/actionBarSize"
-                    android:layout_centerInParent="true"
-                    android:padding="10dp"
-                    android:src="@mipmap/app_text" />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true">
-
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_marginRight="14dp"
-                        android:padding="2dp"
-                        app:srcCompat="@drawable/ic_notifications_black_24dp"
-                        android:tint="#303030" />
-
-                    <!--todo: Add a notification counter here later!-->
-                </RelativeLayout>
-
-            </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
-
-    <com.innov8.memeit.CustomClasses.NonSwipeableViewPager
-        android:id="@+id/main_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-
-    </com.innov8.memeit.CustomClasses.NonSwipeableViewPager>
-
-
-    <com.luseen.spacenavigation.SpaceNavigationView
-        android:id="@+id/space"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        app:active_centre_button_icon_color="#fff"
-        app:active_item_color="@color/red"
-        app:centre_button_color="@color/red"
-        app:centre_button_icon="@drawable/ic_add_black_24dp"
-        app:inactive_centre_button_icon_color="#fff"
-        app:inactive_item_color="#bbb"
-        app:space_background_color="#fff"
-        app:space_item_icon_only_size="@dimen/space_item_icon_only_size"
-        app:space_item_icon_size="@dimen/space_item_icon_default_size"
-        app:space_item_text_size="@dimen/space_item_text_default_size" />
-
-
-
+    <include layout="@layout/content_main"/>
 
 </LinearLayout>
