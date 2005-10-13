@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp">
+
+        <com.innov8.memeit.CustomClasses.NonSwipeableViewPager
+            android:id="@+id/main_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize">
+
+        </com.innov8.memeit.CustomClasses.NonSwipeableViewPager>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-24dp"
+                app:elevation="5dp"
+                tools:alpha="0.4"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_menu_black_24dp"
+                            android:tint="#303030" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="?attr/actionBarSize"
+                            android:layout_centerInParent="true"
+                            android:padding="10dp"
+                            android:src="@mipmap/app_text" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true">
+
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:layout_marginRight="14dp"
+                                android:padding="2dp"
+                                android:src="@drawable/ic_notifications_black_24dp"
+                                android:tint="#303030" />
+
+                            <!--todo: Add a notification counter here later!-->
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </android.support.v7.widget.Toolbar>
+
+
+            <View
+                android:id="@+id/toolbarShadow"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:alpha="0.7"
+                android:background="@drawable/toolbar_dropshadow" />
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.luseen.spacenavigation.SpaceNavigationView
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        app:active_centre_button_icon_color="#fff"
+        app:active_item_color="@color/red"
+        app:centre_button_color="@color/red"
+        app:centre_button_icon="@drawable/ic_add_black_24dp"
+        app:inactive_centre_button_icon_color="#fff"
+        app:inactive_item_color="#bbb"
+        app:space_background_color="#fff"
+        app:space_item_icon_only_size="@dimen/space_item_icon_only_size"
+        app:space_item_icon_size="@dimen/space_item_icon_default_size"
+        app:space_item_text_size="@dimen/space_item_text_default_size" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:alpha=".6"
+            android:background="@drawable/toolbar_dropshadow"
+            android:rotation="180" />
+
+        <ImageView
+            android:id="@+id/nav_make_meme"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/meme" />
+
+        <LinearLayout
+            android:id="@+id/as"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_alignParentBottom="true"
+            android:elevation="5dp"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/nav_home"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:src="@drawable/ic_home_black_24dp"
+                android:tint="#3a3a3a" />
+
+            <ImageView
+                android:id="@+id/nav_trending"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:src="@drawable/ic_trending_up_black_24dp"
+                android:tint="#3a3a3a" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_menu_black_24dp"
+                android:tint="#3a3a3a"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/nav_fav"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:src="@drawable/ic_favorite_black_24dp"
+                android:tint="#3a3a3a" />
+
+            <ImageView
+                android:id="@+id/nav_me"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:src="@drawable/ic_account_circle_black_24dp"
+                android:tint="#3a3a3a" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+    <!--Custom Bottom Navigation-->
+
+
+</RelativeLayout><!--<--><!--<android.support.design.widget.CoordinatorLayout android:id="@+id/rootLayout"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto">-->
+
+    <!--<android.support.design.widget.AppBarLayout--><!--android:id = "@+id/my_toolbar"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content">--><!--<android.support.v7.widget.Toolbar android:id="@+id/toolbar"--><!--android:layout_width="match_parent"--><!--android:layout_height="?attr/actionBarSize"--><!--android:background="?attr/colorPrimary"--><!--app:layout_scrollFlags="scroll|enterAlways"--><!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"--><!--app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:gravity="center"--><!--xmlns:android="http://schemas.android.com/apk/res/android">--><!--<RelativeLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent">--><!--<ImageView--><!--android:layout_centerInParent="true"--><!--android:padding="9dp"--><!--android:src="@mipmap/app_text"--><!--android:layout_width="wrap_content"--><!--android:layout_height="match_parent" />--><!--</RelativeLayout>-->
+
+    <!--</android.support.v7.widget.Toolbar>--><!--</android.support.design.widget.AppBarLayout>-->
+
+    <!--<android.support.v4.widget.NestedScrollView--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:fillViewport="true"--><!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+
+    <!--<LinearLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:orientation="vertical">-->
+
+    <!--<TextView--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Android: Exit/close/hide android Appbar/Toolbar/Actionbar or AppBarLayout along with content/screen scroll"--><!--android:textColor="#666" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Android AppBar/Toolbar Tutorial" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Material Design ActionBar/Appbar" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Android AppBar/Toolbar Tutorial" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Material Design ActionBar/Appbar" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Android AppBar/Toolbar Tutorial" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Material Design ActionBar/Appbar" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Android AppBar/Toolbar Tutorial" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Material Design ActionBar/Appbar" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Android AppBar/Toolbar Tutorial" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Material Design ActionBar/Appbar" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Material Design ActionBar/Appbar" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Android AppBar/Toolbar Tutorial" />-->
+
+    <!--<Button--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:text="Material Design ActionBar/Appbar" />-->
+
+    <!--</LinearLayout>--><!--</android.support.v4.widget.NestedScrollView>--><!--</android.support.design.widget.CoordinatorLayout>-->

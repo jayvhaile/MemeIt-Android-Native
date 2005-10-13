@@ -1,0 +1,152 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#fff"
+    tools:context="com.innov8.memeit.Fragments.MeFragment">
+
+    <com.emilsjolander.components.StickyScrollViewItems.StickyScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp">
+                <ImageView
+                    android:src="@mipmap/gradient"
+                    android:layout_width="match_parent"
+                    android:scaleType="centerCrop"
+                    android:layout_height="100dp" />
+                <ImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/profile_image"
+                    android:layout_width="96dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_height="96dp"
+                    android:src="@mipmap/pp"
+                    android:layout_centerHorizontal="true"/>
+            </RelativeLayout>
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:id="@+id/name"
+                android:text="Joe Smith"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:textColor="#3a3a3a"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:id="@+id/username"
+                android:text=" joe_s21"
+                android:layout_marginTop="-5dp"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:textColor="#5a5a5a"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:paddingTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="66dp">
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_height="65dp">
+                    <com.innov8.memeit.CustomClasses.FontTextView
+                        android:layout_width="wrap_content"
+                        android:textSize="28sp"
+                        android:text="956"
+                        android:textColor="@color/red"
+
+                        android:layout_height="wrap_content" />
+                    <com.innov8.memeit.CustomClasses.FontTextView
+                        android:layout_width="wrap_content"
+                        android:textSize="18sp"
+                        android:layout_marginTop="-8dp"
+                        android:text="Followers"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <View
+                    android:layout_marginTop="10dp"
+                    android:layout_width="2dp"
+                    android:layout_marginBottom="6dp"
+                    android:background="#aaa"
+                    android:layout_height="65dp"/>
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_height="65dp">
+                    <com.innov8.memeit.CustomClasses.FontTextView
+                        android:textColor="@color/red"
+                        android:layout_width="wrap_content"
+                        android:textSize="28sp"
+                        android:text="36"
+                        android:layout_height="wrap_content" />
+                    <com.innov8.memeit.CustomClasses.FontTextView
+                        android:layout_width="wrap_content"
+                        android:textSize="18sp"
+                        android:layout_marginTop="-8dp"
+                        android:text="Memes"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <View
+                    android:layout_marginTop="10dp"
+                    android:layout_width="2dp"
+                    android:layout_marginBottom="6dp"
+                    android:background="#aaa"
+                    android:layout_height="65dp"/>
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_height="65dp">
+                    <com.innov8.memeit.CustomClasses.FontTextView
+                        android:layout_width="wrap_content"
+                        android:textSize="28sp"
+                        android:text="3.6k"
+                        android:textColor="@color/red"
+
+                        android:layout_height="wrap_content" />
+                    <com.innov8.memeit.CustomClasses.FontTextView
+                        android:layout_width="wrap_content"
+                        android:textSize="18sp"
+                        android:layout_marginTop="-8dp"
+                        android:text="Points"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+            <android.support.design.widget.TabLayout
+                android:tag="sticky"
+                android:layout_marginTop="15dp"
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="#fff"
+                app:tabIndicatorColor="@color/red"
+                app:tabTextColor="#5a5a5a"
+                app:tabSelectedTextColor="#000"
+                app:tabGravity="fill"
+                app:tabMode="fixed"/>
+            <android.support.v4.view.ViewPager
+                android:visibility="gone"
+                android:id="@+id/profile_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <include layout="@layout/list_item_feed"/>
+
+        </LinearLayout>
+    </com.emilsjolander.components.StickyScrollViewItems.StickyScrollView>
+
+</LinearLayout>

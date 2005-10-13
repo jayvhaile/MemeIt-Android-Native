@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff"
+    tools:context="com.innov8.memeit.Activities.SignUpActivity">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:src="@mipmap/memeitostser"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="100dp" />
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:textColorHint="#3a3a3a"
+            android:background="@drawable/textinput"
+            android:paddingLeft="16dp"
+            android:hint="Email" />
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:textColorHint="#3a3a3a"
+            android:background="@drawable/textinput"
+            android:paddingLeft="16dp"
+            android:hint="Password" />
+
+        <LinearLayout
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="12dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:paddingBottom="12dp"
+            android:background="@drawable/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:layout_width="wrap_content"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                android:text="Sign Up"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:padding="8dp"
+            android:layout_height="wrap_content">
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:layout_width="wrap_content"
+                android:text="Already have an account? "
+                android:layout_height="wrap_content" />
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:layout_width="wrap_content"
+                android:text="Sign up! "
+                android:textColor="#4a90ff"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="-50dp"
+        android:alpha="0.9"
+        android:layout_alignParentBottom="true"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/color" />
+</RelativeLayout>
