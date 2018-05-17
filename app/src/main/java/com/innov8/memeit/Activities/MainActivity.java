@@ -29,17 +29,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-
-//    @BindView(R.id.nav_home)
-//    ImageView nav_home;
-//    @BindView(R.id.nav_trending)
-//    ImageView nav_ranking;
-//    @BindView(R.id.nav_me)
-//    ImageView nav_me;
-//    @BindView(R.id.nav_fav)
-//    ImageView nav_settings;
-//    @BindView(R.id.nav_make_meme)
-//    ImageView makeMeme;
     @BindView(R.id.main_viewpager)
     ViewPager viewPager;
 
@@ -53,74 +42,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-//        imageViews.add(nav_home);
-//        imageViews.add(nav_me);
-//        imageViews.add(nav_settings);
-//        imageViews.add(nav_ranking);
-//        nav_home.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                viewPager.setCurrentItem(0,false);
-//                nav_home.setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_IN);
-//                for(ImageView i : imageViews)
-//                    if(!i.equals((ImageView) view))
-//                        i.setColorFilter(Color.parseColor("#3a3a3a"), PorterDuff.Mode.MULTIPLY);
-//                findViewById(R.id.toolbarShadow).setVisibility(View.VISIBLE);
-//            }
-//        });
-//
-//        nav_me.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                viewPager.setCurrentItem(3,false);
-//                nav_me.setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_IN);
-//                for(ImageView i : imageViews)
-//                    if(!i.equals((ImageView) view))
-//                        i.setColorFilter(Color.parseColor("#3a3a3a"), PorterDuff.Mode.MULTIPLY);
-//                findViewById(R.id.toolbarShadow).setVisibility(View.INVISIBLE);
-//
-//            }
-//        });
-//
-//        nav_settings.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                viewPager.setCurrentItem(2,false);
-//                nav_settings.setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_IN);
-//                for(ImageView i : imageViews)
-//                    if(!i.equals((ImageView) view))
-//                        i.setColorFilter(Color.parseColor("#3a3a3a"), PorterDuff.Mode.MULTIPLY);
-//                findViewById(R.id.toolbarShadow).setVisibility(View.VISIBLE);
-//
-//            }
-//        });
-//
-//        nav_ranking.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                viewPager.setCurrentItem(1,false);
-//                nav_ranking.setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_IN);
-//                for(ImageView i : imageViews)
-//                    if(!i.equals((ImageView) view))
-//                        i.setColorFilter(Color.parseColor("#3a3a3a"), PorterDuff.Mode.MULTIPLY);
-//                findViewById(R.id.toolbarShadow).setVisibility(View.VISIBLE);
-//            }
-//        });
-//
-//        makeMeme.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-
         SpaceNavigationView spaceNavigationView = (SpaceNavigationView) findViewById(R.id.space);
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
         spaceNavigationView.addSpaceItem(new SpaceItem("", R.drawable.ic_home_black_24dp));
         spaceNavigationView.addSpaceItem(new SpaceItem("", R.drawable.ic_trending_up_black_24dp));
         spaceNavigationView.addSpaceItem(new SpaceItem("", R.drawable.ic_favorite_black_24dp));
         spaceNavigationView.addSpaceItem(new SpaceItem("", R.drawable.ic_account_circle_black_24dp));
-
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
             public void onCentreButtonClick() {
