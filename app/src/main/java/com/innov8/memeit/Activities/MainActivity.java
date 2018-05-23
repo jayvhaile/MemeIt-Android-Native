@@ -1,7 +1,6 @@
 package com.innov8.memeit.Activities;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,10 +8,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.innov8.memegenerator.MemeGeneratorActivity;
 import com.innov8.memeit.Fragments.HomeFragment;
 import com.innov8.memeit.Fragments.MeFragment;
 import com.innov8.memeit.Fragments.TrendingFragment;
@@ -34,11 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
     List<Fragment> fragments = new ArrayList<>();
 
-    ArrayList<ImageView> imageViews = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startActivity(new Intent(this,SignUpActivity.class));
+        finish();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -51,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
             public void onCentreButtonClick() {
-
+                startActivity(new Intent(MainActivity.this,MemeGeneratorActivity.class));
             }
 
             @Override
