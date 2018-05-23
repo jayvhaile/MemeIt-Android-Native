@@ -1,5 +1,6 @@
-package com.memeit.client;
+package com.memeit.backend;
 
+import com.memeit.backend.dataclasses.MyUser;
 import com.memeit.client.dataclasses.Comment;
 import com.memeit.client.dataclasses.Meme;
 import com.memeit.client.dataclasses.User;
@@ -17,7 +18,7 @@ public class MemeItClient {
     private MemeInterface memeInterface;
     private static MemeItClient memeItClient;
 
-    private MemeItClient(){
+    private MemeItClient(String BASE_URL){
         Retrofit retrofit=new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -26,8 +27,13 @@ public class MemeItClient {
     }
     public static MemeItClient getInstance(){
         if (memeItClient==null)
-            memeItClient=new MemeItClient();
+           throw new RuntimeException("Should Initialize Client First!");
         return memeItClient;
+    }
+    public static void init(String baseURL){
+        if (memeItClient!=null)
+            throw new RuntimeException("Client Already Initialized!");
+        memeItClient=new MemeItClient(baseURL);
     }
     public MemeInterface getInterface(){
         return memeInterface;
@@ -73,6 +79,11 @@ public class MemeItClient {
         public Call<Boolean> likeMeme(@Query("mid")String memeID);
         @DELETE("meme/like")
         public Call<Boolean> unlikeMeme(@Query("mid")String memeID);
+
+        @POST("user/data")
+        public Call<Response> uploadUserData(@Body MyUser user);
+
+
 
     }
 

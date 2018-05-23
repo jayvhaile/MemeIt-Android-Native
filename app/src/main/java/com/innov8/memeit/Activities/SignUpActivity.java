@@ -17,11 +17,12 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.innov8.memeit.R;
+import com.memeit.backend.MemeItAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements MemeItAuth.SignInListener {
 
     Typeface avenir;
     @BindView(R.id.name)
@@ -35,13 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestId()
-                .requestProfile()
-                .build();
 
-        final GoogleSignInClient client=GoogleSignIn.getClient(this,gso);
         avenir = Typeface.createFromAsset(getAssets(),"fonts/avenir.ttf");
 
         name.setTypeface(avenir);
@@ -49,27 +44,25 @@ public class SignUpActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent gc=client.getSignInIntent();
-                startActivityForResult(gc,556);
+                MemeItAuth.getInstance(SignUpActivity.this).signInWithGoogle(SignUpActivity.this);
             }
         });
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 556) {
-
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+        if (requestCode == MemeItAuth.GOOGLE_SIGNIN_REQUEST_CODE) {
+           MemeItAuth.getInstance(this).handleGoogleSignInResult(data);
         }
     }
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            Toast.makeText(this, "signind in", Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, account.getDisplayName(), Toast.LENGTH_SHORT).show();
-        } catch (ApiException e) {
-            Toast.makeText(this, "failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+
+    @Override
+    public void onSignInSuccessFull() {
+        //todo:biruk -get user name and photo and  upload it to the server
+    }
+
+    @Override
+    public void onSignInFailed(int code) {
+        //todo:biruk -show the neccessary error
     }
 }
