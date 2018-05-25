@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff"
+    tools:context="com.innov8.memeit.Activities.SignUpActivity"
+    android:id="@+id/relativeLayout">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/memeitostser"
+        tools:layout_conversion_absoluteHeight="80dp"
+        tools:layout_editor_absoluteY="10dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_conversion_absoluteWidth="352dp" />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/textinput"
+        android:hint="Email"
+        android:paddingLeft="16dp"
+        android:textColorHint="#3a3a3a"
+        android:textSize="14sp"
+        tools:layout_conversion_absoluteHeight="50dp"
+        tools:layout_editor_absoluteY="106dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_conversion_absoluteWidth="352dp" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/textinput"
+        android:hint="Password"
+        android:paddingLeft="16dp"
+        android:textColorHint="#3a3a3a"
+        android:textSize="14sp"
+        tools:layout_conversion_absoluteHeight="50dp"
+        tools:layout_editor_absoluteY="172dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_conversion_absoluteWidth="352dp" />
+
+    <LinearLayout
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:background="@drawable/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_conversion_absoluteHeight="51dp"
+        tools:layout_editor_absoluteY="238dp"
+        tools:layout_editor_absoluteX="143dp"
+        tools:layout_conversion_absoluteWidth="98dp">
+
+        <com.innov8.memeit.CustomClasses.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign In"
+            android:textColor="#fff"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <com.innov8.memeit.CustomClasses.FontTextView
+        android:layout_width="wrap_content"
+        android:text="Already have an account? "
+        android:layout_height="wrap_content"
+        tools:layout_conversion_absoluteHeight="21dp"
+        tools:layout_editor_absoluteY="297dp"
+        tools:layout_editor_absoluteX="77dp"
+        tools:layout_conversion_absoluteWidth="173dp" />
+
+    <com.innov8.memeit.CustomClasses.FontTextView
+        android:layout_width="wrap_content"
+        android:text="Sign up! "
+        android:textColor="#4a90ff"
+        android:layout_height="wrap_content"
+        tools:layout_conversion_absoluteHeight="21dp"
+        tools:layout_editor_absoluteY="297dp"
+        tools:layout_editor_absoluteX="250dp"
+        tools:layout_conversion_absoluteWidth="58dp" />
+
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_conversion_absoluteHeight="48dp"
+        tools:layout_editor_absoluteY="344dp"
+        tools:layout_editor_absoluteX="117dp"
+        tools:layout_conversion_absoluteWidth="150dp" />
+</android.support.constraint.ConstraintLayout>

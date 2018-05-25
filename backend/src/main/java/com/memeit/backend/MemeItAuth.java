@@ -92,7 +92,7 @@ public class MemeItAuth {
     public void signInWithGoogle(Activity activity) {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
-                .requestId()
+                .requestIdToken("")
                 .requestProfile()
                 .build();
         final GoogleSignInClient client = GoogleSignIn.getClient(activity, gso);
@@ -169,5 +169,4 @@ public class MemeItAuth {
         public void onSignInSuccessFull();
         public void onSignInFailed(int code);
     }
-
 }
