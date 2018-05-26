@@ -8,6 +8,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.innov8.memegenerator.MemeGeneratorActivity;
 import com.innov8.memeit.Fragments.HomeFragment;
@@ -18,6 +20,10 @@ import com.innov8.memeit.R;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
+import com.memeit.backend.MemeItAuth;
+import com.memeit.backend.MemeItClient;
+import com.memeit.backend.OnCompleteListener;
+import com.memeit.backend.dataclasses.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +40,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(this,SignUpActivity.class));
-        finish();
+        if(!MemeItAuth.getInstance().isSignedIn()){
+            startActivity(new Intent(this,SignInActivity.class));
+            finish();
+            return;
+        }else if(!MemeItAuth.getInstance().isUserDataSaved()){
+            startActivity(new Intent(this,SignUpDetailsActivity.class));
+            finish();
+            return;
+        }
+        MemeItAuth.getInstance().getUser(new OnCompleteListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                Toast.makeText(MainActivity.this, "Current User: "+user.getName(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Error error) {
+                Toast.makeText(MainActivity.this, "fuck: "  +error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 

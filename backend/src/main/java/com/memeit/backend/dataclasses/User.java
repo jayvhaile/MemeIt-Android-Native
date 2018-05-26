@@ -1,4 +1,4 @@
-package com.memeit.client.dataclasses;
+package com.memeit.backend.dataclasses;
 
 /**
  * Created by Jv on 4/29/2018.
