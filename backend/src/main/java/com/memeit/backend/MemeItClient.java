@@ -113,7 +113,7 @@ public class MemeItClient {
 
         //================================Memes Related=============================================
 
-       
+
         @GET("trending")
         public Call<List<Meme>> getTrendingMemes();
         @GET("home")
