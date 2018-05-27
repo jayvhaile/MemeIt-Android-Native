@@ -34,9 +34,14 @@ dependencies {
     implementation 'com.github.armcha:SpaceNavigationView:1.6.0'
     implementation 'com.github.bumptech.glide:glide:4.7.1'    //image loading library
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
-    implementation group: 'com.cloudinary', name: 'cloudinary-android', version: '1.24.0' //image server
+    implementation group: 'com.cloudinary', name: 'cloudinary-android', version: '1.24.0'
+    //image server
     implementation project(path: ':memegenerator') //the meme generator module
     implementation project(path: ':backend')  //the backend api module
+
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
+
+    compile 'com.github.ybq:Android-SpinKit:1.1.0'
 }
 repositories {
     mavenCentral()
