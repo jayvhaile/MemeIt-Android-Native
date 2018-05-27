@@ -94,7 +94,7 @@ public class MemeItAuth {
             checkAndFireError(listener, OTHER_ERROR.setMessage("User not signed in"));
         else {
             MemeItClient.getInstance().getInterface().getMyUser()
-                    .enqueue(new MyCallBack<User, User>(listener) {
+                    .enqueue(new MyCallBack<User>(listener) {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.isSuccessful()) {
@@ -115,7 +115,7 @@ public class MemeItAuth {
         AuthInfo user = new AuthInfo(email, password);
         MemeItClient.getInstance().getInterface()
                 .signUpWithEmail(user)
-                .enqueue(new MyCallBack<AuthToken, Void>(listener) {
+                .enqueue(new MyCallBack2<AuthToken, Void>(listener) {
                     @Override
                     public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                         if (response.isSuccessful()) {
@@ -134,7 +134,7 @@ public class MemeItAuth {
         AuthInfo user = new AuthInfo(email, password);
         MemeItClient.getInstance().getInterface()
                 .loginWithEmail(user)
-                .enqueue(new MyCallBack<AuthToken, Void>(listener) {
+                .enqueue(new MyCallBack2<AuthToken, Void>(listener) {
                     @Override
                     public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                         if (response.isSuccessful()) {
@@ -167,7 +167,7 @@ public class MemeItAuth {
             AuthInfo user = new AuthInfo(account.getEmail(), account.getId());
             MemeItClient.getInstance().getInterface()
                     .loginWithGoogle(user)
-                    .enqueue(new MyCallBack<AuthToken, Void>(listener) {
+                    .enqueue(new MyCallBack2<AuthToken, Void>(listener) {
                         @Override
                         public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                             if (response.isSuccessful()) {
@@ -199,7 +199,7 @@ public class MemeItAuth {
             AuthInfo user = new AuthInfo(account.getEmail(), account.getId(),null);
             MemeItClient.getInstance().getInterface()
                     .signUpWithGoogle(user)
-                    .enqueue(new MyCallBack<AuthToken, User>(listener) {
+                    .enqueue(new MyCallBack2<AuthToken, User>(listener) {
                         @Override
                         public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                             if (response.isSuccessful()) {
@@ -228,7 +228,6 @@ public class MemeItAuth {
                     });
 
         } catch (ApiException e) {
-            Toast.makeText(mContext, "649897 "+e.getMessage(), Toast.LENGTH_SHORT).show();
             checkAndFireError(listener, OTHER_ERROR.setMessage("api exxx  "+e.getMessage()));
         }
     }

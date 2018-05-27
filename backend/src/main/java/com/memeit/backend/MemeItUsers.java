@@ -190,7 +190,6 @@ public class MemeItUsers {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (response.isSuccessful()) {
-                            User user = response.body();
                             PrefUtils.get().edit()
                                     .putBoolean(PREFERENCE_USER_DATA_SAVED, true)
                                     .apply();
@@ -236,6 +235,5 @@ public class MemeItUsers {
                 .deleteMe()
                 .enqueue(new MyCallBack<ResponseBody>(listener));
     }
-
 
 }
