@@ -6,33 +6,27 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.memeit.backend.dataclasses.AuthInfo;
 import com.memeit.backend.dataclasses.AuthToken;
-import com.memeit.backend.dataclasses.MyUser;
 import com.memeit.backend.dataclasses.User;
 
 import java.io.IOException;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.memeit.backend.OnCompleteListener.*;
 import static com.memeit.backend.OnCompleteListener.Error.NETWORK_ERROR;
 import static com.memeit.backend.OnCompleteListener.Error.OTHER_ERROR;
 import static com.memeit.backend.Utils.checkAndFireError;
 import static com.memeit.backend.Utils.checkAndFireSuccess;
-import static java.lang.Error.*;
 
 public class MemeItAuth {
 
@@ -46,7 +40,7 @@ public class MemeItAuth {
     public static final int GOOGLE_SIGNIN_REQUEST_CODE = 6598;
     private static final String PREFERENCE_TOKEN = "__token__";
     private static final String PREFERENCE_SIGNIN_METHOD = "__signin_method__";
-    private static final String PREFERENCE_USER_DATA_SAVED = "__user_data_saved__";
+    static final String PREFERENCE_USER_DATA_SAVED = "__user_data_saved__";
     private Context mContext;
     private SharedPreferences preferences;
 
@@ -118,7 +112,7 @@ public class MemeItAuth {
     public static final String TAG = "MemeItAuth";
 
     public void signUpWithEmail(String email, String password, final OnCompleteListener<Void> listener) {
-        MyUser user = new MyUser(email, password);
+        AuthInfo user = new AuthInfo(email, password);
         MemeItClient.getInstance().getInterface()
                 .signUpWithEmail(user)
                 .enqueue(new MyCallBack<AuthToken, Void>(listener) {
@@ -137,7 +131,7 @@ public class MemeItAuth {
 
 
     public void signInWithEmail(String email, String password, final OnCompleteListener<Void> listener) {
-        MyUser user = new MyUser(email, password);
+        AuthInfo user = new AuthInfo(email, password);
         MemeItClient.getInstance().getInterface()
                 .loginWithEmail(user)
                 .enqueue(new MyCallBack<AuthToken, Void>(listener) {
@@ -170,7 +164,7 @@ public class MemeItAuth {
         try {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             final GoogleSignInAccount account = task.getResult(ApiException.class);
-            MyUser user = new MyUser(account.getEmail(), account.getId());
+            AuthInfo user = new AuthInfo(account.getEmail(), account.getId());
             MemeItClient.getInstance().getInterface()
                     .loginWithGoogle(user)
                     .enqueue(new MyCallBack<AuthToken, Void>(listener) {
@@ -202,7 +196,7 @@ public class MemeItAuth {
         try {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             final GoogleSignInAccount account = task.getResult(ApiException.class);
-            MyUser user = new MyUser(account.getEmail(), account.getId(),null);
+            AuthInfo user = new AuthInfo(account.getEmail(), account.getId(),null);
             MemeItClient.getInstance().getInterface()
                     .signUpWithGoogle(user)
                     .enqueue(new MyCallBack<AuthToken, User>(listener) {
@@ -237,28 +231,6 @@ public class MemeItAuth {
             Toast.makeText(mContext, "649897 "+e.getMessage(), Toast.LENGTH_SHORT).show();
             checkAndFireError(listener, OTHER_ERROR.setMessage("api exxx  "+e.getMessage()));
         }
-    }
-
-
-    public void uploadUserData(User user, OnCompleteListener<Void> listener) {
-        //todo:jv add upload user data listner
-        //todo:jv upload userImage
-        MemeItClient.getInstance().getInterface()
-                .uploadUserData(user)
-                .enqueue(new MyCallBack<User, Void>(listener) {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                        if (response.isSuccessful()) {
-                            User user = response.body();
-                            Log.d(TAG, "onResponse: " + user);
-                            preferences.edit()
-                                    .putBoolean(PREFERENCE_USER_DATA_SAVED, true)
-                                    .apply();
-                        } else {
-                            Toast.makeText(mContext, "error uploading " + response.message(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
     public void signInWithFacebook() {

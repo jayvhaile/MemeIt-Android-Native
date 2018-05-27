@@ -4,22 +4,22 @@ package com.memeit.backend.dataclasses;
  * Created by Jv on 4/29/2018.
  */
 public class User {
-    private String uid;
+    private String _id;
     private String name;
-    private String imageUrl;
+    private String img_url;
     private int followerCount;
     private int followingCount;
-    private int postCount;
+    private int memesCount;
     private boolean isFollowingMe;
     private boolean isFollowedByMe;
 
     public User(String name, String imageUrl) {
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.img_url = imageUrl;
     }
 
     public String getUserID() {
-        return uid;
+        return _id;
     }
 
     public String getName() {
@@ -27,7 +27,7 @@ public class User {
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return img_url;
     }
 
     public int getFollowerCount() {
@@ -38,8 +38,8 @@ public class User {
         return followingCount;
     }
 
-    public int getPostCount() {
-        return postCount;
+    public int getMemesCount() {
+        return memesCount;
     }
 
     public boolean isFollowingMe() {

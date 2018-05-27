@@ -1,28 +1,28 @@
-package com.memeit.client.dataclasses;
+package com.memeit.backend.dataclasses;
 
 /**
  * Created by Jv on 5/13/2018.
  */
 public class Comment {
-    private String posterID;
-    private String memeID;
+    private String pid;
     private String comment;
 
-    public Comment(String posterID, String memeID, String comment) {
-        this.posterID = posterID;
-        this.memeID = memeID;
+    private String date;
+
+    public Comment(String comment) {
         this.comment = comment;
     }
 
-    public String getPosterID() {
-        return posterID;
-    }
-
-    public String getMemeID() {
-        return memeID;
+    public String getPid() {
+        return pid;
     }
 
     public String getComment() {
         return comment;
     }
+
+    public String getDate() {
+        return date;
+    }
+
 }

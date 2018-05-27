@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,12 +48,16 @@ public class SignUpDetailsActivity extends AppCompatActivity {
             String name=getIntent().getStringExtra(PARAM_NAME);
             String url=getIntent().getStringExtra(PARAM_IMAGE_URL);
 
+            Toast.makeText(this, "url: "+url, Toast.LENGTH_SHORT).show();
             nameV.setText(name);
 
             Glide.with(this)
                     .load(url)
                     .apply(RequestOptions.circleCropTransform())
+                    .apply(RequestOptions.placeholderOf(R.drawable.ic_profile))
+                    .thumbnail(0.7f)
                     .into(profileV);
+
         }
         profileV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,11 +77,12 @@ public class SignUpDetailsActivity extends AppCompatActivity {
                 MemeItAuth.getInstance().uploadUserData(user, new OnCompleteListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        Log.d("memeitc", "onSuccess: ");
                         startActivity(new Intent(SignUpDetailsActivity.this,MainActivity.class));
                     }
-
                     @Override
                     public void onFailure(Error error) {
+                        Log.d("memeitc", "failer: ");
                         Toast.makeText(SignUpDetailsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
