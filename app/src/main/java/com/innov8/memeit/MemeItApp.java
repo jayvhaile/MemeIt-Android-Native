@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MemeItApp extends Application{
-    private static final String SERVER_URL="http://127.0.0.1:5000";
+    private static final String SERVER_URL="http://127.0.0.1:5000/api/";
     @Override
     public void onCreate() {
         super.onCreate();

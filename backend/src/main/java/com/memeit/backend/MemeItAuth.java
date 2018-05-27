@@ -247,7 +247,7 @@ public class MemeItAuth {
         return preferences.getString(PREFERENCE_TOKEN,null);
     }
 
-    public void SignOut() {
+    public void signOut() {
         preferences.edit()
                 .remove(PREFERENCE_TOKEN)
                 .remove(PREFERENCE_SIGNIN_METHOD)

@@ -5,8 +5,10 @@ import android.text.TextUtils;
 
 import com.memeit.backend.dataclasses.AuthInfo;
 import com.memeit.backend.dataclasses.AuthToken;
+import com.memeit.backend.dataclasses.Badge;
 import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.Meme;
+import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.User;
 
 import java.io.IOException;
@@ -15,11 +17,13 @@ import java.util.List;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -80,15 +84,15 @@ public class MemeItClient {
         //=============================Auth Related=================================================
 
         //------POST------
-        @POST("api/signin")
+        @POST("signin")
         public Call<AuthToken> loginWithEmail(@Body AuthInfo user);
-        @POST("api/signin/google")
+        @POST("signin/google")
         public Call<AuthToken> loginWithGoogle(@Body AuthInfo user);
-        @POST("api/signup")
+        @POST("signup")
         public Call<AuthToken> signUpWithEmail(@Body AuthInfo user);
-        @POST("api/signup/google")
+        @POST("signup/google")
         public Call<AuthToken> signUpWithGoogle(@Body AuthInfo user);
-        @POST("api/signout")
+        @POST("user/delete")
         public Call<AuthToken> signOut(@Body AuthInfo user);
 
 
@@ -100,16 +104,49 @@ public class MemeItClient {
         @GET("user/me")
         public Call<User> getMyUser();
         @GET("user/followers")
-        public Call<List<User>> getFollowersListForUser(@Query("uid") String userID);
+        public Call<List<User>> getMyFollowersList(@Query("skip")int skip,@Query("limit")int limit);
         @GET("user/following")
-        public Call<List<User>> getFollowingListForUser(@Query("uid") String userID);
+        public Call<List<User>> getMyFollowingList(@Query("skip")int skip,@Query("limit")int limit);
+        @GET("user/:uid/followers")
+        public Call<List<User>> getFollowersListForUser(@Query("skip")int skip,
+                                                        @Query("limit")int limit,
+                                                        @Field("uid") String userID);
+        @GET("user/:uid/following")
+        public Call<List<User>> getFollowingListForUser(@Query("skip")int skip,
+                                                        @Query("limit")int limit,
+                                                        @Query("uid") String userID);
         @GET("user/memes")
         public Call<List<Meme>> getPostsOfUser(@Query("uid") String userID);
+        @GET("user/notifications")
+        public Call<List<Notification>> getMyNotifications(@Query("skip")int skip,
+                                                           @Query("limit")int limit);
+        @GET("user/notifications/count")
+        public Call<Integer> getNotifCount();
+        @GET("user/:uid/badges")
+        public Call<List<Badge>> getBadgesFor(@Query("uid") String uid);
+        @GET("user/badges")
+        public Call<List<Badge>> getMyBadges();
+
+        //------POST-----
+
+        @POST("user/follow")
+        public Call<ResponseBody> followUser(@Body String uid);
+        @POST("user/unfollow")
+        public Call<ResponseBody> unfollowUser(@Body String uid);
 
 
         //------PUT------
-        @PUT("api/user")
+        @PUT("user")
         public Call<User> uploadUserData(@Body User user);
+        @PUT("user/notifications/markseenall")
+        public Call<ResponseBody> markNotificationSeen();
+        @PUT("user/notifications/markseen")
+        public Call<ResponseBody> markSingleNotificationSeen(@Body String nid);
+
+        //-----Delete-----
+
+        @DELETE("user")
+        public Call<ResponseBody> deleteMe();
 
         //================================Memes Related=============================================
 
@@ -140,9 +177,6 @@ public class MemeItClient {
         public Call<Boolean> likeMeme(@Query("mid")String memeID);
         @DELETE("meme/like")
         public Call<Boolean> unlikeMeme(@Query("mid")String memeID);
-
-
-
     }
 
 
