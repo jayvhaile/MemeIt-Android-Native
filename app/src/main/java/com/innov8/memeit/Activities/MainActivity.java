@@ -8,6 +8,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import com.innov8.memegenerator.MemeGeneratorActivity;
@@ -22,6 +24,7 @@ import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.memeit.backend.dataclasses.User;
+import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +41,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(!MemeItAuth.getInstance().isSignedIn()){
-            startActivity(new Intent(this,SignInActivity.class));
-            finish();
-            return;
-        }else if(!MemeItAuth.getInstance().isUserDataSaved()){
-            startActivity(new Intent(this,SignUpDetailsActivity.class));
-            finish();
-            return;
-        }
+        //todo: Biruk uncomment later.
+//        if(!MemeItAuth.getInstance().isSignedIn()){
+//            startActivity(new Intent(this,SignInActivity.class));
+//            finish();
+//        }else if(!MemeItAuth.getInstance().isUserDataSaved()){
+//            startActivity(new Intent(this,SignUpDetailsActivity.class));
+//            finish();
+//        }
         MemeItAuth.getInstance().getUser(new OnCompleteListener<User>() {
             @Override
             public void onSuccess(User user) {
@@ -92,6 +94,31 @@ public class MainActivity extends AppCompatActivity {
         // Setting viewpager adapter
         PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
+//
+//        // Navigation drawer
+//        final DuoDrawerLayout drawerLayout = (DuoDrawerLayout) findViewById(R.id.drawer);
+//        DuoDrawerToggle drawerToggle = new DuoDrawerToggle(this, drawerLayout, ((Toolbar) findViewById(R.id.uselessToolbar)),
+//                R.string.navigation_drawer_open,
+//                R.string.navigation_drawer_close);
+//
+//        drawerLayout.setDrawerListener(drawerToggle);
+//        findViewById(R.id.toolbar_drawer_toggle).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(drawerLayout.isDrawerOpen())drawerLayout.closeDrawer();
+//                else drawerLayout.openDrawer();
+//            }
+//        });
+//        drawerLayout.closeDrawer();
+//        drawerToggle.syncState();
+        new SlidingRootNavBuilder(this)
+                .withSavedState(savedInstanceState) //If you call the method, layout will restore its opened/closed state
+                .withContentClickableWhenMenuOpened(false)
+                .withRootViewElevationPx(5)
+                .withRootViewScale(0.5f)
+                .withToolbarMenuToggle((Toolbar) findViewById(R.id.toolbar2))
+                .withMenuLayout(R.layout.menu_drawer)
+                .inject();
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {

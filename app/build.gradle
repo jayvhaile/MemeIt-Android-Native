@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.innov8.memeit"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -43,6 +43,9 @@ dependencies {
     //the backend api module
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
+//    compile 'nl.psdcompany:duo-navigation-drawer:2.0.8'
+    compile 'com.yarolegovich:sliding-root-nav:1.1.0'
+
 
 }
 repositories {

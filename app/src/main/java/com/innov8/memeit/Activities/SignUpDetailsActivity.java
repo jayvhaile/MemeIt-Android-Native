@@ -75,6 +75,8 @@ public class SignUpDetailsActivity extends AppCompatActivity {
             }
         });
 
+        // TODO: Jv: Make sure the responsebody is supposed to be User.
+
 
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,9 +84,9 @@ public class SignUpDetailsActivity extends AppCompatActivity {
                 String name=nameV.getText().toString();
 
                 User user=new User(name,image_url);
-                MemeItUsers.getInstance().updateMyData(user, new OnCompleteListener<ResponseBody>() {
+                MemeItUsers.getInstance().updateMyData(user, new OnCompleteListener<User>() {
                     @Override
-                    public void onSuccess(ResponseBody body) {
+                    public void onSuccess(User body) {
                         Log.d("memeitc", "onSuccess: ");
                         startActivity(new Intent(SignUpDetailsActivity.this,MainActivity.class));
                     }
@@ -105,7 +107,6 @@ public class SignUpDetailsActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Bitmap bitmap = CustomMethods.getBitmapFromUri(data.getData(),getApplicationContext());
                 profileV.setImageBitmap(bitmap);
-
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
