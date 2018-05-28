@@ -1,7 +1,10 @@
 package com.innov8.memeit.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,10 +15,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.OnCompleteListener;
 import com.memeit.backend.dataclasses.User;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +37,7 @@ public class SignUpDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.finish)
     View finish;
+    Activity activity;
 
     String image_url;
     @Override
@@ -39,7 +46,7 @@ public class SignUpDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up_details);
         ButterKnife.bind(this);
 
-
+        activity = this;
         avenir = Typeface.createFromAsset(getAssets(),"fonts/avenir.ttf");
         nameV.setTypeface(avenir);
 
@@ -59,10 +66,13 @@ public class SignUpDetailsActivity extends AppCompatActivity {
                     .into(profileV);
 
         }
+
         profileV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //todo: make them choose profile picture from gallery here
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .start(activity);
             }
         });
 
@@ -71,7 +81,6 @@ public class SignUpDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String name=nameV.getText().toString();
-                //todo validate name
 
                 User user=new User(name,image_url);
                 MemeItAuth.getInstance().uploadUserData(user, new OnCompleteListener<Void>() {
@@ -88,5 +97,19 @@ public class SignUpDetailsActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Bitmap bitmap = CustomMethods.getBitmapFromUri(data.getData(),getApplicationContext());
+                profileV.setImageBitmap(bitmap);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

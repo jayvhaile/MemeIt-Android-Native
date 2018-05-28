@@ -27,8 +27,6 @@ public class SignInActivity extends AppCompatActivity{
     SignInButton google_sign_in;
     @BindView(R.id.sign_in)
     View sign_in;
-    @BindView(R.id.to_sign_up)
-    View to_sign_up;
 
     OnCompleteListener<Void> signInCompletedListener;
     @Override
@@ -78,14 +76,6 @@ public class SignInActivity extends AppCompatActivity{
             }
         });
 
-
-        to_sign_up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SignInActivity.this,SignUpActivity.class));
-
-            }
-        });
     }
     //this is for google sign in
     @Override

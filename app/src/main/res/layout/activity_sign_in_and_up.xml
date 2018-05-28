@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff"
+    tools:context="com.innov8.memeit.Activities.SignInActivity">
+
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_marginTop="108dp"
+        android:src="@mipmap/memeitostser"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_absoluteHeight="80dp"
+        tools:layout_conversion_absoluteWidth="352dp" />
+
+    <com.innov8.memeit.CustomClasses.FontTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="32dp"
+        android:text="The world of memes. Just a login away."
+        android:textColor="#212121"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="206dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="358dp">
+
+
+        <com.innov8.memeit.CustomClasses.FontTextView
+            android:id="@+id/sign_in"
+            android:layout_width="170dp"
+            android:layout_height="60dp"
+            android:background="@drawable/button"
+            android:gravity="center"
+            android:paddingLeft="34dp"
+            android:paddingRight="34dp"
+            android:text="Log In"
+            android:textColor="#fff"
+            android:textSize="26sp"
+            tools:layout_editor_absoluteX="117dp"
+            tools:layout_editor_absoluteY="328dp" />
+
+        <com.innov8.memeit.CustomClasses.FontTextView
+            android:id="@+id/sign_up"
+            android:layout_width="170dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_outline"
+            android:gravity="center"
+            android:paddingLeft="34dp"
+            android:paddingRight="34dp"
+            android:text="Sign Up"
+            android:textColor="#ff4e4e"
+            android:textSize="26sp" />
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

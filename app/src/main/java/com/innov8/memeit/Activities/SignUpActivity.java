@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.SignInButton;
+import com.innov8.memeit.CustomClasses.CustomDialog;
+import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.OnCompleteListener;
@@ -26,51 +28,59 @@ public class SignUpActivity extends AppCompatActivity {
     EditText passwordV;
     @BindView(R.id.confrim_password)
     EditText confrim_password;
-    @BindView(R.id.google_sign_in)
-    SignInButton google_sign_in;
     @BindView(R.id.sign_up)
     View sign_up;
     @BindView(R.id.to_sign_in)
     View to_sign_in;
+    CustomDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
+        dialog = new CustomDialog(this,"Signing up...");
 
         avenir = Typeface.createFromAsset(getAssets(),"fonts/avenir.ttf");
 
         emailV.setTypeface(avenir);
+        confrim_password.setTypeface(avenir);
         passwordV.setTypeface(avenir);
-        google_sign_in.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MemeItAuth.getInstance().signInWithGoogle(SignUpActivity.this);
-            }
-        });
+
+        dialog.show();
+
         sign_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email=emailV.getText().toString();
                 String password=passwordV.getText().toString();
+                boolean emailIsValid = CustomMethods.isEmailValid(email);
+                boolean passwordIsValid = password.length()>7;
+                dialog.show();
+
+                if(confrim_password.getText().toString().equals(password)){
+                if(emailIsValid&&passwordIsValid)
                 MemeItAuth.getInstance().signUpWithEmail(email, password, new OnCompleteListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        dialog.hide();
                         startActivity(new Intent(SignUpActivity.this,SignUpDetailsActivity.class));
                     }
 
                     @Override
                     public void onFailure(Error error) {
+                        dialog.hide();
                         Toast.makeText(SignUpActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
-        });
-
-        to_sign_in.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SignUpActivity.this,SignInActivity.class));
+                else{
+                    String response = "";
+                    if(!emailIsValid&&passwordIsValid) response = "Please enter a valid email.";
+                    else if(emailIsValid&&!passwordIsValid) response = "Your password must at least be 8 characters long";
+                    else response = "Please enter a valid email and enter a password that is at least 8 characters long.";
+                    Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+                }}
+                else Toast.makeText(getApplicationContext(),"Please make sure your passwords match.",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -98,4 +108,5 @@ public class SignUpActivity extends AppCompatActivity {
             });
         }
     }
+
 }
