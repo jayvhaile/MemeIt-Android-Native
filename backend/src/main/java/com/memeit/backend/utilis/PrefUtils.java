@@ -1,4 +1,4 @@
-package com.memeit.backend;
+package com.memeit.backend.utilis;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,9 +1,9 @@
-package com.memeit.backend;
+package com.memeit.backend.utilis;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
-import static com.memeit.backend.OnCompleteListener.Error.NETWORK_ERROR;
+import static com.memeit.backend.utilis.OnCompleteListener.Error.NETWORK_ERROR;
 
 public  abstract class MyCallBack2<T,U> implements Callback<T> {
     OnCompleteListener<U> listener;

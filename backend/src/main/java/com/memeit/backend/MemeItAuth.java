@@ -17,16 +17,19 @@ import com.google.android.gms.tasks.Task;
 import com.memeit.backend.dataclasses.AuthInfo;
 import com.memeit.backend.dataclasses.AuthToken;
 import com.memeit.backend.dataclasses.User;
+import com.memeit.backend.utilis.MyCallBack;
+import com.memeit.backend.utilis.MyCallBack2;
+import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
-import static com.memeit.backend.OnCompleteListener.Error.NETWORK_ERROR;
-import static com.memeit.backend.OnCompleteListener.Error.OTHER_ERROR;
-import static com.memeit.backend.Utils.checkAndFireError;
-import static com.memeit.backend.Utils.checkAndFireSuccess;
+import static com.memeit.backend.utilis.OnCompleteListener.Error.NETWORK_ERROR;
+import static com.memeit.backend.utilis.OnCompleteListener.Error.OTHER_ERROR;
+import static com.memeit.backend.utilis.Utils.checkAndFireError;
+import static com.memeit.backend.utilis.Utils.checkAndFireSuccess;
 
 public class MemeItAuth {
 

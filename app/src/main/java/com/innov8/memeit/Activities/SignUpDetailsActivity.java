@@ -16,8 +16,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.R;
-import com.memeit.backend.MemeItAuth;
-import com.memeit.backend.OnCompleteListener;
+import com.memeit.backend.MemeItUsers;
+import com.memeit.backend.utilis.OnCompleteListener;
 import com.memeit.backend.dataclasses.User;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -82,9 +82,9 @@ public class SignUpDetailsActivity extends AppCompatActivity {
                 String name=nameV.getText().toString();
 
                 User user=new User(name,image_url);
-                MemeItAuth.getInstance().uploadUserData(user, new OnCompleteListener<Void>() {
+                MemeItUsers.getInstance().updateMyData(user, new OnCompleteListener<ResponseBody>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
+                    public void onSuccess(ResponseBody body) {
                         Log.d("memeitc", "onSuccess: ");
                         startActivity(new Intent(SignUpDetailsActivity.this,MainActivity.class));
                     }
@@ -105,6 +105,8 @@ public class SignUpDetailsActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Bitmap bitmap = CustomMethods.getBitmapFromUri(data.getData(),getApplicationContext());
                 profileV.setImageBitmap(bitmap);
+
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_SHORT).show();

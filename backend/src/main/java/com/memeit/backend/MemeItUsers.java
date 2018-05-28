@@ -3,6 +3,10 @@ package com.memeit.backend;
 import com.memeit.backend.dataclasses.Badge;
 import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.User;
+import com.memeit.backend.utilis.MyCallBack;
+import com.memeit.backend.utilis.OnCompleteListener;
+import com.memeit.backend.utilis.PrefUtils;
+import com.memeit.backend.utilis.Utils;
 
 import java.util.List;
 
@@ -11,7 +15,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import static com.memeit.backend.MemeItAuth.PREFERENCE_USER_DATA_SAVED;
-import static com.memeit.backend.OnCompleteListener.Error.OTHER_ERROR;
+import static com.memeit.backend.utilis.OnCompleteListener.Error.OTHER_ERROR;
 
 public class MemeItUsers {
     private static MemeItUsers memeItUsers;

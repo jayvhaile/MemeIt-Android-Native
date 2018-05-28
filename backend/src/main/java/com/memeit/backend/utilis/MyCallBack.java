@@ -1,13 +1,13 @@
-package com.memeit.backend;
+package com.memeit.backend.utilis;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.memeit.backend.OnCompleteListener.Error.NETWORK_ERROR;
-import static com.memeit.backend.OnCompleteListener.Error.OTHER_ERROR;
-import static com.memeit.backend.Utils.checkAndFireError;
-import static com.memeit.backend.Utils.checkAndFireSuccess;
+import static com.memeit.backend.utilis.OnCompleteListener.Error.NETWORK_ERROR;
+import static com.memeit.backend.utilis.OnCompleteListener.Error.OTHER_ERROR;
+import static com.memeit.backend.utilis.Utils.checkAndFireError;
+import static com.memeit.backend.utilis.Utils.checkAndFireSuccess;
 
 public  class MyCallBack<T> implements Callback<T> {
     OnCompleteListener<T> listener;

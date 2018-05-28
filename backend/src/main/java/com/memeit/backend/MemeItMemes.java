@@ -2,6 +2,8 @@ package com.memeit.backend;
 
 import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.Meme;
+import com.memeit.backend.utilis.MyCallBack;
+import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.util.List;
 
@@ -12,7 +14,19 @@ import okhttp3.ResponseBody;
  * related to memes.
  **/
 public class MemeItMemes {
+    private static MemeItMemes memeItmemes;
 
+    private MemeItMemes() {
+
+    }
+
+    public static void init() {
+        memeItmemes = new MemeItMemes();
+    }
+
+    public static MemeItMemes getInstance() {
+        return memeItmemes;
+    }
     /**
      * this is to get home page meme list for a logged in user
      *

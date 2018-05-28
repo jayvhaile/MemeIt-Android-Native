@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.SignInButton;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
-import com.memeit.backend.OnCompleteListener;
+import com.memeit.backend.utilis.OnCompleteListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

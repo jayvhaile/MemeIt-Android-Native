@@ -12,7 +12,7 @@ import com.innov8.memeit.CustomClasses.CustomDialog;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
-import com.memeit.backend.OnCompleteListener;
+import com.memeit.backend.utilis.OnCompleteListener;
 import com.memeit.backend.dataclasses.User;
 
 import butterknife.BindView;

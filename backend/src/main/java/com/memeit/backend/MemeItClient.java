@@ -41,6 +41,7 @@ public class MemeItClient {
 
         MemeItAuth.init(context);
         MemeItUsers.init();
+        MemeItMemes.init();
         OkHttpClient.Builder builder=new OkHttpClient.Builder();
 
         builder.addInterceptor(new Interceptor() {

@@ -8,7 +8,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.innov8.memegenerator.MemeGeneratorActivity;
@@ -21,8 +20,7 @@ import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.memeit.backend.MemeItAuth;
-import com.memeit.backend.MemeItClient;
-import com.memeit.backend.OnCompleteListener;
+import com.memeit.backend.utilis.OnCompleteListener;
 import com.memeit.backend.dataclasses.User;
 
 import java.util.ArrayList;
