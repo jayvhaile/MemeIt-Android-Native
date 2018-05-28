@@ -1,11 +1,9 @@
 package com.memeit.backend.utilis;
 
-import android.graphics.Bitmap;
+import android.net.Uri;
 
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.UploadCallback;
-
-import java.nio.ByteBuffer;
 
 public class Utils {
     public static <T> void checkAndFireSuccess(OnCompleteListener<T> listener, T t) {
@@ -19,9 +17,7 @@ public class Utils {
             listener.onFailure(error);
         }
     }
-    public void uploadImage(Bitmap bitmap, UploadCallback callback){
-        ByteBuffer bb=ByteBuffer.allocate(1);
-        bitmap.copyPixelsToBuffer(bb);
-        MediaManager.get().upload(bb.array()).callback(callback);
+    public static void uploadImage(Uri uri, UploadCallback callback){
+
     }
 }

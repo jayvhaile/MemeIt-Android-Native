@@ -16,6 +16,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavours{
+        dev{
+            minSdkVersion 24
+            versionNameSuffux "-dev"
+            applicationIdSuffux ".dev"
+            resConfig "en" "xhdpi"
+        }
+    }
+
+
 }
 
 dependencies {

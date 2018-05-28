@@ -1,7 +1,5 @@
 package com.innov8.memeit;
-
 import android.app.Application;
-import android.util.Log;
 
 import com.cloudinary.android.MediaManager;
 import com.memeit.backend.MemeItClient;
@@ -15,12 +13,8 @@ public class MemeItApp extends Application{
     public void onCreate() {
         super.onCreate();
         MemeItClient.init(this,SERVER_URL);
-
         Map config = new HashMap();
         config.put("cloud_name", "innov8");
         MediaManager.init(this, config);
-
-        Log.w("This shit works","yassssss");
-
     }
 }

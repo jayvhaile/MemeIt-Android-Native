@@ -187,7 +187,7 @@ public class MemeItUsers {
      * @param user     the updated user data
      * @param listener the Listener to be called when the action is completed
      **/
-    public void updateMyData(User user, OnCompleteListener<User> listener) {
+    public void updateMyData(User user, final OnCompleteListener<User> listener) {
         MemeItClient.getInstance().getInterface()
                 .uploadUserData(user)
                 .enqueue(new MyCallBack<User>(listener) {
