@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MemeIt-master.iml" filepath="$PROJECT_DIR$/MemeIt-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MemeIt.iml" filepath="$PROJECT_DIR$/.idea/MemeIt.iml" />
+      <module fileurl="file://C:\Users\Biruk\Desktop\Android Projects\MemeIt\MemeIt-master.iml" filepath="C:\Users\Biruk\Desktop\Android Projects\MemeIt\MemeIt-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\Biruk\Desktop\Android Projects\MemeIt\app\app.iml" filepath="C:\Users\Biruk\Desktop\Android Projects\MemeIt\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/backend/backend.iml" filepath="$PROJECT_DIR$/backend/backend.iml" />
+      <module fileurl="file://C:\Users\Biruk\Desktop\Android Projects\MemeIt\backend\backend.iml" filepath="C:\Users\Biruk\Desktop\Android Projects\MemeIt\backend\backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/memegenerator/memegenerator.iml" filepath="$PROJECT_DIR$/memegenerator/memegenerator.iml" />
+      <module fileurl="file://C:\Users\Biruk\Desktop\Android Projects\MemeIt\memegenerator\memegenerator.iml" filepath="C:\Users\Biruk\Desktop\Android Projects\MemeIt\memegenerator\memegenerator.iml" />
     </modules>
   </component>
 </project>
