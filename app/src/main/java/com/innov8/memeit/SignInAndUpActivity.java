@@ -1,7 +1,7 @@
 package com.innov8.memeit;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 public class SignInAndUpActivity extends AppCompatActivity {
 

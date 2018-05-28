@@ -3,8 +3,6 @@ package com.innov8.memeit.CustomClasses;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.memeit.backend.MemeItAuth;
-
 /**
  * Created by Biruk on 5/26/2018.
  */

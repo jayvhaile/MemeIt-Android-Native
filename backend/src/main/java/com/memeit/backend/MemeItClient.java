@@ -150,33 +150,72 @@ public class MemeItClient {
 
         //================================Memes Related=============================================
 
+        @GET("meme/home")
+        public Call<List<Meme>> getHomeMemes(@Query("skip")int skip,
+                                             @Query("limit")int limit);
+        @GET("meme/home/guest")
+        public Call<List<Meme>> getHomeMemesForGuest(@Query("skip")int skip,
+                                                     @Query("limit")int limit);
+        @GET("meme/trending")
+        public Call<List<Meme>> getTrendingMemes(@Query("skip")int skip,
+                                                 @Query("limit")int limit);
+        @GET("meme/favourite")
+        public Call<List<Meme>> getFavouriteMemes(@Query("skip")int skip,
+                                                 @Query("limit")int limit);
+        @GET("meme/favourite")
+        public Call<List<Meme>> getFavouriteMemesFor(@Query("uid")String uid,
+                                                     @Query("skip")int skip,
+                                                     @Query("limit")int limit);
 
-        @GET("trending")
-        public Call<List<Meme>> getTrendingMemes();
-        @GET("home")
-        public Call<List<Meme>> getHomeMemesForUser(@Query("uid")String userID);
+        @GET("meme/posts")
+        public Call<List<Meme>> getMyMemes(@Query("skip")int skip,
+                                           @Query("limit")int limit);
+
+        @GET("meme/posts")
+        public Call<List<Meme>> getMemesFor(@Query("uid")String uid,
+                                                     @Query("skip")int skip,
+                                                     @Query("limit")int limit);
+
+        @GET("meme/search")
+        public Call<List<Meme>> getFilteredMemes(@Query("query")String query,
+                                            @Query("skip")int skip,
+                                            @Query("limit")int limit);
         @GET("meme/comments")
-        public Call<List<Comment>> getCommentForMeme(@Query("mid")String memeID);
+        public Call<List<Comment>> getCommentForMeme(@Query("mid")String mid,
+                                                     @Query("skip")int skip,
+                                                     @Query("limit")int limit);
+
+
+
+
 
         @POST("meme")
-        public Call<Meme> postMeme(@Query("meme")Meme meme);
-        @DELETE("meme")
-        public Call<Meme> deleteMeme(@Query("mid")String memeID);
+        public Call<Meme> postMeme(@Body Meme meme);
         @PUT("meme")
-        public Call<Meme> updateMeme(@Query("meme")Meme meme);
+        public Call<Meme> updateMeme(@Body String mid,@Body Meme meme);
+        @DELETE("meme")
+        public Call<ResponseBody> deleteMeme(@Body String mid);
+
+
+        @POST("meme/favourite")
+        public Call<ResponseBody> addMemeToFavourite(@Body String mid);
+        @DELETE("meme/favourite")
+        public Call<ResponseBody> removeMemeFromFavourite(@Body String mid);
+
+
 
 
         @POST("meme/comment")
-        public Call<Comment> postComment(@Query("meme")Comment comment,@Query("mid")String memeID);
+        public Call<Comment> postComment(@Body Comment comment,@Body String mid);
         @DELETE("meme/comment")
-        public Call<Comment> deleteComment(@Query("cid")String commentID,@Query("mid")String memeID);
+        public Call<ResponseBody> deleteComment(@Body String cid,@Body String mid);
         @PUT("meme/comment")
-        public Call<Comment> updateComment(@Query("meme")Comment comment,@Query("mid")String memeID);
+        public Call<ResponseBody> updateComment(@Body Comment comment,@Body String mid,@Body String cid);
 
         @POST("meme/like")
-        public Call<Boolean> likeMeme(@Query("mid")String memeID);
+        public Call<ResponseBody> likeMeme(@Body String mid);
         @DELETE("meme/like")
-        public Call<Boolean> unlikeMeme(@Query("mid")String memeID);
+        public Call<ResponseBody> unlikeMeme(@Body String mid);
     }
 
 

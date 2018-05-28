@@ -2,9 +2,7 @@ package com.innov8.memeit.CustomClasses;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.innov8.memeit.R;
