@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int itemIndex, String itemName) {
                 viewPager.setCurrentItem(itemIndex);
+                if(itemIndex == 3) findViewById(R.id.toolbar2).setVisibility(View.GONE);
+                else findViewById(R.id.toolbar2).setVisibility(View.VISIBLE);
             }
 
             @Override

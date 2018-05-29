@@ -1,90 +1,83 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--<nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout-->
-<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--xmlns:tools="http://schemas.android.com/tools"-->
-<!--android:layout_width="match_parent"-->
-<!--android:layout_height="match_parent"-->
-<!--app:menu="@layout/menu_drawer"-->
-<!--android:id="@+id/drawer"-->
-<!--android:orientation="vertical">-->
+<?xml version="1.0" encoding="utf-8"?><!--<nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout--><!--xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--app:menu="@layout/menu_drawer"--><!--android:id="@+id/drawer"--><!--android:orientation="vertical">-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <ImageView
-        android:layout_marginTop="-20dp"
-        android:src="@drawable/button"
-        android:layout_width="match_parent"
-        android:layout_height="20dp" />
-
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:elevation="6dp"
-            tools:visibility="visible">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_centerInParent="true"
-                android:padding="10dp"
-                android:src="@mipmap/app_text" />
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <!--<ImageView-->
-                <!--android:id="@+id/toolbar_drawer_toggle"-->
-                <!--android:layout_width="36dp"-->
-                <!--android:layout_height="36dp"-->
-                <!--android:visibility="gone"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--app:srcCompat="@drawable/ic_menu_black_24dp"-->
-                <!--android:tint="#303030" />-->
 
 
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true">
 
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginRight="14dp"
-                    android:padding="2dp"
-                    app:srcCompat="@drawable/ic_notifications_black_24dp"
-                    android:tint="#303030" />
-
-                <!--todo: Add a notification counter here later!-->
-            </RelativeLayout>
-
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:background="#00000000"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar2"
+                android:background="#00000000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_centerInParent="true"
+                    android:padding="10dp"
+                    android:visibility="gone"
+                    android:src="@mipmap/app_text" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content">
+
+                    <!--<ImageView-->
+                    <!--android:id="@+id/toolbar_drawer_toggle"-->
+                    <!--android:layout_width="36dp"-->
+                    <!--android:layout_height="36dp"-->
+                    <!--android:visibility="gone"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--app:srcCompat="@drawable/ic_menu_black_24dp"-->
+                    <!--android:tint="#303030" />-->
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginRight="14dp"
+                            android:padding="2dp"
+                            android:tint="#e5303030"
+                            app:srcCompat="@drawable/ic_search_black_24dp" />
+
+                        <!--todo: Add a notification counter here later!-->
+                    </RelativeLayout>
+
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
         <com.innov8.memeit.CustomClasses.NonSwipeableViewPager
             android:id="@+id/main_viewpager"
             android:layout_width="match_parent"
-            android:layout_marginBottom="30dp"
             android:layout_height="match_parent"
-            />
+            android:layout_marginBottom="30dp" />
+
         <com.luseen.spacenavigation.SpaceNavigationView
             android:id="@+id/space"
             android:layout_width="match_parent"
@@ -104,9 +97,4 @@
     </RelativeLayout>
 
 
-
-
-
-
-</LinearLayout>
-    <!--</nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout>-->
+</LinearLayout><!--</nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout>-->

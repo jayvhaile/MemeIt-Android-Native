@@ -87,10 +87,10 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
                 <View
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="14dp"
                     android:layout_width="2dp"
-                    android:layout_marginBottom="6dp"
-                    android:background="#aaa"
+                    android:layout_marginBottom="10dp"
+                    android:background="#a5aaaaaa"
                     android:layout_height="65dp"/>
                 <LinearLayout
                     android:layout_weight="1"
@@ -113,10 +113,10 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
                 <View
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="14dp"
                     android:layout_width="2dp"
-                    android:layout_marginBottom="6dp"
-                    android:background="#aaa"
+                    android:layout_marginBottom="10dp"
+                    android:background="#a5aaaaaa"
                     android:layout_height="65dp"/>
                 <LinearLayout
                     android:layout_weight="1"
