@@ -25,10 +25,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -105,14 +105,14 @@ public class MemeItClient {
         @POST("signup/google")
         public Call<AuthToken> signUpWithGoogle(@Body AuthInfo user);
 
-        @POST("user/delete")
-        public Call<AuthToken> signOut(@Body AuthInfo user);
+        @POST("user/me/delete")
+        public Call<AuthToken> deleteMe(@Body AuthInfo user);
 
 
         //=========================User Related=====================================================
         //------GET------
-        @GET("user")
-        public Call<User> getUserById(@Query("id") String userID);
+        @GET("user/{id}/")
+        public Call<User> getUserById(@Path("id") String uid);
 
         @GET("user/me")
         public Call<User> getMyUser();
@@ -120,24 +120,24 @@ public class MemeItClient {
         @GET("user/me/finished")
         public Call<Boolean> isMyUserDataSaved();
 
-        @GET("user/followers")
+        @GET("user/me/followers")
         public Call<List<User>> getMyFollowersList(@Query("skip") int skip, @Query("limit") int limit);
 
-        @GET("user/following")
+        @GET("user/me/following")
         public Call<List<User>> getMyFollowingList(@Query("skip") int skip, @Query("limit") int limit);
 
-        @GET("user/:uid/followers")
+        @GET("user/{id}/followers")
         public Call<List<User>> getFollowersListForUser(@Query("skip") int skip,
                                                         @Query("limit") int limit,
-                                                        @Field("uid") String userID);
+                                                        @Path("id") String uid);
 
-        @GET("user/:uid/following")
+        @GET("user/{id}/following")
         public Call<List<User>> getFollowingListForUser(@Query("skip") int skip,
                                                         @Query("limit") int limit,
-                                                        @Query("uid") String userID);
+                                                        @Path("id") String uid);
 
-        @GET("user/memes")
-        public Call<List<Meme>> getPostsOfUser(@Query("uid") String userID);
+        @GET("user/{id}/posts")
+        public Call<List<Meme>> getPostsOfUser(@Path("uid") String userID);
 
         @GET("user/notifications")
         public Call<List<Notification>> getMyNotifications(@Query("skip") int skip,
