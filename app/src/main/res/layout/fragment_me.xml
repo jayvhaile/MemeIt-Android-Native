@@ -77,7 +77,6 @@
                         android:textSize="24sp"
                         android:text="956"
                         android:textColor="@color/red"
-
                         android:layout_height="wrap_content" />
                     <com.innov8.memeit.CustomClasses.FontTextView
                         android:layout_width="wrap_content"

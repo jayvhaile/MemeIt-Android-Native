@@ -15,6 +15,8 @@ public class MemeItApp extends Application{
         MemeItClient.init(this,SERVER_URL);
         Map config = new HashMap();
         config.put("cloud_name", "innov8");
+        config.put("api_key", "591249199742556");
+        config.put("api_secret", "yT2mxv0vQrEWjzsPrmyD6xu5a-Y");
         MediaManager.init(this, config);
     }
 }

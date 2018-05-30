@@ -18,16 +18,20 @@ import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.innov8.memeit.R;
+import com.memeit.backend.MemeItUsers;
+import com.memeit.backend.dataclasses.User;
+import com.memeit.backend.utilis.OnCompleteListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.Map;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SignUpDetailsActivity extends AppCompatActivity {
+    public static String TAG="fuck";
+
     public static final String PARAM_NAME="name";
     public static final String PARAM_IMAGE_URL="url";
     Typeface avenir;
@@ -41,6 +45,7 @@ public class SignUpDetailsActivity extends AppCompatActivity {
     Activity activity;
 
     Uri image_url;
+    boolean isFromGoogle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,16 +56,14 @@ public class SignUpDetailsActivity extends AppCompatActivity {
         avenir = Typeface.createFromAsset(getAssets(),"fonts/avenir.ttf");
         nameV.setTypeface(avenir);
 
-        if(getIntent()!=null){
+        if(getIntent().getData()!=null){
             //this is called if the user signed in with google or facebook and get the profile info from that
             String name=getIntent().getStringExtra(PARAM_NAME);
-            String url=getIntent().getStringExtra(PARAM_IMAGE_URL);
-
-            Toast.makeText(this, "url: "+url, Toast.LENGTH_SHORT).show();
+            image_url= Uri.parse(getIntent().getStringExtra(PARAM_IMAGE_URL));
             nameV.setText(name);
 
             Glide.with(this)
-                    .load(url)
+                    .load(image_url)
                     .apply(RequestOptions.circleCropTransform())
                     .apply(RequestOptions.placeholderOf(R.drawable.ic_profile))
                     .thumbnail(0.7f)
@@ -73,6 +76,8 @@ public class SignUpDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
+                        .setAspectRatio(1,1)
+                        .setCropShape(CropImageView.CropShape.OVAL)
                         .start(activity);
             }
         });
@@ -81,14 +86,13 @@ public class SignUpDetailsActivity extends AppCompatActivity {
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(activity, "kjhkjhkjh", Toast.LENGTH_SHORT).show();
-                if (image_url!=null){
-                    Toast.makeText(activity, "yayyy", Toast.LENGTH_SHORT).show();
+                if (image_url!=null&&!isFromGoogle){
                     Log.d(TAG, "finish "+image_url.toString());
                     MediaManager.get().upload(image_url).callback(new UploadCallback() {
                      @Override
                      public void onStart(String s) {
-                         Log.d(TAG, "onStart: ");
+                         Log.d(TAG, "onStart: "+s);
+                         Toast.makeText(activity, "yayyy", Toast.LENGTH_SHORT).show();
                      }
 
                      @Override
@@ -98,13 +102,9 @@ public class SignUpDetailsActivity extends AppCompatActivity {
 
                      @Override
                      public void onSuccess(String s, Map map) {
-                         Toast.makeText(activity, "sucess "+s, Toast.LENGTH_SHORT).show();
-                         Set set=map.keySet();
-
-                         for (Object oo:set) {
-                             Log.d(TAG, "onSuccess key: "+String.valueOf(oo));
-                         }
-
+                       String url= String.valueOf(map.get("secure_url"));
+                       String name=nameV.getText().toString();
+                       uploadData(name,url);
                      }
 
                      @Override
@@ -116,42 +116,42 @@ public class SignUpDetailsActivity extends AppCompatActivity {
                      public void onReschedule(String s, ErrorInfo errorInfo) {
 
                      }
-                 }).unsigned("aa")
-                            .dispatch();
+                 }).dispatch();
+                }else{
+                    String url= image_url==null?null:image_url.toString();
+                    String name=nameV.getText().toString();
+                    uploadData(name,url);
                 }
-                //upload the user image here here
-               /* String name=nameV.getText().toString();
-
-                User user=new User(name,image_url.toString());
-                MemeItUsers.getInstance().updateMyData(user, new OnCompleteListener<User>() {
-                    @Override
-                    public void onSuccess(ResponseBody body) {
-                        Log.d("memeitc", "onSuccess: ");
-                        startActivity(new Intent(SignUpDetailsActivity.this,MainActivity.class));
-                    }
-                    @Override
-                    public void onFailure(Error error) {
-                        Log.d("memeitc", "failer: ");
-                        Toast.makeText(SignUpDetailsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });*/
             }
         });
     }
-    public static String TAG="fuck";
+
+    private void uploadData(String name,String url){
+        User user=new User(name,url);
+        MemeItUsers.getInstance().updateMyData(user, new OnCompleteListener<User>() {
+            @Override
+            public void onSuccess(User body) {
+                startActivity(new Intent(SignUpDetailsActivity.this,MainActivity.class));
+            }
+            @Override
+            public void onFailure(Error error) {
+                Toast.makeText(SignUpDetailsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 image_url=result.getUri();
+                isFromGoogle=false;
                 Glide.with(this)
                         .load(result.getUri())
                         .apply(RequestOptions.circleCropTransform())
                         .apply(RequestOptions.placeholderOf(R.drawable.ic_profile))
                         .thumbnail(0.7f)
                         .into(profileV);
-
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_SHORT).show();

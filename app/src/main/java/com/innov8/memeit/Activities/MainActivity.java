@@ -1,29 +1,27 @@
 package com.innov8.memeit.Activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Toast;
 
 import com.innov8.memegenerator.MemeGeneratorActivity;
+import com.innov8.memeit.Fragments.FavoritesFragment;
 import com.innov8.memeit.Fragments.HomeFragment;
 import com.innov8.memeit.Fragments.MeFragment;
 import com.innov8.memeit.Fragments.TrendingFragment;
-import com.innov8.memeit.Fragments.FavoritesFragment;
 import com.innov8.memeit.R;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.utilis.OnCompleteListener;
-import com.memeit.backend.dataclasses.User;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
 import java.util.ArrayList;
@@ -39,27 +37,38 @@ public class MainActivity extends AppCompatActivity {
     List<Fragment> fragments = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //todo: Biruk uncomment later.
-//        if(!MemeItAuth.getInstance().isSignedIn()){
-//            startActivity(new Intent(this,SignInActivity.class));
-//            finish();
-//        }else if(!MemeItAuth.getInstance().isUserDataSaved()){
-//            startActivity(new Intent(this,SignUpDetailsActivity.class));
-//            finish();
-//        }
-        MemeItAuth.getInstance().getUser(new OnCompleteListener<User>() {
+        if(!MemeItAuth.getInstance().isSignedIn()){
+            startActivity(new Intent(this,SignInAndUpActivity.class));
+            finish();
+            return;
+        }
+        MemeItAuth.getInstance().isUserDataSaved(new OnCompleteListener<Boolean>() {
             @Override
-            public void onSuccess(User user) {
-                Toast.makeText(MainActivity.this, "Current User: "+user.getName(), Toast.LENGTH_LONG).show();
+            public void onSuccess(Boolean saved) {
+                if (saved){
+                    init(savedInstanceState);
+                }else{
+                    goToSignUpDetails();
+                }
             }
 
             @Override
             public void onFailure(Error error) {
-                Toast.makeText(MainActivity.this, "fuck: "  +error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "error: "+error.getMessage() , Toast.LENGTH_SHORT).show();
+                goToSignUpDetails();
             }
         });
+    }
+    private void goToSignUpDetails(){
+        startActivity(new Intent(this,SignUpDetailsActivity.class));
+        finish();
+    }
+
+
+    private void init(Bundle savedInstanceState){
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -94,23 +103,6 @@ public class MainActivity extends AppCompatActivity {
         // Setting viewpager adapter
         PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
-//
-//        // Navigation drawer
-//        final DuoDrawerLayout drawerLayout = (DuoDrawerLayout) findViewById(R.id.drawer);
-//        DuoDrawerToggle drawerToggle = new DuoDrawerToggle(this, drawerLayout, ((Toolbar) findViewById(R.id.uselessToolbar)),
-//                R.string.navigation_drawer_open,
-//                R.string.navigation_drawer_close);
-//
-//        drawerLayout.setDrawerListener(drawerToggle);
-//        findViewById(R.id.toolbar_drawer_toggle).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(drawerLayout.isDrawerOpen())drawerLayout.closeDrawer();
-//                else drawerLayout.openDrawer();
-//            }
-//        });
-//        drawerLayout.closeDrawer();
-//        drawerToggle.syncState();
         new SlidingRootNavBuilder(this)
                 .withSavedState(savedInstanceState) //If you call the method, layout will restore its opened/closed state
                 .withContentClickableWhenMenuOpened(false)
@@ -119,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
                 .withToolbarMenuToggle((Toolbar) findViewById(R.id.toolbar2))
                 .withMenuLayout(R.layout.menu_drawer)
                 .inject();
+
+
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {

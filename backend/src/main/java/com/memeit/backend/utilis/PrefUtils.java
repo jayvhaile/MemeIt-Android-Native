@@ -13,7 +13,7 @@ public class PrefUtils {
         this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public void init(Context context){
+    public static void init(Context context){
         if (preferenceUtils==null){
             preferenceUtils=new PrefUtils(context);
         }else{

@@ -23,7 +23,7 @@
         <activity android:name=".Activities.SignUpDetailsActivity" />
         <activity android:name=".Activities.SignInActivity" />
         <activity android:name=".Activities.SettingsActivity" />
-        <activity android:name=".SignInAndUpActivity"></activity>
+        <activity android:name=".Activities.SignInAndUpActivity"></activity>
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>
     </application>

@@ -46,7 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
         confrim_password.setTypeface(avenir);
         passwordV.setTypeface(avenir);
 
-        dialog.show();
+
 
         sign_up.setOnClickListener(new View.OnClickListener() {
             @Override

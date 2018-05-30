@@ -197,6 +197,7 @@ public class MemeItUsers {
                             PrefUtils.get().edit()
                                     .putBoolean(PREFERENCE_USER_DATA_SAVED, true)
                                     .apply();
+                            Utils.checkAndFireSuccess(listener,response.body());
                         } else {
                             Utils.checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
                         }

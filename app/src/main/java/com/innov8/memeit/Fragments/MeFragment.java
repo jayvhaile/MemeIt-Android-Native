@@ -6,24 +6,29 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.innov8.memeit.Fragments.ProfileFragments.FollowersFragment;
 import com.innov8.memeit.Fragments.ProfileFragments.FollowingFragment;
 import com.innov8.memeit.Fragments.ProfileFragments.MemesFragment;
 import com.innov8.memeit.R;
+import com.memeit.backend.MemeItUsers;
+import com.memeit.backend.dataclasses.User;
+import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 public class MeFragment extends Fragment {
@@ -34,6 +39,9 @@ public class MeFragment extends Fragment {
     ViewPager pager;
     ViewPagerAdapter adapter;
     List<Fragment> fragments;
+
+    TextView nameV;
+    ImageView profileV;
     public MeFragment() {
 
     }
@@ -67,7 +75,38 @@ public class MeFragment extends Fragment {
             }
         });
 
+
+        nameV=(TextView) view.findViewById(R.id.name);
+        profileV=view.findViewById(R.id.profile_image);
+
+        loadData();
+
+
         return view;
+    }
+
+    private void loadData(){
+        MemeItUsers.getInstance().getMyUserDetail(new OnCompleteListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                Toast.makeText(getActivity(), "success:"+user.getName(), Toast.LENGTH_SHORT).show();
+
+                nameV.setText(user.getName());
+                if(!TextUtils.isEmpty(user.getImageUrl())){
+                    Glide.with(getContext())
+                            .load(user.getImageUrl())
+                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(profileV);
+                }
+            }
+
+            @Override
+            public void onFailure(Error error) {
+                Toast.makeText(getActivity(), "failer: "+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
 

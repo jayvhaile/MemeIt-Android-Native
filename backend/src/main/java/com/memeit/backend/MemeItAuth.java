@@ -75,10 +75,13 @@ public class MemeItAuth {
         else
             return true;
     }
-
-    public boolean isUserDataSaved() {
-        if (!isSignedIn()) return false;
-        return preferences.getBoolean(PREFERENCE_USER_DATA_SAVED, false);
+    public void isUserDataSaved(OnCompleteListener<Boolean> listener){
+        if ( preferences.getBoolean(PREFERENCE_USER_DATA_SAVED, false)){
+            listener.onSuccess(true);
+        }else{
+            MemeItClient.getInstance().getInterface()
+                    .isMyUserDataSaved().enqueue(new MyCallBack<Boolean>(listener));
+        }
     }
 
     public SignInMethod getSignedInMethod() {
