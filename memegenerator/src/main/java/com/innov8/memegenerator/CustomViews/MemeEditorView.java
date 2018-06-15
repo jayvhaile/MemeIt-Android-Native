@@ -10,8 +10,8 @@ import android.view.View;
  * Created by Haile on 5/19/2018.
  */
 
-public class MemeView extends View {
-    public MemeView(Context context, @Nullable AttributeSet attrs) {
+public class MemeEditorView extends View {
+    public MemeEditorView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 }
