@@ -63,7 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         dialog.hide();
-                        startActivity(new Intent(SignUpActivity.this,SignUpDetailsActivity.class));
+                        startActivity(new Intent(SignUpActivity.this,SetupProfileActivity.class));
                     }
 
                     @Override
@@ -94,9 +94,9 @@ public class SignUpActivity extends AppCompatActivity {
             MemeItAuth.getInstance().handleGoogleSignUpResult(data, new OnCompleteListener<User>() {
                 @Override
                 public void onSuccess(User user) {
-                    Intent intent=new Intent(SignUpActivity.this,SignUpDetailsActivity.class);
-                    intent.putExtra(SignUpDetailsActivity.PARAM_NAME,user.getName());
-                    intent.putExtra(SignUpDetailsActivity.PARAM_IMAGE_URL,user.getImageUrl());
+                    Intent intent=new Intent(SignUpActivity.this,SetupProfileActivity.class);
+                    intent.putExtra(SetupProfileActivity.PARAM_NAME,user.getName());
+                    intent.putExtra(SetupProfileActivity.PARAM_IMAGE_URL,user.getImageUrl());
                     startActivity(intent);
                 }
 

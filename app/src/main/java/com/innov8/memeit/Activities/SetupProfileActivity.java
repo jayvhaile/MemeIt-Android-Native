@@ -29,7 +29,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SignUpDetailsActivity extends AppCompatActivity {
+public class SetupProfileActivity extends AppCompatActivity {
     public static String TAG="fuck";
 
     public static final String PARAM_NAME="name";
@@ -49,7 +49,7 @@ public class SignUpDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up_details);
+        setContentView(R.layout.activity_setup_profile);
         ButterKnife.bind(this);
 
         activity = this;
@@ -77,7 +77,7 @@ public class SignUpDetailsActivity extends AppCompatActivity {
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .setAspectRatio(1,1)
-                        .setCropShape(CropImageView.CropShape.OVAL)
+                         .setCropShape(CropImageView.CropShape.OVAL)
                         .start(activity);
             }
         });
@@ -131,11 +131,11 @@ public class SignUpDetailsActivity extends AppCompatActivity {
         MemeItUsers.getInstance().updateMyData(user, new OnCompleteListener<User>() {
             @Override
             public void onSuccess(User body) {
-                startActivity(new Intent(SignUpDetailsActivity.this,MainActivity.class));
+                startActivity(new Intent(SetupProfileActivity.this,MainActivity.class));
             }
             @Override
             public void onFailure(Error error) {
-                Toast.makeText(SignUpDetailsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SetupProfileActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

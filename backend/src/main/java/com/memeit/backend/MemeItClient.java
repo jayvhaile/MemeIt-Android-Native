@@ -13,12 +13,11 @@ import com.memeit.backend.dataclasses.AuthInfo;
 import com.memeit.backend.dataclasses.AuthToken;
 import com.memeit.backend.dataclasses.Badge;
 import com.memeit.backend.dataclasses.Comment;
-import com.memeit.backend.dataclasses.Meme;
+import com.memeit.backend.dataclasses.MemeRequest;
+import com.memeit.backend.dataclasses.MemeResponse;
 import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.PrefUtils;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -242,7 +241,7 @@ public class MemeItClient{
                                                         @Path("id") String uid);
 
         @GET("user/{id}/posts")
-        public Call<List<Meme>> getPostsOfUser(@Path("uid") String userID,@Query("search") @Nullable String search);
+        public Call<List<MemeResponse>> getPostsOfUser(@Path("uid") String userID, @Query("search") String search);
 
         @GET("user/me/notifications")
         public Call<List<Notification>> getMyNotifications(@Query("skip") int skip,
@@ -284,39 +283,39 @@ public class MemeItClient{
         //================================Memes Related=============================================
 
         @GET("meme/home")
-        public Call<List<Meme>> getHomeMemes(@Query("skip") int skip,
-                                             @Query("limit") int limit);
+        public Call<List<MemeResponse>> getHomeMemes(@Query("skip") int skip,
+                                                     @Query("limit") int limit);
 
         @GET("meme/home/guest")
-        public Call<List<Meme>> getHomeMemesForGuest(@Query("skip") int skip,
-                                                     @Query("limit") int limit);
+        public Call<List<MemeResponse>> getHomeMemesForGuest(@Query("skip") int skip,
+                                                             @Query("limit") int limit);
 
         @GET("meme/trending")
-        public Call<List<Meme>> getTrendingMemes(@Query("skip") int skip,
-                                                 @Query("limit") int limit);
+        public Call<List<MemeResponse>> getTrendingMemes(@Query("skip") int skip,
+                                                         @Query("limit") int limit);
 
         @GET("meme/favourite")
-        public Call<List<Meme>> getFavouriteMemes(@Query("skip") int skip,
-                                                  @Query("limit") int limit);
+        public Call<List<MemeResponse>> getFavouriteMemes(@Query("skip") int skip,
+                                                          @Query("limit") int limit);
 
         @GET("meme/favourite")
-        public Call<List<Meme>> getFavouriteMemesFor(@Query("uid") String uid,
-                                                     @Query("skip") int skip,
-                                                     @Query("limit") int limit);
+        public Call<List<MemeResponse>> getFavouriteMemesFor(@Query("uid") String uid,
+                                                             @Query("skip") int skip,
+                                                             @Query("limit") int limit);
 
         @GET("meme/posts")
-        public Call<List<Meme>> getMyMemes(@Query("skip") int skip,
-                                           @Query("limit") int limit);
+        public Call<List<MemeResponse>> getMyMemes(@Query("skip") int skip,
+                                                   @Query("limit") int limit);
 
         @GET("meme/posts")
-        public Call<List<Meme>> getMemesFor(@Query("uid") String uid,
-                                            @Query("skip") int skip,
-                                            @Query("limit") int limit);
+        public Call<List<MemeResponse>> getMemesFor(@Query("uid") String uid,
+                                                    @Query("skip") int skip,
+                                                    @Query("limit") int limit);
 
         @GET("meme/search")
-        public Call<List<Meme>> getFilteredMemes(@Query("query") String query,
-                                                 @Query("skip") int skip,
-                                                 @Query("limit") int limit);
+        public Call<List<MemeResponse>> getFilteredMemes(@Query("query") String query,
+                                                         @Query("skip") int skip,
+                                                         @Query("limit") int limit);
 
         @GET("meme/comments")
         public Call<List<Comment>> getCommentForMeme(@Query("mid") String mid,
@@ -325,10 +324,10 @@ public class MemeItClient{
 
 
         @POST("meme")
-        public Call<Meme> postMeme(@Body Meme meme);
+        public Call<MemeResponse> postMeme(@Body MemeRequest meme);
 
         @PUT("meme")
-        public Call<Meme> updateMeme(@Body String mid, @Body Meme meme);
+        public Call<MemeResponse> updateMeme(@Body String mid, @Body MemeResponse meme);
 
         @DELETE("meme")
         public Call<ResponseBody> deleteMeme(@Body String mid);

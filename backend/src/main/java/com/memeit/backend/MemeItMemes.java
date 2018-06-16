@@ -1,7 +1,8 @@
 package com.memeit.backend;
 
 import com.memeit.backend.dataclasses.Comment;
-import com.memeit.backend.dataclasses.Meme;
+import com.memeit.backend.dataclasses.MemeRequest;
+import com.memeit.backend.dataclasses.MemeResponse;
 import com.memeit.backend.utilis.MyCallBack;
 import com.memeit.backend.utilis.OnCompleteListener;
 
@@ -34,10 +35,10 @@ public class MemeItMemes {
      * @param limit    to limit the number of retrieved memes
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getHomeMemes(int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+    public void getHomeMemes(int skip, int limit, OnCompleteListener<List<MemeResponse>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getHomeMemes(skip, limit)
-                .enqueue(new MyCallBack<List<Meme>>(listener));
+                .enqueue(new MyCallBack<List<MemeResponse>>(listener));
     }
 
     /**
@@ -47,10 +48,10 @@ public class MemeItMemes {
      * @param limit    to limit the number of retrieved memes
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getHomeMemesGuest(int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+    public void getHomeMemesGuest(int skip, int limit, OnCompleteListener<List<MemeResponse>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getHomeMemesForGuest(skip, limit)
-                .enqueue(new MyCallBack<List<Meme>>(listener));
+                .enqueue(new MyCallBack<List<MemeResponse>>(listener));
     }
 
     /**
@@ -60,10 +61,10 @@ public class MemeItMemes {
      * @param limit    to limit the number of retrieved memes
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getTrendingMemes(int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+    public void getTrendingMemes(int skip, int limit, OnCompleteListener<List<MemeResponse>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getTrendingMemes(skip, limit)
-                .enqueue(new MyCallBack<List<Meme>>(listener));
+                .enqueue(new MyCallBack<List<MemeResponse>>(listener));
     }
 
     /**
@@ -73,10 +74,10 @@ public class MemeItMemes {
      * @param limit    to limit the number of retrieved memes
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getFavouriteMemes(int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+    public void getFavouriteMemes(int skip, int limit, OnCompleteListener<List<MemeResponse>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getFavouriteMemes(skip, limit)
-                .enqueue(new MyCallBack<List<Meme>>(listener));
+                .enqueue(new MyCallBack<List<MemeResponse>>(listener));
     }
 
     /**
@@ -86,10 +87,10 @@ public class MemeItMemes {
      * @param limit    to limit the number of retrieved memes
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getFavouriteMemesFor(String uid, int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+    public void getFavouriteMemesFor(String uid, int skip, int limit, OnCompleteListener<List<MemeResponse>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getFavouriteMemesFor(uid, skip, limit)
-                .enqueue(new MyCallBack<List<Meme>>(listener));
+                .enqueue(new MyCallBack<List<MemeResponse>>(listener));
     }
 
     /**
@@ -99,10 +100,10 @@ public class MemeItMemes {
      * @param limit    to limit the number of retrieved memes
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getMyMemes(int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+    public void getMyMemes(int skip, int limit, OnCompleteListener<List<MemeResponse>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getMyMemes(skip, limit)
-                .enqueue(new MyCallBack<List<Meme>>(listener));
+                .enqueue(new MyCallBack<List<MemeResponse>>(listener));
     }
 
     /**
@@ -113,10 +114,10 @@ public class MemeItMemes {
      * @param limit    to limit the number of retrieved memes
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getMemesOf(String uid, int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+    public void getMemesOf(String uid, int skip, int limit, OnCompleteListener<List<MemeResponse>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getMemesFor(uid, skip, limit)
-                .enqueue(new MyCallBack<List<Meme>>(listener));
+                .enqueue(new MyCallBack<List<MemeResponse>>(listener));
     }
 
     /**
@@ -127,10 +128,10 @@ public class MemeItMemes {
      * @param limit    to limit the number of retrieved memes
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getFileterdMemes(String query, int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+    public void getFileterdMemes(String query, int skip, int limit, OnCompleteListener<List<MemeResponse>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getFilteredMemes(query, skip, limit)
-                .enqueue(new MyCallBack<List<Meme>>(listener));
+                .enqueue(new MyCallBack<List<MemeResponse>>(listener));
     }
 
     public void getCommentsForMeme(String mid, int skip, int limit, OnCompleteListener<List<Comment>> listener) {
@@ -146,10 +147,10 @@ public class MemeItMemes {
      * @param meme     the meme to be posted
      * @param listener the Listener to be called when the action is completed
      **/
-    public void postMeme(Meme meme, OnCompleteListener<Meme> listener) {
+    public void postMeme(MemeRequest meme, OnCompleteListener<MemeResponse> listener) {
         MemeItClient.getInstance().getInterface()
                 .postMeme(meme)
-                .enqueue(new MyCallBack<Meme>(listener));
+                .enqueue(new MyCallBack<MemeResponse>(listener));
     }
 
     /**
@@ -159,10 +160,10 @@ public class MemeItMemes {
      * @param meme     the edited meme
      * @param listener the Listener to be called when the action is completed
      **/
-    public void editMeme(String mid, Meme meme, OnCompleteListener<Meme> listener) {
+    public void editMeme(String mid, MemeResponse meme, OnCompleteListener<MemeResponse> listener) {
         MemeItClient.getInstance().getInterface()
                 .updateMeme(mid, meme)
-                .enqueue(new MyCallBack<Meme>(listener));
+                .enqueue(new MyCallBack<MemeResponse>(listener));
     }
 
     /**

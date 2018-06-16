@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 27
@@ -9,6 +8,7 @@ android {
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 27
+        buildToolsVersion='27.0.3'
         versionCode 1
         versionName "1.0"
     }
@@ -22,12 +22,11 @@ android {
 
 }
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.google.android.gms:play-services-auth:11.6.2'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.cloudinary:cloudinary-android:1.24.0'
-    testImplementation 'junit:junit:4.12'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.google.android.gms:play-services-auth:11.6.2'
+    compile 'com.cloudinary:cloudinary-android:1.24.0'
+    testCompile 'junit:junit:4.12'
 }
 repositories {
     mavenCentral()

@@ -12,7 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
-import com.innov8.memegenerator.MemeGeneratorActivity;
+import com.innov8.memegenerator.SimpleMemeGenerator;
 import com.innov8.memeit.Fragments.FavoritesFragment;
 import com.innov8.memeit.Fragments.HomeFragment;
 import com.innov8.memeit.Fragments.MeFragment;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void goToSignUpDetails(){
-        startActivity(new Intent(this,SignUpDetailsActivity.class));
+        startActivity(new Intent(this,SetupProfileActivity.class));
         finish();
     }
 
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
             public void onCentreButtonClick() {
-                startActivity(new Intent(MainActivity.this,MemeGeneratorActivity.class));
+                startActivity(new Intent(MainActivity.this,SimpleMemeGenerator.class));
             }
 
             @Override
@@ -119,19 +119,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
-
-
-
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
-
         }
-
         @Override
         public Fragment getItem(int pos) {
             return fragments.get(pos>3 ? 3 : pos);
         }
-
         @Override
         public int getCount() {
             return fragments.size();

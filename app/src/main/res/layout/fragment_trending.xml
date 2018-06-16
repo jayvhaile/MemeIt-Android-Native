@@ -1,14 +1,16 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context="com.innov8.memeit.Fragments.TrendingFragment">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar2"
             android:layout_width="match_parent"
@@ -22,30 +24,21 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_centerInParent="true"
                 android:padding="10dp"
-                android:visibility="gone"
-                android:src="@mipmap/app_text" />
+                android:src="@mipmap/app_text"
+                android:visibility="gone" />
+
             <com.innov8.memeit.CustomClasses.FontTextView
-                android:textSize="26sp"
-                android:text="Trending"
-                android:paddingLeft="40dp"
-                android:textColor="@color/red"
-                android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:paddingLeft="40dp"
+                android:text="Trending"
+                android:textColor="@color/red"
+                android:textSize="26sp" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-                <!--<ImageView-->
-                <!--android:id="@+id/toolbar_drawer_toggle"-->
-                <!--android:layout_width="36dp"-->
-                <!--android:layout_height="36dp"-->
-                <!--android:visibility="gone"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--app:srcCompat="@drawable/ic_menu_black_24dp"-->
-                <!--android:tint="#303030" />-->
-
-
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -59,8 +52,8 @@
                         android:layout_height="36dp"
                         android:layout_marginRight="14dp"
                         android:padding="2dp"
-                        app:srcCompat="@drawable/ic_search_black_24dp"
-                        android:tint="#e5303030" />
+                        android:tint="#e5303030"
+                        app:srcCompat="@drawable/ic_search_black_24dp" />
 
                     <!--todo: Add a notification counter here later!-->
                 </RelativeLayout>
@@ -69,4 +62,12 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-</FrameLayout>
+    <fragment
+        android:id="@+id/meme_list_frag"
+        android:tag="memelist"
+        android:name="com.innov8.memeit.Fragments.MemeListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_meme_list" />
+
+</LinearLayout>
