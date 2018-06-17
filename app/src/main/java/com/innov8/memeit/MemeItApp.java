@@ -1,8 +1,10 @@
 package com.innov8.memeit;
 import android.app.Application;
+import android.util.Log;
 
 import com.cloudinary.android.MediaManager;
 import com.memeit.backend.MemeItClient;
+import com.memeit.backend.Vollley.APIClient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,10 +15,17 @@ public class MemeItApp extends Application{
     public void onCreate() {
         super.onCreate();
         MemeItClient.init(getApplicationContext(),SERVER_URL);
+        APIClient.init(getApplicationContext());
         Map config = new HashMap();
         config.put("cloud_name", "innov8");
         config.put("api_key", "591249199742556");
         config.put("api_secret", "yT2mxv0vQrEWjzsPrmyD6xu5a-Y");
         MediaManager.init(this, config);
+    }
+
+    @Override
+    public void onTerminate() {
+        Log.d("fuckers", "onTerminate:");
+        super.onTerminate();
     }
 }

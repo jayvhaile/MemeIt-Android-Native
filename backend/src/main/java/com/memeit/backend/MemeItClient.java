@@ -9,19 +9,10 @@ import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.memeit.backend.dataclasses.AuthInfo;
-import com.memeit.backend.dataclasses.AuthToken;
-import com.memeit.backend.dataclasses.Badge;
-import com.memeit.backend.dataclasses.Comment;
-import com.memeit.backend.dataclasses.MemeRequest;
-import com.memeit.backend.dataclasses.MemeResponse;
-import com.memeit.backend.dataclasses.Notification;
-import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.PrefUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -30,17 +21,8 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
  * Created by Jv on 4/29/2018.
@@ -53,24 +35,35 @@ public class MemeItClient{
     private static final String TAG = "memeitclient";
     public static final String HEADER_CACHE_CONTROL = "Cache-Control";
     public static final String HEADER_PRAGMA = "Pragma";
-
-
-    private static final long CACHE_SIZE=10;//todo jv get cache size from settings
+    private static final long CACHE_SIZE=10;
     private static final long MAX_CACHE_DAYS=30;
-
-
+    private Cache cache;
     private Context mContext;
+    BroadcastReceiver connectionReceiver;
+    ConnectivityManager cm ;
+    boolean isConnected;
+    public static MemeItClient getInstance() {
+        if (memeItClient == null)
+            throw new RuntimeException("Should Initialize Client First!");
+        return memeItClient;
+    }
+    public static void init(Context context, String baseURL) {
+        if (memeItClient != null)
+            throw new RuntimeException("Client Already Initialized!");
+        memeItClient = new MemeItClient(context, baseURL);
+    }
+
+
     private MemeItClient(final Context context, String BASE_URL) {
         mContext=context;
         initConnectionListener();
         MemeItAuth.init(context);
-
-
+        initCache();
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(provideOfflineCacheInterceptor())
                 .addNetworkInterceptor(provideCacheInterceptor())
                 .addInterceptor(provideAuthInterceptor())
-                .cache(provideCache());
+                .cache(cache);
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -87,9 +80,6 @@ public class MemeItClient{
         PrefUtils.init(context);
 
     }
-    BroadcastReceiver connectionReceiver;
-    ConnectivityManager cm ;
-    boolean isConnected;
     private void initConnectionListener(){
         cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         connectionReceiver=new BroadcastReceiver() {
@@ -104,15 +94,13 @@ public class MemeItClient{
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
     }
-    private Cache provideCache() {
-        Cache cache = null;
+    private void initCache() {
         try {
-            cache = new Cache(new File(mContext.getCacheDir(), "http‐cache"),
+            cache = new Cache(new File(mContext.getDataDir(), "memeit-http‐cache"),
                     10 * 1024 * 1024); // 10 MB
         } catch (Exception e) {
             Log.e(TAG, "Could not create Cache!");
-        }
-        return cache;
+        };
     }
     private Interceptor provideCacheInterceptor() {
         return new Interceptor() {
@@ -121,10 +109,12 @@ public class MemeItClient{
                 Response response = chain.proceed(chain.request());
                 CacheControl cacheControl;
                 if (isConnected) {
+                    //todo check etag and update accordingly
                     cacheControl = new CacheControl.Builder()
                             .maxAge(0, TimeUnit.SECONDS)
                             .build();
                 } else {
+                    //todo provide from cache
                     cacheControl = new CacheControl.Builder()
                             .maxStale(30, TimeUnit.DAYS)
                             .build();
@@ -171,189 +161,8 @@ public class MemeItClient{
     }
 
 
-
-
-
-    public static MemeItClient getInstance() {
-        if (memeItClient == null)
-            throw new RuntimeException("Should Initialize Client First!");
-        return memeItClient;
-    }
-
-    public static void init(Context context, String baseURL) {
-        if (memeItClient != null)
-            throw new RuntimeException("Client Already Initialized!");
-        memeItClient = new MemeItClient(context, baseURL);
-    }
-
-    MemeInterface getInterface() {
+    public MemeInterface getInterface() {
         return memeInterface;
-    }
-
-
-    static interface MemeInterface {
-        //=============================Auth Related=================================================
-
-        //------POST------
-        @POST("signin")
-        public Call<AuthToken> loginWithEmail(@Body AuthInfo user);
-
-        @POST("signin/google")
-        public Call<AuthToken> loginWithGoogle(@Body AuthInfo user);
-
-        @POST("signup")
-        public Call<AuthToken> signUpWithEmail(@Body AuthInfo user);
-
-        @POST("signup/google")
-        public Call<AuthToken> signUpWithGoogle(@Body AuthInfo user);
-
-        @DELETE("user/me")
-        public Call<AuthToken> deleteMe(@Body AuthInfo user);
-
-
-        //=========================User Related=====================================================
-        //------GET------
-        @GET("user/me")
-        public Call<User> getMyUser();
-
-        @GET("user/{id}/")
-        public Call<User> getUserById(@Path("id") String uid);
-
-
-
-        @GET("user/me/finished")
-        public Call<Boolean> isMyUserDataSaved();
-
-        @GET("user/me/followers")
-        public Call<List<User>> getMyFollowersList(@Query("skip") int skip, @Query("limit") int limit);
-
-        @GET("user/me/followings")
-        public Call<List<User>> getMyFollowingList(@Query("skip") int skip, @Query("limit") int limit);
-
-        @GET("user/{id}/followers")
-        public Call<List<User>> getFollowersListForUser(@Query("skip") int skip,
-                                                        @Query("limit") int limit,
-                                                        @Path("id") String uid);
-
-        @GET("user/{id}/following")
-        public Call<List<User>> getFollowingListForUser(@Query("skip") int skip,
-                                                        @Query("limit") int limit,
-                                                        @Path("id") String uid);
-
-        @GET("user/{id}/posts")
-        public Call<List<MemeResponse>> getPostsOfUser(@Path("uid") String userID, @Query("search") String search);
-
-        @GET("user/me/notifications")
-        public Call<List<Notification>> getMyNotifications(@Query("skip") int skip,
-                                                           @Query("limit") int limit);
-
-        @GET("user/me/notifications/count")
-        public Call<Integer> getNotifCount();
-
-        @GET("user/{id}/badges")
-        public Call<List<Badge>> getBadgesFor(@Path("uid") String uid);
-
-        @GET("user/me/badges")
-        public Call<List<Badge>> getMyBadges();
-
-        //------POST-----
-
-        @POST("user/{id}/follow")
-        public Call<ResponseBody> followUser(@Path("id") String uid);
-
-        @POST("user/{id}/unfollow")
-        public Call<ResponseBody> unfollowUser(@Path("id") String uid);
-
-
-        //------PUT------
-        @PUT("user/me")
-        public Call<User> uploadUserData(@Body User user);
-
-        @PUT("user/me/notifications/markseenall")
-        public Call<ResponseBody> markNotificationSeen();
-
-        @PUT("user/me/notifications/markseen")
-        public Call<ResponseBody> markSingleNotificationSeen(@Body String nid);
-
-        //-----Delete-----
-
-        @DELETE("user/me")
-        public Call<ResponseBody> deleteMe();
-
-        //================================Memes Related=============================================
-
-        @GET("meme/home")
-        public Call<List<MemeResponse>> getHomeMemes(@Query("skip") int skip,
-                                                     @Query("limit") int limit);
-
-        @GET("meme/home/guest")
-        public Call<List<MemeResponse>> getHomeMemesForGuest(@Query("skip") int skip,
-                                                             @Query("limit") int limit);
-
-        @GET("meme/trending")
-        public Call<List<MemeResponse>> getTrendingMemes(@Query("skip") int skip,
-                                                         @Query("limit") int limit);
-
-        @GET("meme/favourite")
-        public Call<List<MemeResponse>> getFavouriteMemes(@Query("skip") int skip,
-                                                          @Query("limit") int limit);
-
-        @GET("meme/favourite")
-        public Call<List<MemeResponse>> getFavouriteMemesFor(@Query("uid") String uid,
-                                                             @Query("skip") int skip,
-                                                             @Query("limit") int limit);
-
-        @GET("meme/posts")
-        public Call<List<MemeResponse>> getMyMemes(@Query("skip") int skip,
-                                                   @Query("limit") int limit);
-
-        @GET("meme/posts")
-        public Call<List<MemeResponse>> getMemesFor(@Query("uid") String uid,
-                                                    @Query("skip") int skip,
-                                                    @Query("limit") int limit);
-
-        @GET("meme/search")
-        public Call<List<MemeResponse>> getFilteredMemes(@Query("query") String query,
-                                                         @Query("skip") int skip,
-                                                         @Query("limit") int limit);
-
-        @GET("meme/comments")
-        public Call<List<Comment>> getCommentForMeme(@Query("mid") String mid,
-                                                     @Query("skip") int skip,
-                                                     @Query("limit") int limit);
-
-
-        @POST("meme")
-        public Call<MemeResponse> postMeme(@Body MemeRequest meme);
-
-        @PUT("meme")
-        public Call<MemeResponse> updateMeme(@Body String mid, @Body MemeResponse meme);
-
-        @DELETE("meme")
-        public Call<ResponseBody> deleteMeme(@Body String mid);
-
-
-        @POST("meme/favourite")
-        public Call<ResponseBody> addMemeToFavourite(@Body String mid);
-
-        @DELETE("meme/favourite")
-        public Call<ResponseBody> removeMemeFromFavourite(@Body String mid);
-
-
-        @POST("meme/comment")
-        public Call<Comment> postComment(@Body Comment comment, @Body String mid);
-
-        @DELETE("meme/comment")
-        public Call<ResponseBody> deleteComment(@Body String cid, @Body String mid);
-
-        @PUT("meme/comment")
-        public Call<ResponseBody> updateComment(@Body Comment comment, @Body String mid, @Body String cid);
-
-        @POST("meme/like")
-        public Call<ResponseBody> likeMeme(@Body String mid);
-
-        @DELETE("meme/like")
-        public Call<ResponseBody> unlikeMeme(@Body String mid);
     }
 
 

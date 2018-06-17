@@ -1,6 +1,4 @@
 package com.memeit.backend;
-
-import com.android.volley.toolbox.Volley;
 import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.MemeRequest;
 import com.memeit.backend.dataclasses.MemeResponse;

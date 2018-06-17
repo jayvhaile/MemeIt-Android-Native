@@ -63,11 +63,11 @@
     </android.support.design.widget.AppBarLayout>
 
     <fragment
-        android:id="@+id/meme_list_frag"
-        android:tag="memelist"
-        android:name="com.innov8.memeit.Fragments.MemeListFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_meme_list" />
+    android:id="@+id/meme_list_frag"
+    android:tag="memelist"
+    android:name="com.innov8.memeit.Fragments.MemeListFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout="@layout/fragment_meme_list" />
 
 </LinearLayout>

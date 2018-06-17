@@ -10,12 +10,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="56dp"
             android:background="#f6f6f6">
 
             <ImageView
@@ -24,11 +24,13 @@
                 android:layout_height="45dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="0dp"
                 android:padding="4dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/circle" />
+                app:srcCompat="@drawable/circle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="0dp" />
 
             <TextView
                 android:id="@+id/meme_poster_name"
@@ -63,14 +65,13 @@
         <ImageView
             android:id="@+id/meme_image"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="256dp"
             app:srcCompat="@drawable/got" />
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:background="#f6f6f6">
+            android:layout_height="56dp"
+            android:background="#f4f4f4">
 
             <TextView
                 android:id="@+id/meme_reactions"

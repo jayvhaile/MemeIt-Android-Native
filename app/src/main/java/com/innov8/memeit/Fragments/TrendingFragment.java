@@ -25,16 +25,6 @@ public class TrendingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_trending, container, false);
-    }
-
-    @Override
-    public void onDestroyView() {
-        FragmentManager fm=getFragmentManager();
-        fm.beginTransaction()
-                .remove(fm.findFragmentByTag(""))
-                .commit();
-        super.onDestroyView();
     }
 }
