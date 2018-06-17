@@ -17,7 +17,4 @@ public class Utils {
             listener.onFailure(error);
         }
     }
-    public static void uploadImage(Uri uri, UploadCallback callback){
-
-    }
 }

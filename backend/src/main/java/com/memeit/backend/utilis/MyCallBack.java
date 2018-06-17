@@ -28,6 +28,7 @@ public  class MyCallBack<T> implements Callback<T> {
 
     @Override
     public void onFailure(Call<T> call, Throwable throwable) {
+        if (call.isCanceled())return;
         Utils.checkAndFireError(listener, NETWORK_ERROR.setMessage(throwable.getMessage()));
     }
 }

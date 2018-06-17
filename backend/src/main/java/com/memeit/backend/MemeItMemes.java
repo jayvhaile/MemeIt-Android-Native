@@ -1,5 +1,6 @@
 package com.memeit.backend;
 
+import com.android.volley.toolbox.Volley;
 import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.MemeRequest;
 import com.memeit.backend.dataclasses.MemeResponse;
@@ -9,6 +10,7 @@ import com.memeit.backend.utilis.OnCompleteListener;
 import java.util.List;
 
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 /**
  * This Class Provide the interface to get memes, post memes to the server and many other actions
@@ -62,9 +64,10 @@ public class MemeItMemes {
      * @param listener the Listener to be called when the action is completed
      **/
     public void getTrendingMemes(int skip, int limit, OnCompleteListener<List<MemeResponse>> listener) {
-        MemeItClient.getInstance().getInterface()
+       MemeItClient.getInstance().getInterface()
                 .getTrendingMemes(skip, limit)
                 .enqueue(new MyCallBack<List<MemeResponse>>(listener));
+
     }
 
     /**

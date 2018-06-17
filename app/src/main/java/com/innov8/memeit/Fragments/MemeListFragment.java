@@ -28,6 +28,8 @@ import java.util.List;
 public class MemeListFragment extends Fragment {
     private static final String TAG="MemeListFragment";
     private static final int LIMIT=20;
+    private  MemeItMemes memeAPI=MemeItMemes.getInstance();
+
     private RecyclerView memeList;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -60,7 +62,7 @@ public class MemeListFragment extends Fragment {
             @Override
             public void onRefresh() {
                 resetSkip();
-                MemeItMemes.getInstance().getTrendingMemes(skip, LIMIT, new OnCompleteListener<List<MemeResponse>>() {
+               memeAPI.getTrendingMemes(skip, LIMIT, new OnCompleteListener<List<MemeResponse>>() {
                     @Override
                     public void onSuccess(List<MemeResponse> memeResponses) {
                         memeAdapter.setAll(memeResponses);
@@ -72,6 +74,7 @@ public class MemeListFragment extends Fragment {
                     public void onFailure(Error error) {
                         Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onFailure: "+error.getMessage());
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
             }

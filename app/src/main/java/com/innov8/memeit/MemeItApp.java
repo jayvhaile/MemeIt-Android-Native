@@ -12,7 +12,7 @@ public class MemeItApp extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        MemeItClient.init(this,SERVER_URL);
+        MemeItClient.init(getApplicationContext(),SERVER_URL);
         Map config = new HashMap();
         config.put("cloud_name", "innov8");
         config.put("api_key", "591249199742556");
