@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 24
+        minSdkVersion 16
         targetSdkVersion 27
         buildToolsVersion='27.0.3'
         versionCode 1

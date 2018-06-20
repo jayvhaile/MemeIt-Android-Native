@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.cloudinary.android.MediaManager;
 import com.memeit.backend.MemeItClient;
-import com.memeit.backend.Vollley.APIClient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +14,6 @@ public class MemeItApp extends Application{
     public void onCreate() {
         super.onCreate();
         MemeItClient.init(getApplicationContext(),SERVER_URL);
-        APIClient.init(getApplicationContext());
         Map config = new HashMap();
         config.put("cloud_name", "innov8");
         config.put("api_key", "591249199742556");

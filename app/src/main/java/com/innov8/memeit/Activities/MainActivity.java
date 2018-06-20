@@ -84,20 +84,17 @@ public class MainActivity extends AppCompatActivity {
             public void onCentreButtonClick() {
                 startActivity(new Intent(MainActivity.this,SimpleMemeGenerator.class));
             }
-
             @Override
             public void onItemClick(int itemIndex, String itemName) {
                 viewPager.setCurrentItem(itemIndex);
                 if(itemIndex == 3) findViewById(R.id.toolbar2).setVisibility(View.GONE);
                 else findViewById(R.id.toolbar2).setVisibility(View.VISIBLE);
             }
-
             @Override
             public void onItemReselected(int itemIndex, String itemName) {
 
             }
         });
-
         fragments.add(new HomeFragment());
         fragments.add(new TrendingFragment());
         fragments.add(new FavoritesFragment());

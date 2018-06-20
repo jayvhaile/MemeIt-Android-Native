@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.innov8.memeit"
-        minSdkVersion 24
+        minSdkVersion 16
         targetSdkVersion 27
         buildToolsVersion='27.0.3'
         versionCode 1
@@ -17,9 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-
-
 }
 
 dependencies {
@@ -46,12 +43,8 @@ dependencies {
     //the meme generator module
     compile project(path: ':backend')
     //the backend api module
-
     compile 'com.github.ybq:Android-SpinKit:1.1.0'
-//    compile 'nl.psdcompany:duo-navigation-drawer:2.0.8'
     compile 'com.yarolegovich:sliding-root-nav:1.1.0'
-
-
 }
 repositories {
     mavenCentral()

@@ -60,9 +60,9 @@ public class MemeListFragment extends Fragment {
                memeAPI.getTrendingMemes(skip, LIMIT, new OnCompleteListener<List<MemeResponse>>() {
                     @Override
                     public void onSuccess(List<MemeResponse> memeResponses) {
+                        swipeRefreshLayout.setRefreshing(false);
                         memeAdapter.setAll(memeResponses);
                         incSkip();
-                        swipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override

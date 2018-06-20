@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -96,8 +97,13 @@ public class MemeItClient{
     }
     private void initCache() {
         try {
-            cache = new Cache(new File(mContext.getDataDir(), "memeit-http‐cache"),
-                    10 * 1024 * 1024); // 10 MB
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                cache = new Cache(new File(mContext.getDataDir(), "memeit-http‐cache"),
+                        10 * 1024 * 1024); // 10 MB
+            }else{
+                cache = new Cache(new File(mContext.getCacheDir(), "memeit-http‐cache"),
+                        10 * 1024 * 1024); // 10 MB
+            }
         } catch (Exception e) {
             Log.e(TAG, "Could not create Cache!");
         };
