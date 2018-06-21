@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
+
 }
 
 dependencies {
@@ -43,8 +46,14 @@ dependencies {
     //the meme generator module
     compile project(path: ':backend')
     //the backend api module
+
     compile 'com.github.ybq:Android-SpinKit:1.1.0'
+//    compile 'nl.psdcompany:duo-navigation-drawer:2.0.8'
     compile 'com.yarolegovich:sliding-root-nav:1.1.0'
+    //Custom Tablayout
+    compile 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
+
+
 }
 repositories {
     mavenCentral()
