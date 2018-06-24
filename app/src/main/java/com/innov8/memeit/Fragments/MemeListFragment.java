@@ -69,6 +69,7 @@ public class MemeListFragment extends Fragment {
                     public void onFailure(Error error) {
                         Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "onFailure: "+error.getMessage());
+
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 });
@@ -94,11 +95,9 @@ public class MemeListFragment extends Fragment {
                 memeAdapter.addAll(memeResponses);
                 incSkip();
             }
-
             @Override
             public void onFailure(Error error) {
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onFailure: "+error.getMessage());
             }
         });
     }

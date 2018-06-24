@@ -17,30 +17,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@mipmap/many_pics_optimized" />
-
+            />
+        <!--android:src="@mipmap/many_pics_optimized"-->
         <ImageView
             android:id="@+id/background_login_2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@mipmap/many_pics_optimized" />
-
+             />
+        <!--android:src="@mipmap/many_pics_optimized"-->
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="600dp"
             android:layout_alignParentBottom="true"
             android:scaleType="centerCrop"
-            android:src="@mipmap/loginbg" />
-
+            />
+        <!--android:src="@mipmap/loginbg"-->
         <ImageView
             android:layout_width="260dp"
             android:layout_height="110dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:background="@mipmap/memeitworldofmemes"
-            android:layout_marginTop="16dp"/>
 
+            android:layout_marginTop="16dp"/>
+        <!--android:background="@mipmap/memeitworldofmemes"-->
         <com.innov8.memeit.CustomClasses.NonSwipeableViewPager
             android:id="@+id/login_viewpager"
             android:layout_width="match_parent"

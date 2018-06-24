@@ -15,11 +15,10 @@
             android:id="@+id/blurred_pp_profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
-            android:src="@mipmap/blurred" />
-
+            android:layout_alignParentLeft="true" />
+        <!--android:src="@mipmap/blurred"-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,22 +38,22 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/ic_favorite_black_24dp"
+                    app:srcCompat="@drawable/ic_favorite_black_24dp"
                     android:tint="#fff" />
 
                 <ImageView
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginRight="5dp"
-                    android:src="@drawable/ic_trending_up_black_24dp"
+                    app:srcCompat="@drawable/ic_trending_up_black_24dp"
                     android:tint="#fff" />
 
                 <ImageView
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:src="@drawable/ic_stars_black_24dp"
-                    android:tint="#fff" />
 
+                    android:tint="#fff" />
+                <!--android:src="@drawable/ic_stars_black_24dp"-->
             </LinearLayout>
 
             <RelativeLayout
@@ -166,7 +165,7 @@
                 android:textSize="20sp" />
         </LinearLayout>
 
-        <com.kekstudio.dachshundtablayout.DachshundTabLayout
+        <!--<com.kekstudio.dachshundtablayout.DachshundTabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -175,6 +174,6 @@
             app:tabBackground="@android:color/transparent"
             app:tabIndicatorColor="#fff"
             app:tabSelectedTextColor="#fff"
-            app:tabTextColor="#8fffffff" />
+            app:tabTextColor="#8fffffff" />-->
     </RelativeLayout>
 </LinearLayout>

@@ -51,7 +51,7 @@ dependencies {
 //    compile 'nl.psdcompany:duo-navigation-drawer:2.0.8'
     compile 'com.yarolegovich:sliding-root-nav:1.1.0'
     //Custom Tablayout
-    compile 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
+//    compile 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
 
 
 }

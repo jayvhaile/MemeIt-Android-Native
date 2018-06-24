@@ -23,7 +23,6 @@ public class MemeItApp extends Application{
 
     @Override
     public void onTerminate() {
-        Log.d("fuckers", "onTerminate:");
         super.onTerminate();
     }
 }
