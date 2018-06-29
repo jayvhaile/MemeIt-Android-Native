@@ -93,7 +93,7 @@ public class MeFragment extends Fragment {
 
                 nameV.setText(user.getName());
                 if(!TextUtils.isEmpty(user.getImageUrl())){
-                    Glide.with(getContext())
+                    Glide.with(MeFragment.this)
                             .load(user.getImageUrl())
                             .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
                             .apply(RequestOptions.circleCropTransform())

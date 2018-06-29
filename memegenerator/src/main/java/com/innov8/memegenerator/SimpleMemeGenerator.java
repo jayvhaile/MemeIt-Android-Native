@@ -17,14 +17,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
-import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.dataclasses.MemeRequest;
 import com.memeit.backend.dataclasses.MemeResponse;
-import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.Arrays;
 import java.util.List;

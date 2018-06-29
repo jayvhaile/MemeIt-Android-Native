@@ -2,6 +2,7 @@ package com.memeit.backend;
 import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.MemeRequest;
 import com.memeit.backend.dataclasses.MemeResponse;
+import com.memeit.backend.dataclasses.Reaction;
 import com.memeit.backend.utilis.MyCallBack;
 import com.memeit.backend.utilis.OnCompleteListener;
 
@@ -204,26 +205,29 @@ public class MemeItMemes {
     }
 
     /**
-     * this is to like a meme
+     * this is to react to a meme.
+     * A user can only have one reaction for a meme,
+     * reacting again to the same meme results to updating
+     * the previous meme
      *
-     * @param mid      the meme id to be liked
+     * @param reaction  the reaction object
      * @param listener the Listener to be called when the action is completed
      **/
-    public void likeMeme(String mid, OnCompleteListener<ResponseBody> listener) {
+    public void reactToMeme(Reaction reaction, OnCompleteListener<ResponseBody> listener) {
         MemeItClient.getInstance().getInterface()
-                .likeMeme(mid)
+                .reactToMeme(reaction)
                 .enqueue(new MyCallBack<ResponseBody>(listener));
     }
 
     /**
-     * this is to unlike a meme
+     * this is delete users reaction to a meme
      *
-     * @param mid      the meme id to be unliked
+     * @param mid      the meme id to unreact to
      * @param listener the Listener to be called when the action is completed
      **/
-    public void unLikeMeme(String mid, OnCompleteListener<ResponseBody> listener) {
+    public void unreactToMeme(String mid, OnCompleteListener<ResponseBody> listener) {
         MemeItClient.getInstance().getInterface()
-                .unlikeMeme(mid)
+                .unreactToMeme(mid)
                 .enqueue(new MyCallBack<ResponseBody>(listener));
     }
 

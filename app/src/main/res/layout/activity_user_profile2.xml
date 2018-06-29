@@ -13,12 +13,27 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="256dp"
-            android:background="@drawable/back">
+            android:background="@drawable/gradient_profile"
+            app:expandedTitleGravity="bottom|center_horizontal"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"></android.support.v7.widget.Toolbar>
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_profile" />
         </android.support.design.widget.CollapsingToolbarLayout>
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
