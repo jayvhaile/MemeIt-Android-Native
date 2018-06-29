@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(!MemeItAuth.getInstance().isSignedIn()){
-            startActivity(new Intent(this,AuthActivity.class));
+            startActivity(new Intent(this,SignInAndUpActivity.class));
             finish();
             return;
         }
@@ -58,13 +58,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Error error) {
                 Toast.makeText(MainActivity.this, "error: "+error.getMessage() , Toast.LENGTH_SHORT).show();
+                goToSignUpDetails();
             }
         });
     }
     private void goToSignUpDetails(){
-        Intent intent=new Intent(this,AuthActivity.class);
-        intent.putExtra(AuthActivity.STARTING_FRAGMENT_PARAM,AuthActivity.FRAGMENT_SETUP);
-        startActivity(intent);
+        startActivity(new Intent(this,SetupProfileActivity.class));
         finish();
     }
 
@@ -85,17 +84,20 @@ public class MainActivity extends AppCompatActivity {
             public void onCentreButtonClick() {
                 startActivity(new Intent(MainActivity.this,SimpleMemeGenerator.class));
             }
+
             @Override
             public void onItemClick(int itemIndex, String itemName) {
                 viewPager.setCurrentItem(itemIndex);
                 if(itemIndex == 3) findViewById(R.id.toolbar2).setVisibility(View.GONE);
                 else findViewById(R.id.toolbar2).setVisibility(View.VISIBLE);
             }
+
             @Override
             public void onItemReselected(int itemIndex, String itemName) {
 
             }
         });
+
         fragments.add(new HomeFragment());
         fragments.add(new TrendingFragment());
         fragments.add(new FavoritesFragment());
