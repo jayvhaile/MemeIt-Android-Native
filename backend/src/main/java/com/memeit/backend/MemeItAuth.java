@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -65,8 +66,10 @@ public class MemeItAuth {
 
     public boolean isSignedIn() {
         boolean tokenExists = preferences.getString(PREFERENCE_TOKEN, null) != null;
+        Log.d(TAG, "isSignedIn: "+tokenExists);
         if (!tokenExists) return false;
         SignInMethod method = getSignedInMethod();
+        Log.d(TAG, "isSignedIn: "+method.toString());
         if (method == null) return false;
         if (method == SignInMethod.GOOGLE)
             return GoogleSignIn.getLastSignedInAccount(mContext) != null;

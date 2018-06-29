@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MemeItApp extends Application{
-    private static final String SERVER_URL="http://127.0.0.1:5000/api/";
+    private static final String LOCAL_SERVER_URL="http://127.0.0.1:5000/api/";
+    private static final String SERVER_URL="https://safe-beyond-33046.herokuapp.com/api/";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -20,7 +21,6 @@ public class MemeItApp extends Application{
         config.put("api_secret", "yT2mxv0vQrEWjzsPrmyD6xu5a-Y");
         MediaManager.init(this, config);
     }
-
     @Override
     public void onTerminate() {
         super.onTerminate();

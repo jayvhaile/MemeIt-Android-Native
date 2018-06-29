@@ -71,16 +71,7 @@ public class SetupProfileActivity extends AppCompatActivity {
 
         }
 
-        profileV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CropImage.activity()
-                        .setGuidelines(CropImageView.Guidelines.ON)
-                        .setAspectRatio(1,1)
-                         .setCropShape(CropImageView.CropShape.OVAL)
-                        .start(activity);
-            }
-        });
+
 
 
         finish.setOnClickListener(new View.OnClickListener() {
@@ -141,21 +132,6 @@ public class SetupProfileActivity extends AppCompatActivity {
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                image_url=result.getUri();
-                isFromGoogle=false;
-                Glide.with(this)
-                        .load(result.getUri())
-                        .apply(RequestOptions.circleCropTransform())
-                        .apply(RequestOptions.placeholderOf(R.drawable.ic_profile))
-                        .thumbnail(0.7f)
-                        .into(profileV);
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
-                Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        }
+
     }
 }

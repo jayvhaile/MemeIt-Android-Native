@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <com.innov8.memeit.CustomClasses.FontTextView
-                android:id="@+id/username_setup"
+                android:id="@+id/username"
                 android:text=" joe_s21"
                 android:layout_marginTop="-5dp"
                 android:textSize="16sp"

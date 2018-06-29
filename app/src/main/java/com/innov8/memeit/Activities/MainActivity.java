@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(!MemeItAuth.getInstance().isSignedIn()){
-            startActivity(new Intent(this,SignInAndUpActivity.class));
+            startActivity(new Intent(this,AuthActivity.class));
             finish();
             return;
         }
@@ -58,12 +58,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Error error) {
                 Toast.makeText(MainActivity.this, "error: "+error.getMessage() , Toast.LENGTH_SHORT).show();
-                goToSignUpDetails();
             }
         });
     }
     private void goToSignUpDetails(){
-        startActivity(new Intent(this,SetupProfileActivity.class));
+        Intent intent=new Intent(this,AuthActivity.class);
+        intent.putExtra(AuthActivity.STARTING_FRAGMENT_PARAM,AuthActivity.FRAGMENT_SETUP);
+        startActivity(intent);
         finish();
     }
 
