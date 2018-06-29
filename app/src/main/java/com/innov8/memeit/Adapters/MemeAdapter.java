@@ -1,6 +1,7 @@
 package com.innov8.memeit.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.innov8.memeit.Activities.CommentsActivity;
 import com.innov8.memeit.CustomClasses.MemeItGlideModule;
 import com.innov8.memeit.R;
 import com.memeit.backend.dataclasses.MemeResponse;
@@ -91,15 +93,10 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
             posterNameV = itemView.findViewById(R.id.meme_poster_name);
             reactionCountV = itemView.findViewById(R.id.meme_reactions);
             commentCountV = itemView.findViewById(R.id.meme_comment_count);
-            commentBtnV.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //todo start comment list activity
-                }
-            });
+
         }
 
-        public void bindMeme(MemeResponse meme) {
+        public void bindMeme(final MemeResponse meme) {
             memeId=meme.getMemeId();
             posterNameV.setText(meme.getPoster().getName());
             reactionCountV.setText(String.format("%d people reacted",meme.getReactionCount()));
@@ -112,6 +109,14 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
                     .load(meme.getPoster().getProfileUrl())
                     .apply(RequestOptions.circleCropTransform())
                     .into(posterPicV);
+            commentBtnV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, CommentsActivity.class);
+                    intent.putExtra("id",meme.getMemeId());
+                    mContext.startActivity(intent);
+                }
+            });
         }
     }
 }

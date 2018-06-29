@@ -6,7 +6,7 @@ android {
         applicationId "com.innov8.memeit"
         minSdkVersion 16
         targetSdkVersion 27
-        buildToolsVersion='27.0.3'
+        buildToolsVersion = '27.0.3'
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
@@ -17,7 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 
 
 }
@@ -52,7 +51,7 @@ dependencies {
 //    compile 'nl.psdcompany:duo-navigation-drawer:2.0.8'
     compile 'com.yarolegovich:sliding-root-nav:1.1.0'
     //Custom Tablayout
-   compile 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
+    compile 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
 
 
 }

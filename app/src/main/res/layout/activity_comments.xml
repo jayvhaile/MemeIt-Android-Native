@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context="com.innov8.memeit.Activities.CommentsActivity">
+    <ListView
+        android:id="@+id/comments_list"
+        android:paddingTop="48dp"
+        android:layout_width="match_parent"
+        android:paddingBottom="66dp"
+        android:layout_height="match_parent"/>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        app:cardCornerRadius="10dp"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+        <ImageView
+            android:id="@+id/comments_back"
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            android:layout_width="50dp"
+            android:scaleType="center"
+            android:tint="#bbb"
+            android:layout_height="50dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:layout_marginTop="-8dp"
+                android:textColor="@color/red"
+                android:text="Comments"
+                android:layout_height="wrap_content" />
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:id="@+id/comments_out_of_text"
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:layout_marginTop="-1dp"
+                tools:text="showing 1 - 20 out of 392"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/comments_forward"
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            android:layout_width="50dp"
+            android:rotation="180"
+            android:scaleType="center"
+            android:layout_height="50dp" />
+    </LinearLayout>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        app:cardCornerRadius="16dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:minHeight="50dp"
+        android:layout_marginBottom="16dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:minHeight="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.innov8.memeit.CustomClasses.FontEditText
+                android:id="@+id/comment_field"
+                android:background="#fff"
+                android:inputType="textMultiLine"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:minHeight="50dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:hint="Comment"
+                android:paddingLeft="16dp"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/comment_button"
+                android:src="@mipmap/send"
+                android:layout_width="55dp"
+                android:padding="6dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="50dp" />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

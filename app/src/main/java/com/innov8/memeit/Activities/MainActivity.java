@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(!MemeItAuth.getInstance().isSignedIn()){
-            startActivity(new Intent(this,SignInAndUpActivity.class));
+            startActivity(new Intent(this,AuthActivity.class));
             finish();
             return;
         }
