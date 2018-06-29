@@ -7,6 +7,7 @@ import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.MemeRequest;
 import com.memeit.backend.dataclasses.MemeResponse;
 import com.memeit.backend.dataclasses.Notification;
+import com.memeit.backend.dataclasses.Reaction;
 import com.memeit.backend.dataclasses.User;
 
 import java.util.List;
@@ -181,9 +182,8 @@ interface MemeInterface {
     @PUT("meme/comment")
     public Call<ResponseBody> updateComment(@Body Comment comment, @Body String mid, @Body String cid);
 
-    @POST("meme/like")
-    public Call<ResponseBody> likeMeme(@Body String mid);
-
-    @DELETE("meme/like")
-    public Call<ResponseBody> unlikeMeme(@Body String mid);
+    @POST("meme/react")
+    public Call<ResponseBody> reactToMeme(@Body Reaction reaction);
+    @DELETE("meme/react")
+    public Call<ResponseBody> unreactToMeme(@Body String mid);
 }
