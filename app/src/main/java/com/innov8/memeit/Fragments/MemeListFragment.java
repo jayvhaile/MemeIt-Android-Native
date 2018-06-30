@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItMemes;
-import com.memeit.backend.dataclasses.MemeResponse;
+import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.utilis.OnCompleteListener;
 import java.util.List;
 
@@ -57,9 +57,9 @@ public class MemeListFragment extends Fragment {
             @Override
             public void onRefresh() {
                 resetSkip();
-               memeAPI.getTrendingMemes(skip, LIMIT, new OnCompleteListener<List<MemeResponse>>() {
+               memeAPI.getTrendingMemes(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
                     @Override
-                    public void onSuccess(List<MemeResponse> memeResponses) {
+                    public void onSuccess(List<Meme> memeResponses) {
                         swipeRefreshLayout.setRefreshing(false);
                         memeAdapter.setAll(memeResponses);
                         incSkip();
@@ -89,9 +89,9 @@ public class MemeListFragment extends Fragment {
         });
     }
     private void load(){
-        MemeItMemes.getInstance().getTrendingMemes(skip, LIMIT, new OnCompleteListener<List<MemeResponse>>() {
+        MemeItMemes.getInstance().getTrendingMemes(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
             @Override
-            public void onSuccess(List<MemeResponse> memeResponses) {
+            public void onSuccess(List<Meme> memeResponses) {
                 memeAdapter.addAll(memeResponses);
                 incSkip();
             }

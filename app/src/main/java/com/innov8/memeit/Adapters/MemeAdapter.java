@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.innov8.memeit.CustomClasses.MemeItGlideModule;
 import com.innov8.memeit.R;
-import com.memeit.backend.dataclasses.MemeResponse;
+import com.memeit.backend.dataclasses.Meme;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder> {
     private Context mContext;
-    private List<MemeResponse> memes;
+    private List<Meme> memes;
     private LayoutInflater mInflater;
     public MemeAdapter(Context mContext) {
         this.mContext = mContext;
@@ -49,16 +49,16 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
     public int getItemCount() {
         return memes.size();
     }
-    public void addAll(List<MemeResponse> memes){
+    public void addAll(List<Meme> memes){
         int start=this.memes.size();
         this.memes.addAll(memes);
         notifyItemRangeInserted(start,memes.size());
     }
-    public void add(MemeResponse meme){
+    public void add(Meme meme){
         memes.add(meme);
         notifyItemInserted(memes.size()-1);
     }
-    public void remove(MemeResponse meme){
+    public void remove(Meme meme){
         if(memes.contains(meme)){
             int index=memes.indexOf(meme);
             memes.remove(meme);
@@ -69,7 +69,7 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
         memes.clear();
         notifyDataSetChanged();
     }
-    public void setAll(List<MemeResponse> memes){
+    public void setAll(List<Meme> memes){
         this.memes.clear();
         this.memes.addAll(memes);
         notifyDataSetChanged();
@@ -99,7 +99,7 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
             });
         }
 
-        public void bindMeme(MemeResponse meme) {
+        public void bindMeme(Meme meme) {
             memeId=meme.getMemeId();
             posterNameV.setText(meme.getPoster().getName());
             reactionCountV.setText(String.format("%d people reacted",meme.getReactionCount()));

@@ -18,8 +18,7 @@ import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.memeit.backend.MemeItMemes;
-import com.memeit.backend.dataclasses.MemeRequest;
-import com.memeit.backend.dataclasses.MemeResponse;
+import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -102,9 +101,9 @@ public class SimpleMemeGenerator extends AppCompatActivity {
                 String url= String.valueOf(map.get("secure_url"));
                 pd.setMessage("Image Uploaded");
                 pd.setIndeterminate(true);
-                MemeItMemes.getInstance().postMeme(prepareRequest(url), new OnCompleteListener<MemeResponse>() {
+                MemeItMemes.getInstance().postMeme(prepareRequest(url), new OnCompleteListener<Meme>() {
                     @Override
-                    public void onSuccess(MemeResponse memeResponse) {
+                    public void onSuccess(Meme memeResponse) {
                         pd.dismiss();
                         Toast.makeText(SimpleMemeGenerator.this, "Meme Uploaded", Toast.LENGTH_SHORT).show();
                     }
@@ -129,7 +128,7 @@ public class SimpleMemeGenerator extends AppCompatActivity {
         }).dispatch();
     }
 
-    private MemeRequest prepareRequest(String uri){
+    private Meme prepareRequest(String uri){
         String txt=texts.getText().toString();
         String tag=tags.getText().toString();
         List<String> texts=null;
@@ -140,7 +139,7 @@ public class SimpleMemeGenerator extends AppCompatActivity {
         if (!TextUtils.isEmpty(tag)){
             tags= Arrays.asList(tag.split(","));
         }
-        return new MemeRequest(uri,texts,tags);
+        return Meme.createMeme(uri,texts,tags);
 
     }
 

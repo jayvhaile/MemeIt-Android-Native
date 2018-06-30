@@ -23,18 +23,23 @@ public class Reaction {
     @SerializedName("type")
     private int type;
     @SerializedName("mid")
-    private String mid;
+    private String memeID;
+    @SerializedName("rid")
+    private String reactorID;
 
-    public Reaction(ReactionType type, String mid) {
+    public Reaction(ReactionType type, String memeID) {
         this.type = type.ordinal();
-        this.mid = mid;
+        this.memeID = memeID;
     }
-
     public ReactionType getType() {
         return ReactionType.values()[type];
     }
 
-    public String getMid() {
-        return mid;
+    public String getMemeID() {
+        return memeID;
+    }
+
+    public String getReactorID() {
+        return reactorID;
     }
 }
