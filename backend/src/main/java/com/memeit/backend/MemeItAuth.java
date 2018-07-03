@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -157,7 +158,6 @@ public class MemeItAuth {
                 });
     }
 
-
     public void signInWithGoogle(Activity activity) {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -166,7 +166,15 @@ public class MemeItAuth {
         final GoogleSignInClient client = GoogleSignIn.getClient(activity, gso);
         Intent gc = client.getSignInIntent();
         activity.startActivityForResult(gc, GOOGLE_SIGNIN_REQUEST_CODE);
-
+    }
+    public void signInWithGoogle(Fragment fragment) {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestProfile()
+                .build();
+        final GoogleSignInClient client = GoogleSignIn.getClient(fragment.getContext(),gso);
+        Intent gc = client.getSignInIntent();
+        fragment.startActivityForResult(gc, GOOGLE_SIGNIN_REQUEST_CODE);
     }
 
     public void handleGoogleSignInResult(Intent data, final OnCompleteListener<Void> listener) {
@@ -185,7 +193,11 @@ public class MemeItAuth {
                                 checkAndFireSuccess(listener, null);
                             } else {
                                 //todo sign out from google
-                                checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
+                                try {
+                                    checkAndFireError(listener,OTHER_ERROR.setMessage(response.message()+""+response.errorBody().string()));
+                                } catch (IOException e) {
+                                    checkAndFireError(listener,OTHER_ERROR.setMessage("nooo"+e.getMessage()));
+                                }
                             }
                         }
 
@@ -221,11 +233,10 @@ public class MemeItAuth {
                             } else {
                                 //todo sign out from google
                                 try {
-                                    Toast.makeText(mContext, "--------- "+response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                    checkAndFireError(listener,OTHER_ERROR.setMessage(response.message()+""+response.errorBody().string()));
                                 } catch (IOException e) {
-                                    e.printStackTrace();
+                                    checkAndFireError(listener,OTHER_ERROR.setMessage("nooo"+e.getMessage()));
                                 }
-                                checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
                             }
                         }
 
@@ -262,6 +273,4 @@ public class MemeItAuth {
                 .remove(PREFERENCE_USER_DATA_SAVED)
                 .apply();
     }
-
-
 }

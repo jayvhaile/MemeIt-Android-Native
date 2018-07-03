@@ -1,5 +1,7 @@
 package com.memeit.backend.utilis;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,7 +24,11 @@ public  class MyCallBack<T> implements Callback<T> {
         if (response.isSuccessful()){
             checkAndFireSuccess(listener,response.body());
         }else{
-            checkAndFireError(listener,OTHER_ERROR.setMessage(response.message()));
+            try {
+                checkAndFireError(listener,OTHER_ERROR.setMessage(response.message()+""+response.errorBody().string()));
+            } catch (IOException e) {
+                checkAndFireError(listener,OTHER_ERROR.setMessage("nooo"+e.getMessage()));
+            }
         }
     }
 

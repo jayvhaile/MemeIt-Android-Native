@@ -20,9 +20,16 @@ public class Meme {
     public static Meme createMeme(String memeImageUrl,  List<String> texts, List<String> tags){
         return new Meme(memeImageUrl,texts,tags);
     }
+    public static Meme forID(String memeID){
+        return new Meme(memeID);
+    }
+
 
     public Meme(){
 
+    }
+    private Meme(String memeId){
+        this.memeId=memeId;
     }
     private Meme(String memeImageUrl, List<String> texts, List<String> tags) {
         this.memeImageUrl = memeImageUrl;

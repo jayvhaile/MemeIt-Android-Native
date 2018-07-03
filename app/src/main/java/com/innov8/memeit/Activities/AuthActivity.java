@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,14 +41,16 @@ import java.util.Map;
 import butterknife.ButterKnife;
 
 public class AuthActivity extends AppCompatActivity {
-    public static final String STARTING_FRAGMENT_PARAM="frag";
-    public static final int FRAGMENT_LOGIN=0;
-    public static final int FRAGMENT_SIGNUP=1;
-    public static final int FRAGMENT_SETUP=2;
+    public static final String STARTING_FRAGMENT_PARAM = "frag";
+    public static final int FRAGMENT_LOGIN = 0;
+    public static final int FRAGMENT_SIGNUP = 1;
+    public static final int FRAGMENT_SETUP = 2;
 
     private SignUpFragment signUpFragment;
     private LoginFragment loginFragment;
     private SetupFragment setupFragment;
+
+    private int currentFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,31 +60,38 @@ public class AuthActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         CustomMethods.makeBackgroundScrollAnimate(this, R.id.background_login_1, R.id.background_login_2);
         initFragments();
-        if(getIntent()!=null){
-            int i=getIntent().getIntExtra(STARTING_FRAGMENT_PARAM,FRAGMENT_LOGIN);
-            setCurrentFragment(getFragmentForInt(i));
-        }else{
-            setCurrentFragment(loginFragment);
+        if (getIntent() != null) {
+            int i = getIntent().getIntExtra(STARTING_FRAGMENT_PARAM, FRAGMENT_LOGIN);
+            setCurrentFragment(i);
+        } else {
+            setCurrentFragment(FRAGMENT_LOGIN);
         }
     }
-    private Fragment getFragmentForInt(int i){
-        switch (i){
-            case FRAGMENT_LOGIN:return loginFragment;
-            case FRAGMENT_SIGNUP:return signUpFragment;
-            case FRAGMENT_SETUP:return setupFragment;
-            default:throw new IllegalArgumentException("Index should have been either 0,1 or 2!");
+
+    private Fragment getFragmentForInt(int i) {
+        switch (i) {
+            case FRAGMENT_LOGIN:
+                return loginFragment;
+            case FRAGMENT_SIGNUP:
+                return signUpFragment;
+            case FRAGMENT_SETUP:
+                return setupFragment;
+            default:
+                throw new IllegalArgumentException("Index should have been either 0,1 or 2!");
         }
     }
+
     private void initFragments() {
         signUpFragment = new SignUpFragment();
         loginFragment = new LoginFragment();
         setupFragment = new SetupFragment();
     }
 
-    public void setCurrentFragment(Fragment frag) {
+    public void setCurrentFragment(int i) {
+        currentFrag = i;
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
-                .replace(R.id.holder, frag)
+                .replace(R.id.holder, getFragmentForInt(i))
                 .commit();
     }
 
@@ -98,11 +108,20 @@ public class AuthActivity extends AppCompatActivity {
         return 0;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MemeItAuth.GOOGLE_SIGNIN_REQUEST_CODE) {
+            getFragmentForInt(currentFrag).onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     public static class LoginFragment extends Fragment {
         public LoginFragment() {
         }
 
         OnCompleteListener<Void> signInCompletedListener;
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.fragment_login, container, false);
@@ -123,18 +142,18 @@ public class AuthActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     AuthActivity a = ((AuthActivity) LoginFragment.this.getActivity());
-                    a.setCurrentFragment(a.signUpFragment);
+                    a.setCurrentFragment(FRAGMENT_SIGNUP);
                 }
             });
-            signInCompletedListener=new OnCompleteListener<Void>() {
+            signInCompletedListener = new OnCompleteListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    startActivity(new Intent(getContext(),MainActivity.class));
+                    startActivity(new Intent(getContext(), MainActivity.class));
                 }
 
                 @Override
                 public void onFailure(Error error) {
-                    Toast.makeText(getContext(), error.getDefaultMessage()+"\n"+error.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), error.getDefaultMessage() + "\n" + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             };
             view.findViewById(R.id.signup_button).setOnClickListener(new View.OnClickListener() {
@@ -149,14 +168,33 @@ public class AuthActivity extends AppCompatActivity {
                     }
                 }
             });
-
+            view.findViewById(R.id.signup_google).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MemeItAuth.getInstance().signInWithGoogle(getActivity());
+                }
+            });
+            view.findViewById(R.id.signup_facebook).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //todo facebook signin
+                }
+            });
             return view;
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == MemeItAuth.GOOGLE_SIGNIN_REQUEST_CODE)
+                MemeItAuth.getInstance().handleGoogleSignInResult(data, signInCompletedListener);
         }
     }
 
     public static class SignUpFragment extends Fragment {
         public SignUpFragment() {
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -176,14 +214,14 @@ public class AuthActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     AuthActivity a = ((AuthActivity) SignUpFragment.this.getActivity());
-                    a.setCurrentFragment(a.loginFragment);
+                    a.setCurrentFragment(FRAGMENT_LOGIN);
                 }
             });
             view.findViewById(R.id.signup_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String email=emailV.getText().toString();
-                    String password=passwordV.getText().toString();
+                    String email = emailV.getText().toString();
+                    String password = passwordV.getText().toString();
                     if (CustomMethods.isEmailValid(email) && password.length() >= 1/*todo: change this back to 8*/) {
                         showProgress(true);
                         MemeItAuth.getInstance().signUpWithEmail(email, password, new OnCompleteListener<Void>() {
@@ -191,8 +229,9 @@ public class AuthActivity extends AppCompatActivity {
                             public void onSuccess(Void aVoid) {
                                 showProgress(false);
                                 AuthActivity a = ((AuthActivity) SignUpFragment.this.getActivity());
-                                a.setCurrentFragment(a.setupFragment);
+                                a.setCurrentFragment(FRAGMENT_SETUP);
                             }
+
                             @Override
                             public void onFailure(Error error) {
                                 showProgress(false);
@@ -203,23 +242,64 @@ public class AuthActivity extends AppCompatActivity {
                         //todo show the neccesary errors with a snackbar
                         Toast.makeText(getContext(), "email or password error", Toast.LENGTH_SHORT).show();
                     }
-
-
+                }
+            });
+            view.findViewById(R.id.signup_google).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MemeItAuth.getInstance().signInWithGoogle(getActivity());
+                }
+            });
+            view.findViewById(R.id.signup_facebook).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //todo facebook signup
                 }
             });
             return view;
         }
-        private void showProgress(boolean show){
-            getView().findViewById(R.id.spin_kit_login).setVisibility(show?View.VISIBLE:View.GONE);
+
+        private void showProgress(boolean show) {
+            getView().findViewById(R.id.spin_kit_login).setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == MemeItAuth.GOOGLE_SIGNIN_REQUEST_CODE) {
+                MemeItAuth.getInstance().handleGoogleSignUpResult(data, new OnCompleteListener<User>() {
+                    @Override
+                    public void onSuccess(User user) {
+                        AuthActivity a = ((AuthActivity) SignUpFragment.this.getActivity());
+                        a.setupFragment.fromGoogle(user.getName(), user.getImageUrl());
+                        a.setCurrentFragment(FRAGMENT_SETUP);
+                    }
+
+                    @Override
+                    public void onFailure(Error error) {
+                        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     }
+
     public static class SetupFragment extends Fragment implements View.OnClickListener {
         public SetupFragment() {
         }
-        Uri image_url;
+
+        String name;
+        String image_url;
         boolean isFromGoogle;
         private EditText nameV;
         private ImageView profileV;
+
+
+        public void fromGoogle(String name, String pp) {
+            if (!TextUtils.isEmpty(pp)) isFromGoogle = true;
+            image_url = pp;
+            this.name = name;
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -228,69 +308,83 @@ public class AuthActivity extends AppCompatActivity {
             EditText username = view.findViewById(R.id.username_setup);
             EditText tags = view.findViewById(R.id.tags);
             CustomMethods.makeEditTextsAvenir(getActivity(), view, R.id.name_setup, R.id.tags_setup, R.id.username_setup);
-            profileV=view.findViewById(R.id.profile);
+            profileV = view.findViewById(R.id.profile);
             profileV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     CropImage.activity()
                             .setGuidelines(CropImageView.Guidelines.ON)
-                            .setAspectRatio(1,1)
+                            .setAspectRatio(1, 1)
                             .setCropShape(CropImageView.CropShape.OVAL)
-                            .start(getContext(),SetupFragment.this);
+                            .start(getContext(), SetupFragment.this);
                 }
             });
             view.findViewById(R.id.finish).setOnClickListener(this);
+            nameV.setText(name);
+            loadPic();
             return view;
         }
+
         @Override
         public void onClick(View view) {
-            if (image_url!=null){
-                MediaManager.get().upload(image_url).callback(new UploadCallback() {
-                    @Override
-                    public void onStart(String s) {
-                        Toast.makeText(getContext(), "Image Uploading Started", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onProgress(String s, long l, long l1) {
-                        Toast.makeText(getContext(), "Progress: "+l+"/"+l1, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onSuccess(String s, Map map) {
-                        String url= String.valueOf(map.get("secure_url"));
-                        String name=nameV.getText().toString();
-                        uploadData(name,url);
-                    }
-
-                    @Override
-                    public void onError(String s, ErrorInfo errorInfo) {
-                        Toast.makeText(getContext(), "Image Upload Error: "+errorInfo.getDescription(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onReschedule(String s, ErrorInfo errorInfo) {
-
-                    }
-                }).dispatch();
-            }else{
-                String name=nameV.getText().toString();
-                uploadData(name,null);
+            String name = nameV.getText().toString();
+            if (isFromGoogle) {
+                uploadData(name, image_url);
+            } else {
+                if (image_url != null) {
+                    uploadImageThenData();
+                } else {
+                    uploadData(name, null);
+                }
             }
         }
+
         //todo-jv: upload tags and username
-        private void uploadData(String name,String image_url){
-            User user=new User(name,image_url);
+        private void uploadData(String name, String image_url) {
+            User user = new User(name, image_url);
             MemeItUsers.getInstance().updateMyData(user, new OnCompleteListener<User>() {
                 @Override
                 public void onSuccess(User body) {
-                    startActivity(new Intent(getContext(),MainActivity.class));
+                    startActivity(new Intent(getContext(), MainActivity.class));
                 }
+
                 @Override
                 public void onFailure(Error error) {
                     Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+
+        private void uploadImageThenData() {
+            MediaManager.get().upload(image_url).callback(new UploadCallback() {
+                @Override
+                public void onStart(String s) {
+                    Toast.makeText(getContext(), "Image Uploading Started", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onProgress(String s, long l, long l1) {
+                    Toast.makeText(getContext(), "Progress: " + l + "/" + l1, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onSuccess(String s, Map map) {
+                    String url = String.valueOf(map.get("secure_url"));
+                    String name = nameV.getText().toString();
+                    uploadData(name, url);
+                }
+
+                @Override
+                public void onError(String s, ErrorInfo errorInfo) {
+                    Toast.makeText(getContext(), "Image Upload Error: " + errorInfo.getDescription(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onReschedule(String s, ErrorInfo errorInfo) {
+
+                }
+            }).dispatch();
+
         }
 
         @Override
@@ -299,19 +393,25 @@ public class AuthActivity extends AppCompatActivity {
             if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
                 CropImage.ActivityResult result = CropImage.getActivityResult(data);
                 if (resultCode == RESULT_OK) {
-                    image_url=result.getUri();
-                    isFromGoogle=false;
-                    Glide.with(this)
-                            .load(image_url)
-                            .apply(RequestOptions.circleCropTransform())
-                            .apply(RequestOptions.placeholderOf(R.drawable.ic_profile))
-                            .thumbnail(0.7f)
-                            .into(profileV);
+                    image_url = result.getUri().toString();
+                    isFromGoogle = false;
+                    loadPic();
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                     Exception error = result.getError();
-                    Toast.makeText(getContext(),error.getMessage(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+
+        private void loadPic() {
+            Glide.with(this)
+                    .load(image_url)
+                    .apply(RequestOptions.circleCropTransform())
+                    .apply(RequestOptions.placeholderOf(R.drawable.ic_profile))
+                    .thumbnail(0.7f)
+                    .into(profileV);
+
+
         }
     }
 }

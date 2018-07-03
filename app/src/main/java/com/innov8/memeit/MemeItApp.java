@@ -3,6 +3,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.cloudinary.android.MediaManager;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.memeit.backend.MemeItClient;
 
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class MemeItApp extends Application{
         config.put("api_key", "591249199742556");
         config.put("api_secret", "yT2mxv0vQrEWjzsPrmyD6xu5a-Y");
         MediaManager.init(this, config);
+        Fresco.initialize(this);
     }
     @Override
     public void onTerminate() {

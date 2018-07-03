@@ -18,20 +18,32 @@ import com.innov8.memeit.R;
 import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.utilis.OnCompleteListener;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MemeListFragment extends Fragment {
     private static final String TAG="MemeListFragment";
     private static final int LIMIT=20;
-    private  MemeItMemes memeAPI=MemeItMemes.getInstance();
 
     private RecyclerView memeList;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private MemeAdapter memeAdapter;
 
+    private MemeLoader emptyLoader =new EmptyLoader();
+    private MemeLoader memeLoader;
+
+
 
     private int skip;
+
+
+    public static MemeListFragment withLoader(MemeLoader loader){
+        MemeListFragment fragment=new MemeListFragment();
+        fragment.setMemeLoader(loader,false);
+        return fragment;
+    }
     public MemeListFragment() {
         // Required empty public constructor
     }
@@ -40,6 +52,15 @@ public class MemeListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         memeAdapter=new MemeAdapter(getContext());
+    }
+
+    public void setMemeLoader(MemeLoader loader,boolean reload){
+        this.memeLoader=loader;
+        if(reload)refresh();
+    }
+
+    public MemeLoader getMemeLoader() {
+        return memeLoader==null? emptyLoader :memeLoader;
     }
 
     @Override
@@ -52,27 +73,14 @@ public class MemeListFragment extends Fragment {
         load();
         return view;
     }
+
+
+
     private void setupUI(){
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                resetSkip();
-               memeAPI.getTrendingMemes(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
-                    @Override
-                    public void onSuccess(List<Meme> memeResponses) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        memeAdapter.setAll(memeResponses);
-                        incSkip();
-                    }
-
-                    @Override
-                    public void onFailure(Error error) {
-                        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onFailure: "+error.getMessage());
-
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+               refresh();
             }
         });
         memeList.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
@@ -89,22 +97,71 @@ public class MemeListFragment extends Fragment {
         });
     }
     private void load(){
-        MemeItMemes.getInstance().getTrendingMemes(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
+        getMemeLoader().load(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
             @Override
             public void onSuccess(List<Meme> memeResponses) {
                 memeAdapter.addAll(memeResponses);
                 incSkip();
             }
+
             @Override
             public void onFailure(Error error) {
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+    private void refresh(){
+        resetSkip();
+        getMemeLoader().load(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
+            @Override
+            public void onSuccess(List<Meme> memeResponses) {
+                swipeRefreshLayout.setRefreshing(false);
+                memeAdapter.setAll(memeResponses);
+                incSkip();
+            }
+
+            @Override
+            public void onFailure(Error error) {
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+    }
     private void resetSkip(){
         skip=0;
     }
     private void incSkip(){
         skip+=LIMIT;
+    }
+
+    public interface MemeLoader{
+        public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener);
+    }
+    public static class HomeLoader implements MemeLoader{
+        @Override
+        public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener) {
+            //todo getHomeMemesforguest if user is not signed in
+            MemeItMemes.getInstance().getHomeMemes(skip,limit,listener);
+        }
+    }
+
+    public static class TrendingLoader implements MemeLoader{
+        @Override
+        public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener) {
+            MemeItMemes.getInstance().getTrendingMemes(skip,limit,listener);
+        }
+    }
+    public static class FavoritesLoader implements MemeLoader{
+        @Override
+        public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener) {
+            MemeItMemes.getInstance().getFavouriteMemes(skip,limit,listener);
+        }
+    }
+    public static class EmptyLoader implements MemeLoader{
+        @Override
+        public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener) {
+            listener.onSuccess(new ArrayList<Meme>());
+        }
     }
 }

@@ -16,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -161,8 +162,9 @@ interface MemeInterface {
     @PUT("meme")
     public Call<Meme> updateMeme(@Body Meme meme);
 
-    @DELETE("meme")
-    public Call<ResponseBody> deleteMeme(@Body String mid);
+
+    @DELETE("meme/{mid}")
+    public Call<ResponseBody> deleteMeme(@Path("mid") String mid);
 
 
     @POST("meme/favourite")
