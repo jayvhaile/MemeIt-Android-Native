@@ -86,6 +86,7 @@
             android:layout_gravity="bottom"
             app:active_centre_button_icon_color="#fff"
             app:active_item_color="@color/red"
+            app:elevation = "5dp"
             app:centre_button_color="@color/red"
             app:centre_button_icon="@drawable/ic_add_black_24dp"
             app:inactive_centre_button_icon_color="#fff"

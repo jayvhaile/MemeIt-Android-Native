@@ -1,14 +1,12 @@
 package com.innov8.memeit.Adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Animatable;
+import android.content.Intent;
 import android.net.Uri;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,20 +18,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.cloudinary.Transformation;
 import com.cloudinary.Url;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.ResponsiveUrl;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.innov8.memeit.CustomClasses.CustomMethods;
+import com.innov8.memeit.Activities.CommentsActivity;
 import com.innov8.memeit.CustomClasses.MemeItGlideModule;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItMemes;
@@ -126,7 +115,9 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
             commentBtnV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //todo start comment list activity
+                    Intent intent = new Intent(mContext, CommentsActivity.class);
+                    intent.putExtra("id",memeId);
+                    mContext.startActivity(intent);
                 }
             });
             meme_menu.setOnClickListener(new View.OnClickListener() {
@@ -154,7 +145,6 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
                             memeImageV.setImageURI(url.generate());
                         }
                     });
-
         }
         public void loadProfileImage(String url){
             if(TextUtils.isEmpty(url)){

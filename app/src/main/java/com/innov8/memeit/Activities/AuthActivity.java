@@ -30,6 +30,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
+import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
@@ -161,7 +162,7 @@ public class AuthActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     String email = emailV.getText().toString();
                     String password = passwordV.getText().toString();
-                    if (CustomMethods.isEmailValid(email) && password.length() >= 1/*todo: change this back to 8*/) {
+                    if (/*CustomMethods.isEmailValid(email) && */password.length() >= 8/*todo: change this back to 8*/) {
                         MemeItAuth.getInstance().signInWithEmail(email, password, signInCompletedListener);
                     } else {
                         Toast.makeText(getContext(), "Invalid Email or Password", Toast.LENGTH_SHORT).show();
