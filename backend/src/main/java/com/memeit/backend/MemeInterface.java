@@ -4,8 +4,7 @@ import com.memeit.backend.dataclasses.AuthInfo;
 import com.memeit.backend.dataclasses.AuthToken;
 import com.memeit.backend.dataclasses.Badge;
 import com.memeit.backend.dataclasses.Comment;
-import com.memeit.backend.dataclasses.MemeRequest;
-import com.memeit.backend.dataclasses.MemeResponse;
+import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.Reaction;
 import com.memeit.backend.dataclasses.User;
@@ -17,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -74,7 +74,7 @@ interface MemeInterface {
                                                     @Path("id") String uid);
 
     @GET("user/{id}/posts")
-    public Call<List<MemeResponse>> getPostsOfUser(@Path("uid") String userID, @Query("search") String search);
+    public Call<List<Meme>> getPostsOfUser(@Path("uid") String userID, @Query("search") String search);
 
     @GET("user/me/notifications")
     public Call<List<Notification>> getMyNotifications(@Query("skip") int skip,
@@ -116,37 +116,37 @@ interface MemeInterface {
     //================================Memes Related=============================================
 
     @GET("meme/home")
-    public Call<List<MemeResponse>> getHomeMemes(@Query("skip") int skip,
-                                                 @Query("limit") int limit);
+    public Call<List<Meme>> getHomeMemes(@Query("skip") int skip,
+                                         @Query("limit") int limit);
 
     @GET("meme/home/guest")
-    public Call<List<MemeResponse>> getHomeMemesForGuest(@Query("skip") int skip,
+    public Call<List<Meme>> getHomeMemesForGuest(@Query("skip") int skip,
                                                          @Query("limit") int limit);
 
     @GET("meme/trending")
-    public Call<List<MemeResponse>> getTrendingMemes(@Query("skip") int skip,
+    public Call<List<Meme>> getTrendingMemes(@Query("skip") int skip,
                                                      @Query("limit") int limit);
 
     @GET("meme/favourite")
-    public Call<List<MemeResponse>> getFavouriteMemes(@Query("skip") int skip,
+    public Call<List<Meme>> getFavouriteMemes(@Query("skip") int skip,
                                                       @Query("limit") int limit);
 
     @GET("meme/favourite")
-    public Call<List<MemeResponse>> getFavouriteMemesFor(@Query("uid") String uid,
+    public Call<List<Meme>> getFavouriteMemesFor(@Query("uid") String uid,
                                                          @Query("skip") int skip,
                                                          @Query("limit") int limit);
 
     @GET("meme/posts")
-    public Call<List<MemeResponse>> getMyMemes(@Query("skip") int skip,
+    public Call<List<Meme>> getMyMemes(@Query("skip") int skip,
                                                @Query("limit") int limit);
 
     @GET("meme/posts")
-    public Call<List<MemeResponse>> getMemesFor(@Query("uid") String uid,
+    public Call<List<Meme>> getMemesFor(@Query("uid") String uid,
                                                 @Query("skip") int skip,
                                                 @Query("limit") int limit);
 
     @GET("meme/search")
-    public Call<List<MemeResponse>> getFilteredMemes(@Query("query") String query,
+    public Call<List<Meme>> getFilteredMemes(@Query("query") String query,
                                                      @Query("skip") int skip,
                                                      @Query("limit") int limit);
 
@@ -157,13 +157,14 @@ interface MemeInterface {
 
 
     @POST("meme")
-    public Call<MemeResponse> postMeme(@Body MemeRequest meme);
+    public Call<Meme> postMeme(@Body Meme meme);
 
     @PUT("meme")
-    public Call<MemeResponse> updateMeme(@Body String mid, @Body MemeResponse meme);
+    public Call<Meme> updateMeme(@Body Meme meme);
 
-    @DELETE("meme")
-    public Call<ResponseBody> deleteMeme(@Body String mid);
+
+    @DELETE("meme/{mid}")
+    public Call<ResponseBody> deleteMeme(@Path("mid") String mid);
 
 
     @POST("meme/favourite")
@@ -174,13 +175,13 @@ interface MemeInterface {
 
 
     @POST("meme/comment")
-    public Call<Comment> postComment(@Body Comment comment, @Body String mid);
+    public Call<Comment> postComment(@Body Comment comment);
 
     @DELETE("meme/comment")
-    public Call<ResponseBody> deleteComment(@Body String cid, @Body String mid);
+    public Call<ResponseBody> deleteComment(@Body Comment comment);
 
     @PUT("meme/comment")
-    public Call<ResponseBody> updateComment(@Body Comment comment, @Body String mid, @Body String cid);
+    public Call<ResponseBody> updateComment(@Body Comment comment);
 
     @POST("meme/react")
     public Call<ResponseBody> reactToMeme(@Body Reaction reaction);

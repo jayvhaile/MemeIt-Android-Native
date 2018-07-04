@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bottom_nav_items">22dp</dimen>
+    <dimen name="bottom_nav_items_padding">17dp</dimen>
+    <dimen name="bottom_nav_height">56dp</dimen>
+
+</resources>

@@ -1,12 +1,16 @@
 package com.innov8.memeit.Fragments;
 
 
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,6 +23,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.innov8.memeit.Fragments.ProfileFragments.FollowersFragment;
 import com.innov8.memeit.Fragments.ProfileFragments.FollowingFragment;
 import com.innov8.memeit.Fragments.ProfileFragments.MemesFragment;
@@ -40,8 +47,12 @@ public class MeFragment extends Fragment {
     ViewPagerAdapter adapter;
     List<Fragment> fragments;
 
-    TextView nameV;
-    ImageView profileV;
+    //TextView nameV;
+    TextView followerV;
+    TextView followingV;
+    TextView memeCountV;
+    SimpleDraweeView profileV;
+    CollapsingToolbarLayout ctoolbar;
     public MeFragment() {
 
     }
@@ -49,9 +60,9 @@ public class MeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_me, container, false);
+        view = inflater.inflate(R.layout.activity_user_profile2, container, false);
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+       /* tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         pager = (ViewPager) view.findViewById(R.id.profile_viewpager);
         fragments = new ArrayList<>();
         adapter = new ViewPagerAdapter(getFragmentManager());
@@ -64,23 +75,31 @@ public class MeFragment extends Fragment {
         adapter.addFragment(new FollowingFragment(), "Following");
         pager.setAdapter(adapter);
 
-        tabLayout.setupWithViewPager(pager);
+        tabLayout.setupWithViewPager(pager);*/
 
-        pager.setOnTouchListener(new View.OnTouchListener() {
+        /*pager.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 pager.getParent().requestDisallowInterceptTouchEvent(true);
                 return false;
             }
-        });
+        });*/
 
 
-        nameV=(TextView) view.findViewById(R.id.name);
+        ctoolbar= view.findViewById(R.id.collapsing_tool);
+        followerV= view.findViewById(R.id.followers);
+        followingV= view.findViewById(R.id.followings);
+        memeCountV= view.findViewById(R.id.meme_count);
         profileV=view.findViewById(R.id.profile_image);
 
+        RoundingParams rp=new RoundingParams();
+        rp.setBorder(Color.WHITE,10);
+        rp.setRoundAsCircle(true);
+        profileV.setHierarchy(GenericDraweeHierarchyBuilder.newInstance(getResources())
+        .setRoundingParams(rp)
+        .build());
         loadData();
-
 
         return view;
     }
@@ -91,14 +110,13 @@ public class MeFragment extends Fragment {
             public void onSuccess(User user) {
                 Toast.makeText(getActivity(), "success:"+user.getName(), Toast.LENGTH_SHORT).show();
 
-                nameV.setText(user.getName());
+                ctoolbar.setTitle(user.getName());
                 if(!TextUtils.isEmpty(user.getImageUrl())){
-                    Glide.with(MeFragment.this)
-                            .load(user.getImageUrl())
-                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(profileV);
+                    profileV.setImageURI(Uri.parse(user.getImageUrl()));
                 }
+                followerV.setText(String.format("%d\nfollowers",user.getFollowerCount()));
+                followingV.setText(String.format("%d\nfollowings",user.getFollowingCount()));
+                memeCountV.setText(String.format("%d Memes",user.getPostCount()));
             }
 
             @Override

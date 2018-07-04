@@ -10,7 +10,15 @@
         <item name="windowNoTitle">true</item>
         <!--<item name="android:windowTranslucentStatus">true</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
-        <item name="android:fitsSystemWindows">true</item>
+    </style>
+    <style name="memeit_toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">?attr/colorAccent</item>
+        <item name="colorControlNormal">?attr/colorAccent</item>
+        <item name="android:textAppearance">@style/memeit_text</item>
+    </style>
+    <style name="memeit_text" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:gravity">center_horizontal</item>
     </style>
 
 </resources>

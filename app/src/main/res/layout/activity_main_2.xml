@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.innov8.memeit.CustomClasses.NonSwipeableViewPager
+        android:id="@+id/main_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/bottom_nav_height"
+        android:background="?attr/colorPrimary"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/memeit_toolbar"
+            app:layout_scrollFlags="scroll|enterAlways|snap"/>
+    </android.support.design.widget.AppBarLayout>
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_nav_height"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:background="#fff"
+        android:gravity="center_vertical"
+        >
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_home_black_24dp"
+            android:paddingBottom="@dimen/bottom_nav_items_padding"
+            android:paddingTop="@dimen/bottom_nav_items_padding"
+            android:tag="0"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_trending_up_black_24dp"
+            android:paddingBottom="@dimen/bottom_nav_items_padding"
+            android:paddingTop="@dimen/bottom_nav_items_padding"
+            android:tag="1"
+            android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_add_box_black_24dp"
+            android:paddingBottom="@dimen/bottom_nav_items_padding"
+            android:paddingTop="@dimen/bottom_nav_items_padding"
+            android:tag="-1"
+            android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_favorite_black_24dp"
+            android:paddingBottom="@dimen/bottom_nav_items_padding"
+            android:paddingTop="@dimen/bottom_nav_items_padding"
+            android:tag="2"
+            android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_account_circle_black_24dp"
+            android:paddingBottom="@dimen/bottom_nav_items_padding"
+            android:paddingTop="@dimen/bottom_nav_items_padding"
+            android:tag="3"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
