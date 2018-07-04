@@ -39,7 +39,8 @@ dependencies {
     compile 'com.github.bumptech.glide:annotations:4.7.1'
     //image loading library
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
+//    compile 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
     compile 'com.cloudinary:cloudinary-android:1.24.0'
     //image server
     compile project(path: ':memegenerator')
@@ -52,10 +53,12 @@ dependencies {
     compile 'com.yarolegovich:sliding-root-nav:1.1.0'
     //Custom Tablayout
     compile 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
+//    compile 'com.github.AmrDeveloper.ReactButton:app:1.0.5'
 
-
+//    compile 'com.ramotion.circlemenu:circle-menu:0.3.1'
+    compile 'com.github.BrotherV:Floating-ArcMenu:1.1.0.2'
 }
 repositories {
     mavenCentral()
-
+    maven { url 'https://jitpack.io' }
 }

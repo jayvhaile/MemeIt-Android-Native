@@ -21,7 +21,6 @@ import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.dataclasses.MemeRequest;
 import com.memeit.backend.dataclasses.MemeResponse;
 import com.memeit.backend.utilis.OnCompleteListener;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,8 +50,8 @@ public class SimpleMemeGenerator extends AppCompatActivity {
         memeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CropImage.activity()
-                        .start(SimpleMemeGenerator.this);
+//                CropImage.activity()
+//                        .start(SimpleMemeGenerator.this); todo : uncomment this
             }
         });
         findViewById(R.id.post).setOnClickListener(new View.OnClickListener() {
@@ -64,20 +63,21 @@ public class SimpleMemeGenerator extends AppCompatActivity {
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                image_url=result.getUri();
-                Glide.with(this)
-                        .load(result.getUri())
-                        .apply(RequestOptions.placeholderOf(R.drawable.ic_add))
-                        .thumbnail(0.7f)
-                        .into(memeImage);
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
-                Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        }
+//        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+//            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+//            if (resultCode == RESULT_OK) {
+//                image_url=result.getUri();
+//                Glide.with(this)
+//                        .load(result.getUri())
+//                        .apply(RequestOptions.placeholderOf(R.drawable.ic_add))
+//                        .thumbnail(0.7f)
+//                        .into(memeImage);
+//            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+//                Exception error = result.getError();
+//                Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_SHORT).show();
+//            }
+//        }
+        //todo jv,biruk :  fix image cropper lib error and uncomment this
     }
     private void upload(){
       if(image_url==null){

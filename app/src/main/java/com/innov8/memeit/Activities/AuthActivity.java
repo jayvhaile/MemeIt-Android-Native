@@ -33,8 +33,8 @@ import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+//import com.theartofdev.edmodo.cropper.CropImage;
+//import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.Map;
 
@@ -233,11 +233,11 @@ public class AuthActivity extends AppCompatActivity {
             profileV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CropImage.activity()
-                            .setGuidelines(CropImageView.Guidelines.ON)
-                            .setAspectRatio(1,1)
-                            .setCropShape(CropImageView.CropShape.OVAL)
-                            .start(getContext(),SetupFragment.this);
+//                    CropImage.activity()
+//                            .setGuidelines(CropImageView.Guidelines.ON)
+//                            .setAspectRatio(1,1)
+//                            .setCropShape(CropImageView.CropShape.OVAL)
+//                            .start(getContext(),SetupFragment.this); todo: uncomment this
                 }
             });
             view.findViewById(R.id.finish).setOnClickListener(this);
@@ -297,22 +297,23 @@ public class AuthActivity extends AppCompatActivity {
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
-            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                if (resultCode == RESULT_OK) {
-                    image_url=result.getUri();
-                    isFromGoogle=false;
-                    Glide.with(this)
-                            .load(image_url)
-                            .apply(RequestOptions.circleCropTransform())
-                            .apply(RequestOptions.placeholderOf(R.drawable.ic_profile))
-                            .thumbnail(0.7f)
-                            .into(profileV);
-                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    Exception error = result.getError();
-                    Toast.makeText(getContext(),error.getMessage(),Toast.LENGTH_SHORT).show();
-                }
-            }
+//            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+//                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+//                if (resultCode == RESULT_OK) {
+//                    image_url=result.getUri();
+//                    isFromGoogle=false;
+//                    Glide.with(this)
+//                            .load(image_url)
+//                            .apply(RequestOptions.circleCropTransform())
+//                            .apply(RequestOptions.placeholderOf(R.drawable.ic_profile))
+//                            .thumbnail(0.7f)
+//                            .into(profileV);
+//                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+//                    Exception error = result.getError();
+//                    Toast.makeText(getContext(),error.getMessage(),Toast.LENGTH_SHORT).show();
+//                }
+//            } todo: uncomment this
+
         }
     }
 }

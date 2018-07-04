@@ -21,8 +21,8 @@ import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+//import com.theartofdev.edmodo.cropper.CropImage;
+//import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.Map;
 

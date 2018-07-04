@@ -2,6 +2,7 @@ package com.innov8.memeit.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,19 +14,27 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bvapp.arcmenulibrary.ArcMenu;
+import com.bvapp.arcmenulibrary.widget.FloatingActionButton;
 import com.innov8.memeit.Activities.CommentsActivity;
 import com.innov8.memeit.CustomClasses.MemeItGlideModule;
 import com.innov8.memeit.R;
+import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.dataclasses.MemeResponse;
+import com.memeit.backend.dataclasses.Reaction;
+import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.ResponseBody;
 
 /**
  * Created by Jv on 6/16/2018.
  */
 
 public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder> {
+    private View view;
     private Context mContext;
     private List<MemeResponse> memes;
     private LayoutInflater mInflater;
@@ -93,7 +102,7 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
             posterNameV = itemView.findViewById(R.id.meme_poster_name);
             reactionCountV = itemView.findViewById(R.id.meme_reactions);
             commentCountV = itemView.findViewById(R.id.meme_comment_count);
-
+            view = itemView;
         }
 
         public void bindMeme(final MemeResponse meme) {
@@ -117,6 +126,66 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
                     mContext.startActivity(intent);
                 }
             });
+            setupReactions(view,meme);
         }
+    }
+    public void setupReactions(View itemView, final MemeResponse meme){
+        final int[] ITEM_DRAWABLES = { R.mipmap.rofl,
+                R.mipmap.laughing, R.mipmap.neutral, R.mipmap.angry};
+
+        final String[] STR = {"Very funny","Funny","Stupid","Triggering"};
+
+        ArcMenu menu = itemView.findViewById(R.id.arcMenu);
+        menu.showTooltip(true);
+        menu.setToolTipBackColor(Color.WHITE);
+        menu.setToolTipCorner(6f);
+        menu.setToolTipPadding(2f);
+        menu.setToolTipTextColor(Color.BLUE);
+        menu.setAnim(300,300,ArcMenu.ANIM_MIDDLE_TO_RIGHT,ArcMenu.ANIM_MIDDLE_TO_RIGHT,
+                ArcMenu.ANIM_INTERPOLATOR_ACCELERATE_DECLERATE,ArcMenu.ANIM_INTERPOLATOR_ACCELERATE_DECLERATE);
+
+        final int itemCount = ITEM_DRAWABLES.length;
+        for (int i = 0; i < itemCount; i++) {
+            FloatingActionButton item = new FloatingActionButton(mContext);
+
+            item.setSize(FloatingActionButton.SIZE_MINI);
+            item.setIcon(ITEM_DRAWABLES[i]);
+            item.setBackgroundColor(Color.parseColor("#ffffff"));
+            menu.setChildSize(item.getIntrinsicHeight()); // set absolute child size for menu
+
+            final int position = i;
+            menu.addItem(item, STR[i], new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    switch (position){
+                        case 0:
+                            react(Reaction.ReactionType.VERY_FUNNY,meme);
+                            break;
+                        case 1:
+                            react(Reaction.ReactionType.FUNNY,meme);
+                            break;
+                        case 2:
+                            react(Reaction.ReactionType.STUPID,meme);
+                            break;
+                        case 3:
+                            react(Reaction.ReactionType.ANGERING,meme);
+                            break;
+                    }
+                }
+            });
+        }
+    }
+    public void react(Reaction.ReactionType reactionType,MemeResponse meme){
+        MemeItMemes.getInstance().reactToMeme(new Reaction(reactionType, meme.getMemeId()), new OnCompleteListener<ResponseBody>() {
+            @Override
+            public void onSuccess(ResponseBody responseBody) {
+
+            }
+
+            @Override
+            public void onFailure(Error error) {
+
+            }
+        });
     }
 }
