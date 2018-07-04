@@ -57,6 +57,7 @@ dependencies {
 
 //    compile 'com.ramotion.circlemenu:circle-menu:0.3.1'
     compile 'com.github.BrotherV:Floating-ArcMenu:1.1.0.2'
+    compile 'com.facebook.fresco:fresco:1.9.0'
 }
 repositories {
     mavenCentral()
