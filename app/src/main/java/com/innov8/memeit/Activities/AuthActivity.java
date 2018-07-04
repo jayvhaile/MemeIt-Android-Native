@@ -2,35 +2,27 @@ package com.innov8.memeit.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
-import com.google.android.gms.auth.api.Auth;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.innov8.memeit.CustomClasses.CustomMethods;
+import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
-import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
@@ -293,7 +285,7 @@ public class AuthActivity extends AppCompatActivity {
         String image_url;
         boolean isFromGoogle;
         private EditText nameV;
-        private ImageView profileV;
+        private SimpleDraweeView profileV;
 
 
         public void fromGoogle(String name, String pp) {
@@ -304,7 +296,7 @@ public class AuthActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.activity_setup_profile, container, false);
+            View view = inflater.inflate(R.layout.fragment_setup_profile, container, false);
             nameV = view.findViewById(R.id.name_setup);
             EditText username = view.findViewById(R.id.username_setup);
             EditText tags = view.findViewById(R.id.tags);
@@ -322,7 +314,7 @@ public class AuthActivity extends AppCompatActivity {
             });
             view.findViewById(R.id.finish).setOnClickListener(this);
             nameV.setText(name);
-            loadPic();
+            ImageUtils.loadImageTo(profileV, image_url);
             return view;
         }
 
@@ -396,23 +388,12 @@ public class AuthActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     image_url = result.getUri().toString();
                     isFromGoogle = false;
-                    loadPic();
+                    ImageUtils.loadImageTo(profileV, image_url);
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                     Exception error = result.getError();
                     Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
-        }
-
-        private void loadPic() {
-            Glide.with(this)
-                    .load(image_url)
-                    .apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.placeholderOf(R.drawable.ic_profile))
-                    .thumbnail(0.7f)
-                    .into(profileV);
-
-
         }
     }
 }

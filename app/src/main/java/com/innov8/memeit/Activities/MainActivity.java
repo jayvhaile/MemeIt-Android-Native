@@ -1,7 +1,6 @@
 package com.innov8.memeit.Activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initUI(Bundle savedInstanceState) {
 
-        setContentView(R.layout.activity_main_2);
+        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initToolbar();
         initBottomNav();

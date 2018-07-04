@@ -15,14 +15,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.cloudinary.Url;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.ResponsiveUrl;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.innov8.memeit.Activities.CommentsActivity;
+import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.CustomClasses.MemeItGlideModule;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItMemes;
@@ -133,33 +131,11 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
             posterNameV.setText(meme.getPoster().getName());
             reactionCountV.setText(String.format("%d people reacted",meme.getReactionCount()));
             commentCountV.setText(String.valueOf(meme.getCommentCount()));
-            loadProfileImage(meme.getPoster().getProfileUrl());
-            loadMemeImage(meme.getMemeImageUrl());
+            ImageUtils.loadImageTo(posterPicV,meme.getPoster().getProfileUrl());
+            ImageUtils.loadImageTo(memeImageV,meme.getMemeImageUrl());
         }
-        public void loadMemeImage(String url){
-            MediaManager.get().responsiveUrl(ResponsiveUrl.Preset.FIT)
-                    .stepSize(10)
-                    .generate(Uri.parse(url).getLastPathSegment(), memeImageV, new ResponsiveUrl.Callback() {
-                        @Override
-                        public void onUrlReady(Url url) {
-                            memeImageV.setImageURI(url.generate());
-                        }
-                    });
-        }
-        public void loadProfileImage(String url){
-            if(TextUtils.isEmpty(url)){
-                posterPicV.setImageURI((Uri) null);
-                return;
-            }
-            MediaManager.get().responsiveUrl(ResponsiveUrl.Preset.FIT)
-                    .stepSize(10)
-                    .generate(Uri.parse(url).getLastPathSegment(), posterPicV, new ResponsiveUrl.Callback() {
-                        @Override
-                        public void onUrlReady(Url url) {
-                            posterPicV.setImageURI(url.generate());
-                        }
-                    });
-        }
+
+
         private void showMemeMenu(){
             PopupMenu menu=new PopupMenu(mContext,meme_menu);
             menu.getMenuInflater().inflate(R.menu.meme_menu,menu.getMenu());
