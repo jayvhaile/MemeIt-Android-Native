@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Reaction {
     public enum ReactionType{
-        FUNNY(2f),VERY_FUNNY(3f),SMART(2.5f),STUPID(-1f),CONFUSING(0.25f);
+        FUNNY(2f),VERY_FUNNY(3f),STUPID(-1f),ANGERING(-2F);
 
         private float score;
 
@@ -27,7 +27,10 @@ public class Reaction {
     @SerializedName("rid")
     private String reactorID;
 
-    public Reaction(ReactionType type, String memeID) {
+    public static Reaction create(ReactionType type,String memeID){
+        return new Reaction(type,memeID);
+    }
+    private Reaction(ReactionType type, String memeID) {
         this.type = type.ordinal();
         this.memeID = memeID;
     }

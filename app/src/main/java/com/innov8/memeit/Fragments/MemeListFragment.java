@@ -24,7 +24,7 @@ import java.util.List;
 
 public class MemeListFragment extends Fragment {
     private static final String TAG="MemeListFragment";
-    private static final int LIMIT=20;
+    private static final int LIMIT=5;
 
     private RecyclerView memeList;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -51,7 +51,7 @@ public class MemeListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        memeAdapter=new MemeAdapter(getContext());
+
     }
 
     public void setMemeLoader(MemeLoader loader,boolean reload){
@@ -69,12 +69,11 @@ public class MemeListFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_meme_list, container, false);
         swipeRefreshLayout=view.findViewById(R.id.swipe_to_refresh);
         memeList=view.findViewById(R.id.meme_recycler_view);
+        memeAdapter=new MemeAdapter(getContext());
         setupUI();
         load();
         return view;
     }
-
-
 
     private void setupUI(){
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -83,7 +82,8 @@ public class MemeListFragment extends Fragment {
                refresh();
             }
         });
-        memeList.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        final LinearLayoutManager llm=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        memeList.setLayoutManager(llm);
         DefaultItemAnimator animator=new DefaultItemAnimator();
         memeList.setItemAnimator(animator);
         memeList.setAdapter(memeAdapter);
@@ -92,14 +92,27 @@ public class MemeListFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount=llm.getChildCount();
+                int totalItemCount=llm.getItemCount();
+                int fp=llm.findFirstVisibleItemPosition();
+
+                if(!memeAdapter.isLoading()){//todo jv add isLastPage checker
+                    if(visibleItemCount+fp>=totalItemCount&&fp>=0){
+                        load();
+                    }
+                }
                 //todo load more at the end
             }
         });
     }
+
+
     private void load(){
+        memeAdapter.setLoading(true);
         getMemeLoader().load(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
             @Override
             public void onSuccess(List<Meme> memeResponses) {
+                memeAdapter.setLoading(false);
                 memeAdapter.addAll(memeResponses);
                 incSkip();
             }
@@ -107,6 +120,7 @@ public class MemeListFragment extends Fragment {
             @Override
             public void onFailure(Error error) {
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                memeAdapter.setLoading(false);
             }
         });
     }
@@ -126,7 +140,6 @@ public class MemeListFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-
     }
     private void resetSkip(){
         skip=0;

@@ -150,7 +150,7 @@ interface MemeInterface {
                                                      @Query("skip") int skip,
                                                      @Query("limit") int limit);
 
-    @GET("meme/comments")
+    @GET("meme/comment")
     public Call<List<Comment>> getCommentForMeme(@Query("mid") String mid,
                                                  @Query("skip") int skip,
                                                  @Query("limit") int limit);

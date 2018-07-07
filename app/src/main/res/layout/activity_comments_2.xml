@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="256dp">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
+            app:toolbarId="@+id/toolbar"
+            app:titleEnabled="false">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/meme_image"
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                fresco:actualImageScaleType="fitCenter"
+                fresco:placeholderImage="@drawable/got"
+                app:layout_collapseMode="parallax"/>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"/>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/comments_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior" />
+    <android.support.v7.widget.CardView
+        app:cardCornerRadius="16dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:minHeight="50dp"
+        android:layout_marginBottom="16dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_behavior="@string/scrolling_behavior">
+        <LinearLayout
+            android:minHeight="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.innov8.memeit.CustomClasses.FontEditText
+                android:id="@+id/comment_field"
+                android:background="#fff"
+                android:inputType="textMultiLine"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:minHeight="50dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:hint="Comment"
+                android:paddingLeft="16dp"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/comment_button"
+                android:src="@mipmap/send"
+                android:layout_width="55dp"
+                android:padding="6dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="50dp" />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</android.support.design.widget.CoordinatorLayout>

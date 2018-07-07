@@ -1,198 +1,138 @@
 package com.innov8.memeit.Activities;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.innov8.memeit.Adapters.CommentsAdapter;
+import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.dataclasses.Comment;
+import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.utilis.OnCompleteListener;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CommentsActivity extends AppCompatActivity {
+    public static final String MEME_PARAM_KEY= "meme";
 
-    int page = 1;
-    int limit = 20;
+
+    private static final int LIMIT = 20;
     int skip = 0;
-    int start = 1;
-    int end = 20;
-    int total = 300; //todo: fix this and enter total number of comments for a post
 
-    MemeItMemes memeItMemes;
 
-    String memeID;
+
+    Meme meme;
+    boolean isPostingComment;
+
+    @BindView(R.id.meme_image)
+    SimpleDraweeView memeImage;
+    CommentsAdapter commentsAdapter;
     @BindView(R.id.comments_list)
-    ListView commentsList;
-    @BindView(R.id.comments_back)
-    ImageView backNav;
-    @BindView(R.id.comments_forward)
-    ImageView forwardNav;
+    RecyclerView commentsList;
     @BindView(R.id.comment_field)
     EditText commentField;
     @BindView(R.id.comment_button)
     ImageView commentButton;
-    @BindView(R.id.comments_out_of_text)
-    TextView outOfText;
-
+    OnCompleteListener<Comment> onCommentCompletedListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comments);
+        setContentView(R.layout.activity_comments_2);
         ButterKnife.bind(this);
-        memeID = getIntent().getStringExtra("id");
-
-        memeItMemes = MemeItMemes.getInstance();
-
-        memeItMemes.getCommentsForMeme(memeID, skip, limit, new OnCompleteListener<List<Comment>>() {
+        meme = getIntent().getParcelableExtra(MEME_PARAM_KEY);
+        if(meme==null)
+            throw new NullPointerException("Meme Must be passed to CommentActivity");
+        commentsAdapter=new CommentsAdapter(this);
+        LinearLayoutManager llm=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        commentsList.setLayoutManager(llm);
+        commentsList.setItemAnimator(new DefaultItemAnimator());
+        commentsList.setAdapter(commentsAdapter);
+        onCommentCompletedListener = new OnCompleteListener<Comment>() {
             @Override
-            public void onSuccess(List<Comment> comments) {
-                commentsList.setAdapter(new CommentsAdapter(getApplicationContext(),R.layout.list_item_comment,comments));
-                setOutOfText();
+            public void onSuccess(Comment comment) {
+                Toast.makeText(CommentsActivity.this, "Comment Saved", Toast.LENGTH_SHORT).show();
+                commentField.setText("");
+                refresh();
+                setPostingComment(false);
             }
 
             @Override
             public void onFailure(Error error) {
-                Toast.makeText(getApplicationContext(),"Something went wrong.",Toast.LENGTH_LONG).show();
-                Log.w("Comments Error",error.getMessage() + "\nid = " + memeID);
+                Toast.makeText(CommentsActivity.this, "comment failed " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                setPostingComment(false);
             }
-        });
-
-        backNav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(page!=1){
-                    page--;
-                    skip-=20;
-                    start-=20;
-                    end-=20;
-
-                    memeItMemes.getCommentsForMeme(memeID, skip, limit, new OnCompleteListener<List<Comment>>() {
-                        @Override
-                        public void onSuccess(List<Comment> comments) {
-                            commentsList.setAdapter(new CommentsAdapter(getApplicationContext(),R.layout.list_item_comment,comments));
-                            setOutOfText();
-                        }
-
-                        @Override
-                        public void onFailure(Error error) {
-                            Toast.makeText(getApplicationContext(),"Something went wrong.",Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-                if(page==2) backNav.setColorFilter(Color.parseColor("#bbbbbb"));
-            }
-        });
-        forwardNav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                page++;
-                skip+=20;
-                start+=20;
-                end+=20;
-                memeItMemes.getCommentsForMeme(memeID, skip, limit, new OnCompleteListener<List<Comment>>() {
-                    @Override
-                    public void onSuccess(List<Comment> comments) {
-                        commentsList.setAdapter(new CommentsAdapter(getApplicationContext(),R.layout.list_item_comment,comments));
-                        setOutOfText();
-                    }
-
-                    @Override
-                    public void onFailure(Error error) {
-                        Toast.makeText(getApplicationContext(),"Something went wrong.",Toast.LENGTH_LONG).show();
-                    }
-                });
-                if(page==1) backNav.setColorFilter(Color.parseColor("#000000"));
-            }
-        });
-
+        };
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String commentText = commentField.getText().toString();
-                if(!commentText.equals("")){
-                    memeItMemes.comment(memeID, new Comment(commentText), new OnCompleteListener<Comment>() {
-                        @Override
-                        public void onSuccess(Comment comment) {
-                            memeItMemes.getCommentsForMeme(memeID, skip, limit, new OnCompleteListener<List<Comment>>() {
-                                @Override
-                                public void onSuccess(List<Comment> comments) {
-                                    commentsList.setAdapter(new CommentsAdapter(getApplicationContext(),R.layout.list_item_comment,comments));
-                                    setOutOfText();
-                                }
+                String txt=commentField.getText().toString();
+                if(isPostingComment()||TextUtils.isEmpty(txt))return;
+                Comment comment=Comment.createComment(meme.getMemeId(),txt);
+                setPostingComment(true);
+                MemeItMemes.getInstance().comment(comment, onCommentCompletedListener);
+            }
+        });
+        ImageUtils.loadImageFromCloudinaryTo(memeImage,meme.getMemeImageUrl());
+        load();
 
-                                @Override
-                                public void onFailure(Error error) {
-                                    Toast.makeText(getApplicationContext(),"Something went wrong.",Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        }
+    }
 
-                        @Override
-                        public void onFailure(Error error) {
-                            Toast.makeText(getApplicationContext(),"Sorry, a problem has occured",Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-                else Toast.makeText(getApplicationContext(),"Please enter a comment.",Toast.LENGTH_LONG).show();
+    private void load(){
+        MemeItMemes.getInstance().getCommentsForMeme(meme.getMemeId(), skip,LIMIT, new OnCompleteListener<List<Comment>>() {
+            @Override
+            public void onSuccess(List<Comment> comments) {
+                commentsAdapter.addAll(comments);
+                incSkip();
+            }
+
+            @Override
+            public void onFailure(Error error) {
+                Toast.makeText(CommentsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void refresh(){
+        resetSkip();
+        MemeItMemes.getInstance().getCommentsForMeme(meme.getMemeId(), skip,LIMIT, new OnCompleteListener<List<Comment>>() {
+            @Override
+            public void onSuccess(List<Comment> comments) {
+                commentsAdapter.setAll(comments);
+                incSkip();
+            }
+
+            @Override
+            public void onFailure(Error error) {
+                Toast.makeText(CommentsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public class CommentsAdapter extends ArrayAdapter<Comment>{
-        Context c;
-        ArrayList<Comment> comments = new ArrayList<>();
 
-        public CommentsAdapter(@NonNull Context context, int resource, @NonNull List<Comment> objects) {
-            super(context, resource, objects);
-            c = context;
-            comments = (ArrayList<Comment>) objects;
-        }
-
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            View view= LayoutInflater.from(c).inflate(R.layout.list_item_comment,parent,false);
-            TextView name = view.findViewById(R.id.list_name);
-            TextView comment = view.findViewById(R.id.list_comment);
-            TextView date = view.findViewById(R.id.list_item_date);
-            ImageView userPhoto = view.findViewById(R.id.list_pp);
-
-            Comment currentObject = comments.get(position);
-
-            name.setText(currentObject.getPid());
-            comment.setText(currentObject.getComment());
-            date.setText(currentObject.getDate());
-//            Glide.with(c).load().into(userPhoto); todo: Biruk: Not sure how to do this yet. Find out.
-
-            return super.getView(position, convertView, parent);
-        }
+    private void resetSkip(){
+        skip=0;
+    }
+    private void incSkip(){
+        skip+=LIMIT;
     }
 
-    @SuppressLint("DefaultLocale")
-    public void setOutOfText(){
-        outOfText.setText(String.format("showing %d - %d out of %d memes.", start, end, total));
+    public boolean isPostingComment() {
+        return isPostingComment;
+    }
+
+    public void setPostingComment(boolean postingComment) {
+        isPostingComment = postingComment;
     }
 }

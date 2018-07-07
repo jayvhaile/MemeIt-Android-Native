@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BottomNavigation">
+        <attr name="menu" format="reference"/>
+        <attr name="skip_tint" format="integer"/>
+        <attr name="selected_tint" format="color"/>
+        <attr name="deselected_tint" format="color"/>
+        <attr name="item_padding" format="dimension"/>
+    </declare-styleable>
+</resources>

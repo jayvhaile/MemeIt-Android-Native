@@ -2,6 +2,7 @@ package com.innov8.memeit.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -154,7 +155,7 @@ public class AuthActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     String email = emailV.getText().toString();
                     String password = passwordV.getText().toString();
-                    if (/*CustomMethods.isEmailValid(email) && */password.length() >= 8/*todo: change this back to 8*/) {
+                    if (/*CustomMethods.isEmailValid(email) && */password.length() >= 1/*todo: change this back to 8*/) {
                         MemeItAuth.getInstance().signInWithEmail(email, password, signInCompletedListener);
                     } else {
                         Toast.makeText(getContext(), "Invalid Email or Password", Toast.LENGTH_SHORT).show();
@@ -282,7 +283,7 @@ public class AuthActivity extends AppCompatActivity {
         }
 
         String name;
-        String image_url;
+        Uri image_url;
         boolean isFromGoogle;
         private EditText nameV;
         private SimpleDraweeView profileV;
@@ -290,7 +291,7 @@ public class AuthActivity extends AppCompatActivity {
 
         public void fromGoogle(String name, String pp) {
             if (!TextUtils.isEmpty(pp)) isFromGoogle = true;
-            image_url = pp;
+            image_url = Uri.parse(pp);
             this.name = name;
         }
 
@@ -314,7 +315,7 @@ public class AuthActivity extends AppCompatActivity {
             });
             view.findViewById(R.id.finish).setOnClickListener(this);
             nameV.setText(name);
-            ImageUtils.loadImageTo(profileV, image_url);
+            ImageUtils.loadImageFromUriTo(profileV, image_url);
             return view;
         }
 
@@ -322,7 +323,7 @@ public class AuthActivity extends AppCompatActivity {
         public void onClick(View view) {
             String name = nameV.getText().toString();
             if (isFromGoogle) {
-                uploadData(name, image_url);
+                uploadData(name, image_url.toString());
             } else {
                 if (image_url != null) {
                     uploadImageThenData();
@@ -386,9 +387,9 @@ public class AuthActivity extends AppCompatActivity {
             if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
                 CropImage.ActivityResult result = CropImage.getActivityResult(data);
                 if (resultCode == RESULT_OK) {
-                    image_url = result.getUri().toString();
+                    image_url = result.getUri();
                     isFromGoogle = false;
-                    ImageUtils.loadImageTo(profileV, image_url);
+                    ImageUtils.loadImageFromUriTo(profileV, image_url);
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                     Exception error = result.getError();
                     Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();

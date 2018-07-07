@@ -41,26 +41,26 @@ import java.util.List;
 public class MeFragment extends Fragment {
 
 
-    View view;
-    TabLayout tabLayout;
-    ViewPager pager;
-    ViewPagerAdapter adapter;
-    List<Fragment> fragments;
+  View view;
+  TabLayout tabLayout;
+  ViewPager pager;
+  ViewPagerAdapter adapter;
+  List<Fragment> fragments;
 
-    //TextView nameV;
-    TextView followerV;
-    TextView followingV;
-    TextView memeCountV;
-    SimpleDraweeView profileV;
-    CollapsingToolbarLayout ctoolbar;
-    public MeFragment() {
+  //TextView nameV;
+  TextView followerV;
+  TextView followingV;
+  TextView memeCountV;
+  SimpleDraweeView profileV;
+  CollapsingToolbarLayout ctoolbar;
+  public MeFragment() {
 
-    }
+  }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_user_profile2, container, false);
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    view = inflater.inflate(R.layout.activity_user_profile2, container, false);
 
        /* tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         pager = (ViewPager) view.findViewById(R.id.profile_viewpager);
@@ -87,74 +87,74 @@ public class MeFragment extends Fragment {
         });*/
 
 
-        ctoolbar= view.findViewById(R.id.collapsing_tool);
-        followerV= view.findViewById(R.id.followers);
-        followingV= view.findViewById(R.id.followings);
-        memeCountV= view.findViewById(R.id.meme_count);
-        profileV=view.findViewById(R.id.profile_image);
+    ctoolbar= view.findViewById(R.id.collapsing_tool);
+    followerV= view.findViewById(R.id.followers);
+    followingV= view.findViewById(R.id.followings);
+    memeCountV= view.findViewById(R.id.meme_count);
+    profileV=view.findViewById(R.id.profile_image);
 
-        RoundingParams rp=new RoundingParams();
-        rp.setBorder(Color.WHITE,10);
-        rp.setRoundAsCircle(true);
-        profileV.setHierarchy(GenericDraweeHierarchyBuilder.newInstance(getResources())
-        .setRoundingParams(rp)
-        .build());
-        loadData();
+    RoundingParams rp=new RoundingParams();
+    rp.setBorder(Color.WHITE,10);
+    rp.setRoundAsCircle(true);
+    profileV.setHierarchy(GenericDraweeHierarchyBuilder.newInstance(getResources())
+            .setRoundingParams(rp)
+            .build());
+    loadData();
 
-        return view;
+    return view;
+  }
+
+  private void loadData(){
+    MemeItUsers.getInstance().getMyUserDetail(new OnCompleteListener<User>() {
+      @Override
+      public void onSuccess(User user) {
+        Toast.makeText(getActivity(), "success:"+user.getName(), Toast.LENGTH_SHORT).show();
+
+        ctoolbar.setTitle(user.getName());
+        if(!TextUtils.isEmpty(user.getImageUrl())){
+          profileV.setImageURI(Uri.parse(user.getImageUrl()));
+        }
+        followerV.setText(String.format("%d\nfollowers",user.getFollowerCount()));
+        followingV.setText(String.format("%d\nfollowings",user.getFollowingCount()));
+        memeCountV.setText(String.format("%d Memes",user.getPostCount()));
+      }
+
+      @Override
+      public void onFailure(Error error) {
+        Toast.makeText(getActivity(), "failer: "+error.getMessage(), Toast.LENGTH_SHORT).show();
+      }
+    });
+
+  }
+
+
+  class ViewPagerAdapter extends FragmentPagerAdapter {
+    private final List<Fragment> mFragmentList = new ArrayList<>();
+    private final List<String> mFragmentTitleList = new ArrayList<>();
+
+    public ViewPagerAdapter(FragmentManager manager) {
+      super(manager);
     }
 
-    private void loadData(){
-        MemeItUsers.getInstance().getMyUserDetail(new OnCompleteListener<User>() {
-            @Override
-            public void onSuccess(User user) {
-                Toast.makeText(getActivity(), "success:"+user.getName(), Toast.LENGTH_SHORT).show();
-
-                ctoolbar.setTitle(user.getName());
-                if(!TextUtils.isEmpty(user.getImageUrl())){
-                    profileV.setImageURI(Uri.parse(user.getImageUrl()));
-                }
-                followerV.setText(String.format("%d\nfollowers",user.getFollowerCount()));
-                followingV.setText(String.format("%d\nfollowings",user.getFollowingCount()));
-                memeCountV.setText(String.format("%d Memes",user.getPostCount()));
-            }
-
-            @Override
-            public void onFailure(Error error) {
-                Toast.makeText(getActivity(), "failer: "+error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
+    @Override
+    public Fragment getItem(int position) {
+      return mFragmentList.get(position);
     }
 
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
+    @Override
+    public int getCount() {
+      return mFragmentList.size();
     }
+
+    public void addFragment(Fragment fragment, String title) {
+      mFragmentList.add(fragment);
+      mFragmentTitleList.add(title);
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+      return mFragmentTitleList.get(position);
+    }
+  }
 
 }

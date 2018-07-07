@@ -6,7 +6,7 @@ android {
         applicationId "com.innov8.memeit"
         minSdkVersion 16
         targetSdkVersion 27
-        buildToolsVersion='27.0.3'
+        buildToolsVersion = '27.0.3'
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
@@ -17,7 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 
 
 }
@@ -35,10 +34,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:11.6.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'se.emilsjolander:StickyScrollViewItems:1.1.0'
-    compile 'com.github.armcha:SpaceNavigationView:1.6.0'
-    //image loading library
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
     compile 'com.cloudinary:cloudinary-android:1.24.0'
     //image server
     compile project(path: ':memegenerator')
@@ -47,14 +43,12 @@ dependencies {
     //the backend api module
 
     compile 'com.github.ybq:Android-SpinKit:1.1.0'
-//    compile 'nl.psdcompany:duo-navigation-drawer:2.0.8'
     compile 'com.yarolegovich:sliding-root-nav:1.1.0'
     //Custom Tablayout
-   compile 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
+    compile 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
+    compile 'com.github.BrotherV:Floating-ArcMenu:1.1.0.2'
     compile 'com.facebook.fresco:fresco:1.9.0'
-
 }
 repositories {
     mavenCentral()
-
 }

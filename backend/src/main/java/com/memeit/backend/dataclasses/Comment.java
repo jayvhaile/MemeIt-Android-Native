@@ -1,11 +1,15 @@
 package com.memeit.backend.dataclasses;
 
+import android.net.ParseException;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Jv on 5/13/2018.
  */
-public class Comment {
+public class Comment implements Parcelable{
     @SerializedName("pid")
     private String posterID;
     @SerializedName("mid")
@@ -16,6 +20,30 @@ public class Comment {
     private String comment;
     @SerializedName("date")
     private String date;
+
+    @SerializedName("poster")
+    private Poster poster;
+
+    protected Comment(Parcel in) {
+        posterID = in.readString();
+        memeID = in.readString();
+        commentID = in.readString();
+        comment = in.readString();
+        date = in.readString();
+        poster = in.readParcelable(Poster.class.getClassLoader());
+    }
+
+    public static final Creator<Comment> CREATOR = new Creator<Comment>() {
+        @Override
+        public Comment createFromParcel(Parcel in) {
+            return new Comment(in);
+        }
+
+        @Override
+        public Comment[] newArray(int size) {
+            return new Comment[size];
+        }
+    };
 
     /**
      * Creates a new Comment Object
@@ -56,6 +84,9 @@ public class Comment {
         this.commentID=commentID;
         this.memeID=memeID;
     }
+    public Poster getPoster() {
+        return poster;
+    }
 
     public String getPosterID() {
         return posterID;
@@ -78,5 +109,18 @@ public class Comment {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(posterID);
+        parcel.writeString(memeID);
+        parcel.writeString(commentID);
+        parcel.writeString(comment);
+        parcel.writeString(date);
+        parcel.writeParcelable(poster, i);
+    }
 }

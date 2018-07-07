@@ -3,6 +3,8 @@ package com.innov8.memeit.Activities;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -11,12 +13,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.innov8.memegenerator.SimpleMemeGenerator;
+import com.innov8.memeit.CustomViews.BottomNavigation;
 import com.innov8.memeit.Fragments.FavoritesFragment;
 import com.innov8.memeit.Fragments.HomeFragment;
 import com.innov8.memeit.Fragments.MeFragment;
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_viewpager)
     ViewPager viewPager;
     @BindView(R.id.bottom_nav)
-    LinearLayout bottom_nav;
+    BottomNavigation bottom_nav;
     @BindView(R.id.toolbar2)
     Toolbar mToolbar;
 
@@ -98,23 +102,29 @@ public class MainActivity extends AppCompatActivity {
         this.setSupportActionBar(this.mToolbar);
     }
     private void initBottomNav() {
-        View.OnClickListener listener = new View.OnClickListener() {
+        bottom_nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                int no = Integer.parseInt(String.valueOf(view.getTag()));
-                if (no == -1)
-                    startActivity(new Intent(MainActivity.this, SimpleMemeGenerator.class));
-                else {
-                    select(no);
-                    viewPager.setCurrentItem(no);
-
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_home:
+                        viewPager.setCurrentItem(0);
+                        return true;
+                    case R.id.menu_trending:
+                        viewPager.setCurrentItem(1);
+                        return true;
+                    case R.id.menu_create:
+                        startActivity(new Intent(MainActivity.this, SimpleMemeGenerator.class));
+                        return true;
+                    case R.id.menu_favorites:
+                        viewPager.setCurrentItem(2);
+                        return true;
+                    case R.id.menu_me:
+                        viewPager.setCurrentItem(3);
+                        return true;
                 }
+                return false;
             }
-        };
-        for (int i = 0; i < bottom_nav.getChildCount(); i++) {
-            bottom_nav.getChildAt(i).setOnClickListener(listener);
-        }
-        select(0);
+        });
     }
 
 
@@ -122,26 +132,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_top_menu,menu);
         return true;
-    }
-
-    private void select(int x){
-        this.mToolbar.setTitle(titles[x]);
-        x = x > 1 ? x + 1 : x;
-        clearTints(x);
-        setTinted(x);
-    }
-
-    private void setTinted(int x) {
-        if (x == -1 || x == 2) return;
-        ImageView iv = (ImageView) bottom_nav.getChildAt(x);
-        iv.setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
-    }
-    private void clearTints(int except){
-        for (int i = 0; i < bottom_nav.getChildCount(); i++) {
-            if (i == 2 || i == except) continue;
-            ImageView iv = (ImageView) bottom_nav.getChildAt(i);
-            iv.setColorFilter(getResources().getColor(R.color.bottom_nav_items_gray), PorterDuff.Mode.SRC_IN);
-        }
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {

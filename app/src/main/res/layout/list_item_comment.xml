@@ -2,13 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:padding="14dp"
     android:layout_height="wrap_content">
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/list_pp"
-        android:src="@mipmap/pp"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/comment_poster_pp"
         android:layout_width="50dp"
-        android:layout_height="50dp" />
+        android:layout_height="50dp"
+        android:padding="4dp"
+        fresco:placeholderImage="@drawable/circle"
+        fresco:roundAsCircle="true" />
     <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="1"

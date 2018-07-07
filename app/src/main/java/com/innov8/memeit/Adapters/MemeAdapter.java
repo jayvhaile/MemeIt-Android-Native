@@ -2,33 +2,30 @@ package com.innov8.memeit.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.cloudinary.Url;
-import com.cloudinary.android.MediaManager;
-import com.cloudinary.android.ResponsiveUrl;
+
+import com.bvapp.arcmenulibrary.ArcMenu;
+import com.bvapp.arcmenulibrary.widget.FloatingActionButton;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.innov8.memeit.Activities.CommentsActivity;
 import com.innov8.memeit.CustomClasses.ImageUtils;
-import com.innov8.memeit.CustomClasses.MemeItGlideModule;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.dataclasses.Meme;
+import com.memeit.backend.dataclasses.Reaction;
 import com.memeit.backend.utilis.OnCompleteListener;
 
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,61 +35,101 @@ import okhttp3.ResponseBody;
  * Created by Jv on 6/16/2018.
  */
 
-public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder> {
-    private static final String TAG="MemeAdapter";
+public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
+    private static final String TAG = "MemeAdapter";
 
+    private static final int MEME_TYPE=0;
+    private static final int LOADING_TYPE=1;
     private Context mContext;
     private List<Meme> memes;
     private LayoutInflater mInflater;
+    private boolean isLoading;
     public MemeAdapter(Context mContext) {
         this.mContext = mContext;
-        this.mInflater=LayoutInflater.from(mContext);
-        memes=new ArrayList<>();
+        this.mInflater = LayoutInflater.from(mContext);
+        memes = new ArrayList<>();
     }
+
+
 
     @NonNull
     @Override
-    public MemeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= mInflater.inflate(R.layout.list_item_meme,parent,false);
+    public ViewHolder  onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType==LOADING_TYPE)
+            return new LoadingViewHolder(mInflater.inflate(R.layout.item_list_meme_loading,parent,false));
+
+        View view = mInflater.inflate(R.layout.list_item_meme, parent, false);
         return new MemeViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MemeViewHolder holder, int position) {
-        holder.bindMeme(memes.get(position));
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        if (getItemViewType(position)==MEME_TYPE)
+            ((MemeViewHolder)holder).bindMeme(memes.get(position));
+
     }
 
     @Override
     public int getItemCount() {
-        return memes.size();
+        return memes.size()+(isLoading()?1:0);
     }
-    public void addAll(List<Meme> memes){
-        int start=this.memes.size();
+
+    @Override
+    public int getItemViewType(int position) {
+        return position>=memes.size()?LOADING_TYPE:MEME_TYPE;
+    }
+
+    public void addAll(List<Meme> memes) {
+        if(memes.size()==0)return;
+        int start = this.memes.size();
         this.memes.addAll(memes);
-        notifyItemRangeInserted(start,memes.size());
+        notifyItemRangeInserted(start, memes.size());
     }
-    public void add(Meme meme){
+
+    public void add(Meme meme) {
         memes.add(meme);
-        notifyItemInserted(memes.size()-1);
+        notifyItemInserted(memes.size() - 1);
     }
-    public void remove(Meme meme){
-        if(memes.contains(meme)){
-            int index=memes.indexOf(meme);
+
+    public void remove(Meme meme) {
+        if (memes.contains(meme)) {
+            int index = memes.indexOf(meme);
             memes.remove(meme);
             notifyItemRemoved(index);
         }
     }
-    public void clear(){
+
+    public void clear() {
         memes.clear();
         notifyDataSetChanged();
     }
-    public void setAll(List<Meme> memes){
+
+    public void setAll(List<Meme> memes) {
         this.memes.clear();
         this.memes.addAll(memes);
         notifyDataSetChanged();
     }
 
-    protected class MemeViewHolder extends RecyclerView.ViewHolder {
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    public void setLoading(boolean loading) {
+        isLoading = loading;
+        if(isLoading)
+            notifyItemInserted(memes.size());
+        else
+            notifyItemRemoved(memes.size());
+    }
+    private Meme getMemeByID(String mid){
+        for (Meme meme:memes) {
+            if(meme.getMemeId().equals(mid))
+                return meme;
+        }
+        return null;
+    }
+
+    protected class MemeViewHolder extends ViewHolder {
         private final SimpleDraweeView posterPicV;
         private final SimpleDraweeView memeImageV;
         private final ImageButton commentBtnV;
@@ -101,6 +138,8 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
         private final TextView commentCountV;
         private final ImageButton meme_menu;
         private String memeId;
+        private OnCompleteListener<ResponseBody> reactCompletedListener;
+
         public MemeViewHolder(View itemView) {
             super(itemView);
             meme_menu = itemView.findViewById(R.id.meme_options);
@@ -113,8 +152,11 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
             commentBtnV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Meme meme=getMemeByID(memeId);
+                    if(meme==null)
+                        throw new IllegalStateException("Meme Should not be null");
                     Intent intent = new Intent(mContext, CommentsActivity.class);
-                    intent.putExtra("id",memeId);
+                    intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme);
                     mContext.startActivity(intent);
                 }
             });
@@ -124,36 +166,86 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
                     showMemeMenu();
                 }
             });
+            setupReactions(itemView);
+            reactCompletedListener=new OnCompleteListener() {
+                @Override
+                public void onSuccess(Object o) {
+                    Toast.makeText(mContext, "Reacted", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Error error) {
+                    Toast.makeText(mContext, "reaction failed"+error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            };
         }
+        public void setupReactions(View itemView) {
+            final int[] ITEM_DRAWABLES = {
+                    R.mipmap.laughing,
+                    R.mipmap.rofl,
+                    R.mipmap.neutral,
+                    R.mipmap.angry};
+
+            final String[] STR = { "Funny","Very funny", "Stupid", "Triggering"};
+
+            final ArcMenu menu = itemView.findViewById(R.id.arcMenu);
+            menu.showTooltip(true);
+            menu.setToolTipBackColor(Color.WHITE);
+            menu.setToolTipCorner(6f);
+            menu.setToolTipPadding(2f);
+            menu.setToolTipTextColor(Color.BLUE);
+            menu.setAnim(300, 300, ArcMenu.ANIM_MIDDLE_TO_RIGHT, ArcMenu.ANIM_MIDDLE_TO_RIGHT,
+                    ArcMenu.ANIM_INTERPOLATOR_ACCELERATE_DECLERATE, ArcMenu.ANIM_INTERPOLATOR_ACCELERATE_DECLERATE);
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int no= Integer.parseInt(String.valueOf(v.getTag()));
+                    Reaction reaction=Reaction.create(Reaction.ReactionType.values()[no], memeId);
+                    MemeItMemes.getInstance().reactToMeme(reaction,reactCompletedListener);
+                }
+            };
+            final int itemCount = ITEM_DRAWABLES.length;
+            for (int i = 0; i < itemCount; i++) {
+                FloatingActionButton item = new FloatingActionButton(mContext);
+                item.setSize(FloatingActionButton.SIZE_MINI);
+                item.setIcon(ITEM_DRAWABLES[i]);
+                item.setBackgroundColor(Color.WHITE);
+                menu.setChildSize(item.getIntrinsicHeight()); // set absolute child size for menu
+                menu.addItem(item, STR[i],listener);
+                item.setTag(i);
+            }
+        }
+
 
         public void bindMeme(Meme meme) {
-            memeId=meme.getMemeId();
+            memeId = meme.getMemeId();
             posterNameV.setText(meme.getPoster().getName());
-            reactionCountV.setText(String.format("%d people reacted",meme.getReactionCount()));
+            reactionCountV.setText(String.format("%d people reacted", meme.getReactionCount()));
             commentCountV.setText(String.valueOf(meme.getCommentCount()));
-            ImageUtils.loadImageTo(posterPicV,meme.getPoster().getProfileUrl());
-            ImageUtils.loadImageTo(memeImageV,meme.getMemeImageUrl());
+            ImageUtils.loadImageFromCloudinaryTo(posterPicV, meme.getPoster().getProfileUrl());
+            ImageUtils.loadImageFromCloudinaryTo(memeImageV, meme.getMemeImageUrl());
         }
 
-
-        private void showMemeMenu(){
-            PopupMenu menu=new PopupMenu(mContext,meme_menu);
-            menu.getMenuInflater().inflate(R.menu.meme_menu,menu.getMenu());
+        private void showMemeMenu() {
+            PopupMenu menu = new PopupMenu(mContext, meme_menu);
+            menu.getMenuInflater().inflate(R.menu.meme_menu, menu.getMenu());
             menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()){
+                    switch (item.getItemId()) {
                         case R.id.menu_delete_meme:
                             MemeItMemes.getInstance().deleteMeme(memeId, new OnCompleteListener<ResponseBody>() {
                                 @Override
                                 public void onSuccess(ResponseBody responseBody) {
                                     remove(Meme.forID(memeId));
+                                    //todo show snackbar instead of toast
                                     Toast.makeText(mContext, "Meme Deleted", Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
                                 public void onFailure(Error error) {
-                                    Toast.makeText(mContext, "Meme not Deleted "+error.getMessage(), Toast.LENGTH_LONG).show();
+                                    //todo show snackbar instead of toast
+                                    Toast.makeText(mContext, "Cannot Delete Meme " + error.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             });
                             return true;
@@ -165,4 +257,11 @@ public class MemeAdapter extends RecyclerView.Adapter<MemeAdapter.MemeViewHolder
             menu.show();
         }
     }
+    protected class LoadingViewHolder extends ViewHolder{
+
+        public LoadingViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
 }
