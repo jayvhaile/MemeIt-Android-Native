@@ -20,23 +20,19 @@ import java.io.File;
 
 public class ImageUtils {
     private static final String TAG="ImageUtils";
-    public static void loadImageFromCloudinaryTo(final SimpleDraweeView sdv, String url){
-        if(TextUtils.isEmpty(url)){
+    public static void loadImageFromCloudinaryTo(final SimpleDraweeView sdv, String id){
+        if(TextUtils.isEmpty(id)){
             sdv.setImageURI((Uri) null);
             return;
         }
-        url=Uri.parse(url).getLastPathSegment();
         Transformation t=new Transformation().quality("10");
-        Log.d(TAG, "source : "+url);
-        Url a=MediaManager.get().url().transformation(t).source(url);
-        Log.d(TAG, "transformed: "+a.generate());
+        Url a=MediaManager.get().url().transformation(t).source(id);
         MediaManager.get().responsiveUrl(ResponsiveUrl.Preset.FIT)
                 .stepSize(10)
                 .generate(a, sdv, new ResponsiveUrl.Callback() {
                     @Override
                     public void onUrlReady(Url url) {
                         String u=url.generate();
-                        Log.d(TAG, "onUrlReady: "+u);
                         sdv.setImageURI(u);
                     }
                 });

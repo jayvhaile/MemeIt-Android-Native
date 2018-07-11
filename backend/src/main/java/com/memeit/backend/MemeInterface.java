@@ -29,16 +29,16 @@ interface MemeInterface {
     //=============================Auth Related=================================================
 
     //------POST------
-    @POST("signin")
+    @POST("auth/signin")
     public Call<AuthToken> loginWithEmail(@Body AuthInfo user);
 
-    @POST("signin/google")
+    @POST("auth/signin/google")
     public Call<AuthToken> loginWithGoogle(@Body AuthInfo user);
 
-    @POST("signup")
+    @POST("auth/signup")
     public Call<AuthToken> signUpWithEmail(@Body AuthInfo user);
 
-    @POST("signup/google")
+    @POST("auth/signup/google")
     public Call<AuthToken> signUpWithGoogle(@Body AuthInfo user);
 
     @DELETE("user/me")
@@ -115,6 +115,8 @@ interface MemeInterface {
 
     //================================Memes Related=============================================
 
+    @GET("meme/{id}/refresh")
+    public Call<Meme> getRefreshedMeme(@Path("id") String id);
     @GET("meme/home")
     public Call<List<Meme>> getHomeMemes(@Query("skip") int skip,
                                          @Query("limit") int limit);

@@ -363,9 +363,9 @@ public class AuthActivity extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(String s, Map map) {
-                    String url = String.valueOf(map.get("secure_url"));
+                    String public_id = String.valueOf(map.get("public_id"));
                     String name = nameV.getText().toString();
-                    uploadData(name, url);
+                    uploadData(name, public_id);
                 }
 
                 @Override

@@ -1,4 +1,5 @@
 package com.memeit.backend;
+
 import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.dataclasses.Reaction;
@@ -8,6 +9,10 @@ import com.memeit.backend.utilis.OnCompleteListener;
 import java.util.List;
 
 import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
+
+import static com.memeit.backend.utilis.Utils.checkAndFireSuccess;
 
 /**
  * This Class Provide the interface to get memes, post memes to the server and many other actions
@@ -27,6 +32,22 @@ public class MemeItMemes {
     public static MemeItMemes getInstance() {
         return memeItmemes;
     }
+
+
+    public void getRefreshedMeme(final Meme meme, final OnCompleteListener<Meme> listener) {
+        MemeItClient.getInstance().getInterface()
+                .getRefreshedMeme(meme.getMemeId())
+                .enqueue(new MyCallBack<Meme>(listener) {
+                    @Override
+                    public void onResponse(Call<Meme> call, Response<Meme> response) {
+                        if (response.isSuccessful()) {
+                            checkAndFireSuccess(this.listener,meme.refresh(response.body()));
+                        } else
+                            super.onResponse(call, response);
+                    }
+                });
+    }
+
     /**
      * this is to get home page meme list for a logged in user
      *
@@ -61,7 +82,7 @@ public class MemeItMemes {
      * @param listener the Listener to be called when the action is completed
      **/
     public void getTrendingMemes(int skip, int limit, OnCompleteListener<List<Meme>> listener) {
-       MemeItClient.getInstance().getInterface()
+        MemeItClient.getInstance().getInterface()
                 .getTrendingMemes(skip, limit)
                 .enqueue(new MyCallBack<List<Meme>>(listener));
 
@@ -207,7 +228,7 @@ public class MemeItMemes {
      * reacting again to the same meme results to updating
      * the previous meme
      *
-     * @param reaction  the reaction object
+     * @param reaction the reaction object
      * @param listener the Listener to be called when the action is completed
      **/
     public void reactToMeme(Reaction reaction, OnCompleteListener<ResponseBody> listener) {
@@ -243,14 +264,13 @@ public class MemeItMemes {
     /**
      * this is to edit a comment
      *
-
-     * @param cid      the comment id to be edited
+     * @param cid           the comment id to be edited
      * @param editedComment the edited comment text
-     * @param listener the Listener to be called when the action is completed
+     * @param listener      the Listener to be called when the action is completed
      **/
-    public void editComment(String cid,String editedComment, OnCompleteListener<ResponseBody> listener) {
+    public void editComment(String cid, String editedComment, OnCompleteListener<ResponseBody> listener) {
         MemeItClient.getInstance().getInterface()
-                .updateComment(Comment.createCommentForUpdate(cid,editedComment))
+                .updateComment(Comment.createCommentForUpdate(cid, editedComment))
                 .enqueue(new MyCallBack<ResponseBody>(listener));
     }
 
@@ -263,7 +283,7 @@ public class MemeItMemes {
      **/
     public void deleteComment(String mid, String cid, OnCompleteListener<ResponseBody> listener) {
         MemeItClient.getInstance().getInterface()
-                .deleteComment(Comment.createCommentForDelete(mid,cid))
+                .deleteComment(Comment.createCommentForDelete(mid, cid))
                 .enqueue(new MyCallBack<ResponseBody>(listener));
 
     }

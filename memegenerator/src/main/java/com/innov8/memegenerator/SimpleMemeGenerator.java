@@ -1,7 +1,9 @@
 package com.innov8.memegenerator;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +23,9 @@ import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.theartofdev.edmodo.cropper.CropImage;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.ImageEngine;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +57,8 @@ public class SimpleMemeGenerator extends AppCompatActivity {
             public void onClick(View view) {
                 CropImage.activity()
                         .start(SimpleMemeGenerator.this);
+
+
             }
         });
         findViewById(R.id.post).setOnClickListener(new View.OnClickListener() {
@@ -98,10 +105,11 @@ public class SimpleMemeGenerator extends AppCompatActivity {
 
             @Override
             public void onSuccess(String s, Map map) {
-                String url= String.valueOf(map.get("secure_url"));
+                //printMap(map);
+                String public_id= String.valueOf(map.get("public_id"));
                 pd.setMessage("Image Uploaded");
                 pd.setIndeterminate(true);
-                MemeItMemes.getInstance().postMeme(prepareRequest(url), new OnCompleteListener<Meme>() {
+                MemeItMemes.getInstance().postMeme(prepareRequest(public_id), new OnCompleteListener<Meme>() {
                     @Override
                     public void onSuccess(Meme memeResponse) {
                         pd.dismiss();
@@ -139,8 +147,18 @@ public class SimpleMemeGenerator extends AppCompatActivity {
         if (!TextUtils.isEmpty(tag)){
             tags= Arrays.asList(tag.split(","));
         }
-        return Meme.createMeme(uri,texts,tags);
+        return Meme.createMeme(uri, Meme.MemeType.IMAGE,texts,tags);
 
+    }
+
+    private void printMap(Map map){
+        Object keys[]=map.keySet().toArray();
+
+        for (int i = 0; i < keys.length; i++) {
+            String key= String.valueOf(keys[i]);
+            String elem= String.valueOf(map.get(keys[i]));
+            Log.d(TAG, String.format("%02d=> %s : %s",i, key,elem));
+        }
     }
 
 }

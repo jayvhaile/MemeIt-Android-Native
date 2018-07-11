@@ -13,6 +13,10 @@ import java.util.List;
  */
 
 public class Meme implements Parcelable {
+    public enum MemeType {
+        IMAGE, GIF
+    }
+
     @SerializedName("mid")
     private String memeId;
     @SerializedName("poster")
@@ -31,33 +35,43 @@ public class Meme implements Parcelable {
     private Long commentCount;
     @SerializedName("point")
     private Double point;
-    public static Meme createMeme(String memeImageUrl){
-        return new Meme(memeImageUrl,new ArrayList<String>(),new ArrayList<String>());
+    @SerializedName("type")
+    private String type;
+
+    public static Meme createMeme(String memeImageUrl, MemeType type) {
+        return new Meme(memeImageUrl, type, new ArrayList<String>(), new ArrayList<String>());
     }
-    public static Meme createMeme(String memeImageUrl,  List<String> texts){
-        return new Meme(memeImageUrl,texts,new ArrayList<String>());
+
+    public static Meme createMeme(String memeImageUrl, MemeType type, List<String> texts) {
+        return new Meme(memeImageUrl, type, texts, new ArrayList<String>());
     }
-    public static Meme createMeme(String memeImageUrl,  List<String> texts, List<String> tags){
-        return new Meme(memeImageUrl,texts,tags);
+
+    public static Meme createMeme(String memeImageUrl, MemeType type, List<String> texts, List<String> tags) {
+        return new Meme(memeImageUrl, type, texts, tags);
     }
-    public static Meme forID(String memeID){
+
+    public static Meme forID(String memeID) {
         return new Meme(memeID);
     }
 
 
-    public Meme(){
+    public Meme() {
 
     }
-    private Meme(String memeId){
-        this.memeId=memeId;
+
+    private Meme(String memeId) {
+        this.memeId = memeId;
     }
-    private Meme(String memeImageUrl, List<String> texts, List<String> tags) {
+
+    private Meme(String memeImageUrl, MemeType type, List<String> texts, List<String> tags) {
         this.memeImageUrl = memeImageUrl;
         this.tags = tags;
         this.texts = texts;
+        this.type = type.toString().toLowerCase();
     }
-    private Meme(List<String> texts, List<String> tags,String mid) {
-        this.memeId=mid;
+
+    private Meme(List<String> texts, List<String> tags, String mid) {
+        this.memeId = mid;
         this.tags = tags;
         this.texts = texts;
     }
@@ -73,6 +87,7 @@ public class Meme implements Parcelable {
         this.commentCount = commentCount;
         this.point = point;
     }
+
     @Override
     public int describeContents() {
         return 0;
@@ -88,7 +103,7 @@ public class Meme implements Parcelable {
         parcel.writeLong(reactionCount);
         parcel.writeLong(commentCount);
         parcel.writeDouble(point);
-        parcel.writeParcelable(poster,i);
+        parcel.writeParcelable(poster, i);
     }
 
     protected Meme(Parcel in) {
@@ -96,11 +111,11 @@ public class Meme implements Parcelable {
         memeImageUrl = in.readString();
         tags = in.createStringArrayList();
         texts = in.createStringArrayList();
-        date=in.readLong();
-        reactionCount=in.readLong();
-        commentCount=in.readLong();
-        point=in.readDouble();
-        poster=in.readParcelable(Poster.class.getClassLoader());
+        date = in.readLong();
+        reactionCount = in.readLong();
+        commentCount = in.readLong();
+        point = in.readDouble();
+        poster = in.readParcelable(Poster.class.getClassLoader());
     }
 
     public static final Creator<Meme> CREATOR = new Creator<Meme>() {
@@ -159,10 +174,14 @@ public class Meme implements Parcelable {
         return point;
     }
 
+    public MemeType getType() {
+        return MemeType.valueOf(type.toUpperCase());
+    }
+
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Meme){
-            Meme meme= (Meme) obj;
+        if (obj instanceof Meme) {
+            Meme meme = (Meme) obj;
             return this.getMemeId().equals(meme.getMemeId());
         }
         return false;
@@ -173,18 +192,52 @@ public class Meme implements Parcelable {
         return this.getMemeId().hashCode();
     }
 
+    @Override
+    protected Meme clone()  {
+        Meme meme=new Meme();
+        meme.memeId=memeId;
+        meme.poster = poster;
+        meme.memeImageUrl = memeImageUrl;
+        meme.tags = tags;
+        meme.texts = texts;
+        meme.date = date;
+        meme.reactionCount = reactionCount;
+        meme.commentCount = commentCount;
+        meme.point = point;
+        return meme;
+    }
 
-    public Meme forUpdate(List<String> texts,List<String> tags){
-        return new Meme(texts,tags,getMemeId());
+    public void setReactionCount(Long reactionCount) {
+        this.reactionCount = reactionCount;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public void setPoint(Double point) {
+        this.point = point;
+    }
+
+    public Meme forUpdate(List<String> texts, List<String> tags) {
+        return new Meme(texts, tags, getMemeId());
     }
 
 
-    public Reaction makeReaction(Reaction.ReactionType reactionType){
-        return Reaction.create(reactionType,getMemeId());
-    }
-    public Comment makeComment(String comment){
-        return Comment.createComment(getMemeId(),comment);
+    public Reaction makeReaction(Reaction.ReactionType reactionType) {
+        return Reaction.create(reactionType, getMemeId());
     }
 
+    public Comment makeComment(String comment) {
+        return Comment.createComment(getMemeId(), comment);
+    }
+
+    public Meme refresh(Meme meme) {
+        Meme m=clone();
+        m.commentCount = meme.commentCount;
+        m.reactionCount = meme.reactionCount;
+        m.point = meme.point;
+        return this;
+    }
 
 }

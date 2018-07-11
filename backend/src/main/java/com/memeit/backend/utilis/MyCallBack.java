@@ -12,7 +12,7 @@ import static com.memeit.backend.utilis.Utils.checkAndFireError;
 import static com.memeit.backend.utilis.Utils.checkAndFireSuccess;
 
 public  class MyCallBack<T> implements Callback<T> {
-    OnCompleteListener<T> listener;
+    public OnCompleteListener<T> listener;
 
     public MyCallBack(OnCompleteListener<T> listener) {
         this.listener = listener;

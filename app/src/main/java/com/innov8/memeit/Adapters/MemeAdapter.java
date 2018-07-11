@@ -90,6 +90,11 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
         memes.add(meme);
         notifyItemInserted(memes.size() - 1);
     }
+    public void updateMeme(Meme meme){
+        int index=memes.indexOf(meme);
+        memes.set(index,meme);
+        notifyItemChanged(index);
+    }
 
     public void remove(Meme meme) {
         if (memes.contains(meme)) {
@@ -171,6 +176,7 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
                 @Override
                 public void onSuccess(Object o) {
                     Toast.makeText(mContext, "Reacted", Toast.LENGTH_SHORT).show();
+                    refreshMeme();
                 }
 
                 @Override
@@ -178,6 +184,20 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
                     Toast.makeText(mContext, "reaction failed"+error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             };
+        }
+        private void refreshMeme(){
+            Meme  meme=getMemeByID(memeId);
+            MemeItMemes.getInstance().getRefreshedMeme(meme, new OnCompleteListener<Meme>() {
+                @Override
+                public void onSuccess(Meme meme) {
+                    updateMeme(meme);
+                }
+
+                @Override
+                public void onFailure(Error error) {
+
+                }
+            });
         }
         public void setupReactions(View itemView) {
             final int[] ITEM_DRAWABLES = {
@@ -199,9 +219,7 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int no= Integer.parseInt(String.valueOf(v.getTag()));
-                    Reaction reaction=Reaction.create(Reaction.ReactionType.values()[no], memeId);
-                    MemeItMemes.getInstance().reactToMeme(reaction,reactCompletedListener);
+                    react(v);
                 }
             };
             final int itemCount = ITEM_DRAWABLES.length;
@@ -214,6 +232,12 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
                 menu.addItem(item, STR[i],listener);
                 item.setTag(i);
             }
+        }
+
+        private void react(View v) {
+            int no= Integer.parseInt(String.valueOf(v.getTag()));
+            Reaction reaction=Reaction.create(Reaction.ReactionType.values()[no], memeId);
+            MemeItMemes.getInstance().reactToMeme(reaction,reactCompletedListener);
         }
 
 
@@ -258,7 +282,6 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
     protected class LoadingViewHolder extends ViewHolder{
-
         public LoadingViewHolder(View itemView) {
             super(itemView);
         }

@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.innov8.memegenerator.MemeEditorActivity;
 import com.innov8.memegenerator.SimpleMemeGenerator;
 import com.innov8.memeit.CustomViews.BottomNavigation;
 import com.innov8.memeit.Fragments.FavoritesFragment;
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                         viewPager.setCurrentItem(1);
                         return true;
                     case R.id.menu_create:
-                        startActivity(new Intent(MainActivity.this, SimpleMemeGenerator.class));
+                        startActivity(new Intent(MainActivity.this, MemeEditorActivity.class));
                         return true;
                     case R.id.menu_favorites:
                         viewPager.setCurrentItem(2);

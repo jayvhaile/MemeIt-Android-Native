@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#ddd</color>
     <color name="colorAccent">#FF4081</color>
     <color name="red">#ff5656</color>
+    <color name="editor_actions_drawable_color">#777</color>
 </resources>
 
