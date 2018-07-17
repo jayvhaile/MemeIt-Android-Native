@@ -11,4 +11,20 @@
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/memeit_toolbar"/>
 
+        <com.innov8.memeit.loading_button_lib.customViews.CircularProgressButton
+            android:id="@+id/follow"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/button_follow_back"
+            android:text="Follow"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"
+            app:spinning_bar_color="@color/colorAccent"
+            app:spinning_bar_width="3dp"
+            app:spinning_bar_padding="0dp"
+            app:finalCornerAngle="20dp"
+            app:initialCornerAngle="20dp"/>
+
 </FrameLayout>

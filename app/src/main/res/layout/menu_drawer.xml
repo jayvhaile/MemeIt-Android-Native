@@ -161,6 +161,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/logout"
         android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:paddingBottom="30dp"
@@ -176,7 +177,7 @@
             android:textColor="#313131"
             android:textSize="21sp"
             android:paddingLeft="16dp"
-            android:text="Log"
+            android:text="Log out"
             android:layout_height="wrap_content" />
     </LinearLayout>
     </LinearLayout>

@@ -7,8 +7,8 @@
     android:layout_height="wrap_content">
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/comment_poster_pp"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/profile_mini_size"
+        android:layout_height="@dimen/profile_mini_size"
         android:padding="4dp"
         fresco:placeholderImage="@drawable/circle"
         fresco:roundAsCircle="true" />

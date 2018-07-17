@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.innov8.memeit.Fragments.MeFragment">
+    tools:context="com.innov8.memeit.Fragments.ProfileFragment">
 
     <com.emilsjolander.components.StickyScrollViewItems.StickyScrollView
         android:layout_width="match_parent"

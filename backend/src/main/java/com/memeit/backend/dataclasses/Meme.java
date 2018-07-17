@@ -23,6 +23,8 @@ public class Meme implements Parcelable {
     private Poster poster;
     @SerializedName("img_url")
     private String memeImageUrl;
+    @SerializedName("ratio")
+    private Double memeImageRatio;
     @SerializedName("tags")
     private List<String> tags;
     @SerializedName("texts")
@@ -38,16 +40,17 @@ public class Meme implements Parcelable {
     @SerializedName("type")
     private String type;
 
-    public static Meme createMeme(String memeImageUrl, MemeType type) {
-        return new Meme(memeImageUrl, type, new ArrayList<String>(), new ArrayList<String>());
+
+    public static Meme createMeme(String memeImageUrl,double memeImageRatio, MemeType type) {
+        return new Meme(memeImageUrl,memeImageRatio, type, new ArrayList<String>(), new ArrayList<String>());
     }
 
-    public static Meme createMeme(String memeImageUrl, MemeType type, List<String> texts) {
-        return new Meme(memeImageUrl, type, texts, new ArrayList<String>());
+    public static Meme createMeme(String memeImageUrl,double memeImageRatio, MemeType type, List<String> texts) {
+        return new Meme(memeImageUrl,memeImageRatio, type, texts, new ArrayList<String>());
     }
 
-    public static Meme createMeme(String memeImageUrl, MemeType type, List<String> texts, List<String> tags) {
-        return new Meme(memeImageUrl, type, texts, tags);
+    public static Meme createMeme(String memeImageUrl,double memeImageRatio, MemeType type, List<String> texts, List<String> tags) {
+        return new Meme(memeImageUrl,memeImageRatio, type, texts, tags);
     }
 
     public static Meme forID(String memeID) {
@@ -63,11 +66,12 @@ public class Meme implements Parcelable {
         this.memeId = memeId;
     }
 
-    private Meme(String memeImageUrl, MemeType type, List<String> texts, List<String> tags) {
+    private Meme(String memeImageUrl,double memeImageRatio, MemeType type, List<String> texts, List<String> tags) {
         this.memeImageUrl = memeImageUrl;
         this.tags = tags;
         this.texts = texts;
         this.type = type.toString().toLowerCase();
+        this.memeImageRatio=memeImageRatio;
     }
 
     private Meme(List<String> texts, List<String> tags, String mid) {
@@ -76,10 +80,11 @@ public class Meme implements Parcelable {
         this.texts = texts;
     }
 
-    private Meme(String memeId, Poster poster, String memeImageUrl, List<String> tags, List<String> texts, Long date, Long reactionCount, Long commentCount, Double point) {
+    private Meme(String memeId, Poster poster, String memeImageUrl,double memeImageRatio, List<String> tags, List<String> texts, Long date, Long reactionCount, Long commentCount, Double point) {
         this.memeId = memeId;
         this.poster = poster;
         this.memeImageUrl = memeImageUrl;
+        this.memeImageRatio=memeImageRatio;
         this.tags = tags;
         this.texts = texts;
         this.date = date;
@@ -103,6 +108,7 @@ public class Meme implements Parcelable {
         parcel.writeLong(reactionCount);
         parcel.writeLong(commentCount);
         parcel.writeDouble(point);
+        parcel.writeDouble(memeImageRatio);
         parcel.writeParcelable(poster, i);
     }
 
@@ -115,6 +121,7 @@ public class Meme implements Parcelable {
         reactionCount = in.readLong();
         commentCount = in.readLong();
         point = in.readDouble();
+        memeImageRatio = in.readDouble();
         poster = in.readParcelable(Poster.class.getClassLoader());
     }
 
@@ -178,6 +185,10 @@ public class Meme implements Parcelable {
         return MemeType.valueOf(type.toUpperCase());
     }
 
+    public double getMemeImageRatio() {
+        return memeImageRatio==null?1.0:memeImageRatio;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Meme) {
@@ -204,6 +215,7 @@ public class Meme implements Parcelable {
         meme.reactionCount = reactionCount;
         meme.commentCount = commentCount;
         meme.point = point;
+        meme.memeImageRatio=memeImageRatio;
         return meme;
     }
 

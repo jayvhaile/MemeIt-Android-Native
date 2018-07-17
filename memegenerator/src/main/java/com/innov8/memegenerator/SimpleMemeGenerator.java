@@ -105,11 +105,14 @@ public class SimpleMemeGenerator extends AppCompatActivity {
 
             @Override
             public void onSuccess(String s, Map map) {
-                //printMap(map);
+                printMap(map);
                 String public_id= String.valueOf(map.get("public_id"));
+                double width= Double.parseDouble(String.valueOf( map.get("width")));
+                double height=Double.parseDouble(String.valueOf( map.get("height")));
+                double ratio=width/height;
                 pd.setMessage("Image Uploaded");
                 pd.setIndeterminate(true);
-                MemeItMemes.getInstance().postMeme(prepareRequest(public_id), new OnCompleteListener<Meme>() {
+                MemeItMemes.getInstance().postMeme(prepareRequest(public_id,ratio), new OnCompleteListener<Meme>() {
                     @Override
                     public void onSuccess(Meme memeResponse) {
                         pd.dismiss();
@@ -136,7 +139,7 @@ public class SimpleMemeGenerator extends AppCompatActivity {
         }).dispatch();
     }
 
-    private Meme prepareRequest(String uri){
+    private Meme prepareRequest(String uri,double ratio){
         String txt=texts.getText().toString();
         String tag=tags.getText().toString();
         List<String> texts=null;
@@ -147,7 +150,7 @@ public class SimpleMemeGenerator extends AppCompatActivity {
         if (!TextUtils.isEmpty(tag)){
             tags= Arrays.asList(tag.split(","));
         }
-        return Meme.createMeme(uri, Meme.MemeType.IMAGE,texts,tags);
+        return Meme.createMeme(uri,ratio, Meme.MemeType.IMAGE,texts,tags);
 
     }
 

@@ -50,7 +50,7 @@ public class AuthActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CustomMethods.makeWindowSeamless(this);
-        setContentView(R.layout.activity_redesigned_login);
+        setContentView(R.layout.activity_auth);
         ButterKnife.bind(this);
         CustomMethods.makeBackgroundScrollAnimate(this, R.id.background_login_1, R.id.background_login_2);
         initFragments();

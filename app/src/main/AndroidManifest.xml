@@ -21,11 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.SignUpActivity" />
-        <activity android:name=".Activities.SetupProfileActivity" />
-        <activity android:name=".Activities.SignInActivity" />
-        <activity android:name=".Activities.SettingsActivity" />
-        <activity android:name=".Activities.SignInAndUpActivity" />
+        <activity android:name=".Activities.ProfileActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />

@@ -3,22 +3,34 @@ package com.innov8.memeit.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Animatable;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bvapp.arcmenulibrary.ArcMenu;
 import com.bvapp.arcmenulibrary.widget.FloatingActionButton;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.innov8.memeit.Activities.CommentsActivity;
+import com.innov8.memeit.Activities.ProfileActivity;
+import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItMemes;
@@ -35,49 +47,25 @@ import okhttp3.ResponseBody;
  * Created by Jv on 6/16/2018.
  */
 
-public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
+public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme>> {
     private static final String TAG = "MemeAdapter";
 
     private static final int MEME_TYPE=0;
     private static final int LOADING_TYPE=1;
-    private Context mContext;
-    private List<Meme> memes;
-    private LayoutInflater mInflater;
-    private boolean isLoading;
+    protected Context mContext;
+    protected List<Meme> memes;
+    protected LayoutInflater mInflater;
+    int screen_width;
     public MemeAdapter(Context mContext) {
         this.mContext = mContext;
         this.mInflater = LayoutInflater.from(mContext);
         memes = new ArrayList<>();
+        screen_width = mContext.getResources().getDisplayMetrics().widthPixels;
     }
 
 
 
-    @NonNull
-    @Override
-    public ViewHolder  onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType==LOADING_TYPE)
-            return new LoadingViewHolder(mInflater.inflate(R.layout.item_list_meme_loading,parent,false));
 
-        View view = mInflater.inflate(R.layout.list_item_meme, parent, false);
-        return new MemeViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (getItemViewType(position)==MEME_TYPE)
-            ((MemeViewHolder)holder).bindMeme(memes.get(position));
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return memes.size()+(isLoading()?1:0);
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position>=memes.size()?LOADING_TYPE:MEME_TYPE;
-    }
 
     public void addAll(List<Meme> memes) {
         if(memes.size()==0)return;
@@ -90,11 +78,7 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
         memes.add(meme);
         notifyItemInserted(memes.size() - 1);
     }
-    public void updateMeme(Meme meme){
-        int index=memes.indexOf(meme);
-        memes.set(index,meme);
-        notifyItemChanged(index);
-    }
+
 
     public void remove(Meme meme) {
         if (memes.contains(meme)) {
@@ -114,29 +98,121 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.memes.addAll(memes);
         notifyDataSetChanged();
     }
-
-    public boolean isLoading() {
-        return isLoading;
+    public void updateMeme(Meme meme){
+        int index=memes.indexOf(meme);
+        memes.set(index,meme);
+        notifyItemChanged(index);
     }
 
-    public void setLoading(boolean loading) {
-        isLoading = loading;
-        if(isLoading)
-            notifyItemInserted(memes.size());
-        else
-            notifyItemRemoved(memes.size());
-    }
-    private Meme getMemeByID(String mid){
+    protected Meme getMemeByID(String mid){
         for (Meme meme:memes) {
             if(meme.getMemeId().equals(mid))
                 return meme;
         }
         return null;
     }
+    public abstract boolean isLoading();
+    public abstract void setLoading(boolean loading);
+    public abstract RecyclerView.LayoutManager createlayoutManager();
 
-    protected class MemeViewHolder extends ViewHolder {
+    public static class Listed extends MemeAdapter{
+        private boolean isLoading;
+
+        public Listed(Context mContext) {
+            super(mContext);
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder<Meme>  onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            if (viewType==LOADING_TYPE)
+                return new MemeAdapter.LoadingViewHolder(mInflater.inflate(R.layout.item_list_meme_loading,parent,false));
+
+            View view = mInflater.inflate(R.layout.list_item_meme, parent, false);
+            return new MemeListViewHolder(view);
+
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            if (getItemViewType(position)==MEME_TYPE)
+                holder.bind(memes.get(position));
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return memes.size()+(isLoading()?1:0);
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position>=memes.size()?LOADING_TYPE:MEME_TYPE;
+        }
+        @Override
+        public boolean isLoading() {
+            return isLoading;
+        }
+        @Override
+        public void setLoading(boolean loading) {
+            isLoading = loading;
+            if(isLoading)
+                notifyItemInserted(memes.size());
+            else
+                notifyItemRemoved(memes.size());
+        }
+
+        @Override
+        public RecyclerView.LayoutManager createlayoutManager() {
+            LinearLayoutManager lm=new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false);
+            return lm;
+        }
+
+    }
+    public static class Grid extends MemeAdapter{
+
+        public Grid(Context mContext) {
+            super(mContext);
+        }
+
+        @Override
+        public boolean isLoading() {
+            return false;
+        }
+
+        @Override
+        public void setLoading(boolean loading) {
+
+        }
+
+        @Override
+        public RecyclerView.LayoutManager createlayoutManager() {
+            GridLayoutManager glm=new GridLayoutManager(mContext,3,LinearLayoutManager.VERTICAL,false);
+            return glm;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder<Meme> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = mInflater.inflate(R.layout.list_item_meme_grid, parent, false);
+            return new MemeGridViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder<Meme> holder, int position) {
+            holder.bind(memes.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return memes.size();
+        }
+    }
+
+    public class MemeListViewHolder extends MyViewHolder<Meme> {
         private final SimpleDraweeView posterPicV;
         private final SimpleDraweeView memeImageV;
+        private LinearLayout holder;
         private final ImageButton commentBtnV;
         private final TextView posterNameV;
         private final TextView reactionCountV;
@@ -145,10 +221,10 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
         private String memeId;
         private OnCompleteListener<ResponseBody> reactCompletedListener;
 
-        public MemeViewHolder(View itemView) {
+        public MemeListViewHolder(View itemView) {
             super(itemView);
             meme_menu = itemView.findViewById(R.id.meme_options);
-            posterPicV = itemView.findViewById(R.id.meme_poster_pp);
+            posterPicV = itemView.findViewById(R.id.follower_poster_pp);
             memeImageV = itemView.findViewById(R.id.meme_image);
             commentBtnV = itemView.findViewById(R.id.meme_comment);
             posterNameV = itemView.findViewById(R.id.meme_poster_name);
@@ -163,6 +239,14 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
                     Intent intent = new Intent(mContext, CommentsActivity.class);
                     intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme);
                     mContext.startActivity(intent);
+                }
+            });
+            posterPicV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i=new Intent(mContext, ProfileActivity.class);
+                    i.putExtra("uid",getMemeByID(memeId).getPoster().getID());
+                    mContext.startActivity(i);
                 }
             });
             meme_menu.setOnClickListener(new View.OnClickListener() {
@@ -185,6 +269,28 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
                 }
             };
         }
+        public void bind(Meme meme) {
+            memeId = meme.getMemeId();
+            posterNameV.setText(meme.getPoster().getName());
+            reactionCountV.setText(String.format("%d people reacted", meme.getReactionCount()));
+            commentCountV.setText(String.valueOf(meme.getCommentCount()));
+            ImageUtils.loadImageFromCloudinaryTo(posterPicV, meme.getPoster().getProfileUrl());
+            adjust(meme.getMemeImageRatio());
+            ImageUtils.loadImageFromCloudinaryTo(memeImageV, meme.getMemeImageUrl());
+        }
+
+
+        private void adjust( double ratio){
+            int width=screen_width;
+            int height= (int) (width/ratio);
+            int max_height= (int) CustomMethods.convertDPtoPX(mContext,500.0f);
+            int min_height= (int) CustomMethods.convertDPtoPX(mContext,200.0f);
+            height=height<min_height?min_height:height>max_height?max_height:height;
+            LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(width,height);
+            memeImageV.setLayoutParams(params);
+        }
+
+
         private void refreshMeme(){
             Meme  meme=getMemeByID(memeId);
             MemeItMemes.getInstance().getRefreshedMeme(meme, new OnCompleteListener<Meme>() {
@@ -239,17 +345,6 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
             Reaction reaction=Reaction.create(Reaction.ReactionType.values()[no], memeId);
             MemeItMemes.getInstance().reactToMeme(reaction,reactCompletedListener);
         }
-
-
-        public void bindMeme(Meme meme) {
-            memeId = meme.getMemeId();
-            posterNameV.setText(meme.getPoster().getName());
-            reactionCountV.setText(String.format("%d people reacted", meme.getReactionCount()));
-            commentCountV.setText(String.valueOf(meme.getCommentCount()));
-            ImageUtils.loadImageFromCloudinaryTo(posterPicV, meme.getPoster().getProfileUrl());
-            ImageUtils.loadImageFromCloudinaryTo(memeImageV, meme.getMemeImageUrl());
-        }
-
         private void showMemeMenu() {
             PopupMenu menu = new PopupMenu(mContext, meme_menu);
             menu.getMenuInflater().inflate(R.menu.meme_menu, menu.getMenu());
@@ -281,10 +376,29 @@ public class MemeAdapter extends RecyclerView.Adapter<ViewHolder> {
             menu.show();
         }
     }
-    protected class LoadingViewHolder extends ViewHolder{
+    public class LoadingViewHolder extends MyViewHolder<Meme>{
         public LoadingViewHolder(View itemView) {
             super(itemView);
         }
-    }
 
+        @Override
+        public void bind(Meme meme) {
+
+        }
+    }
+    public class MemeGridViewHolder extends MyViewHolder<Meme>{
+        private final SimpleDraweeView memeImageV;
+        public MemeGridViewHolder(View itemView) {
+            super(itemView);
+            memeImageV = itemView.findViewById(R.id.meme_image);
+            int width=screen_width/3;
+            FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(width,width);
+            memeImageV.setLayoutParams(lp);
+        }
+
+        @Override
+        public void bind(Meme meme) {
+            ImageUtils.loadImageFromCloudinaryTo(memeImageV, meme.getMemeImageUrl());
+        }
+    }
 }

@@ -138,7 +138,7 @@ interface MemeInterface {
                                                          @Query("skip") int skip,
                                                          @Query("limit") int limit);
 
-    @GET("meme/posts")
+    @GET("meme/me/posts")
     public Call<List<Meme>> getMyMemes(@Query("skip") int skip,
                                                @Query("limit") int limit);
 

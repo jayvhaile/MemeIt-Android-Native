@@ -168,4 +168,26 @@ public class CustomMethods {
         }
     }
 
+    public static String formatNumber(int num){
+        if(num<1000){
+          return String.valueOf(num);
+        }else{
+            float d=num/1000.0f;
+            return String.format("%.2fk",d);
+        }
+
+    }
+    public static String formatNumber(int num,String suffix){
+        if(num<1000){
+            return String.format("%d %s",num,suffix);
+        }else{
+            float d=num/1000.0f;
+            return String.format("%.2fk %s",d,suffix);
+        }
+
+    }
+    public static int getScreenWidth(Context context){
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
+
 }

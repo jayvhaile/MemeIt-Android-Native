@@ -1,7 +1,6 @@
 package com.innov8.memeit.Activities;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -15,16 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.innov8.memegenerator.MemeEditorActivity;
 import com.innov8.memegenerator.SimpleMemeGenerator;
+import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomViews.BottomNavigation;
 import com.innov8.memeit.Fragments.FavoritesFragment;
 import com.innov8.memeit.Fragments.HomeFragment;
-import com.innov8.memeit.Fragments.MeFragment;
+import com.innov8.memeit.Fragments.ProfileFragment;
 import com.innov8.memeit.Fragments.MemeListFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
@@ -43,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar mToolbar;
 
 
-    private String titles[]={"Home","Trending","Favorites","Me"};
+    private String titles[] = {"Home", "Trending", "Favorites"};
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -98,25 +95,39 @@ public class MainActivity extends AppCompatActivity {
                 .inject();
 
 
+        findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MemeItAuth.getInstance().signOut();
+                recreate();
+            }
+        });
+
+
     }
-    private void initToolbar(){
+
+    private void initToolbar() {
         this.setSupportActionBar(this.mToolbar);
     }
+
     private void initBottomNav() {
         bottom_nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.menu_home:
+                        setTitle(0);
                         viewPager.setCurrentItem(0);
                         return true;
                     case R.id.menu_trending:
+                        setTitle(1);
                         viewPager.setCurrentItem(1);
                         return true;
                     case R.id.menu_create:
-                        startActivity(new Intent(MainActivity.this, MemeEditorActivity.class));
+                        startActivity(new Intent(MainActivity.this, SimpleMemeGenerator.class));
                         return true;
                     case R.id.menu_favorites:
+                        setTitle(2);
                         viewPager.setCurrentItem(2);
                         return true;
                     case R.id.menu_me:
@@ -128,10 +139,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void setTitle(int index) {
+        mToolbar.setTitle(titles[index]);
+    }
+
+    public void setTitle(String name) {
+        if (viewPager.getCurrentItem() == 3)
+            mToolbar.setTitle(name);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_top_menu,menu);
+        getMenuInflater().inflate(R.menu.main_top_menu, menu);
         return true;
     }
 
@@ -147,12 +166,14 @@ public class MainActivity extends AppCompatActivity {
             switch (pos) {
                 case 0:
                     return new HomeFragment();
+
                 case 1:
-                    return MemeListFragment.withLoader(new MemeListFragment.TrendingLoader());
+                    return MemeListFragment.newInstance(new MemeListFragment.TrendingLoader(),
+                            new MemeAdapter.Listed(MainActivity.this));
                 case 2:
                     return new FavoritesFragment();
                 case 3:
-                    return new MeFragment();
+                    return ProfileFragment.newInstance();
                 default:
                     throw new IllegalArgumentException("should be 0-3");
             }
