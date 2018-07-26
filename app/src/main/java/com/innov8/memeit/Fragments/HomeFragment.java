@@ -82,7 +82,6 @@ public class HomeFragment extends Fragment implements MaterialSearchView.OnQuery
 
     @Override
     public void onDestroy() {
-        btn.dispose();
         super.onDestroy();
     }
 }

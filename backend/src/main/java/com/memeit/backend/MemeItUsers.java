@@ -7,11 +7,14 @@ import com.memeit.backend.utilis.MyCallBack;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.memeit.backend.utilis.PrefUtils;
 import com.memeit.backend.utilis.Utils;
+import com.memeit.backend.utilis.onComplete;
 
+import java.io.IOException;
 import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.memeit.backend.MemeItAuth.PREFERENCE_USER_DATA_SAVED;
@@ -37,7 +40,19 @@ public class MemeItUsers {
      *
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getMyUserDetail(OnCompleteListener<User> listener) {
+    public void getMyUserDetail(final onCompleteListner<User> listener) {
+        /*MemeItClient.getInstance().getInterface()
+                .getMyUser().enqueue(new MyCallBack<User>(listener));*/
+
+        MemeInterface cacheInterface=MemeItClient.getInstance().getMemeInterfaceC();
+        MemeInterface netInterface=MemeItClient.getInstance().getMemeInterfaceN();
+
+
+        Controller<User> controller=new Controller();
+        controller.makeCall(cacheInterface.getMyUser(),netInterface.getMyUser());
+
+    }
+    public void getMyUserDetail(final OnCompleteListener<User> listener) {
         MemeItClient.getInstance().getInterface()
                 .getMyUser().enqueue(new MyCallBack<User>(listener));
     }

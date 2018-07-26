@@ -10,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +42,7 @@ import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
+import com.memeit.backend.utilis.onComplete;
 
 import org.w3c.dom.Text;
 
@@ -160,14 +162,40 @@ public class ProfileFragment extends Fragment {
             }
         };
         if (isMe())
-            MemeItUsers.getInstance().getMyUserDetail(onCompleteListener);
+            MemeItUsers.getInstance().getMyUserDetail(new onComplete<User>() {
+                @Override
+                public void onResponceFromCache(User user) {
+                    Toast.makeText(getContext(), "from Cache", Toast.LENGTH_SHORT).show();
+                    setDataToView(user);
+
+                }
+
+                @Override
+                public void onResponceFromNetwork(User user) {
+                    Toast.makeText(getContext(), "from Network", Toast.LENGTH_SHORT).show();
+                    setDataToView(user);
+                }
+
+                @Override
+                public void onFailed(String error, boolean fromCache) {
+                    Toast.makeText(getActivity(), "failer: fromCache: "+fromCache+"\n" + error, Toast.LENGTH_LONG).show();
+                }
+            });
         else
             MemeItUsers.getInstance().getUserDetailFor(userID, onCompleteListener);
 
     }
+    private void setDataToView(User user){
+        if (!TextUtils.isEmpty(user.getImageUrl())) {
+            ImageUtils.loadImageFromCloudinaryTo(profileV, user.getImageUrl());
+        }
+        followerV.setText(CustomMethods.formatNumber(user.getFollowerCount()));
+        followingV.setText(CustomMethods.formatNumber(user.getFollowingCount()));
+        memeCountV.setText(CustomMethods.formatNumber(user.getPostCount()));
+    }
 
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentStatePagerAdapter {
         String titles[] = {"Memes", "Followings", "Followers"};
 
         public ViewPagerAdapter(FragmentManager manager) {
