@@ -41,7 +41,6 @@ import com.memeit.backend.utilis.OnCompleteListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 
 /**
  * Created by Jv on 6/16/2018.
@@ -219,7 +218,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
         private final TextView commentCountV;
         private final ImageButton meme_menu;
         private String memeId;
-        private OnCompleteListener<ResponseBody> reactCompletedListener;
+        private OnCompleteListener reactCompletedListener;
 
         public MemeListViewHolder(View itemView) {
             super(itemView);
@@ -353,7 +352,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.menu_delete_meme:
-                            MemeItMemes.getInstance().deleteMeme(memeId, new OnCompleteListener<ResponseBody>() {
+                            /*MemeItMemes.getInstance().deleteMeme(memeId, new OnCompleteListener<ResponseBody>() {
                                 @Override
                                 public void onSuccess(ResponseBody responseBody) {
                                     remove(Meme.forID(memeId));
@@ -366,7 +365,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
                                     //todo show snackbar instead of toast
                                     Toast.makeText(mContext, "Cannot Delete Meme " + error.getMessage(), Toast.LENGTH_LONG).show();
                                 }
-                            });
+                            });*/
                             return true;
 
                     }

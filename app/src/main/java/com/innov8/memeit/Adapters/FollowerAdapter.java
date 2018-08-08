@@ -24,7 +24,6 @@ import com.memeit.backend.utilis.OnCompleteListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 
 /**
  * Created by Jv on 7/15/2018.
@@ -91,7 +90,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<MyViewHolder<User>> {
         notifyDataSetChanged();
     }
 
-    public class FollowerViewHolder extends MyViewHolder<User> implements OnCompleteListener<ResponseBody> {
+    public class FollowerViewHolder extends MyViewHolder<User>{
         private final SimpleDraweeView followerppV;
         private final TextView followerName;
         private final TextView followerDetail;
@@ -109,10 +108,10 @@ public class FollowerAdapter extends RecyclerView.Adapter<MyViewHolder<User>> {
                 @Override
                 public void onClick(View view) {
                     followBtn.startAnimation();
-                    if (isFollowedByMe)
+                   /* if (isFollowedByMe)
                         MemeItUsers.getInstance().unFollowUser(userId, FollowerViewHolder.this);
                     else
-                        MemeItUsers.getInstance().followUser(userId, FollowerViewHolder.this);
+                        MemeItUsers.getInstance().followUser(userId, FollowerViewHolder.this);*/
 
                 }
             });
@@ -129,7 +128,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<MyViewHolder<User>> {
             followBtn.setText(isFollowedByMe ? "Unfollow" : "Follow");
         }
 
-        @Override
+        /*@Override
         public void onSuccess(ResponseBody responseBody) {
             isFollowedByMe=!isFollowedByMe;
             followBtn.revertAnimation(new OnAnimationEndListener() {
@@ -144,6 +143,6 @@ public class FollowerAdapter extends RecyclerView.Adapter<MyViewHolder<User>> {
         @Override
         public void onFailure(Error error) {
             followBtn.revertAnimation();
-        }
+        }*/
     }
 }

@@ -10,7 +10,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,10 +22,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -42,14 +37,11 @@ import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
-import com.memeit.backend.utilis.onComplete;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.ResponseBody;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -119,7 +111,7 @@ public class ProfileFragment extends Fragment {
         followBtnV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MemeItUsers.getInstance().followUser(userID, new OnCompleteListener<ResponseBody>() {
+              /*  MemeItUsers.getInstance().followUser(userID, new OnCompleteListener<ResponseBody>() {
                     @Override
                     public void onSuccess(ResponseBody responseBody) {
                         Toast.makeText(getContext(), "Followed", Toast.LENGTH_SHORT).show();
@@ -129,7 +121,7 @@ public class ProfileFragment extends Fragment {
                     public void onFailure(Error error) {
                         Toast.makeText(getContext(), "failed follow: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
             }
         });
         RoundingParams rp = new RoundingParams();
@@ -162,40 +154,14 @@ public class ProfileFragment extends Fragment {
             }
         };
         if (isMe())
-            MemeItUsers.getInstance().getMyUserDetail(new onComplete<User>() {
-                @Override
-                public void onResponceFromCache(User user) {
-                    Toast.makeText(getContext(), "from Cache", Toast.LENGTH_SHORT).show();
-                    setDataToView(user);
-
-                }
-
-                @Override
-                public void onResponceFromNetwork(User user) {
-                    Toast.makeText(getContext(), "from Network", Toast.LENGTH_SHORT).show();
-                    setDataToView(user);
-                }
-
-                @Override
-                public void onFailed(String error, boolean fromCache) {
-                    Toast.makeText(getActivity(), "failer: fromCache: "+fromCache+"\n" + error, Toast.LENGTH_LONG).show();
-                }
-            });
+            MemeItUsers.getInstance().getMyUserDetail(onCompleteListener);
         else
             MemeItUsers.getInstance().getUserDetailFor(userID, onCompleteListener);
 
     }
-    private void setDataToView(User user){
-        if (!TextUtils.isEmpty(user.getImageUrl())) {
-            ImageUtils.loadImageFromCloudinaryTo(profileV, user.getImageUrl());
-        }
-        followerV.setText(CustomMethods.formatNumber(user.getFollowerCount()));
-        followingV.setText(CustomMethods.formatNumber(user.getFollowingCount()));
-        memeCountV.setText(CustomMethods.formatNumber(user.getPostCount()));
-    }
 
 
-    class ViewPagerAdapter extends FragmentStatePagerAdapter {
+    class ViewPagerAdapter extends FragmentPagerAdapter {
         String titles[] = {"Memes", "Followings", "Followers"};
 
         public ViewPagerAdapter(FragmentManager manager) {

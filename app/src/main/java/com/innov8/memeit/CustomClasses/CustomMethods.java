@@ -14,6 +14,7 @@ import android.support.annotation.IdRes;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -57,6 +58,10 @@ public class CustomMethods {
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+    public static boolean isUsernameValid(String username) {
+        //todo check if user name is valid (it should exclude such characters)
+        return username!=null &&username.length()>=1;//todo change back to 5
     }
 
     public static Bitmap getBitmapFromUri(Uri imageUri, Context c) {

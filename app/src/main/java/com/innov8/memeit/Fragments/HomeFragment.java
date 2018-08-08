@@ -33,27 +33,7 @@ public class HomeFragment extends Fragment implements MaterialSearchView.OnQuery
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         searchView = view.findViewById(R.id.search_view);
 
-        btn = view.findViewById(R.id.follow);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                btn.startAnimation();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        followed=!followed;
-                        btn.revertAnimation(new OnAnimationEndListener() {
-                            @Override
-                            public void onAnimationEnd() {
-                                Toast.makeText(getContext(), "end", Toast.LENGTH_SHORT).show();
-                                btn.setText(followed?"Unfollow":"Follow");
-                            }
-                        });
-                    }
-                },4000);
-            }
-        });
         setHasOptionsMenu(true);
         return view;
     }

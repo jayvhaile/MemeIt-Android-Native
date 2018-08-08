@@ -47,12 +47,10 @@ public class FollowersFragment extends Fragment {
         swipeRefreshLayout=view.findViewById(R.id.swipe_to_refresh);
         followerList=view.findViewById(R.id.followers_recycler_view);
         setupUI();
-        load();
         return view;
     }
 
     private void setupUI(){
-        followerAdapter=new FollowerAdapter(getContext());
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -68,7 +66,6 @@ public class FollowersFragment extends Fragment {
         MemeItUsers.getInstance().getMyFollowerList(skip, LIMIT, new OnCompleteListener<List<User>>() {
             @Override
             public void onSuccess(List<User> userResponses) {
-                Toast.makeText(getContext(), "loaded: "+userResponses.size(), Toast.LENGTH_SHORT).show();
                 followerAdapter.addAll(userResponses);
                 incSkip();
             }
