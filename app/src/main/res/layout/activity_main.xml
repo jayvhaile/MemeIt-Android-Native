@@ -24,7 +24,7 @@
             android:background="#fff"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/memeit_toolbar"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            app:layout_scrollFlags="scroll|enterAlways"/>
     </android.support.design.widget.AppBarLayout>
 
     <com.innov8.memeit.CustomViews.BottomNavigation
@@ -33,6 +33,7 @@
         android:layout_height="@dimen/bottom_nav_height"
         android:layout_gravity="bottom"
         android:background="#fff"
+        android:orientation="vertical"
         android:gravity="center_vertical"
         app:deselected_tint="@color/bottom_nav_items_gray"
         app:item_padding="@dimen/bottom_nav_items_padding"

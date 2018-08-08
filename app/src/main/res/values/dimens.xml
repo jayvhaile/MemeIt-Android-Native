@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="auth_bottom_guide">190dp</dimen>
+    <dimen name="auth_icon_size">40dp</dimen>
+    <dimen name="auth_item_height">50dp</dimen>
+    <dimen name="auth_button_height">56dp</dimen>
+</resources>

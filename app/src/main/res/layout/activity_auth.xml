@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_coordinate"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <FrameLayout
+        android:id="@+id/holder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/background_login_1"
@@ -28,7 +28,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="600dp"
+            android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:scaleType="centerCrop"
             android:src="@mipmap/loginbg" />
@@ -37,13 +37,9 @@
             android:layout_width="260dp"
             android:layout_height="110dp"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:background="@mipmap/memeitworldofmemes"
-            android:layout_marginTop="16dp"/>
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="16dp"
+            android:background="@mipmap/memeitworldofmemes" />
 
-        <FrameLayout
-            android:id="@+id/holder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </RelativeLayout>
+    </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

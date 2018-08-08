@@ -6,8 +6,5 @@
         android:startColor="#f50"
         android:centerColor="#f09"
         android:endColor="#0000"
-        android:type="linear"
-        android:gradientRadius="1dp"
-        android:centerY="0.3"
-          />
+        android:type="linear"/>
 </shape>
