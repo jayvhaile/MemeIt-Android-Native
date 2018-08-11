@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.innov8.memegenerator.MemeEditorActivity;
 import com.innov8.memegenerator.SimpleMemeGenerator;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomViews.BottomNavigation;
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startActivity(new Intent(this,MemeEditorActivity.class));
+        if(2<3)return;
         if (!MemeItAuth.getInstance().isSignedIn()) {
             startActivity(new Intent(this, AuthActivity.class));
             finish();

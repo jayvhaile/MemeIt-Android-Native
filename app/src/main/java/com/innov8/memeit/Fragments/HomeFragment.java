@@ -31,7 +31,7 @@ public class HomeFragment extends Fragment implements MaterialSearchView.OnQuery
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        searchView = view.findViewById(R.id.search_view);
+        //searchView = view.findViewById(R.id.search_view);
 
 
         setHasOptionsMenu(true);

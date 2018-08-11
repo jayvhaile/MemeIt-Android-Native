@@ -443,7 +443,7 @@ public class CircularProgressButton extends AppCompatButton implements AnimatedB
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
 
-                ((ShapeDrawable)mGradientDrawable).getPaint().setStrokeWidth((Float)animation.getAnimatedValue());
+                ((ShapeDrawable)mGradientDrawable).getFpaint().setStrokeWidth((Float)animation.getAnimatedValue());
             }
         });*/
 
@@ -553,7 +553,7 @@ public class CircularProgressButton extends AppCompatButton implements AnimatedB
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
 
-                ((ShapeDrawable)mGradientDrawable).getPaint().setStrokeWidth((Float)animation.getAnimatedValue());
+                ((ShapeDrawable)mGradientDrawable).getFpaint().setStrokeWidth((Float)animation.getAnimatedValue());
             }
         });*/
 

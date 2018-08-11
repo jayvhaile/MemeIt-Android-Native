@@ -388,7 +388,7 @@ public class CircularProgressImageButton extends AppCompatImageButton implements
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
 
-                ((ShapeDrawable)mGradientDrawable).getPaint().setStrokeWidth((Float)animation.getAnimatedValue());
+                ((ShapeDrawable)mGradientDrawable).getFpaint().setStrokeWidth((Float)animation.getAnimatedValue());
             }
         });*/
 
@@ -490,7 +490,7 @@ public class CircularProgressImageButton extends AppCompatImageButton implements
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
 
-                ((ShapeDrawable)mGradientDrawable).getPaint().setStrokeWidth((Float)animation.getAnimatedValue());
+                ((ShapeDrawable)mGradientDrawable).getFpaint().setStrokeWidth((Float)animation.getAnimatedValue());
             }
         });*/
 

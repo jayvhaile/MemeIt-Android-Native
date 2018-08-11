@@ -18,19 +18,23 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="0dp"
         android:layout_weight="1"
         app:srcCompat="@drawable/got" />
 
-    <android.support.design.widget.BottomNavigationView
+    <com.innov8.memegenerator.custom_views.BottomNavigation
         android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="56dp"
         android:layout_gravity="bottom"
-        android:background="?android:attr/windowBackground"
-        app:itemIconTint="@color/bottom_nav_selector"
-        app:itemTextColor="@color/bottom_nav_selector"
-        app:menu="@menu/navigation" />
+        app:deselected_tint="#777"
+        app:menu="@menu/navigation"
+        app:selected_tint="#f50"
+        app:skip_tint="2"
+        android:background="#fff"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        app:item_padding="17dp"/>
 
 </LinearLayout>

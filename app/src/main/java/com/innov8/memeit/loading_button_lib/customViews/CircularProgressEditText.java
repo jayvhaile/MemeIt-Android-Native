@@ -177,7 +177,7 @@ public class CircularProgressEditText extends android.support.v7.widget.AppCompa
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
 
-                ((ShapeDrawable)mDrawable).getPaint().setStrokeWidth((Float)animation.getAnimatedValue());
+                ((ShapeDrawable)mDrawable).getFpaint().setStrokeWidth((Float)animation.getAnimatedValue());
             }
         });*/
 
@@ -247,7 +247,7 @@ public class CircularProgressEditText extends android.support.v7.widget.AppCompa
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
 
-                ((ShapeDrawable)mDrawable).getPaint().setStrokeWidth((Float)animation.getAnimatedValue());
+                ((ShapeDrawable)mDrawable).getFpaint().setStrokeWidth((Float)animation.getAnimatedValue());
             }
         });*/
 

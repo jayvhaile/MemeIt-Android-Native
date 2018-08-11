@@ -12,74 +12,49 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
 
-    <ImageView
+    <com.innov8.memegenerator.meme_engine.MemeEditorView
         android:id="@+id/imageView3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/got"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/got" />
+        app:layout_constraintVertical_bias="1.0" />
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout2"
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
         app:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2">
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </android.support.design.widget.AppBarLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <com.innov8.memegenerator.custom_views.VTab
+        android:id="@+id/vtab"
         android:layout_width="56dp"
         android:layout_height="0dp"
         android:background="#eee"
-        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout2">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:item_color="#777"
+        app:selected_background_tint="#709f"
+        app:item_padding="16dp"/>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            app:srcCompat="@drawable/ic_bottom_layout" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#55cf"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            app:srcCompat="@drawable/ic_bottom_text" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/vtab"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            app:srcCompat="@drawable/ic_bottom_sticker" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            app:srcCompat="@drawable/ic_format_paint" />
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

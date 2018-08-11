@@ -1,9 +1,7 @@
 package com.innov8.memegenerator;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,9 +21,6 @@ import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.zhihu.matisse.Matisse;
-import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.ImageEngine;
 
 import java.util.Arrays;
 import java.util.List;
@@ -67,6 +62,9 @@ public class SimpleMemeGenerator extends AppCompatActivity {
                 upload();
             }
         });
+        View x;
+
+
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -163,5 +161,6 @@ public class SimpleMemeGenerator extends AppCompatActivity {
             Log.d(TAG, String.format("%02d=> %s : %s",i, key,elem));
         }
     }
+
 
 }

@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="MemeEditorView">
-
-
-
+    <declare-styleable name="VTab">
+        <attr name="selected_tint" format="color"/>
+        <attr name="selected_background_tint" format="color"/>
+        <attr name="item_color" format="color"/>
+        <attr name="item_background" format="color"/>
+        <attr name="item_padding" format="dimension"/>
     </declare-styleable>
-
+    <declare-styleable name="ToggleImageButton">
+        <attr name="checked" format="boolean"/>
+        <attr name="checked_background" format="color"/>
+        <attr name="unchecked_background" format="color"/>
+    </declare-styleable>
 </resources>
