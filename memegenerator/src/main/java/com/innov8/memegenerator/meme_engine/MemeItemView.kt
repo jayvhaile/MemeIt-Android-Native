@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 
@@ -18,7 +19,7 @@ open class MemeItemView : View {
     var maxHeight: Int = 0
     var memeItemWidth: Int = 0
     var memeItemHeight: Int = 0
-
+    var onClickListener:(()->Unit)?=null
     constructor(context: Context, memeItemWidth: Int, memeItemHeight: Int) : super(context) {
         this.memeItemWidth = memeItemWidth
         this.memeItemHeight = memeItemHeight
@@ -33,7 +34,7 @@ open class MemeItemView : View {
         init()
     }
 
-
+    var mDetector = GestureDetector(context,  mListener());
     private fun init() {
         upaint = Paint(Paint.ANTI_ALIAS_FLAG)
         upaint.style = Paint.Style.STROKE
@@ -63,10 +64,7 @@ open class MemeItemView : View {
 
     }
 
-    private var dx = 0f
-    private var dy = 0f
-    private var lastAction = 0
-    private var type = 0
+
 
     private var resizeOffset = 100
     var resizeMode = true
@@ -76,62 +74,65 @@ open class MemeItemView : View {
         }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        when (event.actionMasked) {
-            MotionEvent.ACTION_DOWN -> onDown(event)
-            MotionEvent.ACTION_MOVE -> {
-                if (type == 0) {
-                    onDrag(event)
-                } else if (type == 1) {
-                    onResize(event)
-                }
-                lastAction = MotionEvent.ACTION_MOVE
-            }
-            MotionEvent.ACTION_UP -> {
-                if (lastAction == MotionEvent.ACTION_DOWN) {
-                    return false
-                }
-            }
-        }
-        return true
+        return mDetector.onTouchEvent(event)
     }
 
-    private fun onDown(event: MotionEvent) {
-        if (resizeMode && event.rawX.isBetween(x + width - resizeOffset, x + width) &&
-                event.rawY.isBetween(y + 60 + height - resizeOffset, y + 60 + height)) {//todo the 60 is added to account for the topbar fix it
-            type = 1
-            dx = event.rawX
-            dy = event.rawY
-            log("resize")
-        } else {
-            dx = x - event.rawX
-            dy = y - event.rawY
-            type = 0
-            log("drag")
-        }
-        lastAction = MotionEvent.ACTION_DOWN
-    }
 
-    private fun onResize(event: MotionEvent) {
-        var nw = memeItemWidth + (event.rawX - dx).toInt()
-        var nh = memeItemHeight + (event.rawY - dy).toInt()
-        memeItemWidth = if (x + nw > maxWidth) (maxWidth - x).toInt() else if (nw < minimumWidth) minimumWidth else nw
-        memeItemHeight = if (y + nh > maxHeight) (maxHeight - y).toInt() else if (nh < minimumHeight) minimumHeight else nh
-        dx = event.rawX
-        dy = event.rawY
-        requestLayout()
-    }
 
-    private fun onDrag(event: MotionEvent) {
-        var nx = event.rawX + dx
-        var ny = event.rawY + dy
-        x = if (nx < 0) 0f else if (nx + width > maxWidth) (maxWidth - width).toFloat() else nx
-        y = if (ny < 0) 0f else if (ny + height > maxHeight) (maxHeight - height).toFloat() else ny
-    }
 
 
     fun Number.isBetween(a: Number, b: Number): Boolean {
         var d = this.toDouble();
         return d >= a.toDouble() && d <= b.toDouble()
     }
+
+    internal inner class mListener : GestureDetector.SimpleOnGestureListener() {
+        private var dx = 0f
+        private var dy = 0f
+        private var type = 0
+        override fun onDown(event: MotionEvent): Boolean {
+            if (resizeMode && event.rawX.isBetween(x + width - resizeOffset, x + width) &&
+                    event.rawY.isBetween(y + 60 + height - resizeOffset, y + 60 + height)) {//todo the 60 is added to account for the topbar fix it
+                type = 1
+                dx = event.rawX
+                dy = event.rawY
+            } else {
+                dx = x - event.rawX
+                dy = y - event.rawY
+                type = 0
+            }
+            return true
+        }
+
+        override fun onSingleTapUp(e: MotionEvent?): Boolean {
+            onClickListener?.invoke()
+            return true
+        }
+        override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+            if (type == 0) {
+                onDrag(e2!!)
+            } else if (type == 1) {
+                onResize(e2!!)
+            }
+            return true
+        }
+        private fun onResize(event: MotionEvent) {
+            var nw = memeItemWidth + (event.rawX - dx).toInt()
+            var nh = memeItemHeight + (event.rawY - dy).toInt()
+            memeItemWidth = if (x + nw > maxWidth) (maxWidth - x).toInt() else if (nw < minimumWidth) minimumWidth else nw
+            memeItemHeight = if (y + nh > maxHeight) (maxHeight - y).toInt() else if (nh < minimumHeight) minimumHeight else nh
+            dx = event.rawX
+            dy = event.rawY
+            requestLayout()
+        }
+
+        private fun onDrag(event: MotionEvent) {
+            var nx = event.rawX + dx
+            var ny = event.rawY + dy
+            x = if (nx < 0) 0f else if (nx + width > maxWidth) (maxWidth - width).toFloat() else nx
+            y = if (ny < 0) 0f else if (ny + height > maxHeight) (maxHeight - height).toFloat() else ny
+        }
+    }
+
 
 }

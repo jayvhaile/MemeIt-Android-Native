@@ -12,13 +12,14 @@ import com.innov8.memegenerator.meme_engine.*
 class MemeEditorActivity : AppCompatActivity() {
     lateinit var vTab: VTab
     lateinit var vPager: ViewPager
+    lateinit var memeEditorView:MemeEditorView
     var memeEditorInterfaces= mutableListOf<MemeEditorInterface>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.meme_editor_layout2)
         vTab = findViewById(R.id.vtab)
         vPager = findViewById(R.id.pager)
-
+        memeEditorView = findViewById(R.id.imageView3)
         val adapter = MyPagerAdapter(supportFragmentManager)
         vPager.adapter = adapter
         vPager.offscreenPageLimit=1
@@ -34,17 +35,13 @@ class MemeEditorActivity : AppCompatActivity() {
                 vTab.item(R.drawable.ic_bottom_sticker, onVtab),
                 vTab.item(R.drawable.ic_format_paint, onVtab)
         )
-        val memeEditorView:MemeEditorView=findViewById(R.id.imageView3)
-
         val memeItemView=MemeItemView(this,400,100)
         val memeTextView=MemeTextView(this,400,100)
         memeTextView.text="Hello"
+        memeTextView.setOnClickListener {
+
+        }
         memeEditorView.addMemeItemView(memeTextView)
-
-       /* Handler().postDelayed({
-            memeTextView.text="Hello world heyyy"
-        },4000)*/
-
     }
 
     private inner class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
@@ -53,7 +50,11 @@ class MemeEditorActivity : AppCompatActivity() {
                 when (pos) {
                     0 -> MemeLayoutEditorFragment()
                     1 -> MemeImageEditorFragment()
-                    2 -> MemeTextEditorFragment()
+                    2 ->{
+                        val memeTextEditorFragment=MemeTextEditorFragment()
+                        memeTextEditorFragment.textEditInterface=memeEditorView.textEditInterface
+                        memeTextEditorFragment
+                    }
                     3 -> MemeStickerEditorFragment()
                     4 -> MemePaintEditorFragment()
                     else -> throw IllegalArgumentException("should be 0-4")

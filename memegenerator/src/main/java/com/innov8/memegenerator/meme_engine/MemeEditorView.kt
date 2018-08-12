@@ -3,10 +3,7 @@ package com.innov8.memegenerator.meme_engine
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Typeface
-import android.text.TextPaint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -22,9 +19,10 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
     }
 
     private val aspectRatio: Float = 0.toFloat()
-
+    private var selectedView:MemeItemView?=null
     private val memeItemViews: MutableList<MemeItemView> = mutableListOf()
 
+    lateinit var textEditInterface:TextEditInterface
     constructor(context: Context) : super(context) {
         init()
 
@@ -38,22 +36,51 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         init()
     }
 
-    lateinit var textPaint: TextPaint
+
     private fun init() {
-        textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
-        with(textPaint) {
-            typeface = Typeface.SANS_SERIF
-            color = Color.WHITE
-            textSize = 60f
-            style = Paint.Style.FILL
+        textEditInterface=object :TextEditInterface{
+            override fun onTextColorChanged(color: Int) {
+                (selectedView as MemeTextView).color=color
+            }
+
+            override fun onTextFontChanged(typeface: Typeface) {
+                (selectedView as MemeTextView).typeface=typeface
+            }
+
+            override fun onTextSetBold(bold: Boolean) {
+
+            }
+
+            override fun onTextSetItalic(italic: Boolean) {
+
+            }
+
+            override fun onTextSetAllCap(allCap: Boolean) {
+
+            }
+
+            override fun onTextSetStroked(stroked: Boolean) {
+
+            }
+
+            override fun onTextStrokeChanged(strokeSize: Float) {
+
+            }
+
+            override fun onTextStrokrColorChanged(strokeColor: Int) {
+
+            }
+
+            override fun onTextSizeChanged(size: Float) {
+
+            }
 
         }
-        setBackgroundColor(Color.BLACK)
     }
 
     fun addMemeItemView(child: MemeItemView) {
         super.addView(child)
-        log("added")
+        selectedView=child
         invalidate()
     }
 
@@ -63,7 +90,6 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
 
     override fun onDraw(canvas: Canvas?) {
         background.draw(canvas)
-        canvas?.drawText("hey",0f,0f,textPaint);
         super.onDraw(canvas)
     }
 

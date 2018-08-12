@@ -1,7 +1,6 @@
 package com.innov8.memeit.Fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -9,11 +8,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.innov8.memeit.R;
 import com.innov8.memeit.loading_button_lib.customViews.CircularProgressButton;
-import com.innov8.memeit.loading_button_lib.interfaces.OnAnimationEndListener;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 
@@ -42,7 +39,7 @@ public class HomeFragment extends Fragment implements MaterialSearchView.OnQuery
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.home_frag_menu, menu);
-        searchView.setMenuItem(menu.findItem(R.id.menu_home_frag_search));
+//        searchView.setMenuItem(menu.findItem(R.id.menu_home_frag_search));
     }
 
     @Override

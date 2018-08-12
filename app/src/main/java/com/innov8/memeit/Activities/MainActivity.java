@@ -17,13 +17,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.innov8.memegenerator.MemeEditorActivity;
-import com.innov8.memegenerator.SimpleMemeGenerator;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomViews.BottomNavigation;
 import com.innov8.memeit.Fragments.FavoritesFragment;
 import com.innov8.memeit.Fragments.HomeFragment;
-import com.innov8.memeit.Fragments.ProfileFragment;
 import com.innov8.memeit.Fragments.MemeListFragment;
+import com.innov8.memeit.Fragments.ProfileFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.utilis.OnCompleteListener;
@@ -46,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(this,MemeEditorActivity.class));
-        if(2<3)return;
         if (!MemeItAuth.getInstance().isSignedIn()) {
             startActivity(new Intent(this, AuthActivity.class));
             finish();
@@ -127,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                         viewPager.setCurrentItem(1);
                         return true;
                     case R.id.menu_create:
-                        startActivity(new Intent(MainActivity.this, SimpleMemeGenerator.class));
+                        startActivity(new Intent(MainActivity.this,MemeEditorActivity.class));
                         return true;
                     case R.id.menu_favorites:
                         setTitle(2);

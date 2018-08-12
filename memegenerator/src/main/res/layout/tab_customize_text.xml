@@ -104,21 +104,21 @@
             app:layout_gravity="center_vertical"
             app:layout_row="0" />
 
-        <View
+        <com.innov8.memegenerator.custom_views.ColorView
             android:id="@+id/opt_text_color"
             android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:background="#f50"
+            android:layout_height="40dp"
             app:layout_column="1"
             app:layout_columnSpan="3"
             app:layout_columnWeight="1"
             app:layout_gravity="center_vertical"
             app:layout_row="1" />
 
-        <Spinner
+        <com.innov8.memegenerator.custom_views.FontChooserView
             android:id="@+id/opt_text_font"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:ms_background_color="#eee"
             app:layout_column="1"
             app:layout_columnSpan="3"
             app:layout_columnWeight="1"
@@ -139,6 +139,8 @@
             android:id="@+id/opt_text_italic"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             app:layout_column="2"
             app:layout_gravity="center_vertical"
             app:layout_row="3"
@@ -151,7 +153,7 @@
             app:layout_column="3"
             app:layout_gravity="center_vertical"
             app:layout_row="3"
-            app:srcCompat="@drawable/ic_bottom_text" />
+            app:srcCompat="@drawable/ic_text_fields_black_24dp" />
 
         <CheckBox
             android:id="@+id/opt_text_stroke"
@@ -182,11 +184,10 @@
             app:layout_gravity="center_vertical"
             app:layout_row="5" />
 
-        <View
+        <com.innov8.memegenerator.custom_views.ColorView
             android:id="@+id/opt_text_stroke_color"
             android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:background="#f50"
+            android:layout_height="40dp"
             app:layout_column="1"
             app:layout_columnSpan="3"
             app:layout_columnWeight="1"
