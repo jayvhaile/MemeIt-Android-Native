@@ -1,4 +1,4 @@
-package com.innov8.memegenerator.custom_views
+package com.innov8.memegenerator.customViews
 
 import android.content.Context
 import android.graphics.Color

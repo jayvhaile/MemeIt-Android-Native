@@ -6,5 +6,5 @@ package com.innov8.memegenerator;
 
 public interface ActionListener {
 
-    public void onDone();
+    void onDone();
 }

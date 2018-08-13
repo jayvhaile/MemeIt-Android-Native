@@ -48,7 +48,7 @@ public abstract class Option<T,V extends View> {
     }
 
     public interface  OnOptionChangedListener<T>{
-        public void onOptionChanged(T t);
+        void onOptionChanged(T t);
     }
 
 }

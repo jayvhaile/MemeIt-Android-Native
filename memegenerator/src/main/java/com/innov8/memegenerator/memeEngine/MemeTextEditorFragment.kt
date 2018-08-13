@@ -1,4 +1,4 @@
-package com.innov8.memegenerator.meme_engine
+package com.innov8.memegenerator.memeEngine
 
 
 import android.os.Bundle
@@ -10,9 +10,9 @@ import android.widget.CheckBox
 import android.widget.SeekBar
 import com.afollestad.materialdialogs.color.ColorChooserDialog
 import com.innov8.memegenerator.R
-import com.innov8.memegenerator.custom_views.ColorView
-import com.innov8.memegenerator.custom_views.FontChooserView
-import com.innov8.memegenerator.custom_views.ToggleImageButton
+import com.innov8.memegenerator.customViews.ColorView
+import com.innov8.memegenerator.customViews.FontChooserView
+import com.innov8.memegenerator.customViews.ToggleImageButton
 import com.innov8.memegenerator.utils.onProgressChanged
 
 class MemeTextEditorFragment : Fragment(), ColorChooserDialog.ColorCallback {
@@ -66,6 +66,18 @@ class MemeTextEditorFragment : Fragment(), ColorChooserDialog.ColorCallback {
         textSizeV.onProgressChanged { progress, fromuser ->
             if (fromuser)
                 textEditInterface.onTextSizeChanged(progress.toFloat())
+        }
+        textStrokeV.setOnCheckedChangeListener({ compoundButton, b ->
+            textEditInterface.onTextSetStroked(b)
+        })
+        textStrokeColorV.onColorChanged={textEditInterface.onTextStrokrColorChanged(it)}
+        textStrokeSizeV.onProgressChanged { progress, fromUser  ->
+            if (fromUser)
+                textEditInterface.onTextStrokeChanged(progress.toFloat())
+        }
+        textStyleAllCapV.onCheckChanged={checked, fromUser ->
+            if (fromUser)
+                textEditInterface.onTextSetAllCap(checked)
         }
     }
 

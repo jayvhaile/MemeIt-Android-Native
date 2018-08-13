@@ -1,11 +1,10 @@
-package com.innov8.memegenerator.meme_engine
+package com.innov8.memegenerator.memeEngine
 
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 
@@ -14,18 +13,8 @@ import android.view.ViewGroup
  */
 
 class MemeEditorView : ViewGroup, MemeEditorInterface {
-    override fun onEditTypeChanged(editType: EditType) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    private val aspectRatio: Float = 0.toFloat()
-    private var selectedView:MemeItemView?=null
-    private val memeItemViews: MutableList<MemeItemView> = mutableListOf()
-
-    lateinit var textEditInterface:TextEditInterface
     constructor(context: Context) : super(context) {
         init()
-
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
@@ -36,15 +25,19 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         init()
     }
 
+    private val aspectRatio: Float = 0.toFloat()
+    private var selectedView: MemeItemView? = null
 
+    lateinit var textEditInterface: TextEditInterface
+    lateinit var selectionListner:(memeItemView:MemeItemView)->Unit
     private fun init() {
-        textEditInterface=object :TextEditInterface{
+        textEditInterface = object : TextEditInterface {
             override fun onTextColorChanged(color: Int) {
-                (selectedView as MemeTextView).color=color
+                (selectedView as MemeTextView).color = color
             }
 
             override fun onTextFontChanged(typeface: Typeface) {
-                (selectedView as MemeTextView).typeface=typeface
+                (selectedView as MemeTextView).typeface = typeface
             }
 
             override fun onTextSetBold(bold: Boolean) {
@@ -56,32 +49,35 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             }
 
             override fun onTextSetAllCap(allCap: Boolean) {
-
+                (selectedView as MemeTextView).allCaps = allCap
             }
 
             override fun onTextSetStroked(stroked: Boolean) {
-
+                (selectedView as MemeTextView).stroke = stroked
             }
 
             override fun onTextStrokeChanged(strokeSize: Float) {
-
+                (selectedView as MemeTextView).strokeWidth = strokeSize
             }
 
             override fun onTextStrokrColorChanged(strokeColor: Int) {
-
+                (selectedView as MemeTextView).strokeColor = strokeColor
             }
 
             override fun onTextSizeChanged(size: Float) {
-                (selectedView as MemeTextView).textSize=size
+                (selectedView as MemeTextView).textSize = size
             }
 
+        }
+        selectionListner={
+            selectedView?.setItemSelected(false)
+            selectedView=it
         }
     }
 
     fun addMemeItemView(child: MemeItemView) {
         super.addView(child)
-        selectedView=child
-        invalidate()
+        child.onSelection=selectionListner
     }
 
     fun removeMemeItemView(child: MemeItemView) {
@@ -118,10 +114,8 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         }
     }
 
-
-
+    override fun onEditTypeChanged(editType: EditType) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }
 
-fun log(vararg messages: Any) {
-    Log.d("#MemeIt", messages.joinToString (" , "))
-}

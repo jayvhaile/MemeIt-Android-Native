@@ -1,4 +1,4 @@
-package com.innov8.memegenerator.meme_engine
+package com.innov8.memegenerator.memeEngine
 
 enum class EditType {
     LAYOUT,IMAGE,TEXT,STICKER,PAINT

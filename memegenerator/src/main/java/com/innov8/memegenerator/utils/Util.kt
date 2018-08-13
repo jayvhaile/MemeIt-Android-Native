@@ -1,6 +1,7 @@
 package com.innov8.memegenerator.utils
 
 import android.content.Context
+import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
 
@@ -21,4 +22,7 @@ fun SeekBar.onProgressChanged(change:(progress:Int, fromUser:Boolean)->Unit){
 
         }
     })
+}
+fun log(vararg messages: Any) {
+    Log.d("#MemeIt", messages.joinToString (" , "))
 }

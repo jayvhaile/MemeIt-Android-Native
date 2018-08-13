@@ -17,20 +17,20 @@ public class ParentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
     protected void setupToolbarAsDisplayHome(String title) {
-        this.mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        this.mToolbar = findViewById(R.id.toolbar);
         this.mToolbar.setTitle(title);
         this.setSupportActionBar(this.mToolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
     protected void setupToolbar(String title) {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle(title);
         mToolbar.setTitleMarginStart(0);
         setSupportActionBar(mToolbar);
     }
     protected void setupToolbar(int res) {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle(getResources().getString(res));
         setSupportActionBar(mToolbar);
     }

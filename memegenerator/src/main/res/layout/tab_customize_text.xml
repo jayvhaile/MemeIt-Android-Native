@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -102,9 +101,12 @@
             app:layout_columnSpan="3"
             app:layout_columnWeight="1"
             app:layout_gravity="center_vertical"
-            app:layout_row="0" />
+            app:layout_row="0"
+            android:min="8"
+            android:max="200"
+            />
 
-        <com.innov8.memegenerator.custom_views.ColorView
+        <com.innov8.memegenerator.customViews.ColorView
             android:id="@+id/opt_text_color"
             android:layout_width="0dp"
             android:layout_height="40dp"
@@ -114,7 +116,7 @@
             app:layout_gravity="center_vertical"
             app:layout_row="1" />
 
-        <com.innov8.memegenerator.custom_views.FontChooserView
+        <com.innov8.memegenerator.customViews.FontChooserView
             android:id="@+id/opt_text_font"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -125,7 +127,7 @@
             app:layout_gravity="center_vertical"
             app:layout_row="2" />
 
-        <com.innov8.memegenerator.custom_views.ToggleImageButton
+        <com.innov8.memegenerator.customViews.ToggleImageButton
             android:id="@+id/opt_text_bold"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -135,7 +137,7 @@
             app:layout_row="3"
             app:srcCompat="@drawable/ic_format_bold" />
 
-        <com.innov8.memegenerator.custom_views.ToggleImageButton
+        <com.innov8.memegenerator.customViews.ToggleImageButton
             android:id="@+id/opt_text_italic"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -146,7 +148,7 @@
             app:layout_row="3"
             app:srcCompat="@drawable/ic_format_italic" />
 
-        <com.innov8.memegenerator.custom_views.ToggleImageButton
+        <com.innov8.memegenerator.customViews.ToggleImageButton
             android:id="@+id/opt_text_allcap"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -184,7 +186,7 @@
             app:layout_gravity="center_vertical"
             app:layout_row="5" />
 
-        <com.innov8.memegenerator.custom_views.ColorView
+        <com.innov8.memegenerator.customViews.ColorView
             android:id="@+id/opt_text_stroke_color"
             android:layout_width="0dp"
             android:layout_height="40dp"

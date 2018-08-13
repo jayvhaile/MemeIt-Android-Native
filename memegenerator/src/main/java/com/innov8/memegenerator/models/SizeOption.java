@@ -2,9 +2,6 @@ package com.innov8.memegenerator.models;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.SeekBar;
-
-import com.innov8.memegenerator.R;
 
 public class SizeOption extends Option<Integer,View> {
 

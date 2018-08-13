@@ -1,4 +1,4 @@
-package com.innov8.memegenerator.custom_views
+package com.innov8.memegenerator.customViews
 
 import android.content.Context
 import android.graphics.Canvas
@@ -18,7 +18,6 @@ class ColorView : View {
             invalidate()
             onColorChanged?.invoke(color)
         }
-
     var strokeWidth=5f
 
     constructor(context: Context) : super(context) {

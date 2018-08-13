@@ -1,4 +1,4 @@
-package com.innov8.memegenerator.custom_views
+package com.innov8.memegenerator.customViews
 
 import android.content.Context
 import android.graphics.Typeface
@@ -27,7 +27,6 @@ class FontChooserView : MaterialSpinner {
         //todo use fonts that are used for memes
         setItems(*fonts)
     }
-    fun getSelectedFont():Typeface{
-        return Typeface.createFromAsset(context.assets,"fonts/${fontsfilename[selectedIndex]}.ttf")
-    }
+    fun getSelectedFont():Typeface =
+            Typeface.createFromAsset(context.assets,"fonts/${fontsfilename[selectedIndex]}.ttf")
 }

@@ -1,4 +1,4 @@
-package com.innov8.memegenerator.custom_views
+package com.innov8.memegenerator.customViews
 
 import android.content.Context
 import android.graphics.Color
@@ -23,9 +23,9 @@ class VTab : LinearLayout {
     var itemColor: Int = 0
     var itemBackgroundColor: Int = 0
     var itemPadding: Int = 0
-    lateinit var itemlayoutParam: LayoutParams;
+    lateinit var itemlayoutParam: LayoutParams
 
-    constructor(context: Context) : super(context) {}
+    constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         setup(context, attrs)
@@ -42,7 +42,7 @@ class VTab : LinearLayout {
             itemBackgroundColor = a.getColor(R.styleable.VTab_item_background, Color.TRANSPARENT)
             selectedTint = a.getColor(R.styleable.VTab_selected_tint, itemColor)
             selectedBackgroundTint = a.getColor(R.styleable.VTab_selected_background_tint, itemBackgroundColor)
-            itemPadding = a.getDimension(R.styleable.VTab_item_padding, 0f).toInt();
+            itemPadding = a.getDimension(R.styleable.VTab_item_padding, 0f).toInt()
         } finally {
             a.recycle()
         }
@@ -60,7 +60,7 @@ class VTab : LinearLayout {
             imgV.setImageDrawable(item.drawable)
             imgV.setOnClickListener({ view ->
                 select(index)
-                Toast.makeText(context,"clicked "+index,Toast.LENGTH_SHORT);
+                Toast.makeText(context,"clicked "+index,Toast.LENGTH_SHORT)
                 item.onClick(index)
             })
             imgV.setPadding(itemPadding, 0, itemPadding, 0)

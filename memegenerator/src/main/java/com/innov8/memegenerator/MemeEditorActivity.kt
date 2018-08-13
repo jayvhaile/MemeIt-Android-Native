@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import com.innov8.memegenerator.custom_views.VTab
-import com.innov8.memegenerator.meme_engine.*
+import com.innov8.memegenerator.customViews.VTab
+import com.innov8.memegenerator.memeEngine.*
 
 class MemeEditorActivity : AppCompatActivity() {
     lateinit var vTab: VTab
@@ -35,13 +35,12 @@ class MemeEditorActivity : AppCompatActivity() {
                 vTab.item(R.drawable.ic_bottom_sticker, onVtab),
                 vTab.item(R.drawable.ic_format_paint, onVtab)
         )
-        val memeItemView=MemeItemView(this,400,100)
         val memeTextView=MemeTextView(this,400,100)
+        val memeTextView2=MemeTextView(this,400,100)
         memeTextView.text="Hello"
-        memeTextView.setOnClickListener {
-
-        }
+        memeTextView2.text="World"
         memeEditorView.addMemeItemView(memeTextView)
+        memeEditorView.addMemeItemView(memeTextView2)
     }
 
     private inner class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
