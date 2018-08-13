@@ -61,7 +61,6 @@ class ColorView : View {
         canvas.drawCircle(c, c, radius, paint)
         paint.style=Paint.Style.FILL
         canvas.drawCircle(c, c, radius-(strokeWidth*2), paint)
-
     }
 
 }
