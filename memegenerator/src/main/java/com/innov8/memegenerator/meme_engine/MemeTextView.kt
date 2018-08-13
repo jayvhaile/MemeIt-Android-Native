@@ -17,7 +17,7 @@ class MemeTextView : MemeItemView {
     var text: String = ""
         set(value) {
             field = value
-            textPaint.textSize = getFitTextSize()
+            textPaint.textSize = calcTextSizeForWidth()
             sl = StaticLayout(text, textPaint, memeItemWidth, Layout.Alignment.ALIGN_CENTER, 1.0f, 0f, false)
             invalidate()
         }
@@ -34,6 +34,7 @@ class MemeTextView : MemeItemView {
     var textSize: Float = 1f
         set(value) {
             field = value
+            memeItemWidth= calcWidthForTextSize().toInt()
             textPaint.textSize = textSize
             invalidate()
             requestLayout()
@@ -100,24 +101,34 @@ class MemeTextView : MemeItemView {
             style = Paint.Style.FILL
 
         }
+        val c = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
         onClickListener= {
             MaterialDialog.Builder(context)
                     .title("Insert Text")
-                    .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input("Write the text here", null,
-                            { dialog, input ->
+                    .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
+                    .input("Write the text here", text,
+                            { _, input ->
                                 text=input.toString()
                             })
                     .show()
         }
+        onResize={
+            w,h->
+            textPaint.textSize = calcTextSizeForWidth()
+        }
     }
 
-    private fun getFitTextSize(): Float =
+    private fun calcTextSizeForWidth(): Float =
             (memeItemWidth - 10) / textPaint.measureText(text) * textPaint.textSize
+
+    private fun calcWidthForTextSize(): Float =
+            ((textSize*textPaint.measureText(text))/textPaint.textSize)+10
+
+
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        textPaint.textSize = getFitTextSize()
+        //textPaint.textSize = calcTextSizeForWidth()
 
     }
 

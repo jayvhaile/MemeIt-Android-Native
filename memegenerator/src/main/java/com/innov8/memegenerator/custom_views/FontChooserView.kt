@@ -7,8 +7,8 @@ import android.util.AttributeSet
 import com.jaredrummler.materialspinner.MaterialSpinner
 
 class FontChooserView : MaterialSpinner {
-    private val fonts = arrayOf("Avenir", "Lyric", "Pacifico", "Ubuntu")
-    private val fontsfilename = arrayOf("avenir", "lyric_font", "Pacifico", "ubuntu")
+    private val fonts = arrayOf("Avenir","Impact", "Lyric", "Pacifico", "Ubuntu")
+    private val fontsfilename = arrayOf("avenir","impact", "lyric_font", "Pacifico", "ubuntu")
 
     constructor(context: Context) : super(context) {
         init()

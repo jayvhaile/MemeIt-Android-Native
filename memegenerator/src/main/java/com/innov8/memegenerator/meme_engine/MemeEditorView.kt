@@ -72,7 +72,7 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             }
 
             override fun onTextSizeChanged(size: Float) {
-
+                (selectedView as MemeTextView).textSize=size
             }
 
         }

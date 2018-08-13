@@ -15,11 +15,18 @@ open class MemeItemView : View {
 
     lateinit var upaint: Paint
     //lateinit var gestureDetector: GestureDetector
-    var maxWidth: Int = 0
-    var maxHeight: Int = 0
+    var maxWidth: Int = 1080
+    var maxHeight: Int = 800
     var memeItemWidth: Int = 0
+        set(value) {
+            field=if (x + value > maxWidth) (maxWidth - x).toInt() else if (value < minimumWidth) minimumWidth else value
+        }
     var memeItemHeight: Int = 0
+        set(value) {
+            field=if (y + value > maxHeight) (maxHeight - y).toInt() else if (value < minimumHeight) minimumHeight else value
+        }
     var onClickListener:(()->Unit)?=null
+    protected var onResize:((width:Int,height:Int)->Unit)?=null
     constructor(context: Context, memeItemWidth: Int, memeItemHeight: Int) : super(context) {
         this.memeItemWidth = memeItemWidth
         this.memeItemHeight = memeItemHeight
@@ -103,7 +110,6 @@ open class MemeItemView : View {
             }
             return true
         }
-
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
             onClickListener?.invoke()
             return true
@@ -119,13 +125,13 @@ open class MemeItemView : View {
         private fun onResize(event: MotionEvent) {
             var nw = memeItemWidth + (event.rawX - dx).toInt()
             var nh = memeItemHeight + (event.rawY - dy).toInt()
-            memeItemWidth = if (x + nw > maxWidth) (maxWidth - x).toInt() else if (nw < minimumWidth) minimumWidth else nw
-            memeItemHeight = if (y + nh > maxHeight) (maxHeight - y).toInt() else if (nh < minimumHeight) minimumHeight else nh
+            memeItemWidth = nw
+            memeItemHeight = nh
+            onResize?.invoke(memeItemWidth,memeItemHeight)
             dx = event.rawX
             dy = event.rawY
             requestLayout()
         }
-
         private fun onDrag(event: MotionEvent) {
             var nx = event.rawX + dx
             var ny = event.rawY + dy
