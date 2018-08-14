@@ -66,17 +66,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     private void goToSignUpDetails() {
         Intent intent = new Intent(this, AuthActivity.class);
         intent.putExtra(AuthActivity.STARTING_FRAGMENT_PARAM, AuthActivity.FRAGMENT_SETUP);
         startActivity(intent);
         finish();
     }
-
-
     private void initUI(Bundle savedInstanceState) {
-
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initToolbar();
@@ -105,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
     private void initToolbar() {
         this.setSupportActionBar(this.mToolbar);
     }
@@ -166,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
             switch (pos) {
                 case 0:
                     return new HomeFragment();
-
                 case 1:
                     return MemeListFragment.newInstance(new MemeListFragment.TrendingLoader(),
                             new MemeAdapter.Listed(MainActivity.this));
