@@ -1,6 +1,5 @@
 package com.innov8.memeit;
 import android.app.Application;
-import android.util.Log;
 
 import com.cloudinary.android.MediaManager;
 import com.facebook.drawee.backends.pipeline.Fresco;

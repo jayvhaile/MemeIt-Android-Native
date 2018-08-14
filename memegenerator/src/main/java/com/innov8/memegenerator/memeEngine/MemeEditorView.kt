@@ -7,6 +7,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import com.innov8.memegenerator.models.TextProperty
 
 /**
  * Created by Haile on 5/19/2018.
@@ -25,18 +26,24 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         init()
     }
 
+    var itemSelectedInterface:ItemSelectedInterface?=null
     private val aspectRatio: Float = 0.toFloat()
     private var selectedView: MemeItemView? = null
 
-    lateinit var textEditInterface: TextEditInterface
+
+    lateinit var textEditListener: TextEditListener
     lateinit var selectionListner:(memeItemView:MemeItemView)->Unit
     private fun init() {
-        textEditInterface = object : TextEditInterface {
+        textEditListener = object : TextEditListener {
+            override fun onApplyAll(textProperty: TextProperty, applySize: Boolean) {
+                (selectedView as MemeTextView?)?.applyTextProperty(textProperty,applySize)
+            }
+
             override fun onTextColorChanged(color: Int) {
-                (selectedView as MemeTextView?)?.color = color
+                (selectedView as MemeTextView?)?.setTextColor(color)
             }
             override fun onTextFontChanged(typeface: Typeface) {
-                (selectedView as MemeTextView?)?.typeface = typeface
+                (selectedView as MemeTextView?)?.setTypeface(typeface)
             }
             override fun onTextSetBold(bold: Boolean) {
 
@@ -45,27 +52,31 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
 
             }
             override fun onTextSetAllCap(allCap: Boolean) {
-                (selectedView as MemeTextView?)?.allCaps = allCap
+                (selectedView as MemeTextView?)?.setAllCaps(allCap)
             }
             override fun onTextSetStroked(stroked: Boolean) {
-                (selectedView as MemeTextView?)?.stroke = stroked
+                (selectedView as MemeTextView?)?.setStroke(stroked)
             }
 
             override fun onTextStrokeChanged(strokeSize: Float) {
-                (selectedView as MemeTextView?)?.strokeWidth = strokeSize
+                (selectedView as MemeTextView?)?.setStrokeWidth(strokeSize)
             }
             override fun onTextStrokrColorChanged(strokeColor: Int) {
-                (selectedView as MemeTextView?)?.strokeColor = strokeColor
+                (selectedView as MemeTextView?)?.setStrokeColor(strokeColor)
             }
 
             override fun onTextSizeChanged(size: Float) {
-                (selectedView as MemeTextView?)?.textSize = size
+                (selectedView as MemeTextView?)?.setTextSize(size)
             }
 
         }
         selectionListner={
             selectedView?.setItemSelected(false)
             selectedView=it
+            val item=selectedView
+            when (item) {
+                is MemeTextView -> itemSelectedInterface?.onTextItemSelected(item.generateProperty())
+            }
         }
     }
 
