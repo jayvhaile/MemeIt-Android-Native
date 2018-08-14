@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.emilsjolander.components.StickyScrollViewItems.StickyScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/colorAccent" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="16dp"
+                android:src="@mipmap/guy_2" />
+            <ImageView
+                android:id="@+id/back_button_profile"
+                android:src="@drawable/ic_arrow_back_black_24dp"
+                android:tint="#fff"
+                android:layout_marginTop="24dp"
+                android:layout_width="64dp"
+                android:padding="18dp"
+                android:layout_height="64dp" />
+            <ImageView
+                android:id="@+id/add_profile"
+                android:src="@drawable/ic_add"
+                android:tint="#fff"
+                android:layout_marginTop="24dp"
+                android:layout_width="64dp"
+                android:layout_alignParentEnd="true"
+                android:padding="18dp"
+                android:layout_height="64dp"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp">
+
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:id="@+id/fontTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:textColor="#313131"
+                android:textSize="19sp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="Jeff Shemsu" />
+
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:alpha="0.8"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.25"
+                android:text="\@genfoMemes" />
+
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:id="@+id/follow_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/button"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:textColor="#fff"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Follow" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.891">
+
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:id="@+id/followers_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:text="24k" />
+
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text=" Followers" />
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="3dp"
+                    android:alpha="0.8"
+                    android:background="@drawable/button"
+                    android:backgroundTint="#313131" />
+
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:id="@+id/memes_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:text="24" />
+
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text=" Memes" />
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="3dp"
+                    android:alpha="0.8"
+                    android:background="@drawable/button"
+                    android:backgroundTint="#313131" />
+
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:id="@+id/badges_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:text="16" />
+
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text=" Badges" />
+            </LinearLayout>
+
+
+        </android.support.constraint.ConstraintLayout>
+        <com.kekstudio.dachshundtablayout.DachshundTabLayout
+            android:tag="sticky"
+            android:id="@+id/tabs_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="#fff"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="#ff5656"
+            app:tabMode="fixed"
+            app:ddAnimatedIndicator="lineMove"
+            app:ddIndicatorColor="#ff5656"
+            app:tabSelectedTextColor="#000"
+            app:tabTextColor="#5a5a5a" />
+        <android.support.v4.view.ViewPager
+            android:id="@+id/profile_viewpager"
+            android:layout_width="match_parent"
+            android:paddingBottom="50dp"
+            android:layout_height="match_parent">
+
+        </android.support.v4.view.ViewPager>
+    </LinearLayout>
+</com.emilsjolander.components.StickyScrollViewItems.StickyScrollView>
