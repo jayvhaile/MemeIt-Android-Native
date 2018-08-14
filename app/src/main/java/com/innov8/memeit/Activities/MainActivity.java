@@ -11,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.innov8.memegenerator.MemeEditorActivity;
 import com.innov8.memeit.Adapters.MemeAdapter;
+import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomViews.BottomNavigation;
 import com.innov8.memeit.Fragments.FavoritesFragment;
 import com.innov8.memeit.Fragments.HomeFragment;
@@ -73,10 +75,16 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
     private void initUI(Bundle savedInstanceState) {
+
+        CustomMethods.makeWindowTransparent(this);
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mToolbar =  findViewById(R.id.toolbar2);
         initToolbar();
         initBottomNav();
+
+
 
         // Setting viewpager adapter
         PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -91,13 +99,13 @@ public class MainActivity extends AppCompatActivity {
                 .inject();
 
 
-        findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MemeItAuth.getInstance().signOut();
-                recreate();
-            }
-        });
+//        findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                MemeItAuth.getInstance().signOut();
+//                recreate();
+//            }
+//        });
 
 
     }
@@ -113,19 +121,23 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.menu_home:
                         setTitle(0);
                         viewPager.setCurrentItem(0);
+                        getSupportActionBar().show();
                         return true;
                     case R.id.menu_trending:
                         setTitle(1);
                         viewPager.setCurrentItem(1);
+                        getSupportActionBar().show();
                         return true;
                     case R.id.menu_create:
                         startActivity(new Intent(MainActivity.this,MemeEditorActivity.class));
                         return true;
                     case R.id.menu_favorites:
                         setTitle(2);
+                        getSupportActionBar().show();
                         viewPager.setCurrentItem(2);
                         return true;
                     case R.id.menu_me:
+                        getSupportActionBar().hide();
                         viewPager.setCurrentItem(3);
                         return true;
                 }
@@ -158,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int pos) {
             //i changed this cuz storing the fragment in array prevents it
             // from being garbage collected which is bad for performance
+            Log.w("pos",pos + "");
             switch (pos) {
                 case 0:
                     return new HomeFragment();

@@ -92,9 +92,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.layout_user_profile, container, false);
+        view = inflater.inflate(R.layout.activity_profile_new, container, false);
 
-        tabLayout = view.findViewById(R.id.profile_tabs);
+        tabLayout = view.findViewById(R.id.tabs_profile);
         pager = view.findViewById(R.id.profile_viewpager);
         adapter = new ViewPagerAdapter(getFragmentManager());
         pager.setAdapter(adapter);
@@ -106,30 +106,30 @@ public class ProfileFragment extends Fragment {
         memeCountV = view.findViewById(R.id.profile_meme_count);
         profileV = view.findViewById(R.id.profile_image);
         followBtnV = view.findViewById(R.id.profile_follow_btn);
-        followBtnV.setVisibility(isMe() ? GONE : VISIBLE);
+//        followBtnV.setVisibility(isMe() ? GONE : VISIBLE);
 
-        followBtnV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              /*  MemeItUsers.getInstance().followUser(userID, new OnCompleteListener<ResponseBody>() {
-                    @Override
-                    public void onSuccess(ResponseBody responseBody) {
-                        Toast.makeText(getContext(), "Followed", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(Error error) {
-                        Toast.makeText(getContext(), "failed follow: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });*/
-            }
-        });
+//        followBtnV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//              /*  MemeItUsers.getInstance().followUser(userID, new OnCompleteListener<ResponseBody>() {
+//                    @Override
+//                    public void onSuccess(ResponseBody responseBody) {
+//                        Toast.makeText(getContext(), "Followed", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Error error) {
+//                        Toast.makeText(getContext(), "failed follow: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });*/
+//            }
+//        });
         RoundingParams rp = new RoundingParams();
         rp.setBorder(Color.WHITE, 10);
         rp.setRoundAsCircle(true);
-        profileV.setHierarchy(GenericDraweeHierarchyBuilder.newInstance(getResources())
-                .setRoundingParams(rp)
-                .build());
+//        profileV.setHierarchy(GenericDraweeHierarchyBuilder.newInstance(getResources())
+//                .setRoundingParams(rp)
+//                .build());
         loadData();
 
         return view;
