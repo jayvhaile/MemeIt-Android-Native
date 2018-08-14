@@ -33,39 +33,33 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
     private fun init() {
         textEditInterface = object : TextEditInterface {
             override fun onTextColorChanged(color: Int) {
-                (selectedView as MemeTextView).color = color
+                (selectedView as MemeTextView?)?.color = color
             }
-
             override fun onTextFontChanged(typeface: Typeface) {
-                (selectedView as MemeTextView).typeface = typeface
+                (selectedView as MemeTextView?)?.typeface = typeface
             }
-
             override fun onTextSetBold(bold: Boolean) {
 
             }
-
             override fun onTextSetItalic(italic: Boolean) {
 
             }
-
             override fun onTextSetAllCap(allCap: Boolean) {
-                (selectedView as MemeTextView).allCaps = allCap
+                (selectedView as MemeTextView?)?.allCaps = allCap
             }
-
             override fun onTextSetStroked(stroked: Boolean) {
-                (selectedView as MemeTextView).stroke = stroked
+                (selectedView as MemeTextView?)?.stroke = stroked
             }
 
             override fun onTextStrokeChanged(strokeSize: Float) {
-                (selectedView as MemeTextView).strokeWidth = strokeSize
+                (selectedView as MemeTextView?)?.strokeWidth = strokeSize
             }
-
             override fun onTextStrokrColorChanged(strokeColor: Int) {
-                (selectedView as MemeTextView).strokeColor = strokeColor
+                (selectedView as MemeTextView?)?.strokeColor = strokeColor
             }
 
             override fun onTextSizeChanged(size: Float) {
-                (selectedView as MemeTextView).textSize = size
+                (selectedView as MemeTextView?)?.textSize = size
             }
 
         }
