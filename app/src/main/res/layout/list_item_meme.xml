@@ -68,8 +68,8 @@
             android:id="@+id/meme_image"
             android:layout_width="match_parent"
             android:layout_height="256dp"
-            fresco:actualImageScaleType="fitCenter"
-            fresco:placeholderImage="@drawable/got" />
+            app:actualImageScaleType="fitCenter"
+            app:placeholderImage="@drawable/got1" />
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"

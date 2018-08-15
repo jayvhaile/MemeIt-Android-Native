@@ -1,14 +1,3 @@
 package com.innov8.memegenerator.models
 
-import android.graphics.Color
-import android.graphics.Typeface
-
-data class TextProperty(val textSize:Float=0f,
-                        val textColor:Int= Color.BLACK,
-                        val typeface: Typeface= Typeface.DEFAULT,
-                        val bold:Boolean=false,
-                        val italic:Boolean=false,
-                        val allCap:Boolean=false,
-                        val stroked:Boolean=false,
-                        val strokeColor:Int=Color.BLACK,
-                        val strokeWidth:Float=0f)
+data class TextProperty(val xP:Float,val yP:Float,val widthP:Float,val heightP:Float,val textStyleProperty: TextStyleProperty)

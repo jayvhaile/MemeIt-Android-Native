@@ -12,7 +12,7 @@ import android.widget.EditText;
  */
 
 public class FontEditText extends android.support.v7.widget.AppCompatEditText {
-    private static final String asset = "fonts/avenir.ttf"/*"fonts/avenir.ttf"*/;
+    private static final String asset = "fonts/avenir.ttf"/*"typefaceLoaders/avenir.ttf"*/;
     Typeface tf;
     public FontEditText(Context context) {
         super(context);

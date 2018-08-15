@@ -2,12 +2,15 @@ package com.innov8.memegenerator.memeEngine
 
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Typeface
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextProperty
+import com.innov8.memegenerator.models.TextStyleProperty
 
 /**
  * Created by Haile on 5/19/2018.
@@ -26,34 +29,39 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         init()
     }
 
-    var itemSelectedInterface:ItemSelectedInterface?=null
+    var itemSelectedInterface: ItemSelectedInterface? = null
     private val aspectRatio: Float = 0.toFloat()
     private var selectedView: MemeItemView? = null
 
 
     lateinit var textEditListener: TextEditListener
-    lateinit var selectionListner:(memeItemView:MemeItemView)->Unit
+    lateinit var selectionListner: (memeItemView: MemeItemView) -> Unit
     private fun init() {
         textEditListener = object : TextEditListener {
-            override fun onApplyAll(textProperty: TextProperty, applySize: Boolean) {
-                (selectedView as MemeTextView?)?.applyTextProperty(textProperty,applySize)
+            override fun onApplyAll(textStyleProperty: TextStyleProperty, applySize: Boolean) {
+                (selectedView as MemeTextView?)?.applyTextStyleProperty(textStyleProperty, applySize)
             }
 
             override fun onTextColorChanged(color: Int) {
                 (selectedView as MemeTextView?)?.setTextColor(color)
             }
-            override fun onTextFontChanged(typeface: Typeface) {
+
+            override fun onTextFontChanged(typeface: MyTypeFace) {
                 (selectedView as MemeTextView?)?.setTypeface(typeface)
             }
+
             override fun onTextSetBold(bold: Boolean) {
 
             }
+
             override fun onTextSetItalic(italic: Boolean) {
 
             }
+
             override fun onTextSetAllCap(allCap: Boolean) {
                 (selectedView as MemeTextView?)?.setAllCaps(allCap)
             }
+
             override fun onTextSetStroked(stroked: Boolean) {
                 (selectedView as MemeTextView?)?.setStroke(stroked)
             }
@@ -61,6 +69,7 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             override fun onTextStrokeChanged(strokeSize: Float) {
                 (selectedView as MemeTextView?)?.setStrokeWidth(strokeSize)
             }
+
             override fun onTextStrokrColorChanged(strokeColor: Int) {
                 (selectedView as MemeTextView?)?.setStrokeColor(strokeColor)
             }
@@ -70,27 +79,69 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             }
 
         }
-        selectionListner={
+        selectionListner = {
             selectedView?.setItemSelected(false)
-            selectedView=it
-            val item=selectedView
+            selectedView = it
+            val item = selectedView
             when (item) {
-                is MemeTextView -> itemSelectedInterface?.onTextItemSelected(item.generateProperty())
+                is MemeTextView -> itemSelectedInterface?.onTextItemSelected(item.generateTextStyleProperty())
             }
         }
     }
 
     fun addMemeItemView(child: MemeItemView) {
         super.addView(child)
-        child.onSelection=selectionListner
+        child.onSelection = selectionListner
     }
 
     fun removeMemeItemView(child: MemeItemView) {
         super.removeView(child)
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    var image: Bitmap? = null
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    override fun onDraw(canvas: Canvas) {
         background.draw(canvas)
+        if (image != null) {
+            val img: Bitmap = image!!
+
+
+            var w: Float
+            var h: Float
+            var x: Float
+            var y: Float
+
+            val iw = img.width.toFloat()
+            val ih = img.height.toFloat()
+            val cw = width.toFloat()
+            val ch = height.toFloat()
+
+            val ir = iw / ih
+            val cr = cw / ch
+
+            if (ir < cr) {
+                val hr = ch / ih
+                w = iw * hr
+                h = ch
+                x = (cw / 2.0f) - (w / 2.0f)
+                y = 0f
+            } else {
+                val wr = cw / iw
+                w = cw
+                h = ih * wr
+                x = 0f
+                y = (ch / 2f) - (h / 2f)
+            }
+
+            val rect = Rect(x.toInt(), y.toInt(),x.toInt()+ w.toInt(), y.toInt()+h.toInt())
+            canvas.drawBitmap(img, null, rect, null)
+
+        }
+
         super.onDraw(canvas)
     }
 
@@ -120,7 +171,33 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
     }
 
     override fun onEditTypeChanged(editType: EditType) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
+
+    fun removeSelectedItem() {
+        if (selectedView != null) {
+            removeMemeItemView(selectedView!!)
+        }
+    }
+
+    fun clearMemeItems() {
+       removeAllViews()
+    }
+
+
+    fun generateAllTextProperty():List<TextProperty>{
+       val list= mutableListOf<TextProperty>()
+        for (index in 0 until  childCount){
+            val  v=super.getChildAt(index)
+            if(v is MemeTextView){
+                list.add(v.generateTextProperty(width.toFloat(), height.toFloat()))
+            }
+        }
+        return list
     }
 }
 

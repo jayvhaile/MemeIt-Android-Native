@@ -2,6 +2,7 @@ package com.innov8.memegenerator;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +35,7 @@ public class SimpleMemeGenerator extends AppCompatActivity {
     private EditText tags;
     private ImageView memeImage;
     private ProgressDialog pd;
-
+    private transient Typeface typeface;
 
     private Uri image_url;
 

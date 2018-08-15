@@ -19,7 +19,7 @@
         android:layout_width="100dp"
         android:layout_height="0dp"
         android:layout_weight="1"
-        app:srcCompat="@drawable/got" />
+        app:srcCompat="@drawable/got1" />
 
     <com.innov8.memegenerator.customViews.BottomNavigation
         android:id="@+id/navigation"

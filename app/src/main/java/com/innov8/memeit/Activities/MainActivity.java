@@ -14,10 +14,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
-import com.innov8.memegenerator.MemeEditorActivity;
+import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomViews.BottomNavigation;
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                         getSupportActionBar().show();
                         return true;
                     case R.id.menu_create:
-                        startActivity(new Intent(MainActivity.this,MemeEditorActivity.class));
+                        startActivity(new Intent(MainActivity.this,MemeTemplateMaker.class));
                         return true;
                     case R.id.menu_favorites:
                         setTitle(2);

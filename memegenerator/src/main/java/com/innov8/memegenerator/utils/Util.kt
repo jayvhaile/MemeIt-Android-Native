@@ -1,6 +1,8 @@
 package com.innov8.memegenerator.utils
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -79,6 +81,45 @@ inline fun RecyclerView.initWithGrid(spanCount:Int,orientation:Int=LinearLayoutM
     this.layoutManager=glm
     this.itemAnimator=DefaultItemAnimator()
 }
+
 inline fun FragmentManager.replace(id:Int, fragment: Fragment){
     beginTransaction().replace(id,fragment).commit()
+}
+inline fun android.app.FragmentManager.replace(id:Int, fragment: android.app.Fragment){
+    beginTransaction().replace(id,fragment).commit()
+}
+
+inline fun calcSampleSize(option:BitmapFactory.Options, reqWidth:Int, reqHeight:Int):Int{
+    val width=option.outWidth
+    val height=option.outHeight
+    var size=1
+    if(width>reqWidth||height>reqHeight){
+        val hw=width/2
+        val hh=height/2
+        while (hw/size>=reqWidth&&hh/size>=reqHeight){
+            size*=2
+        }
+    }
+    return size
+}
+inline fun calcSampleSize(option:BitmapFactory.Options,quality: Float):Int{
+    val size=Math.max(option.outWidth,option.outHeight)
+    val reqSize=size*if (quality>1f) 1f else quality
+    var sampleSize=1
+    if(size>reqSize){
+        val halfSize=size/2
+        while (halfSize/sampleSize>reqSize) sampleSize*=2
+    }
+    return sampleSize
+}
+fun Context.loadBitmap(id:Int,quality:Float):Bitmap{
+    val opt=BitmapFactory.Options()
+    opt.inJustDecodeBounds=true
+    BitmapFactory.decodeResource(resources,id,opt)
+    opt.inSampleSize= calcSampleSize(opt,quality)
+    opt.inJustDecodeBounds=false
+    return BitmapFactory.decodeResource(resources,id,opt)
+}
+fun Context.getDrawableIdByName(name:String):Int{
+    return resources.getIdentifier(name,"drawable",packageName)
 }

@@ -11,7 +11,7 @@ import android.widget.TextView;
  */
 
 public class FontTextView extends android.support.v7.widget.AppCompatTextView {
-    private static final String asset = "fonts/avenir.ttf"/*"fonts/avenir.ttf"*/;
+    private static final String asset = "fonts/avenir.ttf"/*"typefaceLoaders/avenir.ttf"*/;
     public FontTextView(Context context) {
         super(context);
         setCustomFont(context,asset);

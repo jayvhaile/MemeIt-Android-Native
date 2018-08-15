@@ -11,7 +11,9 @@ import android.text.Layout
 import android.text.TextPaint
 import android.util.AttributeSet
 import com.afollestad.materialdialogs.MaterialDialog
+import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextProperty
+import com.innov8.memegenerator.models.TextStyleProperty
 
 class MemeTextView : MemeItemView {
     constructor(context: Context, memeItemWidth: Int, memeItemHeight: Int) : super(context, memeItemWidth, memeItemHeight) {
@@ -34,9 +36,10 @@ class MemeTextView : MemeItemView {
             field = value
             resizeToWrapText(true)
         }
-
-    fun setTypeface(value: Typeface) {
-        dl.paint.typeface = value
+    private var myTypeface:MyTypeFace= MyTypeFace.DEFAULT
+    fun setTypeface(value: MyTypeFace) {
+        myTypeface=value
+        dl.paint.typeface = value.getTypeFace(context)
         resizeToWrapText()
     }
 
@@ -44,6 +47,9 @@ class MemeTextView : MemeItemView {
         dl.paint.textSize = value
         resizeToWrapText(true)
     }
+
+
+
 
     private var bold: Boolean = false
 
@@ -149,18 +155,29 @@ class MemeTextView : MemeItemView {
         dl.draw(canvas)
         canvas?.restore()
     }
-
-    fun generateProperty(): TextProperty {
-        return TextProperty(dl.paint.textSize, color, dl.paint.typeface,
+    fun generateTextProperty(totalW:Float,totalH:Float):TextProperty{
+        return TextProperty(x/totalW,
+                y/totalH,
+                memeItemWidth/totalW,
+                memeItemHeight/totalH,
+                generateTextStyleProperty())
+    }
+    fun generateTextStyleProperty(): TextStyleProperty {
+        return TextStyleProperty(dl.paint.textSize, color, myTypeface,
                 bold, italic, allCaps,
                 stroke, strokeColor, dl.paint.strokeWidth
         )
     }
-
-    fun applyTextProperty(tp: TextProperty,applySize:Boolean=true, text: String = "") {
+    fun applyTextProperty(tp:TextProperty,totalW:Float,totalH:Float){
+        x=totalW*tp.xP
+        y=totalH*tp.yP
+        memeItemWidth= (totalW*tp.widthP).toInt()
+        memeItemHeight= (totalH*tp.heightP).toInt()
+    }
+    fun applyTextStyleProperty(tp: TextStyleProperty, applySize:Boolean=true, text: String = "") {
         color = tp.textColor
         if(applySize) dl.paint.textSize = tp.textSize
-        dl.paint.typeface = tp.typeface
+        dl.paint.typeface = tp.myTypeFace.getTypeFace(context)
         bold = tp.bold
         italic = tp.italic
         allCaps = tp.allCap

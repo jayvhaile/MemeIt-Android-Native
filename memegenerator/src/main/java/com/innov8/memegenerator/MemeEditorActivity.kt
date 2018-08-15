@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import com.innov8.memegenerator.customViews.VTab
 import com.innov8.memegenerator.fragments.*
 import com.innov8.memegenerator.memeEngine.*
-import com.innov8.memegenerator.models.TextProperty
+import com.innov8.memegenerator.models.TextStyleProperty
 
 class MemeEditorActivity : AppCompatActivity() ,ItemSelectedInterface{
 
@@ -49,7 +49,7 @@ class MemeEditorActivity : AppCompatActivity() ,ItemSelectedInterface{
         memeEditorView.addMemeItemView(memeTextView2)
     }
 
-    override fun onTextItemSelected(textProperty: TextProperty) {
+    override fun onTextItemSelected(textStyleProperty: TextStyleProperty) {
         vPager.setCurrentItem(2,false)
     }
 

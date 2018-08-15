@@ -2,7 +2,6 @@ package com.innov8.memegenerator.fragments
 
 
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -21,9 +20,9 @@ import com.innov8.memegenerator.customViews.FontChooserView
 import com.innov8.memegenerator.customViews.ToggleImageButton
 import com.innov8.memegenerator.memeEngine.ItemSelectedInterface
 import com.innov8.memegenerator.memeEngine.TextEditListener
-import com.innov8.memegenerator.models.Font
+import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextPreset
-import com.innov8.memegenerator.models.TextProperty
+import com.innov8.memegenerator.models.TextStyleProperty
 import com.innov8.memegenerator.utils.*
 
 class MemeTextEditorFragment : Fragment(),ItemSelectedInterface {
@@ -61,8 +60,8 @@ class MemeTextEditorFragment : Fragment(),ItemSelectedInterface {
     }
 
     lateinit var textEditListener: TextEditListener
-    override fun onTextItemSelected(textProperty: TextProperty) {
-        textCustomizeFragment.applyTextProperty(textProperty)
+    override fun onTextItemSelected(textStyleProperty: TextStyleProperty) {
+        textCustomizeFragment.applyTextProperty(textStyleProperty)
     }
 }
 
@@ -74,25 +73,25 @@ class TextPresetFragment : Fragment() {
         super.onCreate(savedInstanceState)
         textPresetsAdapter = TextPresetsAdapter(context!!)
         textPresetsAdapter.onItemClick = {
-            textEditListener.onApplyAll(it.textProperty, false)
+            textEditListener.onApplyAll(it.textStyleProperty, false)
         }
         asyncLoaders = AsyncLoader<List<TextPreset>>({
             return@AsyncLoader listOf<TextPreset>(
-                    TextPreset("Normal", TextProperty(
-                            50f, Color.WHITE, Typeface.SANS_SERIF,
+                    TextPreset("Normal", TextStyleProperty(
+                            50f, Color.WHITE, MyTypeFace.byName("Arial")!!,
                             false, false, false,
                             true, Color.BLACK, 10f
                     )),
-                    TextPreset("Meme", TextProperty(
-                            50f, Color.WHITE, Font.byName(context!!, "Impact"),
+                    TextPreset("Meme", TextStyleProperty(
+                            50f, Color.WHITE,  MyTypeFace.byName("Impact")!!,
                             false, false, true,
                             true, Color.BLACK, 10f
                     )),
-                    TextPreset("Red", TextProperty(
-                            50f, Color.RED, Font.byName(context!!, "Pacifico")
+                    TextPreset("Red", TextStyleProperty(
+                            50f, Color.RED,  MyTypeFace.byName("Pacifico")!!
                     )),
-                    TextPreset("Dialog", TextProperty(
-                            50f, Color.YELLOW, Font.byName(context!!, "Ubuntu"),
+                    TextPreset("Dialog", TextStyleProperty(
+                            50f, Color.YELLOW,  MyTypeFace.byName("Ubuntu")!!,
                             false, false, false,
                             false, Color.BLACK, 10f
                     ))
@@ -188,7 +187,7 @@ class TextCustomizeFragment : Fragment(), ColorChooserDialog.ColorCallback {
         }
     }
 
-    fun applyTextProperty(tp: TextProperty) {
+    fun applyTextProperty(tp: TextStyleProperty) {
         val temp=textEditListener
         textEditListener=null
         textColorV.setColor(tp.textColor)

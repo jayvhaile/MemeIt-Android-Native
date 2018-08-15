@@ -7,7 +7,7 @@
         android:id="@+id/meme_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        app:placeholderImage="@drawable/got"
+        app:placeholderImage="@drawable/got1"
         app:roundingBorderColor="@android:color/white"
         app:roundingBorderWidth="2dp" />
 </FrameLayout>

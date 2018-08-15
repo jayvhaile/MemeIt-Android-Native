@@ -2,49 +2,32 @@ package com.innov8.memeit.Fragments;
 
 
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.innov8.memeit.Activities.MainActivity;
 import com.innov8.memeit.Adapters.MemeAdapter;
-import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.Fragments.ProfileFragments.FollowersFragment;
-import com.innov8.memeit.Fragments.ProfileFragments.FollowingFragment;
-import com.innov8.memeit.Fragments.ProfileFragments.MemesFragment;
 import com.innov8.memeit.R;
-import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.List;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 
 public class ProfileFragment extends Fragment {
@@ -143,9 +126,9 @@ public class ProfileFragment extends Fragment {
                 if (!TextUtils.isEmpty(user.getImageUrl())) {
                     ImageUtils.loadImageFromCloudinaryTo(profileV, user.getImageUrl());
                 }
-                followerV.setText(CustomMethods.formatNumber(user.getFollowerCount()));
+                /*followerV.setText(CustomMethods.formatNumber(user.getFollowerCount()));
                 followingV.setText(CustomMethods.formatNumber(user.getFollowingCount()));
-                memeCountV.setText(CustomMethods.formatNumber(user.getPostCount()));
+                memeCountV.setText(CustomMethods.formatNumber(user.getPostCount()));*/
             }
 
             @Override
