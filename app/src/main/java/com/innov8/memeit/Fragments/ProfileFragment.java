@@ -162,7 +162,7 @@ public class ProfileFragment extends Fragment {
 
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
-        String titles[] = {"Memes", "Followings", "Followers"};
+        String titles[] = {"Memes", "Following", "Followers"};
 
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
@@ -198,6 +198,7 @@ public class ProfileFragment extends Fragment {
     private boolean isMe() {
         return TextUtils.isEmpty(userID);
         //todo jv check also if the user id equals this user's
+        //todo biruk remove this funny todo
     }
 
 }
