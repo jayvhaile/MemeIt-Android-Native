@@ -44,7 +44,6 @@ dependencies {
     //the meme generator module
     implementation project(path: ':backend')
     //the backend api module
-
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
     implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
     //Custom Tablayout
