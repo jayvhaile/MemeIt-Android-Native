@@ -3,13 +3,14 @@ package com.innov8.memegenerator.customViews
 import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
+import com.innov8.memegenerator.models.Font
 
 import com.jaredrummler.materialspinner.MaterialSpinner
 
 class FontChooserView : MaterialSpinner {
-    private val fonts = arrayOf("Avenir","Impact", "Lyric", "Pacifico", "Ubuntu")
-    private val fontsfilename = arrayOf("avenir","impact", "lyric_font", "Pacifico", "ubuntu")
 
+
+    lateinit var fonts:List<Font>
     constructor(context: Context) : super(context) {
         init()
     }
@@ -24,9 +25,10 @@ class FontChooserView : MaterialSpinner {
 
     private fun init() {
         //todo customize the item views to show the font
-        //todo use fonts that are used for memes
-        setItems(*fonts)
+        fonts=Font.loadAllFonts(context)
+        setItems(*fonts.map { it.name }.toTypedArray())
     }
-    fun getSelectedFont():Typeface =
-            Typeface.createFromAsset(context.assets,"fonts/${fontsfilename[selectedIndex]}.ttf")
+    fun getSelectedFont():Typeface =fonts[selectedIndex].loadTypeFace(context)
+
+
 }

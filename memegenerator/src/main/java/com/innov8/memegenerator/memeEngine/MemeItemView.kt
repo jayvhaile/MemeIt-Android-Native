@@ -12,46 +12,59 @@ import android.view.View
 
 
 open class MemeItemView : View {
+    protected val isInMemeEditor: Boolean
 
     constructor(context: Context, memeItemWidth: Int, memeItemHeight: Int) : super(context) {
+        isInMemeEditor = true
         this.memeItemWidth = memeItemWidth
         this.memeItemHeight = memeItemHeight
         init()
+
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        isInMemeEditor = false
         init()
+
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        isInMemeEditor = false
         init()
+
     }
 
-    lateinit var mDetector :GestureDetector
+    lateinit var mDetector: GestureDetector
     lateinit var upaint: Paint
 
     var maxWidth: Int = 2000
         set(value) {
             field = value
-            memeItemWidth=memeItemWidth
+            memeItemWidth = memeItemWidth
         }
 
     var maxHeight: Int = 2000
         set(value) {
             field = value
-            memeItemHeight=memeItemHeight
+            memeItemHeight = memeItemHeight
         }
     var memeItemWidth: Int = 0
+        get() =
+            if (isInMemeEditor) field
+            else maxWidth
         set(value) {
-            field=if (x + value > maxWidth) (maxWidth - x).toInt() else if (value < minimumWidth) minimumWidth else value
+            field = if (x + value > maxWidth) (maxWidth - x).toInt() else if (value < minimumWidth) minimumWidth else value
         }
     var memeItemHeight: Int = 0
+        get() =
+            if (isInMemeEditor) field
+            else maxHeight
         set(value) {
-            field=if (y + value > maxHeight) (maxHeight - y).toInt() else if (value < minimumHeight) minimumHeight else value
+            field = if (y + value > maxHeight) (maxHeight - y).toInt() else if (value < minimumHeight) minimumHeight else value
         }
-    var onClickListener:(()->Unit)?=null
-    protected var onResize:((width:Int,height:Int)->Unit)?=null
-    var onSelection:((memeItemView:MemeItemView)->Unit)?=null
+    var onClickListener: (() -> Unit)? = null
+    protected var onResize: ((width: Int, height: Int) -> Unit)? = null
+    var onSelection: ((memeItemView: MemeItemView) -> Unit)? = null
 
     private fun init() {
         upaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -59,10 +72,10 @@ open class MemeItemView : View {
         upaint.strokeWidth = 5f
         upaint.strokeJoin = Paint.Join.ROUND
         upaint.strokeCap = Paint.Cap.BUTT
-        upaint.color = Color.argb(90,255,255,255)
+        upaint.color = Color.argb(90, 255, 255, 255)
         minimumWidth = 120
         minimumHeight = 120
-        mDetector = GestureDetector(context,  MyListener())
+        mDetector = GestureDetector(context, MyListener())
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -73,27 +86,32 @@ open class MemeItemView : View {
             canvas?.drawRect(rect2, upaint)
         }
     }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         maxWidth = MeasureSpec.getSize(widthMeasureSpec)
         maxHeight = MeasureSpec.getSize(heightMeasureSpec)
         setMeasuredDimension(resolveSizeAndState(memeItemWidth, widthMeasureSpec, 1),
                 resolveSizeAndState(memeItemHeight, heightMeasureSpec, 1))
     }
+
     private var resizeOffset = 100
     var itemSelected = false
-        private set(value) {field = value}
+        private set(value) {
+            field = value
+        }
 
 
-    fun setItemSelected(selected: Boolean,fromUser:Boolean=false){
-        if(selected==itemSelected)return
-        itemSelected=selected
-        if (fromUser and selected)onSelection?.invoke(this)
+    fun setItemSelected(selected: Boolean, fromUser: Boolean = false) {
+        if (selected == itemSelected) return
+        itemSelected = selected
+        if (fromUser and selected) onSelection?.invoke(this)
         invalidate()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return mDetector.onTouchEvent(event)
     }
+
     fun Number.isBetween(a: Number, b: Number): Boolean {
         var d = this.toDouble()
         return d >= a.toDouble() && d <= b.toDouble()
@@ -104,11 +122,11 @@ open class MemeItemView : View {
         private var dx = 0f
         private var dy = 0f
         private var type = 0
-        private var selectedBefore:Boolean=false
+        private var selectedBefore: Boolean = false
         override fun onDown(event: MotionEvent): Boolean {
-            selectedBefore=itemSelected
-            setItemSelected(true,true)
-            if ( event.rawX.isBetween(x + width - resizeOffset, x + width) &&
+            selectedBefore = itemSelected
+            setItemSelected(true, true)
+            if (event.rawX.isBetween(x + width - resizeOffset, x + width) &&
                     event.rawY.isBetween(y + 60 + height - resizeOffset, y + 60 + height)) {//todo the 60 is added to account for the topbar fix it
                 type = 1
                 dx = event.rawX
@@ -120,8 +138,9 @@ open class MemeItemView : View {
             }
             return true
         }
+
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
-            if (selectedBefore)
+            if (!isInMemeEditor or selectedBefore)
                 onClickListener?.invoke()
             return true
         }
@@ -134,17 +153,19 @@ open class MemeItemView : View {
             }
             return true
         }
+
         private fun onResize(event: MotionEvent) {
             var nw = memeItemWidth + (event.rawX - dx).toInt()
             var nh = memeItemHeight + (event.rawY - dy).toInt()
             memeItemWidth = nw
             memeItemHeight = nh
-            onResize?.invoke(memeItemWidth,memeItemHeight)
+            onResize?.invoke(memeItemWidth, memeItemHeight)
             dx = event.rawX
             dy = event.rawY
             requestLayout()
 
         }
+
         private fun onDrag(event: MotionEvent) {
             var nx = event.rawX + dx
             var ny = event.rawY + dy

@@ -68,17 +68,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     private void goToSignUpDetails() {
         Intent intent = new Intent(this, AuthActivity.class);
         intent.putExtra(AuthActivity.STARTING_FRAGMENT_PARAM, AuthActivity.FRAGMENT_SETUP);
         startActivity(intent);
         finish();
     }
-
-
     private void initUI(Bundle savedInstanceState) {
+
         CustomMethods.makeWindowTransparent(this);
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mToolbar =  findViewById(R.id.toolbar2);
@@ -110,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
     private void initToolbar() {
         this.setSupportActionBar(this.mToolbar);
     }

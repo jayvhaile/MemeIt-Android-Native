@@ -10,10 +10,10 @@ import com.innov8.memegenerator.R
 
 class ColorView : View {
     lateinit var paint: Paint
-    var onColorChanged: ((color: Int) -> Unit)? =null
-    var color: Int
-        get() = paint.color
-        set(color) {
+    var onColorChanged: ((Int) -> Unit)? =null
+
+    fun getColor():Int=paint.color
+    fun setColor(color:Int) {
             paint.color = color
             invalidate()
             onColorChanged?.invoke(color)
@@ -22,7 +22,7 @@ class ColorView : View {
 
     constructor(context: Context) : super(context) {
         init()
-        color = Color.BLACK
+        setColor(Color.BLACK)
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {

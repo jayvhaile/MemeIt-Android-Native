@@ -1,4 +1,4 @@
-package com.innov8.memegenerator.memeEngine
+package com.innov8.memegenerator.fragments
 
 
 import android.os.Bundle

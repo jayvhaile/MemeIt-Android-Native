@@ -7,9 +7,13 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.innov8.memegenerator.customViews.VTab
+import com.innov8.memegenerator.fragments.*
 import com.innov8.memegenerator.memeEngine.*
+import com.innov8.memegenerator.models.TextProperty
 
-class MemeEditorActivity : AppCompatActivity() {
+class MemeEditorActivity : AppCompatActivity() ,ItemSelectedInterface{
+
+
     lateinit var vTab: VTab
     lateinit var vPager: ViewPager
     lateinit var memeEditorView:MemeEditorView
@@ -21,7 +25,9 @@ class MemeEditorActivity : AppCompatActivity() {
         vPager = findViewById(R.id.pager)
         memeEditorView = findViewById(R.id.imageView3)
         val adapter = MyPagerAdapter(supportFragmentManager)
+
         vPager.adapter = adapter
+
         vPager.offscreenPageLimit=1
 
         val onVtab: (Int) -> Unit = { index ->
@@ -43,27 +49,32 @@ class MemeEditorActivity : AppCompatActivity() {
         memeEditorView.addMemeItemView(memeTextView2)
     }
 
+    override fun onTextItemSelected(textProperty: TextProperty) {
+        vPager.setCurrentItem(2,false)
+    }
+
     private inner class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+
+
         override fun getCount(): Int = 5
         override fun getItem(pos: Int): Fragment =
                 when (pos) {
                     0 -> MemeLayoutEditorFragment()
                     1 -> MemeImageEditorFragment()
                     2 ->{
-                        val memeTextEditorFragment=MemeTextEditorFragment()
-                        memeTextEditorFragment.textEditInterface=memeEditorView.textEditInterface
+                        val memeTextEditorFragment= MemeTextEditorFragment()
+                        memeTextEditorFragment.textEditListener=memeEditorView.textEditListener
+                        memeEditorView.itemSelectedInterface=memeTextEditorFragment
                         memeTextEditorFragment
                     }
                     3 -> MemeStickerEditorFragment()
                     4 -> MemePaintEditorFragment()
                     else -> throw IllegalArgumentException("should be 0-4")
                 }
+
+
     }
-
-
-
     private fun fireOnEditTypeChanged(editType: EditType){
         memeEditorInterfaces.forEach { it.onEditTypeChanged(editType) }
     }
-
 }

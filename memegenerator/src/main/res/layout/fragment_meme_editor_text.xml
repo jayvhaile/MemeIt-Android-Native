@@ -19,8 +19,8 @@
             android:text="@string/customize" />
     </android.support.design.widget.TabLayout>
 
-    <TextView
+    <FrameLayout
+        android:id="@+id/holder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="texts"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>
