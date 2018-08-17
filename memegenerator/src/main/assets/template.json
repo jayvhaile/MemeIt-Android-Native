@@ -1,0 +1,846 @@
+[
+  {
+    "dataSource": 0,
+    "imageURL": "meme_01",
+    "label": "sample",
+    "textProperties": [
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "",
+            "name": "Default"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 0.0,
+          "stroked": true,
+          "textColor": -1,
+          "textSize": 20.0
+        },
+        "widthP": 0.37037036,
+        "xP": 0.32403564,
+        "yP": 0.18147127
+      },
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "",
+            "name": "Default"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 0.0,
+          "stroked": true,
+          "textColor": -1,
+          "textSize": 20.0
+        },
+        "widthP": 0.37037036,
+        "xP": 0.30768484,
+        "yP": 0.48364717
+      },
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "",
+            "name": "Default"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 0.0,
+          "stroked": true,
+          "textColor": -1,
+          "textSize": 20.0
+        },
+        "widthP": 0.37037036,
+        "xP": 0.32034302,
+        "yP": 0.8485549
+      }
+    ]
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_02",
+    "label": "sample",
+    "textProperties": [
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "",
+            "name": "Default"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 0.0,
+          "stroked": true,
+          "textColor": -1,
+          "textSize": 20.0
+        },
+        "widthP": 0.37037036,
+        "xP": 0.28701782,
+        "yP": 0.8438855
+      }
+    ]
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_03",
+    "label": "sample",
+    "textProperties": [
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "",
+            "name": "Default"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 0.0,
+          "stroked": true,
+          "textColor": -1,
+          "textSize": 20.0
+        },
+        "widthP": 0.37037036,
+        "xP": 0.06021118,
+        "yP": 0.62888366
+      }
+    ]
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_04",
+    "label": "sample",
+    "textProperties": [
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "fonts/ubuntu.ttf",
+            "name": "Ubuntu"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 10.0,
+          "stroked": false,
+          "textColor": -256,
+          "textSize": 20.0
+        },
+        "widthP": 0.37037036,
+        "xP": 0.19720459,
+        "yP": 0.63233835
+      }
+    ]
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_05",
+    "label": "sample",
+    "textProperties": [
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "fonts/arial.ttf",
+            "name": "Arial"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 10.0,
+          "stroked": false,
+          "textColor": -16777216,
+          "textSize": 20.0
+        },
+        "widthP": 0.37037036,
+        "xP": 0.18843079,
+        "yP": 0.21679688
+      },
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "",
+            "name": "Default"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 0.0,
+          "stroked": true,
+          "textColor": -1,
+          "textSize": 20.0
+        },
+        "widthP": 0.37037036,
+        "xP": 0.18609619,
+        "yP": 0.71968704
+      },
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "",
+            "name": "Default"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 0.0,
+          "stroked": true,
+          "textColor": -1,
+          "textSize": 20.0
+        },
+        "widthP": 0.21851853,
+        "xP": 0.7814815,
+        "yP": 0.23088619
+      },
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "",
+            "name": "Default"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 0.0,
+          "stroked": true,
+          "textColor": -1,
+          "textSize": 20.0
+        },
+        "widthP": 0.16203703,
+        "xP": 0.82637024,
+        "yP": 0.70624095
+      }
+    ]
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_06",
+    "label": "sample",
+    "textProperties": [
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": true,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "fonts/impact.ttf",
+            "name": "Impact"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 10.0,
+          "stroked": true,
+          "textColor": -1,
+          "textSize": 20.0
+        },
+        "widthP": 0.37037036,
+        "xP": 0.09814453,
+        "yP": 0.51958305
+      }
+    ]
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_07",
+    "label": "sample",
+    "textProperties": [
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "",
+            "name": "Default"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 0.0,
+          "stroked": true,
+          "textColor": -1,
+          "textSize": 20.0
+        },
+        "widthP": 0.37037036,
+        "xP": 0.31632188,
+        "yP": 0.76178646
+      }
+    ]
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_08",
+    "label": "sample",
+    "textProperties": [
+      {
+        "heightP": 0.15144509,
+        "textStyleProperty": {
+          "allCap": false,
+          "bold": false,
+          "italic": false,
+          "myTypeFace": {
+            "fileName": "fonts/ubuntu.ttf",
+            "name": "Ubuntu"
+          },
+          "strokeColor": -16777216,
+          "strokeWidth": 10.0,
+          "stroked": false,
+          "textColor": -256,
+          "textSize": 20.0
+        },
+        "widthP": 0.37037036,
+        "xP": 0.24908447,
+        "yP": 0.685513
+      }
+    ]
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_09",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_10",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_11",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_12",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_13",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_14",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_15",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_16",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_17",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_18",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_19",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_20",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_21",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_22",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_23",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_24",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_25",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_26",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_27",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_28",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_29",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_30",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_31",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_32",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_33",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_34",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_35",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_36",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_37",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_38",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_39",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_40",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_41",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_42",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_43",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_44",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_45",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_46",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_47",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_48",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_49",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_50",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_51",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_52",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_53",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_54",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_55",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_56",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_57",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_58",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_59",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_60",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_61",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_62",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_63",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_64",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_65",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_66",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_67",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_68",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_69",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_70",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_71",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_72",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_73",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_74",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_75",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_76",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_77",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_78",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_79",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_80",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_81",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_82",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_83",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_84",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_85",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_86",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_87",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_88",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_89",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_90",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_91",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_92",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_93",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_94",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_95",
+    "label": "sample",
+    "textProperties": []
+  },
+  {
+    "dataSource": 0,
+    "imageURL": "meme_96",
+    "label": "sample",
+    "textProperties": []
+  }
+]

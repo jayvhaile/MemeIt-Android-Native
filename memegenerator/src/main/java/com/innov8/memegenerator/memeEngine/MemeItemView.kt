@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import com.innov8.memegenerator.utils.fromDP
 
 
 open class MemeItemView : View {
@@ -65,7 +66,8 @@ open class MemeItemView : View {
     var onClickListener: (() -> Unit)? = null
     protected var onResize: ((width: Int, height: Int) -> Unit)? = null
     var onSelection: ((memeItemView: MemeItemView) -> Unit)? = null
-
+    private var resizeOffset=0
+    private var topOffeset=0
     private fun init() {
         upaint = Paint(Paint.ANTI_ALIAS_FLAG)
         upaint.style = Paint.Style.STROKE
@@ -73,9 +75,11 @@ open class MemeItemView : View {
         upaint.strokeJoin = Paint.Join.ROUND
         upaint.strokeCap = Paint.Cap.BUTT
         upaint.color = Color.argb(90, 255, 255, 255)
-        minimumWidth = 120
-        minimumHeight = 120
+        minimumWidth = 50f.fromDP(context).toInt()
+        minimumHeight = 50f.fromDP(context).toInt()
         mDetector = GestureDetector(context, MyListener())
+        resizeOffset = 28f.fromDP(context).toInt()
+        topOffeset = 24f.fromDP(context).toInt()
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -94,7 +98,7 @@ open class MemeItemView : View {
                 resolveSizeAndState(memeItemHeight, heightMeasureSpec, 1))
     }
 
-    private var resizeOffset = 100
+
     var itemSelected = false
         private set(value) {
             field = value
@@ -127,7 +131,7 @@ open class MemeItemView : View {
             selectedBefore = itemSelected
             setItemSelected(true, true)
             if (event.rawX.isBetween(x + width - resizeOffset, x + width) &&
-                    event.rawY.isBetween(y + 60 + height - resizeOffset, y + 60 + height)) {//todo the 60 is added to account for the topbar fix it
+                    event.rawY.isBetween(y + topOffeset + height - resizeOffset, y + topOffeset + height)) {//todo the 60 is added to account for the topbar fix it
                 type = 1
                 dx = event.rawX
                 dy = event.rawY

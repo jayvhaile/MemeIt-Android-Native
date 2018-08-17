@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.innov8.memegenerator.MemeChooser;
 import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.CustomMethods;
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 .withRootViewElevationPx(5)
                 .withRootViewScale(0.5f)
                 .withToolbarMenuToggle((Toolbar) findViewById(R.id.toolbar2))
-                .withMenuLayout(R.layout.menu_drawer)
+                .withMenuLayout(R.layout.menu_drawer2)
                 .inject();
 
 
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                         getSupportActionBar().show();
                         return true;
                     case R.id.menu_create:
-                        startActivity(new Intent(MainActivity.this,MemeTemplateMaker.class));
+                        startActivity(new Intent(MainActivity.this,MemeChooser.class));
                         return true;
                     case R.id.menu_favorites:
                         setTitle(2);
@@ -157,6 +158,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_top_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_notif:
+                startActivity(new Intent(this,MemeTemplateMaker.class));
+        }
         return true;
     }
 

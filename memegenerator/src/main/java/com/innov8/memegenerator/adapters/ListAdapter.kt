@@ -13,7 +13,7 @@ import java.util.*
 
 abstract class ListAdapter<T>(protected var mContext: Context, private val mLayoutID: Int) : RecyclerView.Adapter<MyViewHolder<T>>() {
     private val items: MutableList<T>
-
+    var OnItemClicked:((T)->Unit)?=null
     init {
         items = ArrayList()
     }

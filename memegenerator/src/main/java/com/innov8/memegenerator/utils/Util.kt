@@ -1,16 +1,15 @@
 package com.innov8.memegenerator.utils
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.*
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
@@ -81,6 +80,11 @@ inline fun RecyclerView.initWithGrid(spanCount:Int,orientation:Int=LinearLayoutM
     this.layoutManager=glm
     this.itemAnimator=DefaultItemAnimator()
 }
+inline fun RecyclerView.initWithStagger(spanCount:Int,orientation:Int=LinearLayoutManager.VERTICAL){
+    val glm=StaggeredGridLayoutManager(spanCount,orientation)
+    this.layoutManager=glm
+    this.itemAnimator=DefaultItemAnimator()
+}
 
 inline fun FragmentManager.replace(id:Int, fragment: Fragment){
     beginTransaction().replace(id,fragment).commit()
@@ -122,4 +126,31 @@ fun Context.loadBitmap(id:Int,quality:Float):Bitmap{
 }
 fun Context.getDrawableIdByName(name:String):Int{
     return resources.getIdentifier(name,"drawable",packageName)
+}
+fun Float.toSP(context:Context):Float{
+        return this/context.resources.displayMetrics.scaledDensity
+}
+fun Float.fromSP(context:Context):Float{
+    return this*context.resources.displayMetrics.scaledDensity
+}
+fun Float.toDP(context:Context):Float{
+    return this/context.resources.displayMetrics.density
+}
+fun Float.fromDP(context:Context):Float{
+    return this*context.resources.displayMetrics.density
+}
+fun Context.goTo(clazz: Class<out Activity>){
+    startActivity(Intent(this,clazz))
+}
+fun Activity.goTo(clazz:Class<out Activity>,finish:Boolean=false){
+    startActivity(Intent(this,clazz))
+    if(finish)
+        finish()
+}
+fun Activity.goToWithString(clazz:Class<out Activity>,data:String,finish:Boolean=false){
+    val intent=Intent(this,clazz)
+    intent.putExtra("string",data)
+    startActivity(intent)
+    if(finish)
+        finish()
 }

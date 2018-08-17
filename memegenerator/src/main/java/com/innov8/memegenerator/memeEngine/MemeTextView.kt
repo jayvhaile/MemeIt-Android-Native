@@ -14,9 +14,11 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextProperty
 import com.innov8.memegenerator.models.TextStyleProperty
+import com.innov8.memegenerator.utils.fromSP
+import com.innov8.memegenerator.utils.toSP
 
 class MemeTextView : MemeItemView {
-    constructor(context: Context, memeItemWidth: Int, memeItemHeight: Int) : super(context, memeItemWidth, memeItemHeight) {
+    constructor(context: Context, memeItemWidth: Int=0, memeItemHeight: Int=0) : super(context, memeItemWidth, memeItemHeight) {
         init()
     }
 
@@ -44,7 +46,7 @@ class MemeTextView : MemeItemView {
     }
 
     fun setTextSize(value: Float) {
-        dl.paint.textSize = value
+        dl.paint.textSize = value.fromSP(context)
         resizeToWrapText(true)
     }
 
@@ -101,7 +103,7 @@ class MemeTextView : MemeItemView {
         with(textPaint) {
             typeface = Typeface.DEFAULT
             color = Color.WHITE
-            textSize = 120f
+            textSize = 20f.fromSP(context)
             style = Paint.Style.FILL
 
         }
@@ -163,7 +165,7 @@ class MemeTextView : MemeItemView {
                 generateTextStyleProperty())
     }
     fun generateTextStyleProperty(): TextStyleProperty {
-        return TextStyleProperty(dl.paint.textSize, color, myTypeface,
+        return TextStyleProperty(dl.paint.textSize.toSP(context), color, myTypeface,
                 bold, italic, allCaps,
                 stroke, strokeColor, dl.paint.strokeWidth
         )
@@ -173,10 +175,12 @@ class MemeTextView : MemeItemView {
         y=totalH*tp.yP
         memeItemWidth= (totalW*tp.widthP).toInt()
         memeItemHeight= (totalH*tp.heightP).toInt()
+        applyTextStyleProperty(tp.textStyleProperty,text = "text")
     }
     fun applyTextStyleProperty(tp: TextStyleProperty, applySize:Boolean=true, text: String = "") {
         color = tp.textColor
-        if(applySize) dl.paint.textSize = tp.textSize
+        if(applySize) dl.paint.textSize = tp.textSize.fromSP(context)
+        myTypeface=tp.myTypeFace
         dl.paint.typeface = tp.myTypeFace.getTypeFace(context)
         bold = tp.bold
         italic = tp.italic

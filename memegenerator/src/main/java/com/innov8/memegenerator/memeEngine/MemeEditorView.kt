@@ -8,9 +8,12 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextProperty
 import com.innov8.memegenerator.models.TextStyleProperty
+import com.innov8.memegenerator.utils.getDrawableIdByName
+import com.innov8.memegenerator.utils.loadBitmap
 
 /**
  * Created by Haile on 5/19/2018.
@@ -19,6 +22,7 @@ import com.innov8.memegenerator.models.TextStyleProperty
 class MemeEditorView : ViewGroup, MemeEditorInterface {
     constructor(context: Context) : super(context) {
         init()
+
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
@@ -198,6 +202,18 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             }
         }
         return list
+    }
+
+
+    fun loadMemeTemplate(memeTemplate: MemeTemplate){
+        clearMemeItems()
+        image=context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
+        memeTemplate.textProperties.forEach {
+            val memeTextView=MemeTextView(context)
+            addMemeItemView(memeTextView)
+            memeTextView.applyTextProperty(it,width.toFloat(),height.toFloat())
+
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 package com.innov8.memegenerator;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -19,6 +20,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.innov8.memegenerator.memeEngine.MemeTextView;
+import com.innov8.memegenerator.models.MemeTemplate;
 import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.utilis.OnCompleteListener;
@@ -39,7 +44,7 @@ public class SimpleMemeGenerator extends AppCompatActivity {
 
     private Uri image_url;
 
-
+    Gson gson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +63,9 @@ public class SimpleMemeGenerator extends AppCompatActivity {
 
             }
         });
+        Class<? extends Activity> c;
+        MemeTextView memeTextView=gson.fromJson("{\"heightP\":0.1384083,\"textStyleProperty\":{\"allCap\":false,\"bold\":false,\"italic\":false,\"myTypeFace\":{\"fileName\":\"fonts/ubuntu.ttf\",\"name\":\"Ubuntu\"},\"strokeColor\":-16777216,\"strokeWidth\":10.0,\"stroked\":false,\"textColor\":-256,\"textSize\":120.0},\"widthP\":0.5231481,\"xP\":0.20990959,\"yP\":0.84427506}",
+                new TypeToken<List<MemeTemplate>>(){}.getType());
         findViewById(R.id.post).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

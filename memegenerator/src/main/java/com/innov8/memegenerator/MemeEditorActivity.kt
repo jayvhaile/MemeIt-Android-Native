@@ -1,15 +1,23 @@
 package com.innov8.memegenerator
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import com.google.gson.Gson
 import com.innov8.memegenerator.customViews.VTab
 import com.innov8.memegenerator.fragments.*
-import com.innov8.memegenerator.memeEngine.*
+import com.innov8.memegenerator.memeEngine.EditType
+import com.innov8.memegenerator.memeEngine.ItemSelectedInterface
+import com.innov8.memegenerator.memeEngine.MemeEditorInterface
+import com.innov8.memegenerator.memeEngine.MemeEditorView
+import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.models.TextStyleProperty
+import com.innov8.memegenerator.utils.log
+import java.lang.IllegalArgumentException
 
 class MemeEditorActivity : AppCompatActivity() ,ItemSelectedInterface{
 
@@ -41,12 +49,17 @@ class MemeEditorActivity : AppCompatActivity() ,ItemSelectedInterface{
                 vTab.item(R.drawable.ic_bottom_sticker, onVtab),
                 vTab.item(R.drawable.ic_format_paint, onVtab)
         )
-        val memeTextView=MemeTextView(this,400,100)
-        val memeTextView2=MemeTextView(this,400,100)
-        memeTextView.text="Hello"
-        memeTextView2.text="World"
-        memeEditorView.addMemeItemView(memeTextView)
-        memeEditorView.addMemeItemView(memeTextView2)
+
+        val json:String?=intent.getStringExtra("string")
+
+        if(json!=null){
+            val gson=Gson()
+            val memeTemplate=gson.fromJson(json,MemeTemplate::class.java)
+            Handler().postDelayed({
+                log(memeEditorView.width,memeEditorView.height)
+                memeEditorView.loadMemeTemplate(memeTemplate)
+            },100)
+        }
     }
 
     override fun onTextItemSelected(textStyleProperty: TextStyleProperty) {

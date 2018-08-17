@@ -42,6 +42,7 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
     implementation 'com.facebook.fresco:fresco:1.9.0'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.fxn769:pix:1.2.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
 }

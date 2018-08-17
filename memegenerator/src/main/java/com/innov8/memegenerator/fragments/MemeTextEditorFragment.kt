@@ -38,6 +38,10 @@ class MemeTextEditorFragment : Fragment(),ItemSelectedInterface {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_meme_editor_text, container, false)
+        textPresetFragment = TextPresetFragment()
+        textCustomizeFragment = TextCustomizeFragment()
+        textPresetFragment.textEditListener = textEditListener
+        textCustomizeFragment.textEditListener = textEditListener
         initViews(view)
         return view
     }
@@ -59,6 +63,15 @@ class MemeTextEditorFragment : Fragment(),ItemSelectedInterface {
         childFragmentManager.replace(R.id.holder, textPresetFragment)
     }
 
+
+    override fun onDestroyView() {
+
+        textPresetFragment.onDestroy()
+        textCustomizeFragment.onDestroy()
+        super.onDestroyView()
+    }
+
+
     lateinit var textEditListener: TextEditListener
     override fun onTextItemSelected(textStyleProperty: TextStyleProperty) {
         textCustomizeFragment.applyTextProperty(textStyleProperty)
@@ -78,20 +91,20 @@ class TextPresetFragment : Fragment() {
         asyncLoaders = AsyncLoader<List<TextPreset>>({
             return@AsyncLoader listOf<TextPreset>(
                     TextPreset("Normal", TextStyleProperty(
-                            50f, Color.WHITE, MyTypeFace.byName("Arial")!!,
+                            20f, Color.WHITE, MyTypeFace.byName("Arial")!!,
                             false, false, false,
                             true, Color.BLACK, 10f
                     )),
                     TextPreset("Meme", TextStyleProperty(
-                            50f, Color.WHITE,  MyTypeFace.byName("Impact")!!,
+                            20f, Color.WHITE,  MyTypeFace.byName("Impact")!!,
                             false, false, true,
                             true, Color.BLACK, 10f
                     )),
                     TextPreset("Red", TextStyleProperty(
-                            50f, Color.RED,  MyTypeFace.byName("Pacifico")!!
+                            20f, Color.RED,  MyTypeFace.byName("Pacifico")!!
                     )),
                     TextPreset("Dialog", TextStyleProperty(
-                            50f, Color.YELLOW,  MyTypeFace.byName("Ubuntu")!!,
+                            20f, Color.YELLOW,  MyTypeFace.byName("Ubuntu")!!,
                             false, false, false,
                             false, Color.BLACK, 10f
                     ))

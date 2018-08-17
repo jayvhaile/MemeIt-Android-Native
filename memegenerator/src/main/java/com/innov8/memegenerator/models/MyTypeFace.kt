@@ -2,10 +2,11 @@ package com.innov8.memegenerator.models
 
 import android.content.Context
 import android.graphics.Typeface
-open class MyTypeFace(val name:String,private val fileName: String="",loadNow:Boolean=false){
+
+open class MyTypeFace(val name: String, private val fileName: String = "", loadNow: Boolean = false) {
 
     companion object {
-        var DEFAULT:MyTypeFace=DefaultTypeFace()
+        var DEFAULT: MyTypeFace = MyTypeFace("Default")
         private fun loadAllFiles(): List<MyTypeFace> {
             val prefix = "fonts/"
             val ttf = ".ttf"
@@ -19,37 +20,40 @@ open class MyTypeFace(val name:String,private val fileName: String="",loadNow:Bo
                     MyTypeFace("Ubuntu", "${prefix}ubuntu$ttf")
             )
         }
-        private var typefaceFiles:List<MyTypeFace>?=null
-        fun getTypefaceFiles():List<MyTypeFace>{
-            if(typefaceFiles==null)
-                typefaceFiles= loadAllFiles()
+
+        private var typefaceFiles: List<MyTypeFace>? = null
+        fun getTypefaceFiles(): List<MyTypeFace> {
+            if (typefaceFiles == null)
+                typefaceFiles = loadAllFiles()
             return typefaceFiles!!
         }
 
-        fun byName( name: String,context: Context?=null): MyTypeFace? {
-            val t= getTypefaceFiles().find { font -> font.name == name }
-            if (t!=null&&context!=null)
+        fun byName(name: String, context: Context? = null): MyTypeFace? {
+            val t = getTypefaceFiles().find { font -> font.name == name }
+            if (t != null && context != null)
                 t.loadTypeFace(context)
             return t
         }
     }
 
     private fun loadTypeFace(context: Context) {
-        typeface= Typeface.createFromAsset(context.assets, fileName)
+        if (name == "Default")
+            typeface = Typeface.DEFAULT
+        else
+            typeface = Typeface.createFromAsset(context.assets, fileName)
     }
+
     @Transient
     private var typeface: Typeface? = null
-    open fun getTypeFace(context: Context?=null):Typeface{
-        if(typeface==null)
+
+    open fun getTypeFace(context: Context? = null): Typeface {
+        if (typeface == null)
             loadTypeFace(context!!)
         return typeface!!
     }
+
     override fun toString(): String {
         return name.toString()
     }
 }
-class DefaultTypeFace:MyTypeFace("Default"){
-    override fun getTypeFace(context: Context?): Typeface {
-        return Typeface.DEFAULT
-    }
-}
+
