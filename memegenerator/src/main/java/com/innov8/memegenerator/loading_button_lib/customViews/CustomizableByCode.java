@@ -1,4 +1,4 @@
-package com.innov8.memeit.loading_button_lib.customViews;
+package com.innov8.memegenerator.loading_button_lib.customViews;
 
 interface CustomizableByCode {
     void setSpinningBarWidth(float width);

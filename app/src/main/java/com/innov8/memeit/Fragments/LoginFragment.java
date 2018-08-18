@@ -3,20 +3,15 @@ package com.innov8.memeit.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.innov8.memeit.Activities.AuthActivity;
 import com.innov8.memeit.Activities.MainActivity;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.R;
-import com.innov8.memeit.loading_button_lib.customViews.CircularProgressButton;
-import com.innov8.memeit.loading_button_lib.interfaces.OnAnimationEndListener;
 import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.utilis.OnCompleteListener;
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.Button
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -25,6 +26,7 @@ class MemeTemplateMaker : AppCompatActivity() {
     var json2 = "[{\"imageURL\":\"meme_01\",\"textProperties\":[{\"heightP\":0.19633508,\"textStyleProperty\":{\"allCap\":false,\"bold\":false,\"italic\":false,\"myTypeFace\":{\"fileName\":\"\",\"name\":\"Default\"},\"strokeColor\":-16777216,\"strokeWidth\":0.0,\"stroked\":true,\"textColor\":-1,\"textSize\":20.0},\"widthP\":0.35625,\"xP\":0.3201322,\"yP\":0.13875112},{\"heightP\":0.19633508,\"textStyleProperty\":{\"allCap\":false,\"bold\":false,\"italic\":false,\"myTypeFace\":{\"fileName\":\"\",\"name\":\"Default\"},\"strokeColor\":-16777216,\"strokeWidth\":0.0,\"stroked\":true,\"textColor\":-1,\"textSize\":20.0},\"widthP\":0.35625,\"xP\":0.3217254,\"yP\":0.47377342},{\"heightP\":0.19633508,\"textStyleProperty\":{\"allCap\":false,\"bold\":false,\"italic\":false,\"myTypeFace\":{\"fileName\":\"\",\"name\":\"Default\"},\"strokeColor\":-16777216,\"strokeWidth\":0.0,\"stroked\":true,\"textColor\":-1,\"textSize\":20.0},\"widthP\":0.35,\"xP\":0.32499185,\"yP\":0.8036649}]}]"
     lateinit var memeEditorView: MemeEditorView
     lateinit var memeTextEditorFragment: MemeTextEditorFragment
+    val view: View?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meme_template_maker)
@@ -53,6 +55,8 @@ class MemeTemplateMaker : AppCompatActivity() {
             //Pix.start(this, 56,5)
 
         }
+
+
         findViewById<Button>(R.id.savebtn).setOnClickListener {
             val json = gson.toJson(memeTemplates)
             if(!isExternalStorageWritable())

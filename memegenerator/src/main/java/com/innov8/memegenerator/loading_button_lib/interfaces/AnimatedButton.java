@@ -1,4 +1,4 @@
-package com.innov8.memeit.loading_button_lib.interfaces;
+package com.innov8.memegenerator.loading_button_lib.interfaces;
 
 
 /**

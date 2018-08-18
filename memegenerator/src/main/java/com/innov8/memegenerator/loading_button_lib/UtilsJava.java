@@ -1,4 +1,4 @@
-package com.innov8.memeit.loading_button_lib;
+package com.innov8.memegenerator.loading_button_lib;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

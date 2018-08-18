@@ -74,9 +74,9 @@ open class MemeItemView : View {
         upaint.strokeWidth = 5f
         upaint.strokeJoin = Paint.Join.ROUND
         upaint.strokeCap = Paint.Cap.BUTT
-        upaint.color = Color.argb(90, 255, 255, 255)
+        upaint.color = Color.argb(60, 255, 255, 255)
         minimumWidth = 50f.fromDP(context).toInt()
-        minimumHeight = 50f.fromDP(context).toInt()
+        minimumHeight = 30f.fromDP(context).toInt()
         mDetector = GestureDetector(context, MyListener())
         resizeOffset = 28f.fromDP(context).toInt()
         topOffeset = 24f.fromDP(context).toInt()

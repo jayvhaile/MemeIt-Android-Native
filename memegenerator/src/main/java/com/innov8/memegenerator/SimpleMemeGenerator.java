@@ -99,7 +99,6 @@ public class SimpleMemeGenerator extends AppCompatActivity {
           Toast.makeText(this, "No Image Selected", Toast.LENGTH_SHORT).show();
           return;
       }
-
         MediaManager.get().upload(image_url).callback(new UploadCallback() {
             @Override
             public void onStart(String s) {

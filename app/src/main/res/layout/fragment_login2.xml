@@ -44,7 +44,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline7">
 
-        <com.innov8.memeit.loading_button_lib.customViews.CircularProgressButton
+        <com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
             android:id="@+id/login_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

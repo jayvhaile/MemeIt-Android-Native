@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
-    <android.support.v7.widget.Toolbar
+    <com.innov8.memegenerator.customViews.MyToolBar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="56dp"
@@ -28,7 +28,7 @@
         app:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toTopOf="@+id/guideline2"/>
     <com.innov8.memegenerator.customViews.VTab
         android:id="@+id/vtab"
         android:layout_width="56dp"

@@ -6,20 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.R;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.innov8.memeit.loading_button_lib.customViews.CircularProgressButton;
-import com.innov8.memeit.loading_button_lib.interfaces.OnAnimationEndListener;
-import com.memeit.backend.MemeItUsers;
-import com.memeit.backend.dataclasses.Meme;
+import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton;
 import com.memeit.backend.dataclasses.User;
-import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.util.ArrayList;
 import java.util.List;

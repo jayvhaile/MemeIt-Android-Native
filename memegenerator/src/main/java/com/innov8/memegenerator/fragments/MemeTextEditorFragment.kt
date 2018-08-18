@@ -17,17 +17,34 @@ import com.innov8.memegenerator.R
 import com.innov8.memegenerator.adapters.TextPresetsAdapter
 import com.innov8.memegenerator.customViews.ColorView
 import com.innov8.memegenerator.customViews.FontChooserView
+import com.innov8.memegenerator.customViews.MyToolbarmenu
 import com.innov8.memegenerator.customViews.ToggleImageButton
 import com.innov8.memegenerator.memeEngine.ItemSelectedInterface
+import com.innov8.memegenerator.memeEngine.MemeEditorView
+import com.innov8.memegenerator.memeEngine.MemeTextView
 import com.innov8.memegenerator.memeEngine.TextEditListener
 import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextPreset
 import com.innov8.memegenerator.models.TextStyleProperty
 import com.innov8.memegenerator.utils.*
 
-class MemeTextEditorFragment : Fragment(),ItemSelectedInterface {
+class MemeTextEditorFragment : MemeEditorFragment(),ItemSelectedInterface {
+
+    override val menus: List<MyToolbarmenu>
+        get() = listOf(
+                MyToolbarmenu(R.drawable.ic_add,{
+                    val t=MemeTextView(context!!,400,100)
+                    memeEditorView?.addMemeItemView(t)
+                    t.text="text"
+
+                }),
+                MyToolbarmenu(R.drawable.ic_text_menu_delete,{
+                    memeEditorView?.removeSelectedItem(MemeTextView::class.java)
+                })
+        )
     lateinit var textPresetFragment: TextPresetFragment
     lateinit var textCustomizeFragment: TextCustomizeFragment
+    var memeEditorView:MemeEditorView?=null//todo this should not be here
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         textPresetFragment = TextPresetFragment()
@@ -57,6 +74,7 @@ class MemeTextEditorFragment : Fragment(),ItemSelectedInterface {
                 }
                 1 -> {
                     childFragmentManager.replace(R.id.holder, textCustomizeFragment)
+
                 }
             }
         }
@@ -74,7 +92,8 @@ class MemeTextEditorFragment : Fragment(),ItemSelectedInterface {
 
     lateinit var textEditListener: TextEditListener
     override fun onTextItemSelected(textStyleProperty: TextStyleProperty) {
-        textCustomizeFragment.applyTextProperty(textStyleProperty)
+        if(tabLayout.selectedTabPosition==1)
+            textCustomizeFragment.applyTextProperty(textStyleProperty)
     }
 }
 

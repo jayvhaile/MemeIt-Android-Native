@@ -1,4 +1,4 @@
-package com.innov8.memeit.loading_button_lib.customViews;
+package com.innov8.memegenerator.loading_button_lib.customViews;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -19,13 +19,13 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
-import com.innov8.memeit.R;
-import com.innov8.memeit.loading_button_lib.Utils;
-import com.innov8.memeit.loading_button_lib.UtilsJava;
-import com.innov8.memeit.loading_button_lib.animatedDrawables.CircularAnimatedDrawable;
-import com.innov8.memeit.loading_button_lib.animatedDrawables.CircularRevealAnimatedDrawable;
-import com.innov8.memeit.loading_button_lib.interfaces.AnimatedButton;
-import com.innov8.memeit.loading_button_lib.interfaces.OnAnimationEndListener;
+import com.innov8.memegenerator.R;
+import com.innov8.memegenerator.loading_button_lib.Utils;
+import com.innov8.memegenerator.loading_button_lib.UtilsJava;
+import com.innov8.memegenerator.loading_button_lib.animatedDrawables.CircularAnimatedDrawable;
+import com.innov8.memegenerator.loading_button_lib.animatedDrawables.CircularRevealAnimatedDrawable;
+import com.innov8.memegenerator.loading_button_lib.interfaces.AnimatedButton;
+import com.innov8.memegenerator.loading_button_lib.interfaces.OnAnimationEndListener;
 
 
 /**

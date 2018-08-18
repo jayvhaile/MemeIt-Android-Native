@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat.PNG
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.support.design.widget.TabLayout
@@ -13,6 +14,8 @@ import android.support.v7.widget.*
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
+import java.io.ByteArrayOutputStream
+
 class MyAsyncTask<Return>: AsyncTask<Unit, Unit, Return>(){
     var task:(()->Return)?=null
     var onPostExecute:((Return)->Unit)?=null
@@ -139,6 +142,9 @@ fun Float.toDP(context:Context):Float{
 fun Float.fromDP(context:Context):Float{
     return this*context.resources.displayMetrics.density
 }
+fun Int.fromDP(context:Context):Int{
+    return (this*context.resources.displayMetrics.density).toInt()
+}
 fun Context.goTo(clazz: Class<out Activity>){
     startActivity(Intent(this,clazz))
 }
@@ -153,4 +159,9 @@ fun Activity.goToWithString(clazz:Class<out Activity>,data:String,finish:Boolean
     startActivity(intent)
     if(finish)
         finish()
+}
+fun Bitmap.toByteArray(format:Bitmap.CompressFormat=PNG, quality:Int=100):ByteArray{
+    val stream= ByteArrayOutputStream()
+    compress(format, quality, stream)
+    return stream.toByteArray()
 }

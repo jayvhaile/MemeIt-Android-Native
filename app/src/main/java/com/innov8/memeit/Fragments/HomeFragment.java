@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.innov8.memeit.R;
-import com.innov8.memeit.loading_button_lib.customViews.CircularProgressButton;
+import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 

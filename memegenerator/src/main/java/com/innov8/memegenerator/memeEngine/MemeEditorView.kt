@@ -112,12 +112,10 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         background.draw(canvas)
         if (image != null) {
             val img: Bitmap = image!!
-
-
-            var w: Float
-            var h: Float
-            var x: Float
-            var y: Float
+            val w: Float
+            val h: Float
+            val x: Float
+            val y: Float
 
             val iw = img.width.toFloat()
             val ih = img.height.toFloat()
@@ -144,8 +142,8 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             val rect = Rect(x.toInt(), y.toInt(),x.toInt()+ w.toInt(), y.toInt()+h.toInt())
             canvas.drawBitmap(img, null, rect, null)
 
-        }
 
+        }
         super.onDraw(canvas)
     }
 
@@ -182,8 +180,8 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
-    fun removeSelectedItem() {
-        if (selectedView != null) {
+    fun removeSelectedItem(clazz:(Class<out MemeItemView>)=MemeItemView::class.java) {
+        if (selectedView != null && selectedView!!.javaClass==clazz) {
             removeMemeItemView(selectedView!!)
         }
     }
@@ -214,6 +212,13 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             memeTextView.applyTextProperty(it,width.toFloat(),height.toFloat())
 
         }
+    }
+    fun captureMeme():Bitmap{
+        selectedView?.setItemSelected(false)
+        isDrawingCacheEnabled=true
+        val bitmap= getDrawingCache(true).copy(Bitmap.Config.ARGB_8888,false)
+        destroyDrawingCache()
+        return bitmap
     }
 }
 

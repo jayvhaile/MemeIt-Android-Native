@@ -1,4 +1,4 @@
-package com.innov8.memeit.loading_button_lib.customViews;
+package com.innov8.memegenerator.loading_button_lib.customViews;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -10,9 +10,9 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import com.innov8.memeit.R;
-import com.innov8.memeit.loading_button_lib.animatedDrawables.CircularAnimatedDrawable;
+
+import com.innov8.memegenerator.R;
+import com.innov8.memegenerator.loading_button_lib.animatedDrawables.CircularAnimatedDrawable;
 
 
 /**

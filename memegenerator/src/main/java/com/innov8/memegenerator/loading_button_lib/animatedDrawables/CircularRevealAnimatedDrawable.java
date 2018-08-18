@@ -1,4 +1,4 @@
-package com.innov8.memeit.loading_button_lib.animatedDrawables;
+package com.innov8.memegenerator.loading_button_lib.animatedDrawables;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
