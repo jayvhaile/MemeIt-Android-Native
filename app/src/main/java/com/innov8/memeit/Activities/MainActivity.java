@@ -2,20 +2,12 @@ package com.innov8.memeit.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.innov8.memegenerator.MemeChooser;
 import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
@@ -30,15 +22,18 @@ import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.main_viewpager)
     ViewPager viewPager;
-    @BindView(R.id.bottom_nav)
     BottomNavigation bottom_nav;
-    @BindView(R.id.toolbar2)
     Toolbar mToolbar;
 
 
@@ -79,7 +74,9 @@ public class MainActivity extends AppCompatActivity {
         CustomMethods.makeWindowTransparent(this);
 
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        viewPager=findViewById(R.id.main_viewpager);
+        bottom_nav=findViewById(R.id.bottom_nav);
+        mToolbar=findViewById(R.id.toolbar2);
         mToolbar =  findViewById(R.id.toolbar2);
         initToolbar();
         initBottomNav();
@@ -94,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
                 .withContentClickableWhenMenuOpened(false)
                 .withRootViewElevationPx(5)
                 .withRootViewScale(0.5f)
-                .withToolbarMenuToggle((Toolbar) findViewById(R.id.toolbar2))
                 .withMenuLayout(R.layout.menu_drawer2)
                 .inject();
 

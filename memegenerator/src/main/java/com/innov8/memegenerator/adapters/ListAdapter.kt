@@ -1,7 +1,7 @@
 package com.innov8.memegenerator.adapters
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import java.util.*
  * Created by Jv on 7/21/2018.
  */
 
-abstract class ListAdapter<T>(protected var mContext: Context, private val mLayoutID: Int) : RecyclerView.Adapter<MyViewHolder<T>>() {
+abstract class ListAdapter<T>(protected var mContext: Context, private val mLayoutID: Int) : androidx.recyclerview.widget.RecyclerView.Adapter<MyViewHolder<T>>() {
     private val items: MutableList<T>
     var OnItemClicked:((T)->Unit)?=null
     init {

@@ -1,10 +1,11 @@
 package com.innov8.memeit.Activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.innov8.memeit.Fragments.ProfileFragment;
 import com.innov8.memeit.R;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ProfileActivity extends AppCompatActivity {
 

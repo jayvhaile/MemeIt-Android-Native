@@ -2,7 +2,7 @@ package com.innov8.memegenerator.customViews
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v7.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatImageButton
 import android.util.AttributeSet
 import android.widget.SeekBar
 import com.innov8.memegenerator.R

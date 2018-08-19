@@ -3,14 +3,10 @@ package com.innov8.memeit.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.Fragments.LoginFragment;
 import com.innov8.memeit.Fragments.SetupFragment;
@@ -18,8 +14,10 @@ import com.innov8.memeit.Fragments.SignUpFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 public class AuthActivity extends AppCompatActivity {
     public static final String STARTING_FRAGMENT_PARAM = "frag";
@@ -30,7 +28,6 @@ public class AuthActivity extends AppCompatActivity {
     public SignUpFragment signUpFragment;
     public LoginFragment loginFragment;
     public SetupFragment setupFragment;
-    @BindView(R.id.auth_coordinate)
     CoordinatorLayout authCoordinate;
     private int currentFrag;
 
@@ -39,7 +36,7 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         CustomMethods.makeWindowSeamless(this);
         setContentView(R.layout.activity_auth);
-        ButterKnife.bind(this);
+        authCoordinate=findViewById(R.id.auth_coordinate);
         CustomMethods.makeBackgroundScrollAnimate(this, R.id.background_login_1, R.id.background_login_2);
         initFragments();
         if (getIntent() != null) {

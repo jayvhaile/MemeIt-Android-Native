@@ -45,7 +45,7 @@
                 android:layout_alignParentRight="true" />
         </RelativeLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="120dp">
 
@@ -176,7 +176,7 @@
             </LinearLayout>
 
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <com.kekstudio.dachshundtablayout.DachshundTabLayout
             android:tag="sticky"
             android:id="@+id/tabs_profile"
@@ -191,12 +191,12 @@
             app:ddIndicatorColor="#ff5656"
             app:tabSelectedTextColor="#000"
             app:tabTextColor="#5a5a5a" />
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/profile_viewpager"
             android:layout_width="match_parent"
             android:paddingBottom="50dp"
             android:layout_height="match_parent">
 
-        </android.support.v4.view.ViewPager>
+        </androidx.viewpager.widget.ViewPager>
     </LinearLayout>
 </com.emilsjolander.components.StickyScrollViewItems.StickyScrollView>

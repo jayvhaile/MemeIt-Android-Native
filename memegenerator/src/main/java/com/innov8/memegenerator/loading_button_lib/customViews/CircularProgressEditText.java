@@ -18,7 +18,7 @@ import com.innov8.memegenerator.loading_button_lib.animatedDrawables.CircularAni
 /**
  * Created by leandro on 5/31/16.
  */
-public class CircularProgressEditText extends android.support.v7.widget.AppCompatEditText {
+public class CircularProgressEditText extends androidx.appcompat.widget.AppCompatEditText {
     private enum State {
         PROGRESS, IDLE
     }

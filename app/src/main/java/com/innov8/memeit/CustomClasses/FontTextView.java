@@ -3,14 +3,12 @@ package com.innov8.memeit.CustomClasses;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.TextView;
 
 /**
  * Created by Biruk on 5/11/2018.
  */
 
-public class FontTextView extends android.support.v7.widget.AppCompatTextView {
+public class FontTextView extends androidx.appcompat.widget.AppCompatTextView {
     private static final String asset = "fonts/avenir.ttf"/*"typefaceLoaders/avenir.ttf"*/;
     public FontTextView(Context context) {
         super(context);

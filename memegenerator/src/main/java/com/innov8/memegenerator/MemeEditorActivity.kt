@@ -2,12 +2,7 @@ package com.innov8.memegenerator
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.innov8.memegenerator.customViews.MyToolBar
 import com.innov8.memegenerator.customViews.MyToolbarmenu
@@ -19,14 +14,13 @@ import com.innov8.memegenerator.memeEngine.MemeEditorInterface
 import com.innov8.memegenerator.memeEngine.MemeEditorView
 import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.models.TextStyleProperty
-import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.toByteArray
 
 class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
 
     lateinit var vTab: VTab
-    lateinit var vPager: ViewPager
+    lateinit var vPager: androidx.viewpager.widget.ViewPager
     lateinit var memeEditorView: MemeEditorView
     lateinit var myToolBar: MyToolBar
     lateinit var fragments: List<MemeEditorFragment>
@@ -90,10 +84,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         if (json != null) {
             val gson = Gson()
             val memeTemplate = gson.fromJson(json, MemeTemplate::class.java)
-            Handler().postDelayed({
-                log(memeEditorView.width, memeEditorView.height)
-                memeEditorView.loadMemeTemplate(memeTemplate)
-            }, 100)
+            memeEditorView.loadMemeTemplate(memeTemplate)
         }
 
 
@@ -103,11 +94,11 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         vPager.setCurrentItem(2, false)
     }
 
-    private inner class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    private inner class MyPagerAdapter(fm: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
 
 
         override fun getCount(): Int = fragments.count()
-        override fun getItem(pos: Int): Fragment =fragments[pos]
+        override fun getItem(pos: Int): androidx.fragment.app.Fragment =fragments[pos]
 
 
     }

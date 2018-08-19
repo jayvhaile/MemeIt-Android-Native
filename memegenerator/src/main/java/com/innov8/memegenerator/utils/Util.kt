@@ -7,10 +7,10 @@ import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat.PNG
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v7.widget.*
+import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.widget.*
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
@@ -78,18 +78,18 @@ fun TabLayout.onTabSelected(onSelected:(TabLayout.Tab)->Unit){
 inline fun log(vararg messages: Any) {
     Log.d("#MemeIt", messages.joinToString (" , "))
 }
-inline fun RecyclerView.initWithGrid(spanCount:Int,orientation:Int=LinearLayoutManager.VERTICAL,rev:Boolean=false){
-    val glm=GridLayoutManager(this.context,spanCount,orientation,rev)
+inline fun androidx.recyclerview.widget.RecyclerView.initWithGrid(spanCount:Int, orientation:Int= androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, rev:Boolean=false){
+    val glm= androidx.recyclerview.widget.GridLayoutManager(this.context, spanCount, orientation, rev)
     this.layoutManager=glm
-    this.itemAnimator=DefaultItemAnimator()
+    this.itemAnimator= androidx.recyclerview.widget.DefaultItemAnimator()
 }
-inline fun RecyclerView.initWithStagger(spanCount:Int,orientation:Int=LinearLayoutManager.VERTICAL){
-    val glm=StaggeredGridLayoutManager(spanCount,orientation)
+inline fun androidx.recyclerview.widget.RecyclerView.initWithStagger(spanCount:Int, orientation:Int= androidx.recyclerview.widget.LinearLayoutManager.VERTICAL){
+    val glm= androidx.recyclerview.widget.StaggeredGridLayoutManager(spanCount, orientation)
     this.layoutManager=glm
-    this.itemAnimator=DefaultItemAnimator()
+    this.itemAnimator= androidx.recyclerview.widget.DefaultItemAnimator()
 }
 
-inline fun FragmentManager.replace(id:Int, fragment: Fragment){
+inline fun androidx.fragment.app.FragmentManager.replace(id:Int, fragment: androidx.fragment.app.Fragment){
     beginTransaction().replace(id,fragment).commit()
 }
 inline fun android.app.FragmentManager.replace(id:Int, fragment: android.app.Fragment){

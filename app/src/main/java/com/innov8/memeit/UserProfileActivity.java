@@ -1,8 +1,7 @@
 package com.innov8.memeit;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 
 public class UserProfileActivity extends AppCompatActivity {
 

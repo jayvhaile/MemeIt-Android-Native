@@ -1,10 +1,6 @@
 package com.innov8.memeit.Activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -22,41 +18,36 @@ import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class CommentsActivity extends AppCompatActivity {
     public static final String MEME_PARAM_KEY= "meme";
-
-
     private static final int LIMIT = 20;
     int skip = 0;
-
-
-
     Meme meme;
     boolean isPostingComment;
-
-    @BindView(R.id.meme_image)
     SimpleDraweeView memeImage;
     CommentsAdapter commentsAdapter;
-    @BindView(R.id.comments_list)
     RecyclerView commentsList;
-    @BindView(R.id.comment_field)
     EditText commentField;
-    @BindView(R.id.comment_button)
     ImageView commentButton;
     OnCompleteListener<Comment> onCommentCompletedListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments_2);
-        ButterKnife.bind(this);
+        memeImage=findViewById(R.id.meme_image);
+        commentsList=findViewById(R.id.comments_list);
+        commentField=findViewById(R.id.comment_field);
+        commentButton=findViewById(R.id.comment_button);
         meme = getIntent().getParcelableExtra(MEME_PARAM_KEY);
         if(meme==null)
             throw new NullPointerException("Meme Must be passed to CommentActivity");
         commentsAdapter=new CommentsAdapter(this);
-        LinearLayoutManager llm=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager llm=new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
         commentsList.setLayoutManager(llm);
         commentsList.setItemAnimator(new DefaultItemAnimator());
         commentsList.setAdapter(commentsAdapter);

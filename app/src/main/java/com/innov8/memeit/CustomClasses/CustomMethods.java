@@ -3,21 +3,18 @@ package com.innov8.memeit.CustomClasses;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.IdRes;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
-import android.support.design.widget.BottomNavigationView;
-import android.text.TextUtils;
+import androidx.annotation.IdRes;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -31,8 +28,6 @@ import com.innov8.memeit.R;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -159,29 +154,6 @@ public class CustomMethods {
     }
 
 
-    public static void removeShiftMode(BottomNavigationView view) {
-        BottomNavigationMenuView menuView =
-                (BottomNavigationMenuView) view.getChildAt(0);
-        try {
-            Field shiftingMode = menuView.getClass()
-                    .getDeclaredField("mShiftingMode");
-            shiftingMode.setAccessible(true);
-            shiftingMode.setBoolean(menuView, false);
-            shiftingMode.setAccessible(false);
-            for (int i = 0; i < menuView.getChildCount(); i++) {
-                BottomNavigationItemView item =
-                        (BottomNavigationItemView) menuView.getChildAt
-                                (i);
-                item.setShiftingMode(false);
-// set once again checked value, so view will be updated
-                item.setChecked(item.getItemData().isChecked());
-            }
-        } catch (NoSuchFieldException e) {
-            Log.e("ERROR NO SUCH FIELD", "Unable to get shift mode field");
-        } catch (IllegalAccessException e) {
-            Log.e("ERROR ILLEGAL ALG", "Unable to change value of shift mode");
-        }
-    }
 
     public static String formatNumber(int num){
         if(num<1000){
@@ -190,7 +162,6 @@ public class CustomMethods {
             float d=num/1000.0f;
             return String.format("%.2fk",d);
         }
-
     }
     public static String formatNumber(int num,String suffix){
         if(num<1000){

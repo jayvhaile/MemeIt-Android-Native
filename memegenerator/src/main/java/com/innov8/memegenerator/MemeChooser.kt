@@ -1,8 +1,7 @@
 package com.innov8.memegenerator
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
@@ -14,7 +13,7 @@ import com.innov8.memegenerator.utils.initWithGrid
 import java.io.InputStreamReader
 
 class MemeChooser : AppCompatActivity() {
-    lateinit var memeTemplateListView:RecyclerView
+    lateinit var memeTemplateListView: androidx.recyclerview.widget.RecyclerView
     lateinit var memeTemplatesListAdapter: MemeTemplatesListAdapter
     lateinit var gson:Gson
     override fun onCreate(savedInstanceState: Bundle?) {

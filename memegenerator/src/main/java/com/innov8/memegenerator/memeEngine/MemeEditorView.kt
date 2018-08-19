@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -204,14 +205,16 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
 
 
     fun loadMemeTemplate(memeTemplate: MemeTemplate){
-        clearMemeItems()
-        image=context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
-        memeTemplate.textProperties.forEach {
-            val memeTextView=MemeTextView(context)
-            addMemeItemView(memeTextView)
-            memeTextView.applyTextProperty(it,width.toFloat(),height.toFloat())
+        Handler().postDelayed({
+            clearMemeItems()
+            image=context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
+            memeTemplate.textProperties.forEach {
+                val memeTextView=MemeTextView(context)
+                addMemeItemView(memeTextView)
+                memeTextView.applyTextProperty(it,width.toFloat(),height.toFloat())
 
-        }
+            }
+        }, 300)
     }
     fun captureMeme():Bitmap{
         selectedView?.setItemSelected(false)

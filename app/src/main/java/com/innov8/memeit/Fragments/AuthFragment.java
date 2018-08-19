@@ -1,7 +1,7 @@
 package com.innov8.memeit.Fragments;
 
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.innov8.memeit.Activities.AuthActivity;
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton;

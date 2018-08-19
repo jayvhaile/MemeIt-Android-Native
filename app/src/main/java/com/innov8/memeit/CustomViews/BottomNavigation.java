@@ -1,28 +1,23 @@
 package com.innov8.memeit.CustomViews;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.view.menu.MenuBuilder;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.appcompat.view.menu.MenuBuilder;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.innov8.memegenerator.SimpleMemeGenerator;
-import com.innov8.memeit.Activities.MainActivity;
-import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.R;
 /**
  * Created by Jv on 7/7/2018.
