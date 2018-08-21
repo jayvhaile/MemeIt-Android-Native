@@ -20,7 +20,7 @@
             app:titleEnabled="false">
 
             <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/meme_image"
+                android:id="@+id/meme_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="256dp"
                 fresco:actualImageScaleType="fitCenter"

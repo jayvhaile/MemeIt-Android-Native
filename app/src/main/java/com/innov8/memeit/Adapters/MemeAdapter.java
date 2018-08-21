@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.graphics.Color;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +34,7 @@ import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.dataclasses.Reaction;
 import com.memeit.backend.utilis.OnCompleteListener;
+import com.varunest.sparkbutton.SparkButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -158,7 +161,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
 
         @Override
         public RecyclerView.LayoutManager createlayoutManager() {
-            LinearLayoutManager lm=new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false);
+            LinearLayoutManager lm=new LinearLayoutManager(mContext,RecyclerView.VERTICAL,false);
             return lm;
         }
 
@@ -181,7 +184,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
 
         @Override
         public RecyclerView.LayoutManager createlayoutManager() {
-            GridLayoutManager glm=new GridLayoutManager(mContext,3,LinearLayoutManager.VERTICAL,false);
+            GridLayoutManager glm=new GridLayoutManager(mContext,3,RecyclerView.VERTICAL,false);
             return glm;
         }
 
@@ -212,10 +215,12 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
         private final TextView reactionCountV;
         private final TextView commentCountV;
         private final ImageButton meme_menu;
+        private SparkButton reactButton;
+        private ConstraintLayout reactLayout;
         private String memeId;
         private OnCompleteListener reactCompletedListener;
 
-        public MemeListViewHolder(View itemView) {
+        public MemeListViewHolder(final View itemView) {
             super(itemView);
             meme_menu = itemView.findViewById(R.id.meme_options);
             posterPicV = itemView.findViewById(R.id.follower_poster_pp);
@@ -224,6 +229,8 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
             posterNameV = itemView.findViewById(R.id.meme_poster_name);
             reactionCountV = itemView.findViewById(R.id.meme_reactions);
             commentCountV = itemView.findViewById(R.id.meme_comment_count);
+            reactButton = itemView.findViewById(R.id.react_button);
+            reactLayout = itemView.findViewById(R.id.react_view);
             commentBtnV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -243,6 +250,58 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
                     mContext.startActivity(i);
                 }
             });
+
+            final View.OnClickListener reactListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MemeItMemes memeItMemes = MemeItMemes.getInstance();
+                    Reaction.ReactionType reactionType = null;
+                    int reactRes = 0;
+                    switch (view.getId()){
+                        case R.id.react_funny :
+                            reactionType = Reaction.ReactionType.FUNNY;
+                            reactRes = R.mipmap.laughing;
+                            break;
+                        case R.id.react_veryfunny:
+                            reactionType = Reaction.ReactionType.VERY_FUNNY;
+                            reactRes = R.mipmap.rofl;
+                            break;
+                        case R.id.react_stupid:
+                            reactionType = Reaction.ReactionType.STUPID;
+                            reactRes = R.mipmap.neutral;
+                            break;
+                        case R.id.react_angry:
+                            reactionType = Reaction.ReactionType.ANGERING;
+                            reactRes = R.mipmap.angry;
+                            break;
+                    }
+                    final int finalReactRes = reactRes;
+                    memeItMemes.reactToMeme(Reaction.create(reactionType,memeId), new OnCompleteListener<okhttp3.ResponseBody>() {
+                        @Override
+                        public void onSuccess(okhttp3.ResponseBody responseBody) {
+                            reactButton.setActiveImage(finalReactRes);
+                        }
+
+                        @Override
+                        public void onFailure(Error error) {
+                            Log.w("react",error.getMessage());
+                        }
+                    });
+                    CustomMethods.toggleVisibilityAndAnimate(reactLayout);
+                }
+            };
+
+            reactButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CustomMethods.toggleVisibilityAndAnimate(reactLayout);
+                    itemView.findViewById(R.id.react_funny).setOnClickListener(reactListener);
+                    itemView.findViewById(R.id.react_veryfunny).setOnClickListener(reactListener);
+                    itemView.findViewById(R.id.react_stupid).setOnClickListener(reactListener);
+                    itemView.findViewById(R.id.react_angry).setOnClickListener(reactListener);
+                }
+            });
+
             meme_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -280,7 +339,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
             int max_height= (int) CustomMethods.convertDPtoPX(mContext,500.0f);
             int min_height= (int) CustomMethods.convertDPtoPX(mContext,200.0f);
             height=height<min_height?min_height:height>max_height?max_height:height;
-            LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(width,height);
+            ConstraintLayout.LayoutParams params=new ConstraintLayout.LayoutParams(width,height);
             memeImageV.setLayoutParams(params);
         }
 
