@@ -20,7 +20,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter
 import java.io.InputStreamReader
-import java.util.*
 
 class MemeTemplateMaker : AppCompatActivity() {
     val meme_template_count = 97
@@ -80,6 +79,7 @@ class MemeTemplateMaker : AppCompatActivity() {
 
                         }.onFinished {
                             memeTemplates = it.toMutableList()
+                            meme_template_index
                             if(!load()){
                                 var bitmap = loadBitmap(getDrawableIdByName(String.format("meme_%02d", meme_template_index)), .3f)
                                 memeEditorView.image = bitmap

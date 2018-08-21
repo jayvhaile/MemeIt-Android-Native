@@ -1,10 +1,10 @@
 package com.innov8.memeit.Fragments;
 
 
-import androidx.fragment.app.Fragment;
-
-import com.innov8.memeit.Activities.AuthActivity;
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton;
+import com.innov8.memeit.Activities.AuthActivity;
+
+import androidx.fragment.app.Fragment;
 
 public class AuthFragment extends Fragment {
 
@@ -24,6 +24,5 @@ public class AuthFragment extends Fragment {
         else {
             actionButton.revertAnimation();
         }
-
     }
 }

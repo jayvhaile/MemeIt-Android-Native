@@ -4,6 +4,7 @@ import com.memeit.backend.dataclasses.AuthInfo;
 import com.memeit.backend.dataclasses.AuthToken;
 import com.memeit.backend.dataclasses.Badge;
 import com.memeit.backend.dataclasses.Comment;
+import com.memeit.backend.dataclasses.HomePageItemPack;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.Reaction;
@@ -16,7 +17,6 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -118,8 +118,8 @@ interface MemeInterface {
     @GET("meme/{id}/refresh")
     public Call<Meme> getRefreshedMeme(@Path("id") String id);
     @GET("meme/home")
-    public Call<List<Meme>> getHomeMemes(@Query("skip") int skip,
-                                         @Query("limit") int limit);
+    public Call<HomePageItemPack> getHomeMemes(@Query("skip") int skip,
+                                               @Query("limit") int limit);
 
     @GET("meme/home/guest")
     public Call<List<Meme>> getHomeMemesForGuest(@Query("skip") int skip,

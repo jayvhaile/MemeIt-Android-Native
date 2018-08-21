@@ -22,8 +22,4 @@ public class MemeItApp extends Application{
         MediaManager.init(this, config);
         Fresco.initialize(this);
     }
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
 }

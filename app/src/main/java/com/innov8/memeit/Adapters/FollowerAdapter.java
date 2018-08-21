@@ -1,22 +1,24 @@
 package com.innov8.memeit.Adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.innov8.memegenerator.adapters.MyViewHolder;
+import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.R;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton;
 import com.memeit.backend.dataclasses.User;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 /**

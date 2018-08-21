@@ -41,7 +41,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by Jv on 6/16/2018.
  */
 
-public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme>> {
+public abstract class MemeAdapter2 extends RecyclerView.Adapter<MyViewHolder<Meme>> {
     private static final String TAG = "MemeAdapter";
 
     private static final int MEME_TYPE=0;
@@ -50,7 +50,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
     protected List<Meme> memes;
     protected LayoutInflater mInflater;
     int screen_width;
-    public MemeAdapter(Context mContext) {
+    public MemeAdapter2(Context mContext) {
         this.mContext = mContext;
         this.mInflater = LayoutInflater.from(mContext);
         memes = new ArrayList<>();
@@ -92,12 +92,13 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
             if(meme.getMemeId().equals(mid))
                 return meme;
         }
+
         return null;
     }
     public abstract boolean isLoading();
     public abstract void setLoading(boolean loading);
     public abstract RecyclerView.LayoutManager createlayoutManager();
-    public static class Listed extends MemeAdapter{
+    public static class Listed extends MemeAdapter2 {
         private boolean isLoading;
 
         public Listed(Context mContext) {
@@ -108,7 +109,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
         @Override
         public MyViewHolder<Meme>  onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             if (viewType==LOADING_TYPE)
-                return new MemeAdapter.LoadingViewHolder(mInflater.inflate(R.layout.item_list_meme_loading,parent,false));
+                return new LoadingViewHolder(mInflater.inflate(R.layout.item_list_meme_loading,parent,false));
 
             View view = mInflater.inflate(R.layout.list_item_meme, parent, false);
             return new MemeListViewHolder(view);
@@ -151,7 +152,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
         }
 
     }
-    public static class Grid extends MemeAdapter{
+    public static class Grid extends MemeAdapter2 {
 
         public Grid(Context mContext) {
             super(mContext);
