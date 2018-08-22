@@ -39,7 +39,7 @@ public class CommentsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments_2);
-        memeImage=findViewById(R.id.meme_image);
+        memeImage=findViewById(R.id.meme_image_view);
         commentsList=findViewById(R.id.comments_list);
         commentField=findViewById(R.id.comment_field);
         commentButton=findViewById(R.id.comment_button);

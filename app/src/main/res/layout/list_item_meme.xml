@@ -23,10 +23,7 @@
                 android:id="@+id/follower_poster_pp"
                 android:layout_width="@dimen/profile_mini_size"
                 android:layout_height="@dimen/profile_mini_size"
-                android:layout_marginBottom="0dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="0dp"
                 android:padding="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -62,13 +59,193 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_more_vert_black_24dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/meme_image"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="256dp"
-            app:actualImageScaleType="fitCenter"
-            app:placeholderImage="@drawable/got1" />
+            android:layout_height="wrap_content">
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/meme_image"
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                app:actualImageScaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:placeholderImage="@drawable/got1" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                tools:visibility="visible"
+                android:visibility="gone"
+                android:id="@+id/react_view"
+                android:layout_width="match_parent"
+                android:layout_height="256dp">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/meme_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="256dp"
+                    android:visibility="invisible"
+                    app:actualImageScaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="256dp"
+                    android:background="#50000000"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0"
+                    tools:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/react_funny"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/react_veryfunny"
+                    app:layout_constraintStart_toEndOf="@+id/meme_image_view"
+                    app:layout_constraintTop_toTopOf="parent"
+                    fresco:srcCompat="@mipmap/laughing" />
+
+                <ImageView
+                    android:id="@+id/react_veryfunny"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/react_stupid"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/react_funny"
+                    app:layout_constraintTop_toTopOf="parent"
+                    fresco:srcCompat="@mipmap/rofl" />
+
+                <ImageView
+                    android:id="@+id/react_stupid"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/react_angry"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/react_veryfunny"
+                    app:layout_constraintTop_toTopOf="parent"
+                    fresco:srcCompat="@mipmap/neutral" />
+
+                <ImageView
+                    android:id="@+id/react_angry"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginRight="18dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/meme_image_view"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/react_stupid"
+                    app:layout_constraintTop_toTopOf="@+id/view2"
+                    fresco:srcCompat="@mipmap/angry" />
+
+                <TextView
+                    android:id="@+id/reacation_count_funny"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.15"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/react_funny"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="452" />
+
+                <TextView
+                    android:id="@+id/reacation_count_veryfunny"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.398"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/react_veryfunny"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="653" />
+
+                <TextView
+                    android:id="@+id/reacation_count_stupid"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.625"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/react_stupid"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="653" />
+
+                <TextView
+                    android:id="@+id/reacation_count_angry"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.851"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/react_angry"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="653" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
+
+
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -115,6 +292,23 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_comment" />
 
+            <com.varunest.sparkbutton.SparkButton
+                android:id="@+id/react_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:sparkbutton_activeImage="@mipmap/laughing"
+                app:sparkbutton_iconSize="40dp"
+                app:sparkbutton_inActiveImage="@mipmap/laughing"
+                app:sparkbutton_primaryColor="#ff5656"
+                app:sparkbutton_secondaryColor="#ff8888" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
@@ -126,6 +320,7 @@
         app:menuGravity="Bottom_Left"
         arc:menuChildAnim="true"
         arc:menuChildSize="48dp"
+        android:visibility="gone"
         arc:menuClickAnim="false"
         arc:menuImage="@mipmap/laughing"
         arc:menuNormalColor="#0000"

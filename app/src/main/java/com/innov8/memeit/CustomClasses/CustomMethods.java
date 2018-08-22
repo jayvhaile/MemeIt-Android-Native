@@ -1,5 +1,7 @@
 package com.innov8.memeit.CustomClasses;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -19,6 +21,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -175,5 +179,12 @@ public class CustomMethods {
     public static int getScreenWidth(Context context){
         return context.getResources().getDisplayMetrics().widthPixels;
     }
-
+    public static void toggleVisibilityAndAnimate(final View view){
+        view.animate().setDuration(200).alpha(view.getVisibility()==View.VISIBLE ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                view.setVisibility(view.getVisibility()==View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
+            }
+        });
+    }
 }
