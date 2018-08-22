@@ -1,7 +1,6 @@
 package com.innov8.memegenerator
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.text.TextUtils
@@ -21,17 +20,21 @@ import com.memeit.backend.utilis.OnCompleteListener
 import java.util.*
 
 class MemePosterActivity : AppCompatActivity() {
+    companion object {
+        var bitmap:Bitmap?=null
+    }
     lateinit var imageV:ImageView
     lateinit var statusV:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meme_poster)
-        val byteArray=intent.extras.getByteArray("meme")
-        imageV=findViewById(R.id.meme_image)
+        imageV=findViewById(R.id.meme_image_view)
         statusV=findViewById(R.id.post_status)
-        imageV.setImageBitmap(BitmapFactory.decodeByteArray(byteArray,0,byteArray.size))
+        if(bitmap!=null){
+            imageV.setImageBitmap(bitmap)
+            bitmap=null
+        }
         val postBtn:CircularProgressButton=findViewById(R.id.post_btn)
-
         postBtn.setOnClickListener {
             postBtn.startAnimation()
             statusV.visibility= View.VISIBLE

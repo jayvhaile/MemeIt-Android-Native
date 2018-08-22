@@ -14,7 +14,6 @@ import com.innov8.memegenerator.memeEngine.MemeEditorInterface
 import com.innov8.memegenerator.memeEngine.MemeEditorView
 import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.models.TextStyleProperty
-import com.innov8.memegenerator.utils.toByteArray
 
 class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
@@ -73,7 +72,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                 MyToolbarmenu(R.drawable.ic_left_menu_done){
                     val bitmap=memeEditorView.captureMeme()
                     val intent= Intent(this,MemePosterActivity::class.java)
-                    intent.putExtra("meme",bitmap.toByteArray())
+                    MemePosterActivity.bitmap=bitmap
                     startActivity(intent)
                 },
                 MyToolbarmenu(R.drawable.ic_left_menu_preview)

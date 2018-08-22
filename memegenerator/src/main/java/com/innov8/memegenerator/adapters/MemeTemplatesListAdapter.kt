@@ -22,7 +22,7 @@ class MemeTemplatesListAdapter (context: Context): ListAdapter<MemeTemplate>(con
         init {
             itemView.setOnClickListener({OnItemClicked?.invoke(getItemAt(item_position))})
         }
-        override fun bind(t: MemeTemplate, position: Int) {
+        override fun bind(t: MemeTemplate) {
 
             if (t.dataSource == MemeTemplate.LOCAL_DATA_SOURCE) {
                 memeTemplateImageV.setImageRequest(

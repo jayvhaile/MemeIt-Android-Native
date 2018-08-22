@@ -2,15 +2,6 @@ package com.innov8.memeit.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bvapp.arcmenulibrary.ArcMenu;
-import com.bvapp.arcmenulibrary.widget.FloatingActionButton;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.innov8.memegenerator.adapters.MyViewHolder;
 import com.innov8.memeit.Activities.CommentsActivity;
@@ -39,6 +28,14 @@ import com.varunest.sparkbutton.SparkButton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import okhttp3.ResponseBody;
 
 
 /**
@@ -113,6 +110,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
         public MyViewHolder<Meme>  onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             if (viewType==LOADING_TYPE)
                 return new MemeAdapter.LoadingViewHolder(mInflater.inflate(R.layout.item_list_meme_loading,parent,false));
+
 
             View view = mInflater.inflate(R.layout.list_item_meme, parent, false);
             return new MemeListViewHolder(view);
@@ -202,7 +200,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
         private final TextView commentCountV;
         private final ImageButton meme_menu;
         private SparkButton reactButton;
-        private ConstraintLayout reactLayout;
+        private Group reactGroup;
         private String memeId;
         private OnCompleteListener reactCompletedListener;
 
@@ -216,7 +214,7 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
             reactionCountV = itemView.findViewById(R.id.meme_reactions);
             commentCountV = itemView.findViewById(R.id.meme_comment_count);
             reactButton = itemView.findViewById(R.id.react_button);
-            reactLayout = itemView.findViewById(R.id.react_view);
+            reactGroup = itemView.findViewById(R.id.react_group);
             commentBtnV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -240,7 +238,6 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
             final View.OnClickListener reactListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MemeItMemes memeItMemes = MemeItMemes.getInstance();
                     Reaction.ReactionType reactionType = null;
                     int reactRes = 0;
                     switch (view.getId()){
@@ -262,53 +259,60 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
                             break;
                     }
                     final int finalReactRes = reactRes;
-                    memeItMemes.reactToMeme(Reaction.create(reactionType,memeId), new OnCompleteListener<okhttp3.ResponseBody>() {
-                        @Override
-                        public void onSuccess(okhttp3.ResponseBody responseBody) {
-                            reactButton.setActiveImage(finalReactRes);
-                        }
-
-                        @Override
-                        public void onFailure(Error error) {
-                            Log.w("react",error.getMessage());
-                        }
-                    });
-                    CustomMethods.toggleVisibilityAndAnimate(reactLayout);
+                    react(reactionType, finalReactRes);
+                    toggleReactVisibility();
                 }
             };
+            itemView.findViewById(R.id.react_funny).setOnClickListener(reactListener);
+            itemView.findViewById(R.id.react_veryfunny).setOnClickListener(reactListener);
+            itemView.findViewById(R.id.react_stupid).setOnClickListener(reactListener);
+            itemView.findViewById(R.id.react_angry).setOnClickListener(reactListener);
+            /*reactButton.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(mContext, "long", Toast.LENGTH_SHORT).show();
+                    toggleReactVisibility();
+                    return true;
+                }
+            });*/
 
             reactButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CustomMethods.toggleVisibilityAndAnimate(reactLayout);
-                    itemView.findViewById(R.id.react_funny).setOnClickListener(reactListener);
-                    itemView.findViewById(R.id.react_veryfunny).setOnClickListener(reactListener);
-                    itemView.findViewById(R.id.react_stupid).setOnClickListener(reactListener);
-                    itemView.findViewById(R.id.react_angry).setOnClickListener(reactListener);
+                    toggleReactVisibility();
                 }
             });
-
             meme_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     showMemeMenu();
                 }
             });
-            setupReactions(itemView);
-            reactCompletedListener=new OnCompleteListener() {
+        }
+
+        private void react(Reaction.ReactionType reactionType, final int finalReactRes) {
+            MemeItMemes.getInstance().reactToMeme(Reaction.create(reactionType,memeId), new OnCompleteListener<ResponseBody>() {
                 @Override
-                public void onSuccess(Object o) {
-                    Toast.makeText(mContext, "Reacted", Toast.LENGTH_SHORT).show();
-                    refreshMeme();
+                public void onSuccess(ResponseBody responseBody) {
+                    reactButton.setActiveImage(finalReactRes);
+                    reactButton.playAnimation();
                 }
 
                 @Override
                 public void onFailure(Error error) {
-                    Toast.makeText(mContext, "reaction failed"+error.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.w("react",error.getMessage());
+                    Toast.makeText(mContext, "reaction failed\n"+error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            };
+            });
         }
+
+        private void toggleReactVisibility() {
+            final int v=reactGroup.getVisibility()== View.VISIBLE?View.GONE:View.VISIBLE;
+            reactGroup.setVisibility(v);
+        }
+
         public void bind(Meme meme) {
+            reactGroup.setVisibility(View.GONE);
             memeId = meme.getMemeId();
             posterNameV.setText(meme.getPoster().getName());
             reactionCountV.setText(String.format("%d people reacted", meme.getReactionCount()));
@@ -325,63 +329,9 @@ public abstract class MemeAdapter extends RecyclerView.Adapter<MyViewHolder<Meme
             int max_height= (int) CustomMethods.convertDPtoPX(mContext,500.0f);
             int min_height= (int) CustomMethods.convertDPtoPX(mContext,200.0f);
             height=height<min_height?min_height:height>max_height?max_height:height;
-            ConstraintLayout.LayoutParams params=new ConstraintLayout.LayoutParams(width,height);
-            memeImageV.setLayoutParams(params);
-        }
-
-        private void refreshMeme(){
-            Meme  meme=getMemeByID(memeId);
-            MemeItMemes.getInstance().getRefreshedMeme(meme, new OnCompleteListener<Meme>() {
-                @Override
-                public void onSuccess(Meme meme) {
-                    updateMeme(meme);
-                }
-
-                @Override
-                public void onFailure(Error error) {
-
-                }
-            });
-        }
-        public void setupReactions(View itemView) {
-            final int[] ITEM_DRAWABLES = {
-                    R.mipmap.laughing,
-                    R.mipmap.rofl,
-                    R.mipmap.neutral,
-                    R.mipmap.angry};
-
-            final String[] STR = { "Funny","Very funny", "Stupid", "Triggering"};
-
-            final ArcMenu menu = itemView.findViewById(R.id.arcMenu);
-            menu.showTooltip(true);
-            menu.setToolTipBackColor(Color.WHITE);
-            menu.setToolTipCorner(6f);
-            menu.setToolTipPadding(2f);
-            menu.setToolTipTextColor(Color.BLUE);
-            menu.setAnim(300, 300, ArcMenu.ANIM_MIDDLE_TO_RIGHT, ArcMenu.ANIM_MIDDLE_TO_RIGHT,
-                    ArcMenu.ANIM_INTERPOLATOR_ACCELERATE_DECLERATE, ArcMenu.ANIM_INTERPOLATOR_ACCELERATE_DECLERATE);
-            View.OnClickListener listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    react(v);
-                }
-            };
-            final int itemCount = ITEM_DRAWABLES.length;
-            for (int i = 0; i < itemCount; i++) {
-                FloatingActionButton item = new FloatingActionButton(mContext);
-                item.setSize(FloatingActionButton.SIZE_MINI);
-                item.setIcon(ITEM_DRAWABLES[i]);
-                item.setBackgroundColor(Color.WHITE);
-                menu.setChildSize(item.getIntrinsicHeight()); // set absolute child size for menu
-                menu.addItem(item, STR[i],listener);
-                item.setTag(i);
-            }
-        }
-
-        private void react(View v) {
-            int no= Integer.parseInt(String.valueOf(v.getTag()));
-            Reaction reaction=Reaction.create(Reaction.ReactionType.values()[no], memeId);
-            MemeItMemes.getInstance().reactToMeme(reaction,reactCompletedListener);
+            memeImageV.getLayoutParams().width=width;
+            memeImageV.getLayoutParams().height=height;
+            memeImageV.requestLayout();
         }
         private void showMemeMenu() {
             PopupMenu menu = new PopupMenu(mContext, meme_menu);

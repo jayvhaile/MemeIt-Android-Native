@@ -23,7 +23,7 @@ class TextPresetsAdapter(context:Context) : ListAdapter<TextPreset>(context,R.la
                 onItemClick?.invoke(getItemAt(item_position))
             }
         }
-        override fun bind(t: TextPreset, position: Int) {
+        override fun bind(t: TextPreset) {
             presetV.applyTextStyleProperty(t.textStyleProperty,text = "Sample")
             nameV.text = t.name
         }

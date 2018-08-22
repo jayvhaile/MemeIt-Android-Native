@@ -2,17 +2,11 @@ package com.innov8.memeit.Fragments;
 
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItMemes;
@@ -21,6 +15,12 @@ import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MemeListFragment extends Fragment {
     private static final String TAG="MemeListFragment";
@@ -159,7 +159,7 @@ public class MemeListFragment extends Fragment {
         @Override
         public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener) {
             //todo getHomeMemesforguest if user is not signed in
-            MemeItMemes.getInstance().getHomeMemes(skip,limit,listener);
+            //MemeItMemes.getInstance().getHomeMemes(skip,limit,listener);
         }
     }
 

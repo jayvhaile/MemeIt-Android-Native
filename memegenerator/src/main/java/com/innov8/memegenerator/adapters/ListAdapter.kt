@@ -1,7 +1,6 @@
 package com.innov8.memegenerator.adapters
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,7 @@ abstract class ListAdapter<T>(protected var mContext: Context, private val mLayo
 
     override fun onBindViewHolder(holder: MyViewHolder<T>, position: Int) {
         holder.setPosition(position)
-        holder.bind(items[position], position)
+        holder.bind(items[position])
     }
 
     abstract fun createViewHolder(view: View): MyViewHolder<T>

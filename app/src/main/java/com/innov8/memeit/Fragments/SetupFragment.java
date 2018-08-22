@@ -48,7 +48,7 @@ public class SetupFragment extends AuthFragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setup_profile2, container, false);
         nameV = view.findViewById(R.id.name_setup);
-        EditText username = view.findViewById(R.id.username_setup);
+        EditText username = view.findViewById(R.id.name_setup);
         EditText tags = view.findViewById(R.id.tags_setup);
         CustomMethods.makeEditTextsAvenir(getActivity(), view, R.id.name_setup, R.id.tags_setup);
         profileV = view.findViewById(R.id.profile_pic);
@@ -59,7 +59,7 @@ public class SetupFragment extends AuthFragment implements View.OnClickListener 
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .setAspectRatio(1, 1)
                         .setCropShape(CropImageView.CropShape.OVAL)
-                        .start(getContext(), SetupFragment.this);
+                        .start(getAuthActivity());
             }
         });
         actionButton=view.findViewById(R.id.finish);
