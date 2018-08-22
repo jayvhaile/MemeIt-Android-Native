@@ -23,6 +23,7 @@ public class AuthFragment extends Fragment {
         }
         else {
             actionButton.revertAnimation();
+
         }
     }
 }

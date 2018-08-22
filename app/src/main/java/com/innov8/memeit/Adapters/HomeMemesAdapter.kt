@@ -29,7 +29,7 @@ class HomeMemesAdapter(val context: Context) : RecyclerView.Adapter<MyViewHolder
             }
             MEME_TEMPLATE_SUGGESTION_TYPE -> {
                 val inflater=LayoutInflater.from(context)
-                val v=inflater.inflate(R.layout.list_item_user_suggestion,parent,false)
+                val v=inflater.inflate(R.layout.list_item_meme_template_suggestion,parent,false)
                 return MemeTemplateSuggestionHolder(v)
             }
             AD_TYPE -> {
