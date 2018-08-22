@@ -13,8 +13,8 @@
         android:layout_width="@dimen/profile_mini_size"
         android:layout_height="@dimen/profile_mini_size"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:padding="4dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -38,9 +38,9 @@
         android:id="@+id/meme_options"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="4dp"
         android:background="#0000"
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintRight_toRightOf="parent"
@@ -58,7 +58,7 @@
         app:placeholderImage="@drawable/got1" />
 
     <View
-        android:id="@+id/view2"
+        android:id="@+id/tint"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#c000"
@@ -66,13 +66,12 @@
         app:layout_constraintBottom_toBottomOf="@+id/meme_image"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/meme_image"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/meme_image" />
     <!--react buttons-->
     <ImageView
         android:id="@+id/react_funny"
-        android:layout_width="56dp"
-        android:layout_height="64dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="@+id/meme_image"
         app:layout_constraintEnd_toStartOf="@+id/react_veryfunny"
@@ -83,8 +82,8 @@
 
     <ImageView
         android:id="@+id/react_veryfunny"
-        android:layout_width="56dp"
-        android:layout_height="64dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginEnd="16dp"
@@ -101,8 +100,8 @@
 
     <ImageView
         android:id="@+id/react_stupid"
-        android:layout_width="56dp"
-        android:layout_height="64dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginEnd="32dp"
@@ -117,8 +116,8 @@
 
     <ImageView
         android:id="@+id/react_angry"
-        android:layout_width="56dp"
-        android:layout_height="64dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="@+id/meme_image"
         app:layout_constraintEnd_toStartOf="@+id/meme_image"
@@ -154,7 +153,7 @@
         android:text="35"
         android:textColor="#fff"
         app:layout_constraintEnd_toEndOf="@+id/react_stupid"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="@+id/react_stupid"
         app:layout_constraintTop_toBottomOf="@+id/react_stupid" />
 
@@ -172,17 +171,15 @@
 
     <com.varunest.sparkbutton.SparkButton
         android:id="@+id/react_button"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/meme_image"
         app:sparkbutton_activeImage="@mipmap/laughing"
-        app:sparkbutton_iconSize="30dp"
+        app:sparkbutton_iconSize="28dp"
         app:sparkbutton_inActiveImage="@mipmap/laughing"
         app:sparkbutton_primaryColor="@color/spark_primary"
         app:sparkbutton_secondaryColor="@color/spark_secondary" />
@@ -191,8 +188,6 @@
         android:id="@+id/meme_reactions"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:gravity="center"
         android:paddingLeft="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/react_button"
@@ -200,31 +195,35 @@
         app:layout_constraintTop_toTopOf="@+id/react_button"
         tools:text="30 reactions" />
 
-    <ImageView
+    <com.varunest.sparkbutton.SparkButton
         android:id="@+id/fav_button"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/meme_comment"
-        app:layout_constraintTop_toBottomOf="@+id/view2"
-        app:srcCompat="@drawable/ic_favorite_black_24dp" />
+        app:layout_constraintTop_toBottomOf="@+id/meme_image"
+        app:sparkbutton_activeImage="@drawable/ic_favorite_red"
+        app:sparkbutton_iconSize="28dp"
+        app:sparkbutton_inActiveImage="@drawable/ic_favorite_black_24dp"
+        app:sparkbutton_primaryColor="@color/spark_primary"
+        app:sparkbutton_secondaryColor="@color/spark_secondary" />
 
     <ImageButton
         android:id="@+id/meme_comment"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="16dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:background="#0000"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/meme_comment_count"
         app:layout_constraintTop_toBottomOf="@+id/meme_image"
         app:srcCompat="@drawable/ic_comment" />
+
     <TextView
         android:id="@+id/meme_comment_count"
         android:layout_width="wrap_content"
@@ -240,17 +239,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="64dp" />
+        app:layout_constraintGuide_begin="56dp" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/react_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="-1dp"
-        android:layout_marginRight="-1dp"
         android:visibility="gone"
-        app:constraint_referenced_ids="react_stupid,react_veryfunny,view2,react_funny,react_angry,reacation_count_angry,reacation_count_funny,reacation_count_stupid,reacation_count_veryfunny"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="384dp" />
+        app:constraint_referenced_ids="react_stupid,react_veryfunny,tint,react_funny,react_angry,reacation_count_angry,reacation_count_funny,reacation_count_stupid,reacation_count_veryfunny"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -124,7 +124,7 @@ public class CustomMethods {
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            a.getWindow().setStatusBarColor(Color.TRANSPARENT);
+            a.getWindow().setStatusBarColor(Color.argb(80,0,0,0));
         }
     }
 

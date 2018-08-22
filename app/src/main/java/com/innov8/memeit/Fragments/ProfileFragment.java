@@ -3,12 +3,6 @@ package com.innov8.memeit.Fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +13,10 @@ import android.widget.Toast;
 
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.material.tabs.TabLayout;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.ImageUtils;
+import com.innov8.memeit.CustomClasses.MemeLoader;
 import com.innov8.memeit.Fragments.ProfileFragments.FollowersFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
@@ -28,6 +24,12 @@ import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 
 public class ProfileFragment extends Fragment {
@@ -82,8 +84,6 @@ public class ProfileFragment extends Fragment {
         adapter = new ViewPagerAdapter(getFragmentManager());
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
-
-
         followerV = view.findViewById(R.id.profile_followers_count);
         followingV = view.findViewById(R.id.profile_following_count);
         memeCountV = view.findViewById(R.id.profile_meme_count);
@@ -155,8 +155,7 @@ public class ProfileFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return MemeListFragment.newInstance(new MemeListFragment.MyMemesLoader(),
-                            new MemeAdapter.Grid(getContext()));
+                    return MemeListFragment.newInstance(MemeAdapter.GRID_ADAPTER, MemeLoader.MYMEME_LOADER);
                 case 1:
                     return new FollowersFragment();
                 case 2:
