@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.innov8.memegenerator.MemeChooser;
 import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
-import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.MemeLoader;
 import com.innov8.memeit.CustomViews.BottomNavigation;
 import com.innov8.memeit.Fragments.HomeFragment;
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void initUI(Bundle savedInstanceState) {
 
-        CustomMethods.makeWindowTransparent(this);
+
 
         setContentView(R.layout.activity_main);
         viewPager=findViewById(R.id.main_viewpager);
@@ -95,13 +95,13 @@ public class MainActivity extends AppCompatActivity {
                 .inject();
 
 
-//        findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                MemeItAuth.getInstance().signOut();
-//                recreate();
-//            }
-//        });
+        findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MemeItAuth.getInstance().signOut();
+                recreate();
+            }
+        });
 
 
     }

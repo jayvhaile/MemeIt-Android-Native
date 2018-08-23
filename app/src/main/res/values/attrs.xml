@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="BottomNavigation">
-        <attr name="menu" format="reference"/>
-        <attr name="skip_tint" format="integer"/>
-        <attr name="selected_tint" format="color"/>
-        <attr name="deselected_tint" format="color"/>
-        <attr name="item_padding" format="dimension"/>
+        <attr name="menu" format="reference" />
+        <attr name="skip_tint" format="integer" />
+        <attr name="selected_tint" format="color" />
+        <attr name="deselected_tint" format="color" />
+        <attr name="item_padding" format="dimension" />
     </declare-styleable>
 
 
+    <declare-styleable name="AvatarImageBehavior">
+        <attr name="startXPosition" format="dimension" />
+        <attr name="startYPosition" format="dimension" />
+        <attr name="finalYPosition" format="dimension" />
+        <attr name="startToolbarPosition" format="dimension" />
+        <attr name="startHeight" format="dimension" />
+        <attr name="finalHeight" format="dimension" />
+        <attr name="startTextSize" format="dimension" />
+        <attr name="finishTextSize" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="AvatarNameBehavior">
+        <attr name="dscy" format="dimension" />
+        <attr name="dfcy" format="dimension" />
+        <attr name="margin" format="dimension" />
+        <attr name="ftextsize" format="dimension" />
+    </declare-styleable>
 </resources>
