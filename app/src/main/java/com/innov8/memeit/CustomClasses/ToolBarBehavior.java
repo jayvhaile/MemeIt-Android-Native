@@ -24,7 +24,7 @@ public class ToolBarBehavior extends CoordinatorLayout.Behavior<View> {
     public boolean layoutDependsOn(CoordinatorLayout parent, View child, View dependency) {
         return dependency instanceof ImageView;
     }
-    private void init(){
+    private void init() {
         mFinalHeight = mContext.getResources().getDimension(R.dimen.toolbar_height);
     }
 
