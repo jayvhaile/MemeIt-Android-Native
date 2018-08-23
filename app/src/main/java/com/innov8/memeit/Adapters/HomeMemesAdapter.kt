@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.innov8.memegenerator.adapters.MyViewHolder
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
+import com.innov8.memeit.Models.*
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItUsers
-import com.memeit.backend.dataclasses.*
 
 class HomeMemesAdapter(val context: Context) : RecyclerView.Adapter<MyViewHolder<out HomeElement>>() {
     private var elements = mutableListOf<HomeElement>()
@@ -91,7 +91,7 @@ class HomeMemesAdapter(val context: Context) : RecyclerView.Adapter<MyViewHolder
         }
 
 
-        override fun bind(t: UserSuggestion) {
+        override fun bind(t:UserSuggestion) {
             for(i in 0..4){
                 if(i<t.users.size){
                     imgs[i].visibility=View.VISIBLE

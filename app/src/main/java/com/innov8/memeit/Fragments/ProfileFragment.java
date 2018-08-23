@@ -2,6 +2,12 @@ package com.innov8.memeit.Fragments;
 
 
 import android.os.Bundle;
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.android.material.tabs.TabLayout;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
-import com.innov8.memeit.CustomClasses.MemeLoader;
 import com.innov8.memeit.Fragments.ProfileFragments.FollowersFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
@@ -23,6 +27,7 @@ import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.util.List;
 
+<<<<<<< HEAD
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -34,6 +39,8 @@ import okhttp3.ResponseBody;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+=======
+>>>>>>> parent of d35d87f... before migrating back to appcompat
 
 public class ProfileFragment extends Fragment {
 
@@ -91,7 +98,11 @@ public class ProfileFragment extends Fragment {
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
 
+<<<<<<< HEAD
         nameV=view.findViewById(R.id.profile_name);
+=======
+
+>>>>>>> parent of d35d87f... before migrating back to appcompat
         followerV = view.findViewById(R.id.profile_followers_count);
         memeCountV = view.findViewById(R.id.profile_meme_count);
         profileV = view.findViewById(R.id.profile_image);
@@ -154,7 +165,8 @@ public class ProfileFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return MemeListFragment.newInstance(MemeAdapter.GRID_ADAPTER, MemeLoader.MYMEME_LOADER);
+                    return MemeListFragment.newInstance(new MemeListFragment.MyMemesLoader(),
+                            new MemeAdapter.Grid(getContext()));
                 case 1:
                     return new FollowersFragment();
                 case 2:

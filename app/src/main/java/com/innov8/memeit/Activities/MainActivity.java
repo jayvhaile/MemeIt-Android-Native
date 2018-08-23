@@ -12,8 +12,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.innov8.memegenerator.MemeChooser;
 import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
+<<<<<<< HEAD
 import com.innov8.memeit.CustomClasses.MemeLoader;
+=======
+import com.innov8.memeit.CustomClasses.CustomMethods;
+>>>>>>> parent of d35d87f... before migrating back to appcompat
 import com.innov8.memeit.CustomViews.BottomNavigation;
+import com.innov8.memeit.Fragments.FavoritesFragment;
 import com.innov8.memeit.Fragments.HomeFragment;
 import com.innov8.memeit.Fragments.MemeListFragment;
 import com.innov8.memeit.Fragments.ProfileFragment;
@@ -180,9 +185,10 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return new HomeFragment();
                 case 1:
-                    return MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.TRENDING_LOADER);
+                    return MemeListFragment.newInstance(new MemeListFragment.TrendingLoader(),
+                            new MemeAdapter.Listed(MainActivity.this));
                 case 2:
-                    return MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.FAVOURITE_LOADER);
+                    return new FavoritesFragment();
                 case 3:
                     return ProfileFragment.newInstance();
                 default:

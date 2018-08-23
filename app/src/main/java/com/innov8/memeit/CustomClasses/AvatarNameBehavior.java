@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +22,7 @@ public class AvatarNameBehavior extends CoordinatorLayout.Behavior<TextView> {
     private float margin;
     private float startingTextSize;
     private float finalTextSize;
+    private float scaledDensity;
 
     public AvatarNameBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,6 +44,7 @@ public class AvatarNameBehavior extends CoordinatorLayout.Behavior<TextView> {
     }
     private void init(){
         mFinalHeight = mContext.getResources().getDimension(R.dimen.toolbar_height);
+        scaledDensity = mContext.getResources().getDisplayMetrics().scaledDensity;
     }
     int textColor=0;
     @Override
@@ -57,7 +58,8 @@ public class AvatarNameBehavior extends CoordinatorLayout.Behavior<TextView> {
             float dccy=dependency.getY()+size/2;
 
             float ctextSize=(startingTextSize-finalTextSize)*(dccy-dfcy)/(dscy-dfcy)+finalTextSize;
-            ctextSize=ctextSize/mContext.getResources().getDisplayMetrics().scaledDensity;
+
+            ctextSize=ctextSize/ scaledDensity;
             child.setTextSize(ctextSize);
 
             float cw=child.getWidth();
@@ -66,10 +68,6 @@ public class AvatarNameBehavior extends CoordinatorLayout.Behavior<TextView> {
             double angle=90f*(dccy-dscy)/(dfcy-dscy);
 
             int c=angle>88f?Color.WHITE:Color.BLACK;
-            Log.d(TAG, "===========================================");
-            Log.d(TAG, "onDependentViewChanged: "+c);
-            Log.d(TAG, "onDependentViewChanged: "+textColor);
-            Log.d(TAG, "===========================================");
 
             if(textColor!=c){
                 textColor=c;
@@ -80,11 +78,6 @@ public class AvatarNameBehavior extends CoordinatorLayout.Behavior<TextView> {
             float cr= (float) ((Math.sin(angle)*cw/2)+(Math.cos(angle)*ch/2));
             float m= (float) (margin-((margin)*Math.cos(angle)));
             float radius=(size/2)+m+cr;
-
-
-
-
-
 
 
             float tcx= (float) (Math.sin(angle)*radius);

@@ -95,12 +95,12 @@
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -108,29 +108,29 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.89">
+                app:layout_constraintVertical_bias="0.891">
 
                 <com.innov8.memeit.CustomClasses.FontTextView
                     android:id="@+id/followers_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="24k"
                     android:textColor="@color/colorAccent"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:text="24k" />
 
                 <com.innov8.memeit.CustomClasses.FontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" Followers"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:text=" Followers" />
 
                 <View
                     android:layout_width="10dp"
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="3dp"
                     android:layout_marginRight="5dp"
+                    android:layout_marginTop="3dp"
                     android:alpha="0.8"
                     android:background="@drawable/button"
                     android:backgroundTint="#313131" />
@@ -139,23 +139,23 @@
                     android:id="@+id/memes_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="24"
                     android:textColor="@color/colorAccent"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:text="24" />
 
                 <com.innov8.memeit.CustomClasses.FontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" Memes"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:text=" Memes" />
 
                 <View
                     android:layout_width="10dp"
                     android:layout_height="10dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="3dp"
                     android:layout_marginRight="5dp"
+                    android:layout_marginTop="3dp"
                     android:alpha="0.8"
                     android:background="@drawable/button"
                     android:backgroundTint="#313131" />
@@ -164,15 +164,15 @@
                     android:id="@+id/badges_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="16"
                     android:textColor="@color/colorAccent"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:text="16" />
 
                 <com.innov8.memeit.CustomClasses.FontTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" Badges"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:text=" Badges" />
             </LinearLayout>
 
 

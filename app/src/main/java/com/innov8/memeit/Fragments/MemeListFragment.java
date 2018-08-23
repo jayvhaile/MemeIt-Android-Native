@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.innov8.memeit.Adapters.MemeAdapter;
-import com.innov8.memeit.CustomClasses.EmptyLoader;
-import com.innov8.memeit.CustomClasses.MemeLoader;
 import com.innov8.memeit.R;
+import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.utilis.OnCompleteListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
@@ -38,14 +38,11 @@ public class MemeListFragment extends Fragment {
 
     private int skip;
 
-    private byte memeAdapterType;
-    private byte memeLoaderType;
-    public static MemeListFragment newInstance(byte memeAdapterType,byte memeLoaderType){
+
+    public static MemeListFragment newInstance(MemeLoader loader,MemeAdapter adapter){
         MemeListFragment fragment=new MemeListFragment();
-        Bundle arg=new Bundle();
-        arg.putByte("adapter_type",memeAdapterType);
-        arg.putByte("loader_type",memeLoaderType);
-        fragment.setArguments(arg);
+        fragment.setMemeLoader(loader,false);
+        fragment.setMemeAdapter(adapter);
         return fragment;
     }
     public MemeListFragment() {
@@ -56,19 +53,26 @@ public class MemeListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments()==null)
-            throw new NullPointerException("Argument should not be null");
-        memeAdapterType=getArguments().getByte("adapter_type",MemeAdapter.LIST_ADAPTER);
-        memeLoaderType=getArguments().getByte("loader_type",MemeLoader.EMPTY_LOADER);
-        memeAdapter=MemeAdapter.Companion.create(memeAdapterType,getContext());
-        memeLoader=MemeLoader.Companion.create(memeLoaderType);
+
+    }
+
+    public void setMemeLoader(MemeLoader loader,boolean reload){
+        this.memeLoader=loader;
+        if(reload)refresh();
+    }
+
+    public void setMemeAdapter(MemeAdapter memeAdapter) {
+        this.memeAdapter = memeAdapter;
+    }
+
+    public MemeLoader getMemeLoader() {
+        return memeLoader==null? emptyLoader :memeLoader;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if(memeAdapter==null) throw new NullPointerException("MemeAdapter Should be provided");
-        if(memeLoader==null) throw new NullPointerException("MemeLoader Should be provided");
         View view= inflater.inflate(R.layout.fragment_meme_list, container, false);
         swipeRefreshLayout=view.findViewById(R.id.swipe_to_refresh);
         memeList=view.findViewById(R.id.meme_recycler_view);
@@ -83,7 +87,7 @@ public class MemeListFragment extends Fragment {
                refresh();
             }
         });
-        memeList.setLayoutManager(memeAdapter.createLayoutManager());
+        memeList.setLayoutManager(memeAdapter.createlayoutManager());
         DefaultItemAnimator animator=new DefaultItemAnimator();
         memeList.setItemAnimator(animator);
         memeList.setAdapter(memeAdapter);
@@ -109,7 +113,7 @@ public class MemeListFragment extends Fragment {
 
     private void load(){
         memeAdapter.setLoading(true);
-        memeLoader.load(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
+        getMemeLoader().load(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
             @Override
             public void onSuccess(List<Meme> memeResponses) {
                 memeAdapter.setLoading(false);
@@ -119,7 +123,6 @@ public class MemeListFragment extends Fragment {
 
             @Override
             public void onFailure(Error error) {
-                if(getContext()!=null)
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                 memeAdapter.setLoading(false);
             }
@@ -127,7 +130,7 @@ public class MemeListFragment extends Fragment {
     }
     private void refresh(){
         resetSkip();
-        memeLoader.load(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
+        getMemeLoader().load(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
             @Override
             public void onSuccess(List<Meme> memeResponses) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -149,7 +152,39 @@ public class MemeListFragment extends Fragment {
         skip+=LIMIT;
     }
 
+    public interface MemeLoader{
+        public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener);
+    }
+    public static class HomeLoader implements MemeLoader{
+        @Override
+        public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener) {
+            //todo getHomeMemesforguest if user is not signed in
+            //MemeItMemes.getInstance().getHomeMemes(skip,limit,listener);
+        }
+    }
 
-
-
+    public static class TrendingLoader implements MemeLoader{
+        @Override
+        public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener) {
+            MemeItMemes.getInstance().getTrendingMemes(skip,limit,listener);
+        }
+    }
+    public static class FavoritesLoader implements MemeLoader{
+        @Override
+        public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener) {
+            MemeItMemes.getInstance().getFavouriteMemes(skip,limit,listener);
+        }
+    }
+    public static class MyMemesLoader implements MemeLoader{
+        @Override
+        public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener) {
+            MemeItMemes.getInstance().getMyMemes(skip,limit,listener);
+        }
+    }
+    public static class EmptyLoader implements MemeLoader{
+        @Override
+        public void load(int skip,int limit,OnCompleteListener<List<Meme>> listener) {
+            listener.onSuccess(new ArrayList<Meme>());
+        }
+    }
 }

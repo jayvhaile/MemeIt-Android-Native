@@ -13,7 +13,7 @@ public class ToolBarBehavior extends CoordinatorLayout.Behavior<View> {
     private final static String TAG = "behavior";
     private float mFinalHeight;
     private Context mContext;
-
+//    aaaa
     public ToolBarBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext=context;
