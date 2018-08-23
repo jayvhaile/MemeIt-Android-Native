@@ -12,11 +12,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.innov8.memegenerator.MemeChooser;
 import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
-<<<<<<< HEAD
-import com.innov8.memeit.CustomClasses.MemeLoader;
-=======
-import com.innov8.memeit.CustomClasses.CustomMethods;
->>>>>>> parent of d35d87f... before migrating back to appcompat
 import com.innov8.memeit.CustomViews.BottomNavigation;
 import com.innov8.memeit.Fragments.FavoritesFragment;
 import com.innov8.memeit.Fragments.HomeFragment;
