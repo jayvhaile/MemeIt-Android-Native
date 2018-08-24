@@ -12,8 +12,12 @@ import java.util.List;
  * Created by Jv on 6/30/2018.
  */
 
-public class Meme implements Parcelable {
-    public enum MemeType {
+public class Meme  implements Parcelable,HomeElement {
+    @Override
+    public int getItemType() {
+        return HomeElementKt.getMEME_TYPE();
+    }
+ public enum MemeType {
         IMAGE, GIF
     }
 

@@ -1,1 +1,1 @@
-include ':app', ':memegenerator', ':memegenerator', ':backend'
+include ':app', ':memegenerator', ':backend'

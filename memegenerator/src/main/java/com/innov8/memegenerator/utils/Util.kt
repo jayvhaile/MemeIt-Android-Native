@@ -75,28 +75,28 @@ fun TabLayout.onTabSelected(onSelected:(TabLayout.Tab)->Unit){
         }
     })
 }
-inline fun log(vararg messages: Any) {
+fun log(vararg messages: Any) {
     Log.d("#MemeIt", messages.joinToString (" , "))
 }
-inline fun androidx.recyclerview.widget.RecyclerView.initWithGrid(spanCount:Int, orientation:Int= androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, rev:Boolean=false){
+ fun androidx.recyclerview.widget.RecyclerView.initWithGrid(spanCount:Int, orientation:Int= androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, rev:Boolean=false){
     val glm= androidx.recyclerview.widget.GridLayoutManager(this.context, spanCount, orientation, rev)
     this.layoutManager=glm
     this.itemAnimator= androidx.recyclerview.widget.DefaultItemAnimator()
 }
-inline fun androidx.recyclerview.widget.RecyclerView.initWithStagger(spanCount:Int, orientation:Int= androidx.recyclerview.widget.LinearLayoutManager.VERTICAL){
+fun androidx.recyclerview.widget.RecyclerView.initWithStagger(spanCount:Int, orientation:Int= androidx.recyclerview.widget.LinearLayoutManager.VERTICAL){
     val glm= androidx.recyclerview.widget.StaggeredGridLayoutManager(spanCount, orientation)
     this.layoutManager=glm
     this.itemAnimator= androidx.recyclerview.widget.DefaultItemAnimator()
 }
 
-inline fun androidx.fragment.app.FragmentManager.replace(id:Int, fragment: androidx.fragment.app.Fragment){
+fun androidx.fragment.app.FragmentManager.replace(id:Int, fragment: androidx.fragment.app.Fragment){
     beginTransaction().replace(id,fragment).commit()
 }
-inline fun android.app.FragmentManager.replace(id:Int, fragment: android.app.Fragment){
+fun android.app.FragmentManager.replace(id:Int, fragment: android.app.Fragment){
     beginTransaction().replace(id,fragment).commit()
 }
 
-inline fun calcSampleSize(option:BitmapFactory.Options, reqWidth:Int, reqHeight:Int):Int{
+fun calcSampleSize(option:BitmapFactory.Options, reqWidth:Int, reqHeight:Int):Int{
     val width=option.outWidth
     val height=option.outHeight
     var size=1
@@ -109,7 +109,7 @@ inline fun calcSampleSize(option:BitmapFactory.Options, reqWidth:Int, reqHeight:
     }
     return size
 }
-inline fun calcSampleSize(option:BitmapFactory.Options,quality: Float):Int{
+fun calcSampleSize(option:BitmapFactory.Options,quality: Float):Int{
     val size=Math.max(option.outWidth,option.outHeight)
     val reqSize=size*if (quality>1f) 1f else quality
     var sampleSize=1

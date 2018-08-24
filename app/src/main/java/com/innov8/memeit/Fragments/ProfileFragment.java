@@ -14,6 +14,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
+import com.innov8.memeit.CustomClasses.MemeLoader;
 import com.innov8.memeit.Fragments.ProfileFragments.FollowersFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
@@ -156,8 +157,8 @@ public class ProfileFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return MemeListFragment.newInstance(new MemeListFragment.MyMemesLoader(),
-                            new MemeAdapter.Grid(getContext()));
+                    return MemeListFragment.newInstance(MemeAdapter.GRID_ADAPTER, MemeLoader.MYMEME_LOADER);
+
                 case 1:
                     return new FollowersFragment();
                 case 2:
