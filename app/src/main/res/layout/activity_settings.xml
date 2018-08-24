@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".SettingsActivity">
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:background="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:background="#40000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@mipmap/guy_2" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="8dp"
+        android:alpha="1"
+        android:src="@mipmap/take_photo"
+        app:layout_constraintBottom_toTopOf="@+id/fontTextView4"
+        app:layout_constraintEnd_toEndOf="@+id/imageView7"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/imageView7"
+        app:layout_constraintTop_toTopOf="@+id/imageView7"
+        app:layout_constraintVertical_bias="0.0" />
+
+        <com.innov8.memeit.CustomClasses.FontTextView
+            android:id="@+id/fontTextView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="-1dp"
+            android:layout_marginRight="-1dp"
+            android:alpha="0.7"
+            android:textColor="#fff"
+            app:layout_constraintEnd_toEndOf="@+id/fontTextView4"
+            app:layout_constraintStart_toStartOf="@+id/fontTextView4"
+            app:layout_constraintTop_toBottomOf="@+id/fontTextView4"
+            tools:text="\@genfoMemes" />
+
+    <com.innov8.memeit.CustomClasses.FontTextView
+        android:id="@+id/fontTextView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:textColor="#fff"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView7"
+        tools:text="Jeff Beso" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="256dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/view">
+
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:layout_width="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:textColor="@color/colorAccent"
+                android:text="Account"
+                android:layout_height="wrap_content" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_height="wrap_content">
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:id="@+id/sdf"
+                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="#313131"
+                    android:layout_marginLeft="16dp"
+                    android:text="Username"
+                    android:layout_height="wrap_content" />
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:id="@+id/bl"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@id/sdf"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp"
+                    tools:text="\@genfoMemes"
+                    android:layout_height="wrap_content" />
+                <View
+                    android:layout_below="@id/bl"
+                    android:background="#19000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content">
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:id="@+id/sdf1"
+                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="#313131"
+                    android:layout_marginLeft="16dp"
+                    android:text="Name"
+                    android:layout_height="wrap_content" />
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:id="@+id/bl1"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@id/sdf1"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp"
+                    tools:text="Jeff Beso"
+                    android:layout_height="wrap_content" />
+                <View
+                    android:layout_below="@id/bl1"
+                    android:background="#19000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content">
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:id="@+id/sdf2"
+                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="#313131"
+                    android:layout_marginLeft="16dp"
+                    android:text="Default reaction"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:id="@+id/bl2"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@id/sdf2"
+                    android:layout_marginLeft="16dp"
+                    android:src="@mipmap/laughing"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    tools:text="Jeff Beso"
+                    android:layout_height="20dp" />
+                <View
+                    android:layout_below="@id/bl2"
+                    android:background="#19000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+            </RelativeLayout>
+
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:layout_width="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:textColor="@color/colorAccent"
+                android:text="Memes"
+                android:layout_height="wrap_content" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content">
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:id="@+id/sdf3"
+                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="#313131"
+                    android:layout_marginBottom="8dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:text="Tags to follow"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerVertical="true"
+                    android:alpha=".4"
+                    app:srcCompat="@drawable/ic_navigate_next_black_24dp" />
+                <View
+                    android:layout_below="@id/sdf3"
+                    android:background="#19000000"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content">
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:id="@+id/sdf1"
+                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="#313131"
+                    android:layout_marginLeft="16dp"
+                    android:text="Name"
+                    android:layout_height="wrap_content" />
+                <com.innov8.memeit.CustomClasses.FontTextView
+                    android:id="@+id/bl1"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@id/sdf1"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp"
+                    tools:text="Jeff Beso"
+                    android:layout_height="wrap_content" />
+                <View
+                    android:layout_below="@id/bl1"
+                    android:background="#19000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+        <!--<com.innov8.memeit.CustomClasses.FontTextView-->
+            <!--android:id="@+id/fontTextView5"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:text="Account"-->
+            <!--android:textColor="@color/colorAccent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/imageView6" />-->
+
+        <!--<com.innov8.memeit.CustomClasses.FontTextView-->
+            <!--android:id="@+id/fontTextView6"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:text="Username"-->
+            <!--android:textColor="#313131"-->
+            <!--android:textSize="16sp"-->
+            <!--app:layout_constraintStart_toStartOf="@+id/fontTextView5"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/fontTextView5" />-->
+
+        <!--<com.innov8.memeit.CustomClasses.FontTextView-->
+            <!--android:id="@+id/fontTextView7"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:layout_constraintStart_toStartOf="@+id/fontTextView6"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/fontTextView6"-->
+            <!--tools:text="\@genfoMemes" />-->
+
+        <!--<View-->
+            <!--android:id="@+id/sd"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--app:layout_constraintLeft_toRightOf="parent"-->
+            <!--android:background="#20000000"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/fontTextView7" />-->
+        <!--<com.innov8.memeit.CustomClasses.FontTextView-->
+            <!--android:id="@+id/fontTextView32"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:text="Name"-->
+            <!--android:textColor="#313131"-->
+            <!--android:textSize="16sp"-->
+            <!--app:layout_constraintStart_toStartOf="@+id/fontTextView5"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/sd" />-->
+
+        <!--<com.innov8.memeit.CustomClasses.FontTextView-->
+            <!--android:id="@+id/fontTextView33"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:layout_constraintStart_toStartOf="@+id/fontTextView6"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/fontTextView32"-->
+            <!--tools:text="Jeff Beso" />-->
+
+        <!--<View-->
+            <!--android:id="@+id/view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:background="#20000000"-->
+            <!--app:layout_constraintLeft_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/fontTextView33" />-->
+
+        <!--<com.innov8.memeit.CustomClasses.FontTextView-->
+            <!--android:id="@+id/fontTextView34"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="16dp"-->
+            <!--android:layout_marginLeft="16dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:text="Default reaction"-->
+            <!--android:textColor="#313131"-->
+            <!--android:textSize="16sp"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/view" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/settings_default_reaction"-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--app:layout_constraintStart_toStartOf="@+id/fontTextView34"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/fontTextView34"-->
+            <!--tools:src="@mipmap/laughing" />-->
+        <!--<View-->
+            <!--android:id="@+id/views2"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:background="#20000000"-->
+            <!--app:layout_constraintLeft_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/settings_default_reaction" />-->
+
+        <!--<com.innov8.memeit.CustomClasses.FontTextView-->
+            <!--android:id="@+id/fontTextView5s"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:text="Memes"-->
+            <!--android:textColor="@color/colorAccent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/views2" />-->
+
+        <!--<com.innov8.memeit.CustomClasses.FontTextView-->
+            <!--android:id="@+id/fontTextView342"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="16dp"-->
+            <!--android:layout_marginLeft="16dp"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:text="Tags to follow"-->
+            <!--android:layout_marginBottom="16dp"-->
+            <!--android:textColor="#313131"-->
+            <!--android:textSize="16sp"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/fontTextView5s" />-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:src="@drawable/ic_navigate_next_black_24dp"-->
+            <!--app:layout_constraintBottom_toBottomOf="@+id/fontTextView342"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="@+id/fontTextView342" />-->
+        <!--<View-->
+            <!--android:id="@+id/views3"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:background="#20000000"-->
+            <!--app:layout_constraintLeft_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/fontTextView342"/>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

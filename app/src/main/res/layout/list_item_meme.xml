@@ -60,19 +60,15 @@
     <View
         android:id="@+id/view2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#c000"
+        android:layout_height="256dp"
+        android:background="#78000000"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/meme_image"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/meme_image"
-        app:layout_constraintVertical_bias="1.0" />
+        tools:layout_editor_absoluteY="64dp" />
     <!--react buttons-->
     <ImageView
         android:id="@+id/react_funny"
-        android:layout_width="56dp"
-        android:layout_height="64dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="@+id/meme_image"
         app:layout_constraintEnd_toStartOf="@+id/react_veryfunny"
@@ -83,8 +79,8 @@
 
     <ImageView
         android:id="@+id/react_veryfunny"
-        android:layout_width="56dp"
-        android:layout_height="64dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginEnd="16dp"
@@ -101,8 +97,8 @@
 
     <ImageView
         android:id="@+id/react_stupid"
-        android:layout_width="56dp"
-        android:layout_height="64dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginEnd="32dp"
@@ -117,8 +113,8 @@
 
     <ImageView
         android:id="@+id/react_angry"
-        android:layout_width="56dp"
-        android:layout_height="64dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="@+id/meme_image"
         app:layout_constraintEnd_toStartOf="@+id/meme_image"
@@ -183,7 +179,7 @@
         app:layout_constraintTop_toBottomOf="@+id/meme_image"
         app:sparkbutton_activeImage="@mipmap/laughing"
         app:sparkbutton_iconSize="30dp"
-        app:sparkbutton_inActiveImage="@mipmap/laughing"
+        app:sparkbutton_inActiveImage="@mipmap/laughing_inactive_light"
         app:sparkbutton_primaryColor="@color/spark_primary"
         app:sparkbutton_secondaryColor="@color/spark_secondary" />
 

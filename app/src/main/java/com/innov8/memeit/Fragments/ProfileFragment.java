@@ -22,6 +22,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.Fragments.ProfileFragments.FollowersFragment;
+import com.innov8.memeit.Fragments.ProfileFragments.FollowingFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
@@ -158,7 +159,7 @@ public class ProfileFragment extends Fragment {
                     return MemeListFragment.newInstance(new MemeListFragment.MyMemesLoader(),
                             new MemeAdapter.Grid(getContext()));
                 case 1:
-                    return new FollowersFragment();
+                    return new FollowingFragment();
                 case 2:
                     return new FollowersFragment();
 

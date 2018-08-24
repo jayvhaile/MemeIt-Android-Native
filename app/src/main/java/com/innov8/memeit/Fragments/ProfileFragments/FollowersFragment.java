@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.innov8.memeit.Adapters.FollowerAdapter;
+import com.innov8.memeit.Adapters.FollowerListAdapter;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
@@ -28,7 +29,7 @@ public class FollowersFragment extends Fragment {
     private RecyclerView followerList;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private FollowerAdapter followerAdapter;
+    private FollowerListAdapter followerAdapter;
     public FollowersFragment() {
         // Required empty public constructor
     }
@@ -55,16 +56,17 @@ public class FollowersFragment extends Fragment {
                 refresh();
             }
         });
-        followerList.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        followerList.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
         DefaultItemAnimator animator=new DefaultItemAnimator();
         followerList.setItemAnimator(animator);
+        load();
         followerList.setAdapter(followerAdapter);
     }
     private void load(){
         MemeItUsers.getInstance().getMyFollowerList(skip, LIMIT, new OnCompleteListener<List<User>>() {
             @Override
             public void onSuccess(List<User> userResponses) {
-                followerAdapter.addAll(userResponses);
+                followerAdapter.addUsers(userResponses);
                 incSkip();
             }
 

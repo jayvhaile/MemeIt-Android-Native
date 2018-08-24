@@ -1,6 +1,7 @@
 package com.innov8.memeit.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressB
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.R;
+import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
 
 import java.util.ArrayList;
@@ -41,12 +43,18 @@ public class FollowerAdapter extends RecyclerView.Adapter<MyViewHolder<User>> {
     @Override
     public MyViewHolder<User> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.list_item_follower, parent, false);
+        CircularProgressButton followButton = view.findViewById(R.id.follower_follow_btn);
+
         return new FollowerViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder<User> holder, int position) {
         holder.bind(users.get(position));
+        CircularProgressButton followButton = holder.itemView.findViewById(R.id.follower_follow_btn);
+        if(users.get(position).isFollowedByMe()) {
+            followButton.setText("Following");
+        }
     }
 
     @Override
