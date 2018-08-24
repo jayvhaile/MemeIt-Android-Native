@@ -20,7 +20,6 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar2"
-            android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bottom_nav_back"
@@ -43,9 +42,5 @@
         app:menu="@menu/main_bottom_nav"
         app:selected_tint="?attr/colorAccent"
         app:skip_tint="2" />
-    <View
-        android:background="#8dffffff"
-        android:layout_width="match_parent"
-        android:layout_height="24dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

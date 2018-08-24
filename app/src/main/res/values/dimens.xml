@@ -4,4 +4,11 @@
     <dimen name="auth_icon_size">40dp</dimen>
     <dimen name="auth_item_height">50dp</dimen>
     <dimen name="auth_button_height">56dp</dimen>
+
+
+
+    <dimen name="image_width">100dp</dimen>
+    <dimen name="image_final_width">32dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
 </resources>

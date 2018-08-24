@@ -129,14 +129,15 @@ interface MemeInterface {
     public Call<List<Meme>> getTrendingMemes(@Query("skip") int skip,
                                                      @Query("limit") int limit);
 
-    @GET("meme/favourite")
+    @GET("meme/me/favourite")
     public Call<List<Meme>> getFavouriteMemes(@Query("skip") int skip,
-                                                      @Query("limit") int limit);
+                                              @Query("limit") int limit);
 
-    @GET("meme/favourite")
-    public Call<List<Meme>> getFavouriteMemesFor(@Query("uid") String uid,
-                                                         @Query("skip") int skip,
-                                                         @Query("limit") int limit);
+    @GET("meme/{uid}/favourite")
+    public Call<List<Meme>> getFavouriteMemesFor(@Path("uid") String uid,
+                                                 @Query("skip") int skip,
+                                                 @Query("limit") int limit);
+
 
     @GET("meme/me/posts")
     public Call<List<Meme>> getMyMemes(@Query("skip") int skip,
