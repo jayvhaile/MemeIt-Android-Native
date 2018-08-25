@@ -16,6 +16,7 @@ import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.CustomClasses.MemeLoader;
 import com.innov8.memeit.Fragments.ProfileFragments.FollowersFragment;
+import com.innov8.memeit.Fragments.ProfileFragments.FollowingFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
@@ -160,7 +161,7 @@ public class ProfileFragment extends Fragment {
                     return MemeListFragment.newInstance(MemeAdapter.GRID_ADAPTER, MemeLoader.MYMEME_LOADER);
 
                 case 1:
-                    return new FollowersFragment();
+                    return new FollowingFragment();
                 case 2:
                     return new FollowersFragment();
 
