@@ -45,6 +45,7 @@ public class FollowersFragment extends Fragment {
 
         swipeRefreshLayout=view.findViewById(R.id.swipe_to_refresh);
         followerList=view.findViewById(R.id.followers_recycler_view);
+        followerAdapter = new FollowerListAdapter(getContext());
         setupUI();
         return view;
     }
