@@ -144,14 +144,15 @@ public class MemeItMemes {
     /**
      * this is to get meme list that match the search query
      *
-     * @param query    the search query
+     * @param text   the search text (can be null to search only by tags)
+     * @param tags   the search tags (can be null to search only by text)
      * @param skip     to skip some memes from the retrieved list
      * @param limit    to limit the number of retrieved memes
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getFileterdMemes(String query, int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+    public void getFileterdMemes(String text,String tags[], int skip, int limit, OnCompleteListener<List<Meme>> listener) {
         MemeItClient.getInstance().getInterface()
-                .getFilteredMemes(query, skip, limit)
+                .getFilteredMemes(text,tags, skip, limit)
                 .enqueue(new MyCallBack<List<Meme>>(listener));
     }
 
@@ -286,6 +287,33 @@ public class MemeItMemes {
                 .deleteComment(Comment.createCommentForDelete(mid, cid))
                 .enqueue(new MyCallBack<ResponseBody>(listener));
 
+    }
+
+    /**
+     * this is to get list of popular tags(used more often)
+     *
+     * @param text   the search text .Only for filtering the tags(can be null)
+     * @param skip     to skip some memes from the retrieved list
+     * @param limit    to limit the number of retrieved memes
+     * @param listener the Listener to be called when the action is completed
+     **/
+    public void getPopularTags(String text, int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+        MemeItClient.getInstance().getInterface()
+                .getPopularTags(text, skip, limit)
+                .enqueue(new MyCallBack<List<Meme>>(listener));
+    }
+    /**
+     * this is to get list of trending tags(recent most used)
+     *
+     * @param skip     to skip some memes from the retrieved list
+     * @param limit    to limit the number of retrieved memes
+     * @param listener the Listener to be called when the action is completed
+     **/
+
+    public void getTrendingTags(int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+        MemeItClient.getInstance().getInterface()
+                .getTrendingTags(skip, limit)
+                .enqueue(new MyCallBack<List<Meme>>(listener));
     }
 
 

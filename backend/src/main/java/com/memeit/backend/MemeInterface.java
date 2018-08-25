@@ -87,6 +87,7 @@ interface MemeInterface {
 
     @GET("user/me/badges")
     public Call<List<Badge>> getMyBadges();
+
     @GET("user/following/suggestion")
     public Call<List<User>> getUserSuggestions();
 
@@ -118,17 +119,18 @@ interface MemeInterface {
 
     @GET("meme/{id}/refresh")
     public Call<Meme> getRefreshedMeme(@Path("id") String id);
+
     @GET("meme/home")
     public Call<List<Meme>> getHomeMemes(@Query("skip") int skip,
-                                               @Query("limit") int limit);
+                                         @Query("limit") int limit);
 
     @GET("meme/home/guest")
     public Call<List<Meme>> getHomeMemesForGuest(@Query("skip") int skip,
-                                                         @Query("limit") int limit);
+                                                 @Query("limit") int limit);
 
     @GET("meme/trending")
     public Call<List<Meme>> getTrendingMemes(@Query("skip") int skip,
-                                                     @Query("limit") int limit);
+                                             @Query("limit") int limit);
 
 
     @GET("meme/me/favourite")
@@ -143,17 +145,18 @@ interface MemeInterface {
 
     @GET("meme/me/posts")
     public Call<List<Meme>> getMyMemes(@Query("skip") int skip,
-                                               @Query("limit") int limit);
+                                       @Query("limit") int limit);
 
     @GET("meme/posts")
     public Call<List<Meme>> getMemesFor(@Query("uid") String uid,
-                                                @Query("skip") int skip,
-                                                @Query("limit") int limit);
+                                        @Query("skip") int skip,
+                                        @Query("limit") int limit);
 
     @GET("meme/search")
-    public Call<List<Meme>> getFilteredMemes(@Query("query") String query,
-                                                     @Query("skip") int skip,
-                                                     @Query("limit") int limit);
+    public Call<List<Meme>> getFilteredMemes(@Query("text") String text,
+                                             @Query("tags") String[] tags,
+                                             @Query("skip") int skip,
+                                             @Query("limit") int limit);
 
     @GET("meme/comment")
     public Call<List<Comment>> getCommentForMeme(@Query("mid") String mid,
@@ -179,7 +182,6 @@ interface MemeInterface {
     public Call<ResponseBody> removeMemeFromFavourite(@Path("mid") String mid);
 
 
-
     @POST("meme/comment")
     public Call<Comment> postComment(@Body Comment comment);
 
@@ -191,6 +193,16 @@ interface MemeInterface {
 
     @POST("meme/react")
     public Call<ResponseBody> reactToMeme(@Body Reaction reaction);
+
     @DELETE("meme/react")
     public Call<ResponseBody> unreactToMeme(@Body String mid);
+
+
+    @GET("meme/tags/popular")
+    public Call<List<Meme>> getPopularTags(@Query("search") String text,
+                                             @Query("skip") int skip,
+                                             @Query("limit") int limit);
+    @GET("meme/tags/trending")
+    Call<List<Meme>> getTrendingTags(@Query("skip") int skip,
+                                           @Query("limit") int limit);
 }
