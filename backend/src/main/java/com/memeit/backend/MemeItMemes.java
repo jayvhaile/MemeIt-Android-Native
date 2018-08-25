@@ -1,7 +1,6 @@
 package com.memeit.backend;
 
 import com.memeit.backend.dataclasses.Comment;
-import com.memeit.backend.dataclasses.HomePageItemPack;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.dataclasses.Reaction;
 import com.memeit.backend.utilis.MyCallBack;
@@ -56,10 +55,10 @@ public class MemeItMemes {
      * @param limit    to limit the number of retrieved memes
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getHomeMemes(int skip, int limit, OnCompleteListener<HomePageItemPack> listener) {
+    public void getHomeMemes(int skip, int limit, OnCompleteListener<List<Meme>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getHomeMemes(skip, limit)
-                .enqueue(new MyCallBack<HomePageItemPack>(listener));
+                .enqueue(new MyCallBack<List<Meme>>(listener));
     }
 
     /**

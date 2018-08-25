@@ -4,7 +4,6 @@ import com.memeit.backend.dataclasses.AuthInfo;
 import com.memeit.backend.dataclasses.AuthToken;
 import com.memeit.backend.dataclasses.Badge;
 import com.memeit.backend.dataclasses.Comment;
-import com.memeit.backend.dataclasses.HomePageItemPack;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.Reaction;
@@ -88,6 +87,8 @@ interface MemeInterface {
 
     @GET("user/me/badges")
     public Call<List<Badge>> getMyBadges();
+    @GET("user/following/suggestion")
+    public Call<List<User>> getUserSuggestions();
 
     //------POST-----
 
@@ -118,7 +119,7 @@ interface MemeInterface {
     @GET("meme/{id}/refresh")
     public Call<Meme> getRefreshedMeme(@Path("id") String id);
     @GET("meme/home")
-    public Call<HomePageItemPack> getHomeMemes(@Query("skip") int skip,
+    public Call<List<Meme>> getHomeMemes(@Query("skip") int skip,
                                                @Query("limit") int limit);
 
     @GET("meme/home/guest")
@@ -128,6 +129,7 @@ interface MemeInterface {
     @GET("meme/trending")
     public Call<List<Meme>> getTrendingMemes(@Query("skip") int skip,
                                                      @Query("limit") int limit);
+
 
     @GET("meme/me/favourite")
     public Call<List<Meme>> getFavouriteMemes(@Query("skip") int skip,
@@ -170,11 +172,12 @@ interface MemeInterface {
     public Call<ResponseBody> deleteMeme(@Path("mid") String mid);
 
 
-    @POST("meme/favourite")
-    public Call<ResponseBody> addMemeToFavourite(@Body String mid);
+    @POST("meme/{mid}/favourite")
+    public Call<ResponseBody> addMemeToFavourite(@Path("mid") String mid);
 
-    @DELETE("meme/favourite")
-    public Call<ResponseBody> removeMemeFromFavourite(@Body String mid);
+    @DELETE("meme/{mid}/favourite")
+    public Call<ResponseBody> removeMemeFromFavourite(@Path("mid") String mid);
+
 
 
     @POST("meme/comment")

@@ -26,7 +26,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MemeListFragment extends Fragment {
     private static final String TAG = "MemeListFragment";
-    private static final int LIMIT = 50;
+    private static final int LIMIT = 20;
 
     private RecyclerView memeList;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -64,7 +64,7 @@ public class MemeListFragment extends Fragment {
         memeAdapterType = getArguments().getByte("adapter_type", MemeAdapter.LIST_ADAPTER);
         memeLoaderType = getArguments().getByte("loader_type", MemeLoader.EMPTY_LOADER);
         memeAdapter = MemeAdapter.Companion.create(memeAdapterType, getContext());
-        memeLoader = MemeLoader.Companion.create(memeLoaderType);
+        memeLoader = MemeLoader.Companion.create(memeLoaderType,getContext());
     }
 
 
@@ -131,6 +131,7 @@ public class MemeListFragment extends Fragment {
 
             @Override
             public void onFailure(Error error) {
+                if (getContext()==null)return;
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                 memeAdapter.setLoading(false);
             }
@@ -139,6 +140,7 @@ public class MemeListFragment extends Fragment {
 
     private void refresh() {
         resetSkip();
+        memeLoader.reset();
         memeLoader.load(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
             @Override
             public void onSuccess(List<Meme> memeResponses) {
@@ -149,6 +151,7 @@ public class MemeListFragment extends Fragment {
 
             @Override
             public void onFailure(Error error) {
+                if (getContext()==null)return;
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                 swipeRefreshLayout.setRefreshing(false);
             }
