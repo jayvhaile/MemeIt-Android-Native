@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (view.getId()) {
                     case R.id.search_button:
                         searchLoading.setVisibility(View.VISIBLE);
-                        //todo: Jv and biruk: add the fetching of results here using @id/search_suggestions as a recyclerview, tags as the list of tags
+                        //todo: Jv and biruk: add the fetching of results here using @id/search_suggestions as a recyclerview,TagSuggestionAdapter as adapter and tags as the list of tags
                         break;
                     case R.id.close_searchbar:
                         searchQuery.setText("");
