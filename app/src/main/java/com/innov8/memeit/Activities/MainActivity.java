@@ -14,7 +14,6 @@ import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.MemeLoader;
 import com.innov8.memeit.CustomViews.BottomNavigation;
-import com.innov8.memeit.Fragments.HomeFragment;
 import com.innov8.memeit.Fragments.MemeListFragment;
 import com.innov8.memeit.Fragments.ProfileFragment;
 import com.innov8.memeit.R;
@@ -32,6 +31,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String BOTTOM_NAV_INDEX = "bottom_nav_index";
     ViewPager viewPager;
     BottomNavigation bottom_nav;
     Toolbar mToolbar;
@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
                     goToSignUpDetails();
                 }
             }
-
             @Override
             public void onFailure(Error error) {
                 Toast.makeText(MainActivity.this, "error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -70,9 +69,6 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
     private void initUI(Bundle savedInstanceState) {
-
-
-
         setContentView(R.layout.activity_main);
         viewPager=findViewById(R.id.main_viewpager);
         bottom_nav=findViewById(R.id.bottom_nav);
@@ -80,9 +76,6 @@ public class MainActivity extends AppCompatActivity {
         mToolbar =  findViewById(R.id.toolbar2);
         initToolbar();
         initBottomNav();
-
-
-
         // Setting viewpager adapter
         PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
@@ -94,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
                 .withMenuLayout(R.layout.menu_drawer2)
                 .inject();
 
-
         findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,6 +94,15 @@ public class MainActivity extends AppCompatActivity {
                 recreate();
             }
         });
+        if(savedInstanceState!=null){
+            int index=savedInstanceState.getInt(BOTTOM_NAV_INDEX,0);
+            bottom_nav.select(index);
+            if(index==3){
+                getSupportActionBar().hide();
+            }else{
+                getSupportActionBar().show();
+            }
+        }
 
 
     }
@@ -165,12 +166,15 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(BOTTOM_NAV_INDEX,bottom_nav.getSelectedIndex());
+        super.onSaveInstanceState(outState);
+    }
     private class MyPagerAdapter extends FragmentPagerAdapter {
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
         @Override
         public Fragment getItem(int pos) {
             //i changed this cuz storing the fragment in array prevents it
@@ -178,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             Log.w("pos",pos + "");
             switch (pos) {
                 case 0:
-                    return new HomeFragment();
+                    return MemeListFragment.newInstance(MemeAdapter.HOME_ADAPTER, MemeLoader.HOME_LOADER);
                 case 1:
                     return MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.TRENDING_LOADER);
                 case 2:
@@ -189,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
                     throw new IllegalArgumentException("should be 0-3");
             }
         }
-
         @Override
         public int getCount() {
             return 4;

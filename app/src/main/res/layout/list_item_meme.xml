@@ -55,7 +55,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        app:placeholderImage="@drawable/got1" />
+        app:failureImage="@drawable/ic_sync_problem"
+        app:progressBarImage="@drawable/vector_anim"/>
 
     <View
         android:id="@+id/tint"

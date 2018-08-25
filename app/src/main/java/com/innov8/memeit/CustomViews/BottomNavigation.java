@@ -36,6 +36,8 @@ public class BottomNavigation extends LinearLayout {
 
     LayoutParams  layoutParams;
 
+    int selectedIndex;
+
     BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener;
     public BottomNavigation(Context context) {
         super(context);
@@ -79,8 +81,8 @@ public class BottomNavigation extends LinearLayout {
             @Override
             public void onClick(View view) {
                 int no = Integer.parseInt(String.valueOf(view.getTag()));
-                onNavigationItemSelectedListener.onNavigationItemSelected(menu.getItem(no));
                 select(no);
+                onNavigationItemSelectedListener.onNavigationItemSelected(menu.getItem(no));
             }
         };
 
@@ -95,7 +97,8 @@ public class BottomNavigation extends LinearLayout {
         }
 
     }
-    private void select(int x){
+    public void select(int x){
+        selectedIndex=x;
         clearTints();
         setTinted(x);
     }
@@ -111,6 +114,9 @@ public class BottomNavigation extends LinearLayout {
             ImageView iv = (ImageView) getChildAt(i);
             iv.setColorFilter(deselected_tint, PorterDuff.Mode.SRC_IN);
         }
+    }
+    public int getSelectedIndex(){
+        return selectedIndex;
     }
 
     private boolean isNotTintable(int index){

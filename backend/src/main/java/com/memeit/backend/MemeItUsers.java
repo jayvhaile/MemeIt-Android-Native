@@ -152,7 +152,11 @@ public class MemeItUsers {
                 .getBadgesFor(uid)
                 .enqueue(new MyCallBack<List<Badge>>(listener));
     }
-
+    public void getUserSuggestions(OnCompleteListener<List<User>> listener){
+        MemeItClient.getInstance().getInterface()
+                .getUserSuggestions()
+                .enqueue(new MyCallBack<List<User>>(listener));
+    }
 
     //====================================================================================================================
 

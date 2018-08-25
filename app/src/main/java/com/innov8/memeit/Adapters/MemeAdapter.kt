@@ -2,6 +2,7 @@ package com.innov8.memeit.Adapters
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
+import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.CustomClasses.CustomMethods
@@ -41,6 +43,7 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
             else ->
                 throw IllegalArgumentException("Use one of (LIST_ADAPTER,GRID_ADAPTER,HOME_ADAPTER)")
         }
+
         const val LOADING_TYPE = 5864
     }
 
@@ -60,10 +63,12 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
         items.addAll(homeElements)
         notifyItemRangeInserted(start, homeElements.size)
     }
+
     fun add(homeElement: HomeElement) {
         items.add(homeElement)
         notifyItemInserted(items.size - 1)
     }
+
     fun remove(homeElement: HomeElement) {
         if (items.contains(homeElement)) {
             val index = items.indexOf(homeElement)
@@ -245,14 +250,15 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
             }
         });*/
         reactButton.setOnClickListener { toggleReactVisibility() }
-        favButton.isChecked=false
-        favButton.setOnClickListener{
-            val meme=getCurrentMeme()
-            MemeItMemes.getInstance().addToFavourites(meme.memeId,object : OnCompleteListener<ResponseBody> {
+        favButton.isChecked = false
+        favButton.setOnClickListener {
+            val meme = getCurrentMeme()
+            MemeItMemes.getInstance().addToFavourites(meme.memeId, object : OnCompleteListener<ResponseBody> {
                 override fun onSuccess(responseBody: ResponseBody) {
                     favButton.playAnimation()
-                    favButton.isChecked=true
+                    favButton.isChecked = true
                 }
+
                 override fun onFailure(error: OnCompleteListener.Error) {
                     Toast.makeText(this@MemeListViewHolder.memeAdapter.context, "favourite failed\n" + error.message, Toast.LENGTH_SHORT).show()
                 }
@@ -331,7 +337,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
         menu.show()
     }
 
-    private fun getCurrentMeme():Meme{
+    private fun getCurrentMeme(): Meme {
         return memeAdapter.items[itemPosition] as Meme
     }
 }
@@ -358,6 +364,12 @@ class UserSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewH
             itemView.findViewById(R.id.suggestion_pp3),
             itemView.findViewById(R.id.suggestion_pp4)
     )
+    private val texts: List<TextView> = listOf(
+            itemView.findViewById(R.id.suggestion_name1),
+            itemView.findViewById(R.id.suggestion_name2),
+            itemView.findViewById(R.id.suggestion_name3),
+            itemView.findViewById(R.id.suggestion_name4)
+    )
     private val buttons: List<CircularProgressButton> = listOf(
             itemView.findViewById(R.id.suggestion_follow_btn1),
             itemView.findViewById(R.id.suggestion_follow_btn2),
@@ -366,24 +378,52 @@ class UserSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewH
     )
 
     init {
+        val listener: (View) -> Unit = {
+            val i = it.tag?.toString()?.toInt() ?: 0
+            val user = (memeAdapter.items[itemPosition] as UserSuggestion).users[i]
+            buttons[i].startAnimation()
+
+            val action = {
+                MemeItUsers.getInstance().followUser(user.userID, object : OnCompleteListener<ResponseBody> {
+                    override fun onSuccess(t: ResponseBody?) {
+                        buttons[i].revertAnimation {
+                            images[i].visibility = View.GONE
+                            texts[i].visibility = View.GONE
+                            buttons[i].visibility = View.GONE
+                            memeAdapter.context.toast("Now Following User")
+                        }
+                    }
+
+                    override fun onFailure(error: OnCompleteListener.Error?) {
+                        buttons[i].revertAnimation {
+                            memeAdapter.context.toast("Failed To Follow user " + error?.message)
+                        }
+                    }
+                })
+            }
+            //todo remove this (this is just to see it loading)
+            Handler().postDelayed(action, 5000)
+        }
         buttons.forEachIndexed { i, btn ->
             btn.setOnClickListener {
-                val user = (memeAdapter.items[itemPosition] as UserSuggestion).users[i]
-                //todo provide an oncompletelistenr here
-                MemeItUsers.getInstance().followUser(user.userID, null)
+                it.tag = i
+                it.setOnClickListener(listener)
             }
         }
     }
 
     override fun bind(homeElement: HomeElement) {
         val userSuggestion = homeElement as UserSuggestion
-        for (i in 0..4) {
+        for (i in 0 until 4) {
             if (i < userSuggestion.users.size) {
                 images[i].visibility = View.VISIBLE
+                texts[i].visibility = View.VISIBLE
                 buttons[i].visibility = View.VISIBLE
                 images[i].setImageURI(userSuggestion.users[i].imageUrl)//todo replace with loadimageto
+                texts[i].text = userSuggestion.users[i].name
             } else {
                 images[i].visibility = View.GONE
+                texts[i].visibility = View.GONE
                 buttons[i].visibility = View.GONE
             }
         }
@@ -404,9 +444,17 @@ class MemeTemplateSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : M
             itemView.findViewById(R.id.suggestion_follow_btn4)
     )
 
+    init {
+        btns.forEachIndexed { i, btn ->
+            btn.setOnClickListener {
+
+            }
+        }
+    }
+
     override fun bind(homeElement: HomeElement) {
         val templateSuggestion = homeElement as MemeTemplateSuggestion
-        for (i in 0..4) {
+        for (i in 0 until 4) {
             if (i < templateSuggestion.templates.size) {
                 imgs[i].visibility = View.VISIBLE
                 btns[i].visibility = View.VISIBLE
