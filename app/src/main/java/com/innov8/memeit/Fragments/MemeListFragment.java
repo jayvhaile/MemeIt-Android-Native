@@ -189,7 +189,7 @@ public class MemeListFragment extends Fragment {
     }
 
 
-    public void swapLoader(MemeLoader loader){
+    public void swapLoader(MemeLoader loader){//todo analayze this
         resetSkip();
         memeAdapter.clear();
         this.memeLoader=loader==null?emptyLoader:loader;

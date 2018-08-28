@@ -177,7 +177,7 @@
         android:layout_marginLeft="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fontTextView5"
+        app:layout_constraintTop_toBottomOf="@+id/meme_tags"
         app:sparkbutton_activeImage="@mipmap/laughing"
         app:sparkbutton_iconSize="28dp"
         app:sparkbutton_inActiveImage="@mipmap/laughing"
@@ -185,18 +185,15 @@
         app:sparkbutton_secondaryColor="@color/spark_secondary" />
 
     <com.innov8.memeit.CustomClasses.FontTextView
-        android:id="@+id/fontTextView5"
+        android:id="@+id/meme_tags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
-        android:visibility="gone"
         android:textColor="#1394fd"
-        android:text="#programming  #funny_stuff"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meme_image"
-        tools:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@+id/meme_image" />
 
     <com.innov8.memeit.CustomClasses.FontTextView
         android:id="@+id/meme_reactions"

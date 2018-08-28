@@ -109,6 +109,12 @@ public class MainActivity extends AppCompatActivity{
                 recreate();
             }
         });
+        findViewById(R.id.settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,SettingsActivity.class));
+            }
+        });
     }
 
 
@@ -123,7 +129,7 @@ public class MainActivity extends AppCompatActivity{
         bottom_nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                closeSearch();
+                searchItem.collapseActionView();
                 switch (item.getItemId()) {
                     case R.id.menu_home:
                         setTitle(0);
@@ -181,11 +187,12 @@ public class MainActivity extends AppCompatActivity{
 
 
     private ChipSearchToolbar searchToolbar;
+    MenuItem searchItem;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_top_menu, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        searchItem = menu.findItem(R.id.menu_search);
         searchToolbar = (ChipSearchToolbar) searchItem.getActionView();
 
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {

@@ -1,17 +1,11 @@
 package com.innov8.memeit.Activities;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.KeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -20,11 +14,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.innov8.memeit.CustomClasses.SharedPrefs;
 import com.innov8.memeit.R;
-import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.Reaction;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -90,6 +88,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         imageQuality = findViewById(R.id.image_quality);
         nameProfile = findViewById(R.id.namesettings);
         usernameProfile = findViewById(R.id.usernamesettings);
+        pp=findViewById(R.id.settings_pp);
     }
 
     public void initSettings(){
@@ -98,7 +97,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         cachesize.setText(getCacheSize());
         defaultReaction.setImageDrawable(getDefaultReactionDrawable());
         imageQuality.setText(getImageQuality());
-        pp.setImageURI(""); //todo: JV replace the empty string with a method to retrieve URI
+        //pp.setImageURI(""); //todo: JV replace the empty string with a method to retrieve URI
         nameProfile.setText(sharedPrefs.getName());
         usernameProfile.setText(sharedPrefs.getUsername());
     }
@@ -139,6 +138,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void requestName(){
+        new MaterialDialog.Builder(this)
+                .input("name", "prefill", false, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+
+                    }
+                }).show();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         AlertDialog dialog = null;
         builder.setTitle("Enter your MemeIt name");
@@ -160,7 +166,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                finalDialog.hide();
+//                hide();
             }
         });
         dialog = builder.create();

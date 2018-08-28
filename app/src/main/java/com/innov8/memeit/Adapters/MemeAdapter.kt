@@ -2,7 +2,13 @@ package com.innov8.memeit.Adapters
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Handler
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,8 +22,10 @@ import androidx.constraintlayout.widget.Group
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.drawee.view.SimpleDraweeView
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
+import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
@@ -197,6 +205,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
     private val reactButton: SparkButton = itemView.findViewById(R.id.react_button)
     private val favButton: SparkButton = itemView.findViewById(R.id.fav_button)
     private val reactGroup: Group = itemView.findViewById(R.id.react_group)
+    private val memeTags:TextView=itemView.findViewById(R.id.meme_tags)
     private lateinit var memeId: String
 
     init {
@@ -267,6 +276,28 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
             })
         }
         memeMenu.setOnClickListener { showMemeMenu() }
+        memeTags.movementMethod=LinkMovementMethod.getInstance()
+        memeTags.setOnClickListener {showFollowDialog()}
+
+    }
+    private fun showFollowDialog(){
+        val meme=getCurrentMeme()
+        MaterialDialog.Builder(memeAdapter.context)
+                .items(meme.tags.map {"#$it"})
+                .itemsCallbackMultiChoice(null) {
+                    _, _, _ ->
+                    true
+                }
+                .positiveText("Follow")
+                .negativeText("Cancel")
+                .onPositive { dialog, which ->
+                    val si=dialog.selectedIndices
+                    val selectedTags=meme.tags.filterIndexed { index, _ ->
+                        si?.contains(index)?:false
+                    }.toList()
+                    log(selectedTags)
+                }
+                .show()
     }
 
     private fun react(reactionType: Reaction.ReactionType?, finalReactRes: Int) {
@@ -298,15 +329,60 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
         ImageUtils.loadImageFromCloudinaryTo(posterPicV, meme.poster.profileUrl)
         adjust(meme.memeImageRatio)
         ImageUtils.loadImageFromCloudinaryTo(memeImageV, meme.memeImageUrl)
+        meme.tags.forEach{
+            log(it)
+        }
+        if(meme.tags.isEmpty()){
+            memeTags.visibility=View.GONE
+        }else{
+            memeTags.visibility=View.VISIBLE
+
+            handleTag(meme.tags)
+        }
+
+    }
+
+    class MyClickableSpan(val onClick:()->Unit):ClickableSpan(){
+        val color= Color.rgb(19,148,253)
+        override fun onClick(widget: View?) {
+           onClick()
+        }
+
+        override fun updateDrawState(ds: TextPaint) {
+            ds.color=color
+            ds.isUnderlineText= false
+        }
+    }
+    fun handleTag(tags:List<String>){
+        val spanBuilder=SpannableStringBuilder()
+        tags.map {"#$it"}
+                .forEachIndexed {i,it->
+                    val si=spanBuilder.length
+                    spanBuilder.append(it)
+                    val span=MyClickableSpan{
+                        MaterialDialog.Builder(memeAdapter.context)
+                                .title("Do you want to follow this tag?")
+                                .content(it)
+                                .contentColor(Color.rgb(19,148,253))
+                                .positiveText("Follow")
+                                .negativeText("Cancel")
+                                .onPositive { _, _->
+                                    //todo follow tag
+                                }.show()
+                    }
+                    spanBuilder.setSpan(span,si,spanBuilder.length,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                    if(i+1<tags.size)spanBuilder.append(", ")
+                }
+        memeTags.setText(spanBuilder,TextView.BufferType.SPANNABLE)
     }
 
 
     private fun adjust(ratio: Double) {
         val width = screen_width
         var height = (width / ratio).toInt()
-        val max_height = CustomMethods.convertDPtoPX(memeAdapter.context, 500.0f).toInt()
-        val min_height = CustomMethods.convertDPtoPX(memeAdapter.context, 200.0f).toInt()
-        height = if (height < min_height) min_height else if (height > max_height) max_height else height
+        val maxHeight = CustomMethods.convertDPtoPX(memeAdapter.context, 500.0f).toInt()
+        val minHeight = CustomMethods.convertDPtoPX(memeAdapter.context, 200.0f).toInt()
+        height = if (height < minHeight) minHeight else if (height > maxHeight) maxHeight else height
         memeImageV.layoutParams.width = width
         memeImageV.layoutParams.height = height
         memeImageV.requestLayout()
@@ -317,25 +393,26 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
         menu.menuInflater.inflate(R.menu.meme_menu, menu.menu)
         menu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.menu_delete_meme ->
-                    /*MemeItMemes.getInstance().deleteMeme(memeId, new OnCompleteListener<ResponseBody>() {
-                    @Override
-                    public void onSuccess(ResponseBody responseBody) {
-                        remove(Meme.forID(memeId));
-                        //todo show snackbar instead of toast
-                        Toast.makeText(mContext, "Meme Deleted", Toast.LENGTH_SHORT).show();
-                    }
+                R.id.menu_delete_meme -> {
+                    MemeItMemes.getInstance().deleteMeme(memeId, object : OnCompleteListener<ResponseBody> {
+                        override fun onSuccess(t: ResponseBody?) {
+                            memeAdapter.remove(Meme.forID(memeId))
+                            //todo show snackbar instead of toast
+                            memeAdapter.context.toast("Meme Deleted")
+                        }
 
-                    @Override
-                    public void onFailure(Error error) {
-                        //todo show snackbar instead of toast
-                        Toast.makeText(mContext, "Cannot Delete Meme " + error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });*/
+                        override fun onFailure(error: OnCompleteListener.Error?) {
+                            //todo show snackbar instead of toast
+                            memeAdapter.context.toast("Cannot Delete Meme " + error?.getMessage())
+                        }
+                    })
                     return@OnMenuItemClickListener true
+                }
             }
             false
         })
+
+
         menu.show()
     }
 
@@ -346,13 +423,11 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
 
 class MemeGridViewHolder(itemView: View, memeAdapter: MemeAdapter, screen_width: Int) : MemeViewHolder(itemView, memeAdapter) {
     private val memeImageV: SimpleDraweeView = itemView.findViewById(R.id.meme_image)
-
     init {
         val width = screen_width / GridMemeAdapter.GRID_SPAN_COUNT
         val lp = FrameLayout.LayoutParams(width, width)
         memeImageV.layoutParams = lp
     }
-
     override fun bind(homeElement: HomeElement) {
         val meme = homeElement as Meme
         ImageUtils.loadImageFromCloudinaryTo(memeImageV, meme.memeImageUrl)

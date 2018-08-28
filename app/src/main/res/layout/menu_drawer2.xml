@@ -52,6 +52,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline11">
 
         <com.innov8.memeit.CustomClasses.FontTextView
+            android:id="@+id/settings"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
