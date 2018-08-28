@@ -2,7 +2,6 @@ package com.innov8.memeit.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,13 +12,20 @@ import com.innov8.memegenerator.MemeChooser;
 import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.MemeLoader;
+import com.innov8.memeit.CustomClasses.SearchLoader;
 import com.innov8.memeit.CustomViews.BottomNavigation;
+import com.innov8.memeit.CustomViews.ChipSearchToolbar;
 import com.innov8.memeit.Fragments.MemeListFragment;
 import com.innov8.memeit.Fragments.ProfileFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.utilis.OnCompleteListener;
+import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,16 +33,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 
-public class MainActivity extends AppCompatActivity {
-    public static final String BOTTOM_NAV_INDEX = "bottom_nav_index";
+public class MainActivity extends AppCompatActivity{
     ViewPager viewPager;
     BottomNavigation bottom_nav;
     Toolbar mToolbar;
-
-
+    SlidingRootNav rootNav;
+    ArrayList<String> tags = new ArrayList<>();
+    MyPagerAdapter pagerAdapter;
     private String titles[] = {"Home", "Trending", "Favorites"};
 
     @Override
@@ -56,36 +63,44 @@ public class MainActivity extends AppCompatActivity {
                     goToSignUpDetails();
                 }
             }
+
             @Override
             public void onFailure(Error error) {
                 Toast.makeText(MainActivity.this, "error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     private void goToSignUpDetails() {
         Intent intent = new Intent(this, AuthActivity.class);
         intent.putExtra(AuthActivity.STARTING_FRAGMENT_PARAM, AuthActivity.FRAGMENT_SETUP);
         startActivity(intent);
         finish();
     }
+
     private void initUI(Bundle savedInstanceState) {
+
         setContentView(R.layout.activity_main);
-        viewPager=findViewById(R.id.main_viewpager);
-        bottom_nav=findViewById(R.id.bottom_nav);
-        mToolbar=findViewById(R.id.toolbar2);
-        mToolbar =  findViewById(R.id.toolbar2);
+        viewPager = findViewById(R.id.main_viewpager);
+        bottom_nav = findViewById(R.id.bottom_nav);
+        mToolbar = findViewById(R.id.toolbar2);
+        mToolbar = findViewById(R.id.toolbar2);
         initToolbar();
         initBottomNav();
-        // Setting viewpager adapter
-        PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-        new SlidingRootNavBuilder(this)
-                .withSavedState(savedInstanceState) //If you call the method, layout will restore its opened/closed state
+
+
+        // Setting viewpager pagerAdapter
+        pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
+        rootNav = new SlidingRootNavBuilder(this)
+                .withSavedState(savedInstanceState)
                 .withContentClickableWhenMenuOpened(false)
                 .withRootViewElevationPx(5)
                 .withRootViewScale(0.5f)
                 .withMenuLayout(R.layout.menu_drawer2)
+                .withToolbarMenuToggle(mToolbar)
                 .inject();
+
 
         findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,18 +109,12 @@ public class MainActivity extends AppCompatActivity {
                 recreate();
             }
         });
-        if(savedInstanceState!=null){
-            int index=savedInstanceState.getInt(BOTTOM_NAV_INDEX,0);
-            bottom_nav.select(index);
-            if(index==3){
-                getSupportActionBar().hide();
-            }else{
-                getSupportActionBar().show();
-            }
-        }
-
-
     }
+
+
+
+
+
     private void initToolbar() {
         this.setSupportActionBar(this.mToolbar);
     }
@@ -114,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         bottom_nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                closeSearch();
                 switch (item.getItemId()) {
                     case R.id.menu_home:
                         setTitle(0);
@@ -126,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                         getSupportActionBar().show();
                         return true;
                     case R.id.menu_create:
-                        startActivity(new Intent(MainActivity.this,MemeChooser.class));
+                        startActivity(new Intent(MainActivity.this, MemeChooser.class));
                         return true;
                     case R.id.menu_favorites:
                         setTitle(2);
@@ -144,58 +154,98 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setTitle(int index) {
-        mToolbar.setTitle(titles[index]);
+        getSupportActionBar().setTitle(titles[index]);
     }
 
     public void setTitle(String name) {
         if (viewPager.getCurrentItem() == 3)
             mToolbar.setTitle(name);
     }
+    private MemeLoader tempLoader;
+    private SearchLoader searchLoader;
 
+    private void showSearch() {
+
+        MemeListFragment frag = (MemeListFragment) pagerAdapter.fragments.get(viewPager.getCurrentItem());
+        tempLoader = frag.memeLoader;
+        frag.swapLoader(searchLoader);
+
+
+    }
+    private void closeSearch(){
+
+        MemeListFragment frag = (MemeListFragment) pagerAdapter.fragments.get(viewPager.getCurrentItem());
+        frag.swapLoader(tempLoader);
+
+    }
+
+
+    private ChipSearchToolbar searchToolbar;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_top_menu, menu);
-        return true;
-    }
 
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        searchToolbar = (ChipSearchToolbar) searchItem.getActionView();
+
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                showSearch();
+                return searchToolbar.onMenuItemActionExpand(item);
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                closeSearch();
+                return searchToolbar.onMenuItemActionCollapse(item);
+            }
+        });
+        searchToolbar.setOnSearch(new Function2<String, String[], Unit>() {
+            @Override
+            public Unit invoke(String s, String[] strings) {
+                if(searchLoader==null){
+                    searchLoader=new SearchLoader();
+                    MemeListFragment frag = (MemeListFragment) pagerAdapter.fragments.get(viewPager.getCurrentItem());
+                    frag.swapLoader(searchLoader);
+                }
+                searchLoader.search(s,strings,0,100);
+                return null;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
         switch (item.getItemId()){
             case R.id.menu_notif:
                 startActivity(new Intent(this,MemeTemplateMaker.class));
         }
         return true;
     }
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(BOTTOM_NAV_INDEX,bottom_nav.getSelectedIndex());
-        super.onSaveInstanceState(outState);
-    }
+
     private class MyPagerAdapter extends FragmentPagerAdapter {
+        List<? extends Fragment> fragments;
+
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
+            fragments = Arrays.asList(
+                    MemeListFragment.newInstance(MemeAdapter.HOME_ADAPTER, MemeLoader.HOME_LOADER),
+                    MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.TRENDING_LOADER),
+                    MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.FAVOURITE_LOADER),
+                    ProfileFragment.newInstance()
+            );
         }
+
         @Override
         public Fragment getItem(int pos) {
-            //i changed this cuz storing the fragment in array prevents it
-            // from being garbage collected which is bad for performance
-            Log.w("pos",pos + "");
-            switch (pos) {
-                case 0:
-                    return MemeListFragment.newInstance(MemeAdapter.HOME_ADAPTER, MemeLoader.HOME_LOADER);
-                case 1:
-                    return MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.TRENDING_LOADER);
-                case 2:
-                    return MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.FAVOURITE_LOADER);
-                case 3:
-                    return ProfileFragment.newInstance();
-                default:
-                    throw new IllegalArgumentException("should be 0-3");
-            }
+            return fragments.get(pos);
         }
+
         @Override
         public int getCount() {
-            return 4;
+            return fragments.size();
         }
     }
 }

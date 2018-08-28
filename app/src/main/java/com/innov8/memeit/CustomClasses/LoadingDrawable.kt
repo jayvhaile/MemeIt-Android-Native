@@ -1,26 +1,70 @@
 package com.innov8.memeit.CustomClasses
 
-import android.graphics.Canvas
-import android.graphics.ColorFilter
+import android.animation.ValueAnimator
+import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.util.Log
 
+//todo change the px to dp
 class LoadingDrawable : Drawable() {
     override fun onLevelChange(level: Int): Boolean {
-        return super.onLevelChange(level)
+        super.onLevelChange(level)
+        if (level>100)return false
+        sweepAngle=sweepInitialAngle+(360f-sweepInitialAngle)*(level/100f)
+        Log.d("fuck",level.toString()+"\t"+(360f-sweepInitialAngle)*(level/100f))
+        invalidateSelf()
+        return true
     }
     override fun setAlpha(alpha: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getOpacity(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return PixelFormat.OPAQUE
     }
 
     override fun setColorFilter(colorFilter: ColorFilter?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+    var startingAngle=0f
+        set(value) {
+            field=value%360
+        }
+
+    var c:Long=0
+
+    val radius=60f
+    val strokeSize=8f
+    val paddingSize=4f
+    val sweepInitialAngle=20f
+    var sweepAngle=sweepInitialAngle
+    val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val paint2:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val anim=ValueAnimator.ofFloat(0f,0.1f)
+    val anim2=ValueAnimator.ofFloat(0f,0.1f)
+    init {
+        paint.color=Color.WHITE
+        paint.style=Paint.Style.STROKE
+        paint.strokeWidth=strokeSize
+
+        paint2.color=Color.argb(80,0,0,0)
+
+        anim.duration=1
+        anim.repeatMode=ValueAnimator.RESTART
+        anim.repeatCount=ValueAnimator.INFINITE
+        anim.addUpdateListener {
+            startingAngle+=4.5f
+            invalidateSelf()
+        }
+        anim.start()
     }
 
-    override fun draw(canvas: Canvas?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    override fun draw(canvas: Canvas) {
+        val w=bounds.width()/2f
+        val h=bounds.height()/2f
+
+        canvas.drawCircle(w,h,radius+strokeSize+paddingSize,paint2)
+        val rect=RectF(w-radius,h-radius,w+radius,h+radius)
+        canvas.drawArc(rect,startingAngle,sweepAngle,false,paint)
+
     }
 }

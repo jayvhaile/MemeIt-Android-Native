@@ -15,5 +15,6 @@
 
 
     <color name="spark_primary">#ff5656</color>
+    <color name="spark_primary_emoji">#fd5</color>
     <color name="spark_secondary">#ff8888</color>
 </resources>

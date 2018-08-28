@@ -11,12 +11,10 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.tabs.TabLayout;
-import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
-import com.innov8.memeit.CustomClasses.MemeLoader;
-import com.innov8.memeit.Fragments.ProfileFragments.FollowersFragment;
-import com.innov8.memeit.Fragments.ProfileFragments.FollowingFragment;
+import com.innov8.memeit.CustomClasses.UserListLoader;
+import com.innov8.memeit.Fragments.ProfileFragments.UserListFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
@@ -37,9 +35,6 @@ import static android.view.View.VISIBLE;
 
 
 public class ProfileFragment extends Fragment {
-
-
-
 
 
     String userID;
@@ -68,11 +63,11 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.profile_page, container, false);
     }
+
     TabLayout tabLayout;
     ViewPager pager;
     ViewPagerAdapter adapter;
@@ -83,6 +78,7 @@ public class ProfileFragment extends Fragment {
     TextView memeCountV;
     SimpleDraweeView profileV;
     TextView followBtnV;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -93,7 +89,7 @@ public class ProfileFragment extends Fragment {
         tabLayout.setupWithViewPager(pager);
 
 
-        nameV=view.findViewById(R.id.profile_name);
+        nameV = view.findViewById(R.id.profile_name);
 
 
         followerV = view.findViewById(R.id.profile_followers_count);
@@ -105,33 +101,47 @@ public class ProfileFragment extends Fragment {
         followBtnV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MemeItUsers.getInstance().followUser(userID, new OnCompleteListener<ResponseBody>() {
-                    @Override
-                    public void onSuccess(ResponseBody responseBody) {
-                        Toast.makeText(getContext(), "Followed", Toast.LENGTH_SHORT).show();
-                    }
+                if (followBtnV.getText().toString().equalsIgnoreCase("Follow")) {
+                    MemeItUsers.getInstance().followUser(userID, new OnCompleteListener<ResponseBody>() {
+                        @Override
+                        public void onSuccess(ResponseBody responseBody) {
+                            Toast.makeText(getContext(), "Followed", Toast.LENGTH_SHORT).show();
+                        }
 
-                    @Override
-                    public void onFailure(Error error) {
-                        Toast.makeText(getContext(), "failed follow: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(Error error) {
+                            Toast.makeText(getContext(), "failed follow: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else if (followBtnV.getText().equals("Unfollow")) {
+                    MemeItUsers.getInstance().unFollowUser(userID, new OnCompleteListener<ResponseBody>() {
+                        @Override
+                        public void onSuccess(ResponseBody responseBody) {
+                            Toast.makeText(getContext(), "UnFollowed", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Error error) {
+                            Toast.makeText(getContext(), "failed follow: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+
             }
         });
 
         loadData();
     }
 
+    User userData;
+
     private void loadData() {
         OnCompleteListener<User> onCompleteListener = new OnCompleteListener<User>() {
             @Override
             public void onSuccess(User user) {
-               nameV.setText(user.getName());
-                if (!TextUtils.isEmpty(user.getImageUrl())) {
-                    ImageUtils.loadImageFromCloudinaryTo(profileV, user.getImageUrl());
-                }
-                followerV.setText(CustomMethods.formatNumber(user.getFollowerCount()));
-                memeCountV.setText(CustomMethods.formatNumber(user.getPostCount()));
+                userData = user;
+                updateView();
             }
 
             @Override
@@ -143,6 +153,23 @@ public class ProfileFragment extends Fragment {
             MemeItUsers.getInstance().getMyUserDetail(onCompleteListener);
         else
             MemeItUsers.getInstance().getUserDetailFor(userID, onCompleteListener);
+
+    }
+
+    private void updateView() {
+        nameV.setText(userData.getName());
+        if (!TextUtils.isEmpty(userData.getImageUrl())) {
+            ImageUtils.loadImageFromCloudinaryTo(profileV, userData.getImageUrl());
+        }
+        followerV.setText(CustomMethods.formatNumber(userData.getFollowerCount()));
+        memeCountV.setText(CustomMethods.formatNumber(userData.getPostCount()));
+        Toast.makeText(getContext(),userData.getName()+"\n"+userData.isFollowedByMe()+"\n"+userData.isFollowingMe(), Toast.LENGTH_SHORT).show();
+        if(userData.isFollowedByMe()){
+            followBtnV.setText("Unfollow");
+        }else{
+            followBtnV.setText("Follow");
+        }
+
 
     }
 
@@ -158,12 +185,11 @@ public class ProfileFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return MemeListFragment.newInstance(MemeAdapter.GRID_ADAPTER, MemeLoader.MYMEME_LOADER);
-
+                    return MemeListFragment.newInstanceForUserPosts(userID);
                 case 1:
-                    return new FollowingFragment();
+                    return UserListFragment.newInstance(UserListLoader.FOLLOWING_LOADER,userID);
                 case 2:
-                    return new FollowersFragment();
+                    return UserListFragment.newInstance(UserListLoader.FOLLOWER_LOADER,userID);
 
                 default:
                     throw new IllegalArgumentException("Should be 1-3");
@@ -185,6 +211,7 @@ public class ProfileFragment extends Fragment {
         return TextUtils.isEmpty(userID);
         //todo jv check also if the user id equals this user's
         //todo biruk remove this funny todo
+        //todo how tf is that funny
     }
 
 }

@@ -16,23 +16,25 @@ interface MemeLoader<T> {
         const val HOME_LOADER: Byte = 1
         const val TRENDING_LOADER: Byte = 2
         const val FAVOURITE_LOADER: Byte = 3
-        const val MYMEME_LOADER: Byte = 4
+        const val USER_POST_MEME_LOADER: Byte = 4
         const val EMPTY_LOADER: Byte = 5
-        fun create(type: Byte, context: Context) =
+        fun create(type: Byte, context: Context, userID: String? = null):MemeLoader<out HomeElement> =
                 when (type) {
                     HOME_LOADER -> HomeLoader(context)
                     TRENDING_LOADER -> TrendingLoader()
                     FAVOURITE_LOADER -> FavoritesLoader()
-                    MYMEME_LOADER -> MyMemesLoader()
+                    USER_POST_MEME_LOADER -> MyMemesLoader(userID = userID)
                     else -> EmptyLoader()
                 }
     }
 
-    fun load(skip: Int, limit: Int, listener: OnCompleteListener<List<T>>)
+    var listener: OnCompleteListener<List<T>>?
+
+    fun load(skip: Int, limit: Int)
     fun reset() {}
 }
 
-class HomeLoader(val context: Context) : MemeLoader<HomeElement> {
+class HomeLoader(val context: Context, override var listener: OnCompleteListener<List<HomeElement>>? = null) : MemeLoader<HomeElement> {
     var userSuggestions: Queue<User>? = null
     var memeTemplates: List<MemeTemplate>? = null
 
@@ -43,7 +45,6 @@ class HomeLoader(val context: Context) : MemeLoader<HomeElement> {
     var memeLoaded = false
     var memeFailed = false
 
-    var tempmemeListener: OnCompleteListener<List<HomeElement>>? = null
     var tempMemes: List<Meme>? = null
     var tempError: OnCompleteListener.Error? = null
 
@@ -62,7 +63,7 @@ class HomeLoader(val context: Context) : MemeLoader<HomeElement> {
 
     }
 
-    override fun load(skip: Int, limit: Int, listener: OnCompleteListener<List<HomeElement>>) {
+    override fun load(skip: Int, limit: Int) {
         log("load called")
         log("checking if suggestion is not loaded or failed")
         log("result", suggestionLoaded, suggestionFailed)
@@ -92,7 +93,6 @@ class HomeLoader(val context: Context) : MemeLoader<HomeElement> {
                 bake()
             }
         }
-        tempmemeListener = listener
         memeFailed = false
         log("loading memes")
         MemeItMemes.getInstance().getHomeMemes(skip, limit, myMemeListener)
@@ -113,7 +113,7 @@ class HomeLoader(val context: Context) : MemeLoader<HomeElement> {
         if (memeLoadedOrFailed && suggestionLoadedOrFailed && templateLoadedOrFailed) {
             if (memeFailed) {
                 log("meme loading failed. sending error")
-                tempmemeListener!!.onFailure(tempError)
+                listener?.onFailure(tempError)
             } else {
                 log("baking results")
                 val homeElements = mutableListOf<HomeElement>()
@@ -128,7 +128,7 @@ class HomeLoader(val context: Context) : MemeLoader<HomeElement> {
                         }
                     }
                 }
-                tempmemeListener!!.onSuccess(homeElements)
+                listener?.onSuccess(homeElements)
             }
         }
     }
@@ -190,10 +190,8 @@ class HomeLoader(val context: Context) : MemeLoader<HomeElement> {
     }
 
     override fun reset() {
-
         userSuggestions = null
         memeTemplates = null
-        tempmemeListener = null
         tempMemes = null
         tempError = null
         suggestionLoaded = false
@@ -204,32 +202,47 @@ class HomeLoader(val context: Context) : MemeLoader<HomeElement> {
         memeFailed = false
         index = 0
         type = 0
-        templatelastIndex=0
+        templatelastIndex = 0
     }
 
 
 }
 
-class TrendingLoader : MemeLoader<Meme> {
-    override fun load(skip: Int, limit: Int, listener: OnCompleteListener<List<Meme>>) {
+class SearchLoader(override var listener: OnCompleteListener<List<Meme>>? = null) : MemeLoader<Meme> {
+
+    fun search(search: String?, tags: Array<String>?, skip: Int, limit: Int) {
+        MemeItMemes.getInstance().getFileterdMemes(search, tags, skip, limit, listener)
+    }
+
+    override fun load(skip: Int, limit: Int) {
+        search(null, null, skip, limit)
+    }
+
+}
+
+class TrendingLoader(override var listener: OnCompleteListener<List<Meme>>? = null) : MemeLoader<Meme> {
+    override fun load(skip: Int, limit: Int) {
         MemeItMemes.getInstance().getTrendingMemes(skip, limit, listener)
     }
 }
 
-class FavoritesLoader : MemeLoader<Meme> {
-    override fun load(skip: Int, limit: Int, listener: OnCompleteListener<List<Meme>>) {
+class FavoritesLoader(override var listener: OnCompleteListener<List<Meme>>? = null) : MemeLoader<Meme> {
+    override fun load(skip: Int, limit: Int) {
         MemeItMemes.getInstance().getFavouriteMemes(skip, limit, listener)
     }
 }
 
-class MyMemesLoader : MemeLoader<Meme> {
-    override fun load(skip: Int, limit: Int, listener: OnCompleteListener<List<Meme>>) {
-        MemeItMemes.getInstance().getMyMemes(skip, limit, listener)
+class MyMemesLoader(override var listener: OnCompleteListener<List<Meme>>? = null, val userID: String?) : MemeLoader<Meme> {
+    override fun load(skip: Int, limit: Int) {
+        if (userID == null)
+            MemeItMemes.getInstance().getMyMemes(skip, limit, listener)
+        else
+            MemeItMemes.getInstance().getMemesOf(userID, skip, limit, listener)
     }
 }
 
-class EmptyLoader : MemeLoader<Meme> {
-    override fun load(skip: Int, limit: Int, listener: OnCompleteListener<List<Meme>>) {
-        listener.onSuccess(ArrayList())
+class EmptyLoader(override var listener: OnCompleteListener<List<Meme>>? = null) : MemeLoader<Meme> {
+    override fun load(skip: Int, limit: Int) {
+        listener?.onSuccess(ArrayList())
     }
 }

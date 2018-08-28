@@ -7,6 +7,7 @@ import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.Reaction;
+import com.memeit.backend.dataclasses.Tag;
 import com.memeit.backend.dataclasses.User;
 
 import java.util.List;
@@ -63,17 +64,16 @@ interface MemeInterface {
     public Call<List<User>> getMyFollowingList(@Query("skip") int skip, @Query("limit") int limit);
 
     @GET("user/{id}/followers")
-    public Call<List<User>> getFollowersListForUser(@Query("skip") int skip,
-                                                    @Query("limit") int limit,
-                                                    @Path("id") String uid);
+    public Call<List<User>> getFollowersListForUser(@Path("id") String uid,
+                                                    @Query("skip") int skip,
+                                                    @Query("limit") int limit
+    );
 
-    @GET("user/{id}/following")
-    public Call<List<User>> getFollowingListForUser(@Query("skip") int skip,
-                                                    @Query("limit") int limit,
-                                                    @Path("id") String uid);
+    @GET("user/{id}/followings")
+    public Call<List<User>> getFollowingListForUser(@Path("id") String uid,
+                                                    @Query("skip") int skip,
+                                                    @Query("limit") int limit);
 
-    @GET("user/{id}/posts")
-    public Call<List<Meme>> getPostsOfUser(@Path("uid") String userID, @Query("search") String search);
 
     @GET("user/me/notifications")
     public Call<List<Notification>> getMyNotifications(@Query("skip") int skip,
@@ -147,8 +147,8 @@ interface MemeInterface {
     public Call<List<Meme>> getMyMemes(@Query("skip") int skip,
                                        @Query("limit") int limit);
 
-    @GET("meme/posts")
-    public Call<List<Meme>> getMemesFor(@Query("uid") String uid,
+    @GET("meme/{uid}/posts")
+    public Call<List<Meme>> getMemesFor(@Path("uid") String uid,
                                         @Query("skip") int skip,
                                         @Query("limit") int limit);
 
@@ -199,10 +199,11 @@ interface MemeInterface {
 
 
     @GET("meme/tags/popular")
-    public Call<List<Meme>> getPopularTags(@Query("search") String text,
-                                             @Query("skip") int skip,
-                                             @Query("limit") int limit);
+    public Call<List<Tag>> getPopularTags(@Query("search") String text,
+                                          @Query("skip") int skip,
+                                          @Query("limit") int limit);
+
     @GET("meme/tags/trending")
-    Call<List<Meme>> getTrendingTags(@Query("skip") int skip,
-                                           @Query("limit") int limit);
+    Call<List<Tag>> getTrendingTags(@Query("skip") int skip,
+                                    @Query("limit") int limit);
 }

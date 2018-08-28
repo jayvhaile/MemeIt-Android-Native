@@ -13,6 +13,7 @@ import com.innov8.memeit.Fragments.SetupFragment;
 import com.innov8.memeit.Fragments.SignUpFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -84,6 +85,7 @@ public class AuthActivity extends AppCompatActivity {
             int realHeight = metrics.heightPixels;
             return realHeight > usableHeight ? realHeight - usableHeight : 0;
         }
+
         return 0;
     }
 
@@ -91,6 +93,9 @@ public class AuthActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MemeItAuth.GOOGLE_SIGNIN_REQUEST_CODE) {
+            getFragmentForInt(currentFrag).onActivityResult(requestCode, resultCode, data);
+        }
+        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             getFragmentForInt(currentFrag).onActivityResult(requestCode, resultCode, data);
         }
     }

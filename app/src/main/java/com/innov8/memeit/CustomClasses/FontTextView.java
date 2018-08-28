@@ -9,7 +9,7 @@ import android.util.AttributeSet;
  */
 
 public class FontTextView extends androidx.appcompat.widget.AppCompatTextView {
-    private static final String asset = "fonts/avenir.ttf"/*"typefaceLoaders/avenir.ttf"*/;
+    public  static final String asset = "fonts/avenir.ttf"/*"typefaceLoaders/avenir.ttf"*/;
     public FontTextView(Context context) {
         super(context);
         setCustomFont(context,asset);

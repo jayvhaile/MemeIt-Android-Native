@@ -72,6 +72,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                 MyToolbarmenu(R.drawable.ic_left_menu_done){
                     val bitmap=memeEditorView.captureMeme()
                     val intent= Intent(this,MemePosterActivity::class.java)
+                    intent.putExtra("texts",memeEditorView.getTexts().toTypedArray())
                     MemePosterActivity.bitmap=bitmap
                     startActivity(intent)
                 },

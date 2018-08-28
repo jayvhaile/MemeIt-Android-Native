@@ -7,7 +7,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.Group
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,6 +23,7 @@ import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.CustomClasses.CustomMethods
 import com.innov8.memeit.CustomClasses.ImageUtils
+import com.innov8.memeit.CustomClasses.LoadingDrawable
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
@@ -196,6 +200,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
     private lateinit var memeId: String
 
     init {
+        memeImageV.hierarchy.setProgressBarImage(LoadingDrawable())
         commentBtnV.setOnClickListener {
             val meme = memeAdapter.getMemeByID(memeId)
                     ?: throw IllegalStateException("Meme Should not be null")

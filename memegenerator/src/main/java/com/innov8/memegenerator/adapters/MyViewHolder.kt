@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
  */
 
 abstract class MyViewHolder<T>(itemView: View) : ViewHolder(itemView) {
-    protected var item_position: Int = 0
+    var item_position: Int = 0
 
     abstract fun bind(t: T)
 

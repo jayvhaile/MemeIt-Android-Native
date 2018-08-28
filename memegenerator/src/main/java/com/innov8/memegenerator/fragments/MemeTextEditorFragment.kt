@@ -3,9 +3,6 @@ package com.innov8.memegenerator.fragments
 
 import android.graphics.Color
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +10,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.SeekBar
 import com.afollestad.materialdialogs.color.ColorChooserDialog
+import com.google.android.material.tabs.TabLayout
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.adapters.TextPresetsAdapter
 import com.innov8.memegenerator.customViews.ColorView
@@ -92,6 +90,8 @@ class MemeTextEditorFragment : MemeEditorFragment(),ItemSelectedInterface {
 
     lateinit var textEditListener: TextEditListener
     override fun onTextItemSelected(textStyleProperty: TextStyleProperty) {
+        if(context==null)return
+        log("fukua",isDetached,isAdded,isHidden)
         if(tabLayout.selectedTabPosition==1)
             textCustomizeFragment.applyTextProperty(textStyleProperty)
     }

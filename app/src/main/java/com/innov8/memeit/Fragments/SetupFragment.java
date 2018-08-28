@@ -154,7 +154,9 @@ public class SetupFragment extends AuthFragment implements View.OnClickListener 
             if (resultCode == Activity.RESULT_OK) {
                 image_url = result.getUri();
                 isFromGoogle = false;
-                ImageUtils.loadImageFromUriTo(profileV, image_url);
+
+                Toast.makeText(getContext(), image_url.toString(), Toast.LENGTH_SHORT).show();
+                profileV.setImageURI(image_url);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();

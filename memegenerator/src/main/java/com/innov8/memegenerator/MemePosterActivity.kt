@@ -3,8 +3,8 @@ package com.innov8.memegenerator
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +17,6 @@ import com.innov8.memegenerator.utils.toast
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.dataclasses.Meme
 import com.memeit.backend.utilis.OnCompleteListener
-import java.util.*
 
 class MemePosterActivity : AppCompatActivity() {
     companion object {
@@ -25,15 +24,19 @@ class MemePosterActivity : AppCompatActivity() {
     }
     lateinit var imageV:ImageView
     lateinit var statusV:TextView
+    lateinit var tagsV:EditText
+    var texts:Array<String>?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meme_poster)
         imageV=findViewById(R.id.meme_image_view)
         statusV=findViewById(R.id.post_status)
+        tagsV=findViewById(R.id.tags)
         if(bitmap!=null){
             imageV.setImageBitmap(bitmap)
             bitmap=null
         }
+        texts=intent?.getStringArrayExtra("texts")
         val postBtn:CircularProgressButton=findViewById(R.id.post_btn)
         postBtn.setOnClickListener {
             postBtn.startAnimation()
@@ -94,15 +97,13 @@ class MemePosterActivity : AppCompatActivity() {
     private fun prepareRequest(uri: String, ratio: Float): Meme {
         val txt = ""
         val tag = ""
-        var texts: List<String>? = null
-        var tags: List<String>? = null
-        if (!TextUtils.isEmpty(txt)) {
-            texts = Arrays.asList(*txt.split(",".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray())
-        }
-        if (!TextUtils.isEmpty(tag)) {
-            tags = Arrays.asList(*tag.split(",".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray())
-        }
-        return Meme.createMeme(uri, ratio.toDouble(), Meme.MemeType.IMAGE, texts, tags)
+        var tags: List<String>? = getTags()
+        return Meme.createMeme(uri, ratio.toDouble(), Meme.MemeType.IMAGE, texts?.toList(), tags)
 
     }
+    fun getTags()=
+            tagsV.text.split(" ")
+                    .filter {it.startsWith("#") &&it.length>1}
+                    .map { it.substring(1) }
+                    .toList()
 }

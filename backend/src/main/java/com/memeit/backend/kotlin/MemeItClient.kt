@@ -56,4 +56,5 @@ class MemeItClient private constructor(val context: Context, val baseUrl: String
             return@Interceptor it.proceed(req.build())
         }
     }
+
 }

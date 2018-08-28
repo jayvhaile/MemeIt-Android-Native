@@ -23,10 +23,12 @@ import com.innov8.memeit.R;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
 
 /*
  * Created by Biruk on 5/11/2018.
@@ -181,5 +183,12 @@ public class CustomMethods {
                 view.setVisibility(view.getVisibility()==View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
             }
         });
+    }
+    public static String[]toArray(@NonNull List<String> list){
+        String sA[]=new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            sA[i]=list.get(i);
+        }
+        return sA;
     }
 }

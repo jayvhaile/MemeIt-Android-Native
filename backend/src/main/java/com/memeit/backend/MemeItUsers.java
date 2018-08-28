@@ -1,5 +1,7 @@
 package com.memeit.backend;
 
+import android.util.Log;
+
 import com.memeit.backend.dataclasses.Badge;
 import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.User;
@@ -114,7 +116,7 @@ public class MemeItUsers {
      **/
     public void getFollowerListFor(String uid, int skip, int limit, OnCompleteListener<List<User>> listener) {
         MemeItClient.getInstance().getInterface()
-                .getFollowersListForUser(skip,limit,uid)
+                .getFollowersListForUser(uid,skip,limit)
                 .enqueue(new MyCallBack<List<User>>(listener));
     }
 
@@ -127,8 +129,9 @@ public class MemeItUsers {
      * @param listener the Listener to be called when the action is completed
      **/
     public void getFollowingListFor(String uid, int skip, int limit, OnCompleteListener<List<User>> listener) {
+        Log.d("ufak", "getFollowingListFor: "+uid);
         MemeItClient.getInstance().getInterface()
-                .getFollowingListForUser(skip,limit,uid)
+                .getFollowingListForUser(uid,skip,limit)
                 .enqueue(new MyCallBack<List<User>>(listener));
     }
     /**

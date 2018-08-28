@@ -15,6 +15,7 @@ import com.innov8.memegenerator.models.TextProperty
 import com.innov8.memegenerator.models.TextStyleProperty
 import com.innov8.memegenerator.utils.getDrawableIdByName
 import com.innov8.memegenerator.utils.loadBitmap
+import com.innov8.memegenerator.utils.log
 
 /**
  * Created by Haile on 5/19/2018.
@@ -140,14 +141,14 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
                 y = (ch / 2f) - (h / 2f)
             }
 
-            val rect = Rect(x.toInt(), y.toInt(),x.toInt()+ w.toInt(), y.toInt()+h.toInt())
+            rect = Rect(x.toInt(), y.toInt(),x.toInt()+ w.toInt(), y.toInt()+h.toInt())
             canvas.drawBitmap(img, null, rect, null)
 
 
         }
         super.onDraw(canvas)
     }
-
+    var rect=Rect(0,0,0,0)
     override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
         val eleft: Int = this.paddingLeft
         val etop: Int = this.paddingTop
@@ -220,8 +221,32 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         selectedView?.setItemSelected(false)
         isDrawingCacheEnabled=true
         val bitmap= getDrawingCache(true).copy(Bitmap.Config.ARGB_8888,false)
+        log("view",width,height)
+        log("bitmap",bitmap.width,bitmap.height)
+
+        val rb=Bitmap.createBitmap(bitmap,rect.left,rect.top,
+                rect.right-rect.left,rect.bottom-rect.top)
+        log("bitmap",rb.width,rb.height)
+
         destroyDrawingCache()
-        return bitmap
+        return rb
     }
+    fun getRatio():Float{
+        val w=rect.right-rect.left
+        val h=rect.bottom-rect.top
+
+        return w.toFloat()/h
+    }
+    fun getTexts():List<String>{
+        val x= mutableListOf<String>()
+        for (i in 0 until childCount){
+            val v=getChildAt(i)
+            if( v is MemeTextView ){
+                x.add(v.text)
+            }
+        }
+        return x
+    }
+
 }
 

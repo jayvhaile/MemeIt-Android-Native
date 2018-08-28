@@ -3,6 +3,7 @@ package com.memeit.backend;
 import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.dataclasses.Reaction;
+import com.memeit.backend.dataclasses.Tag;
 import com.memeit.backend.utilis.MyCallBack;
 import com.memeit.backend.utilis.OnCompleteListener;
 
@@ -297,10 +298,10 @@ public class MemeItMemes {
      * @param limit    to limit the number of retrieved memes
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getPopularTags(String text, int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+    public void getPopularTags(String text, int skip, int limit, OnCompleteListener<List<Tag>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getPopularTags(text, skip, limit)
-                .enqueue(new MyCallBack<List<Meme>>(listener));
+                .enqueue(new MyCallBack<List<Tag>>(listener));
     }
     /**
      * this is to get list of trending tags(recent most used)
@@ -310,10 +311,10 @@ public class MemeItMemes {
      * @param listener the Listener to be called when the action is completed
      **/
 
-    public void getTrendingTags(int skip, int limit, OnCompleteListener<List<Meme>> listener) {
+    public void getTrendingTags(int skip, int limit, OnCompleteListener<List<Tag>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getTrendingTags(skip, limit)
-                .enqueue(new MyCallBack<List<Meme>>(listener));
+                .enqueue(new MyCallBack<List<Tag>>(listener));
     }
 
 

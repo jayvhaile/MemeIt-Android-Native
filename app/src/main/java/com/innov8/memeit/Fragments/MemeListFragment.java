@@ -34,19 +34,30 @@ public class MemeListFragment extends Fragment {
     private MemeAdapter memeAdapter;
 
     private MemeLoader emptyLoader = new EmptyLoader();
-    private MemeLoader memeLoader;
+    public MemeLoader memeLoader;
 
 
     private int skip;
 
     private byte memeAdapterType;
     private byte memeLoaderType;
+    private OnCompleteListener<List<Meme>> listener;
+    private OnCompleteListener<List<Meme>> refreshListener;
 
     public static MemeListFragment newInstance(byte memeAdapterType, byte memeLoaderType) {
         MemeListFragment fragment = new MemeListFragment();
         Bundle arg = new Bundle();
         arg.putByte("adapter_type", memeAdapterType);
         arg.putByte("loader_type", memeLoaderType);
+        fragment.setArguments(arg);
+        return fragment;
+    }
+    public static MemeListFragment newInstanceForUserPosts(String userID) {
+        MemeListFragment fragment = new MemeListFragment();
+        Bundle arg = new Bundle();
+        arg.putByte("adapter_type", MemeAdapter.GRID_ADAPTER);
+        arg.putByte("loader_type", MemeLoader.USER_POST_MEME_LOADER);
+        arg.putString("uid", userID);
         fragment.setArguments(arg);
         return fragment;
     }
@@ -64,8 +75,42 @@ public class MemeListFragment extends Fragment {
         memeAdapterType = getArguments().getByte("adapter_type", MemeAdapter.LIST_ADAPTER);
         memeLoaderType = getArguments().getByte("loader_type", MemeLoader.EMPTY_LOADER);
         memeAdapter = MemeAdapter.Companion.create(memeAdapterType, getContext());
-        memeLoader = MemeLoader.Companion.create(memeLoaderType,getContext());
+        if(memeLoaderType==MemeLoader.USER_POST_MEME_LOADER){
+            String uid=getArguments().getString("uid");
+            memeLoader = MemeLoader.Companion.create(memeLoaderType,getContext(),uid);
+        }else{
+            memeLoader = MemeLoader.Companion.create(memeLoaderType,getContext(),null);
+        }
+        listener = new OnCompleteListener<List<Meme>>() {
+            @Override
+            public void onSuccess(List<Meme> memeResponses) {
+                memeAdapter.setLoading(false);
+                memeAdapter.addAll(memeResponses);
+                incSkip();
+            }
+
+            @Override
+            public void onFailure(Error error) {
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                memeAdapter.setLoading(false);
+            }
+        };
+        refreshListener = new OnCompleteListener<List<Meme>>() {
+            @Override
+            public void onSuccess(List<Meme> memeResponses) {
+                swipeRefreshLayout.setRefreshing(false);
+                memeAdapter.setAll(memeResponses);
+                incSkip();
+            }
+
+            @Override
+            public void onFailure(Error error) {
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        };
     }
+
 
 
     @Override
@@ -117,46 +162,23 @@ public class MemeListFragment extends Fragment {
             }
         });
     }
-
+    private boolean refresh;
 
     private void load() {
         memeAdapter.setLoading(true);
-        memeLoader.load(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
-            @Override
-            public void onSuccess(List<Meme> memeResponses) {
-                memeAdapter.setLoading(false);
-                memeAdapter.addAll(memeResponses);
-                incSkip();
-            }
-
-            @Override
-            public void onFailure(Error error) {
-                if (getContext()==null)return;
-                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                memeAdapter.setLoading(false);
-            }
-        });
+        memeLoader.setListener(listener);
+        refresh=false;
+        memeLoader.load(skip, LIMIT);
     }
 
     private void refresh() {
         resetSkip();
         memeLoader.reset();
-        memeLoader.load(skip, LIMIT, new OnCompleteListener<List<Meme>>() {
-            @Override
-            public void onSuccess(List<Meme> memeResponses) {
-                swipeRefreshLayout.setRefreshing(false);
-                memeAdapter.setAll(memeResponses);
-                incSkip();
-            }
-
-            @Override
-            public void onFailure(Error error) {
-                if (getContext()==null)return;
-                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        memeLoader.setListener(refreshListener);
+        refresh=true;
+        memeLoader.load(skip, LIMIT);
     }
+
 
     private void resetSkip() {
         skip = 0;
@@ -166,4 +188,23 @@ public class MemeListFragment extends Fragment {
         skip += LIMIT;
     }
 
+
+    public void swapLoader(MemeLoader loader){
+        resetSkip();
+        memeAdapter.clear();
+        this.memeLoader=loader==null?emptyLoader:loader;
+        load();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        memeLoader.setListener(refresh?refreshListener:listener);
+    }
+
+    @Override
+    public void onStop() {
+        memeLoader.setListener(null);
+        super.onStop();
+    }
 }

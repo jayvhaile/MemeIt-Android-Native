@@ -55,8 +55,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        app:failureImage="@drawable/ic_sync_problem"
-        app:progressBarImage="@drawable/vector_anim"/>
+        app:failureImage="@drawable/ic_sync_problem"/>
 
     <View
         android:id="@+id/tint"
@@ -178,12 +177,26 @@
         android:layout_marginLeft="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meme_image"
+        app:layout_constraintTop_toBottomOf="@+id/fontTextView5"
         app:sparkbutton_activeImage="@mipmap/laughing"
         app:sparkbutton_iconSize="28dp"
         app:sparkbutton_inActiveImage="@mipmap/laughing"
-        app:sparkbutton_primaryColor="@color/spark_primary"
+        app:sparkbutton_primaryColor="@color/spark_primary_emoji"
         app:sparkbutton_secondaryColor="@color/spark_secondary" />
+
+    <com.innov8.memeit.CustomClasses.FontTextView
+        android:id="@+id/fontTextView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        android:textColor="#1394fd"
+        android:text="#programming  #funny_stuff"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/meme_image"
+        tools:visibility="gone"/>
 
     <com.innov8.memeit.CustomClasses.FontTextView
         android:id="@+id/meme_reactions"
@@ -200,11 +213,13 @@
         android:id="@+id/fav_button"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/react_button"
         app:layout_constraintEnd_toStartOf="@+id/meme_comment"
-        app:layout_constraintTop_toBottomOf="@+id/meme_image"
+        app:layout_constraintTop_toTopOf="@+id/react_button"
         app:sparkbutton_activeImage="@drawable/ic_favorite_red"
         app:sparkbutton_iconSize="28dp"
         app:sparkbutton_inActiveImage="@drawable/ic_favorite_black_24dp"
@@ -215,14 +230,12 @@
         android:id="@+id/meme_comment"
         android:layout_width="28dp"
         android:layout_height="28dp"
-        android:layout_marginTop="16dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="16dp"
         android:background="#0000"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/react_button"
         app:layout_constraintRight_toLeftOf="@+id/meme_comment_count"
-        app:layout_constraintTop_toBottomOf="@+id/meme_image"
+        app:layout_constraintTop_toTopOf="@+id/react_button"
         app:srcCompat="@drawable/ic_comment" />
 
     <TextView
