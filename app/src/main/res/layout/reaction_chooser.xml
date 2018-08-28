@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/laughing"
+        android:layout_width="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:src="@mipmap/laughing"
+        android:paddingRight="200dp"
+        android:paddingLeft="16dp"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/rofl"
+        android:layout_width="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:src="@mipmap/rofl"
+        android:paddingRight="200dp"
+        android:paddingLeft="16dp"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/neutral"
+        android:layout_width="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:src="@mipmap/neutral"
+        android:paddingRight="200dp"
+        android:paddingLeft="16dp"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/angry"
+        android:layout_width="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:src="@mipmap/angry"
+        android:paddingRight="200dp"
+        android:paddingLeft="16dp"
+        android:layout_height="wrap_content" />
+</LinearLayout>

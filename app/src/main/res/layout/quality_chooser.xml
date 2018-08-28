@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.innov8.memeit.CustomClasses.FontTextView
+        android:id="@+id/low"
+        android:layout_width="match_parent"
+        android:text="Low"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:paddingBottom="16dp"
+        android:layout_height="wrap_content" />
+<View
+    android:layout_width="match_parent"
+    android:background="#37000000"
+    android:layout_height="1dp"/>
+    <com.innov8.memeit.CustomClasses.FontTextView
+        android:layout_width="match_parent"
+        android:text="Medium"
+        android:id="@+id/medium"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:paddingBottom="16dp"
+        android:layout_height="wrap_content" />
+    <View
+        android:layout_width="match_parent"
+        android:background="#37000000"
+        android:layout_height="1dp"/>
+    <com.innov8.memeit.CustomClasses.FontTextView
+        android:layout_width="match_parent"
+        android:id="@+id/high"
+        android:text="High"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:paddingBottom="16dp"
+        android:layout_height="wrap_content" />
+    <View
+        android:layout_width="match_parent"
+        android:background="#37000000"
+        android:layout_height="1dp"/>
+</LinearLayout>

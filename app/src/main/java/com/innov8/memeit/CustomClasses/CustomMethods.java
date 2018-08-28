@@ -10,8 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -173,6 +176,18 @@ public class CustomMethods {
         }
 
     }
+
+    public static boolean deviceIsConnected(Context context){
+        ConnectivityManager cm =
+                (ConnectivityManager)
+                        context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean b = activeNetwork != null &&
+                        activeNetwork.isConnectedOrConnecting();
+        Log.w("Internet",b + "");
+        return b;
+    }
+
     public static int getScreenWidth(Context context){
         return context.getResources().getDisplayMetrics().widthPixels;
     }

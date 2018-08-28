@@ -30,7 +30,7 @@
         <activity android:name=".Activities.CommentsActivity" />
         <activity android:name=".Activities.ProfileNewActivity" />
         <activity android:name=".AboutActivity" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".Activities.SettingsActivity"></activity>
     </application>
 
 </manifest>
