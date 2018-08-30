@@ -12,7 +12,6 @@ import com.innov8.memegenerator.MemeChooser;
 import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.MemeLoader;
-import com.innov8.memeit.CustomClasses.SearchLoader;
 import com.innov8.memeit.CustomViews.BottomNavigation;
 import com.innov8.memeit.CustomViews.ChipSearchToolbar;
 import com.innov8.memeit.Fragments.MemeListFragment;
@@ -37,7 +36,7 @@ import androidx.viewpager.widget.ViewPager;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     BottomNavigation bottom_nav;
     Toolbar mToolbar;
@@ -112,13 +111,10 @@ public class MainActivity extends AppCompatActivity{
         findViewById(R.id.settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this,SettingsActivity.class));
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
     }
-
-
-
 
 
     private void initToolbar() {
@@ -129,7 +125,8 @@ public class MainActivity extends AppCompatActivity{
         bottom_nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                searchItem.collapseActionView();
+                if(searchItem.isActionViewExpanded())
+                    searchItem.collapseActionView();
                 switch (item.getItemId()) {
                     case R.id.menu_home:
                         setTitle(0);
@@ -167,32 +164,33 @@ public class MainActivity extends AppCompatActivity{
         if (viewPager.getCurrentItem() == 3)
             mToolbar.setTitle(name);
     }
-    private MemeLoader tempLoader;
-    private SearchLoader searchLoader;
+
 
     private void showSearch() {
 
         MemeListFragment frag = (MemeListFragment) pagerAdapter.fragments.get(viewPager.getCurrentItem());
-        tempLoader = frag.memeLoader;
-        frag.swapLoader(searchLoader);
+        frag.setSearchMode(true);
 
 
     }
-    private void closeSearch(){
+
+    private void closeSearch() {
 
         MemeListFragment frag = (MemeListFragment) pagerAdapter.fragments.get(viewPager.getCurrentItem());
-        frag.swapLoader(tempLoader);
+        frag.setSearchMode(false);
 
     }
 
 
     private ChipSearchToolbar searchToolbar;
     MenuItem searchItem;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_top_menu, menu);
 
         searchItem = menu.findItem(R.id.menu_search);
+
         searchToolbar = (ChipSearchToolbar) searchItem.getActionView();
 
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
@@ -211,23 +209,20 @@ public class MainActivity extends AppCompatActivity{
         searchToolbar.setOnSearch(new Function2<String, String[], Unit>() {
             @Override
             public Unit invoke(String s, String[] strings) {
-                if(searchLoader==null){
-                    searchLoader=new SearchLoader();
-                    MemeListFragment frag = (MemeListFragment) pagerAdapter.fragments.get(viewPager.getCurrentItem());
-                    frag.swapLoader(searchLoader);
-                }
-                searchLoader.search(s,strings,0,100);
+                MemeListFragment frag = (MemeListFragment) pagerAdapter.fragments.get(viewPager.getCurrentItem());
+                frag.search(s, strings);
                 return null;
             }
         });
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_notif:
-                startActivity(new Intent(this,MemeTemplateMaker.class));
+                startActivity(new Intent(this, MemeTemplateMaker.class));
         }
         return true;
     }

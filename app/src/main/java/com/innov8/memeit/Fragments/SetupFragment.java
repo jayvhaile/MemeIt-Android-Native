@@ -27,6 +27,8 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.Map;
 
+import okhttp3.ResponseBody;
+
 public class SetupFragment extends AuthFragment implements View.OnClickListener {
     public SetupFragment() {
     }
@@ -99,9 +101,9 @@ public class SetupFragment extends AuthFragment implements View.OnClickListener 
     //todo-jv: upload tags and username
     private void uploadData(String name, String image_url) {
         User user = new User(name, image_url);
-        MemeItUsers.getInstance().updateMyData(user, new OnCompleteListener<User>() {
+        MemeItUsers.getInstance().updateMyData(user, new OnCompleteListener<ResponseBody>() {
             @Override
-            public void onSuccess(User body) {
+            public void onSuccess(ResponseBody body) {
                 setLoading(false);
                 startActivity(new Intent(getContext(), MainActivity.class));
             }

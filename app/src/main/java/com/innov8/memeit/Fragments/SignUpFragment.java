@@ -19,6 +19,7 @@ public class SignUpFragment extends AuthFragment implements View.OnClickListener
     }
 
     EditText userNameV;
+    EditText emailV;
     EditText passwordV;
 
 
@@ -29,6 +30,7 @@ public class SignUpFragment extends AuthFragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.fragment_signup2, container, false);
 
         userNameV = view.findViewById(R.id.signup_username);
+        emailV = view.findViewById(R.id.signup_email);
         passwordV = view.findViewById(R.id.signup_password);
         actionButton = view.findViewById(R.id.signup_btn);
 
@@ -106,14 +108,17 @@ public class SignUpFragment extends AuthFragment implements View.OnClickListener
 
     private void signupWithUsername() {
         String username = userNameV.getText().toString();
+        String email = emailV.getText().toString();
         String password = passwordV.getText().toString();
         if (!CustomMethods.isUsernameValid(username)){
             getAuthActivity().showError("Username should at least be 5 in length!");
+        }else if(!CustomMethods.isEmailValid(email)){//todo change back to 8
+            getAuthActivity().showError("Invalid Email!");
         }else if(password.length() <= 1){//todo change back to 8
             getAuthActivity().showError("Password should at least be 8 in length!");
         }else{
             setLoading(true);
-            MemeItAuth.getInstance().signUpWithEmail(username, password, onCompleteListener);
+            MemeItAuth.getInstance().signUpWithUsername(username,email, password, onCompleteListener);
         }
     }
 }

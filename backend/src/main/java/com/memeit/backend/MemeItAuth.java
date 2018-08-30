@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import androidx.fragment.app.Fragment;
-import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -24,6 +22,7 @@ import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.io.IOException;
 
+import androidx.fragment.app.Fragment;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -38,11 +37,12 @@ public class MemeItAuth {
 
 
     public enum SignInMethod {
-        EMAIL, GOOGLE, FACEBOOK;
+        USERNAME, GOOGLE, FACEBOOK;
     }
 
     public static final int GOOGLE_SIGNIN_REQUEST_CODE = 6598;
     private static final String PREFERENCE_TOKEN = "__token__";
+    private static final String PREFERENCE_UID = "__uid__";
     private static final String PREFERENCE_SIGNIN_METHOD = "__signin_method__";
     static final String PREFERENCE_USER_DATA_SAVED = "__user_data_saved__";
     private Context mContext;
@@ -66,10 +66,8 @@ public class MemeItAuth {
 
     public boolean isSignedIn() {
         boolean tokenExists = preferences.getString(PREFERENCE_TOKEN, null) != null;
-        Log.d(TAG, "isSignedIn: "+tokenExists);
         if (!tokenExists) return false;
         SignInMethod method = getSignedInMethod();
-        Log.d(TAG, "isSignedIn: "+method.toString());
         if (method == null) return false;
         if (method == SignInMethod.GOOGLE)
             return GoogleSignIn.getLastSignedInAccount(mContext) != null;
@@ -120,8 +118,8 @@ public class MemeItAuth {
 
     public static final String TAG = "MemeItAuth";
 
-    public void signUpWithEmail(String email, String password, final OnCompleteListener<Void> listener) {
-        AuthInfo user = new AuthInfo(email, password);
+    public void signUpWithUsername(String username,String email, String password, final OnCompleteListener<Void> listener) {
+        AuthInfo user = new AuthInfo(username,email, password);
         MemeItClient.getInstance().getInterface()
                 .signUpWithEmail(user)
                 .enqueue(new MyCallBack2<AuthToken, Void>(listener) {
@@ -129,7 +127,7 @@ public class MemeItAuth {
                     public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                         if (response.isSuccessful()) {
                             AuthToken token = response.body();
-                            setSignedIn(SignInMethod.EMAIL, token.getToken());
+                            setSignedIn(SignInMethod.USERNAME, token);
                             checkAndFireSuccess(listener, null);
                         } else {
                             checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
@@ -139,8 +137,8 @@ public class MemeItAuth {
     }
 
 
-    public void signInWithEmail(String email, String password, final OnCompleteListener<Void> listener) {
-        AuthInfo user = new AuthInfo(email, password);
+    public void signInWithUsername(String username, String password, final OnCompleteListener<Void> listener) {
+        AuthInfo user = new AuthInfo(username, password);
         MemeItClient.getInstance().getInterface()
                 .loginWithEmail(user)
                 .enqueue(new MyCallBack2<AuthToken, Void>(listener) {
@@ -148,7 +146,7 @@ public class MemeItAuth {
                     public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                         if (response.isSuccessful()) {
                             AuthToken token = response.body();
-                            setSignedIn(SignInMethod.EMAIL, token.getToken());
+                            setSignedIn(SignInMethod.USERNAME, token);
                             checkAndFireSuccess(listener, null);
                         } else {
                             checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
@@ -180,7 +178,7 @@ public class MemeItAuth {
         try {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             final GoogleSignInAccount account = task.getResult(ApiException.class);
-            AuthInfo user = new AuthInfo(account.getEmail(), account.getId());
+            AuthInfo user = new AuthInfo(account.getEmail(), account.getId(),(Void) null);
             MemeItClient.getInstance().getInterface()
                     .loginWithGoogle(user)
                     .enqueue(new MyCallBack2<AuthToken, Void>(listener) {
@@ -188,7 +186,7 @@ public class MemeItAuth {
                         public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                             if (response.isSuccessful()) {
                                 AuthToken token = response.body();
-                                setSignedIn(SignInMethod.GOOGLE, token.getToken());
+                                setSignedIn(SignInMethod.GOOGLE, token);
                                 checkAndFireSuccess(listener, null);
                             } else {
                                 //todo sign out from google
@@ -216,7 +214,7 @@ public class MemeItAuth {
         try {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             final GoogleSignInAccount account = task.getResult(ApiException.class);
-            AuthInfo user = new AuthInfo(account.getEmail(), account.getId(),null);
+            AuthInfo user = new AuthInfo(account.getEmail(), account.getId(),(Void) null);
             MemeItClient.getInstance().getInterface()
                     .signUpWithGoogle(user)
                     .enqueue(new MyCallBack2<AuthToken, User>(listener) {
@@ -224,7 +222,7 @@ public class MemeItAuth {
                         public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                             if (response.isSuccessful()) {
                                 AuthToken token = response.body();
-                                setSignedIn(SignInMethod.GOOGLE, token.getToken());
+                                setSignedIn(SignInMethod.GOOGLE, token);
                                 Uri u=account.getPhotoUrl();
                                 String url=u==null?null:u.toString();
                                 User user = new User(account.getDisplayName(),url);
@@ -255,21 +253,27 @@ public class MemeItAuth {
         //todo: jv -implement sign in with facebook
     }
 
-    private void setSignedIn(SignInMethod signInMethod, String token) {
+    private void setSignedIn(SignInMethod signInMethod, AuthToken token) {
         preferences.edit()
-                .putString(PREFERENCE_TOKEN, token)
+                .putString(PREFERENCE_TOKEN, token.getToken())
+                .putString(PREFERENCE_UID, token.getUid())
                 .putString(PREFERENCE_SIGNIN_METHOD, signInMethod.toString())
                 .apply();
     }
     public String getToken(){
         return preferences.getString(PREFERENCE_TOKEN,null);
     }
+    public String getUserID(){
+        return preferences.getString(PREFERENCE_UID,null);
+    }
 
     public void signOut() {
         preferences.edit()
                 .remove(PREFERENCE_TOKEN)
+                .remove(PREFERENCE_UID)
                 .remove(PREFERENCE_SIGNIN_METHOD)
                 .remove(PREFERENCE_USER_DATA_SAVED)
                 .apply();
+        //todo clear cache
     }
 }

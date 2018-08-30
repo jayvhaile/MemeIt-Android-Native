@@ -11,7 +11,6 @@ import com.innov8.memegenerator.adapters.MyViewHolder
 import com.innov8.memeit.R
 import com.memeit.backend.dataclasses.Tag
 import java.util.*
-import kotlin.collections.HashSet
 
 class TagSuggestionAdapter(val context: Context) : RecyclerView.Adapter<TagSuggestionAdapter.TagViewHolder>() {
 
@@ -29,7 +28,7 @@ class TagSuggestionAdapter(val context: Context) : RecyclerView.Adapter<TagSugge
     var OnDataChange: ((MutableList<Tag>) -> Unit)? = null
 
     init {
-        items = HashSet()
+        items = hashSetOf()
         filteredItems = ArrayList()
     }
 

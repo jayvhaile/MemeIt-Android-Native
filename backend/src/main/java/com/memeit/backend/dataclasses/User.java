@@ -7,6 +7,7 @@ public class User {
     private String uid;
     private String name;
     private String pic;
+    private String cpic;
     private int followerCount;
     private int followingCount;
     private int postCount;
@@ -28,6 +29,9 @@ public class User {
 
     public String getImageUrl() {
         return pic;
+    }
+    public String getCoverImageUrl() {
+        return cpic;
     }
 
     public int getFollowerCount() {

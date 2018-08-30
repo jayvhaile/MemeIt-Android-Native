@@ -4,7 +4,9 @@ import android.util.Log;
 
 import com.memeit.backend.dataclasses.Badge;
 import com.memeit.backend.dataclasses.Notification;
+import com.memeit.backend.dataclasses.Tag;
 import com.memeit.backend.dataclasses.User;
+import com.memeit.backend.dataclasses.Username;
 import com.memeit.backend.utilis.MyCallBack;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.memeit.backend.utilis.PrefUtils;
@@ -194,12 +196,12 @@ public class MemeItUsers {
      * @param user     the updated user data
      * @param listener the Listener to be called when the action is completed
      **/
-    public void updateMyData(User user, final OnCompleteListener<User> listener) {
+    public void updateMyData(User user, final OnCompleteListener<ResponseBody> listener) {
         MemeItClient.getInstance().getInterface()
                 .uploadUserData(user)
-                .enqueue(new MyCallBack<User>(listener) {
+                .enqueue(new MyCallBack<ResponseBody>(listener) {
                     @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
                             PrefUtils.get().edit()
                                     .putBoolean(PREFERENCE_USER_DATA_SAVED, true)
@@ -246,6 +248,58 @@ public class MemeItUsers {
         MemeItClient.getInstance().getInterface()
                 .deleteMe()
                 .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+
+    public void isUsernameAvailable(String username,OnCompleteListener<Username> listener){
+        MemeItClient.getInstance().getInterface()
+                .isUsernameAvailable(username)
+                .enqueue(new MyCallBack<Username>(listener));
+    }
+    public void updateUsername(String username,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .updateUsername(username)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+    public void updatePassword(String password,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .updatePassword(password)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+    public void updateName(String name,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .updateName(name)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+    public void updateProfilePic(String url,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .updateProfilePic(url)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+    public void updateCoverPic(String url,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .updateCoverPic(url)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+    public void setFollowingTags(String [] tags,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .setFollowingTags(tags)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+
+    public void followTags(String [] tags,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .followTags(tags)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+    public void unFollowTags(String  tag,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .unfollowTag(tag)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+    public void getFollowingTags(OnCompleteListener<List<Tag>> listener){
+        MemeItClient.getInstance().getInterface()
+                .getMyTags()
+                .enqueue(new MyCallBack<List<Tag>>(listener));
     }
 
 }

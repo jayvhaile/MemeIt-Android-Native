@@ -101,7 +101,7 @@ public class LoginFragment extends AuthFragment implements View.OnClickListener 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    MemeItAuth.getInstance().signInWithEmail(username, password, signInCompletedListener);
+                    MemeItAuth.getInstance().signInWithUsername(username, password, signInCompletedListener);
 
                 }
             }, 2000);

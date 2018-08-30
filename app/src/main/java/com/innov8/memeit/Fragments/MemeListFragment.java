@@ -2,18 +2,23 @@ package com.innov8.memeit.Fragments;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.innov8.memegenerator.utils.UtilKt;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.EmptyLoader;
 import com.innov8.memeit.CustomClasses.MemeLoader;
+import com.innov8.memeit.CustomClasses.SearchLoader;
 import com.innov8.memeit.R;
+import com.memeit.backend.dataclasses.HomeElement;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.utilis.OnCompleteListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -34,7 +39,7 @@ public class MemeListFragment extends Fragment {
     private MemeAdapter memeAdapter;
 
     private MemeLoader emptyLoader = new EmptyLoader();
-    public MemeLoader memeLoader;
+    private MemeLoader memeLoader;
 
 
     private int skip;
@@ -52,6 +57,7 @@ public class MemeListFragment extends Fragment {
         fragment.setArguments(arg);
         return fragment;
     }
+
     public static MemeListFragment newInstanceForUserPosts(String userID) {
         MemeListFragment fragment = new MemeListFragment();
         Bundle arg = new Bundle();
@@ -74,13 +80,6 @@ public class MemeListFragment extends Fragment {
             throw new NullPointerException("Argument should not be null");
         memeAdapterType = getArguments().getByte("adapter_type", MemeAdapter.LIST_ADAPTER);
         memeLoaderType = getArguments().getByte("loader_type", MemeLoader.EMPTY_LOADER);
-        memeAdapter = MemeAdapter.Companion.create(memeAdapterType, getContext());
-        if(memeLoaderType==MemeLoader.USER_POST_MEME_LOADER){
-            String uid=getArguments().getString("uid");
-            memeLoader = MemeLoader.Companion.create(memeLoaderType,getContext(),uid);
-        }else{
-            memeLoader = MemeLoader.Companion.create(memeLoaderType,getContext(),null);
-        }
         listener = new OnCompleteListener<List<Meme>>() {
             @Override
             public void onSuccess(List<Meme> memeResponses) {
@@ -111,32 +110,43 @@ public class MemeListFragment extends Fragment {
         };
     }
 
+    private void initLoader() {
+        if (searchMode && searchLoader == null) {
+            searchLoader = new SearchLoader();
+        }
+        if (memeLoader == null)
+            if (memeLoaderType == MemeLoader.USER_POST_MEME_LOADER) {
+                String uid = getArguments().getString("uid");
+                memeLoader = MemeLoader.Companion.create(memeLoaderType, getContext(), uid);
+            } else {
+                memeLoader = MemeLoader.Companion.create(memeLoaderType, getContext(), null);
+            }
+    }
+
+
+    private void initAdapter() {
+        if (memeAdapter == null)
+            memeAdapter = MemeAdapter.Companion.create(memeAdapterType, getContext());
+    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (memeAdapter == null) throw new NullPointerException("MemeAdapter Should be provided");
-        if (memeLoader == null) throw new NullPointerException("MemeLoader Should be provided");
         View view = inflater.inflate(R.layout.fragment_meme_list, container, false);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        initAdapter();
+        initLoader();
         swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh);
         memeList = view.findViewById(R.id.meme_recycler_view);
-        setupUI();
-        load();
-    }
-
-
-    private void setupUI() {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                memeAdapter.setLoading(false);
-                refresh();
+                refresh(false);
             }
         });
         memeList.setLayoutManager(memeAdapter.createLayoutManager());
@@ -147,37 +157,26 @@ public class MemeListFragment extends Fragment {
         memeList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(disableScrollListener)return;
                 super.onScrolled(recyclerView, dx, dy);
                 RecyclerView.LayoutManager llm = memeList.getLayoutManager();
                 int visibleItemCount = llm.getChildCount();
                 int totalItemCount = llm.getItemCount();
                 int fp = ((LinearLayoutManager) llm).findFirstVisibleItemPosition();
-
                 if (!memeAdapter.getLoading()) {//todo jv add isLastPage checker
                     if (visibleItemCount + fp >= totalItemCount && fp >= 0) {
+                        UtilKt.log("SCROLL LOAD");
                         load();
                     }
                 }
                 //todo load more at the end
             }
         });
+        load();
     }
+
+
     private boolean refresh;
-
-    private void load() {
-        memeAdapter.setLoading(true);
-        memeLoader.setListener(listener);
-        refresh=false;
-        memeLoader.load(skip, LIMIT);
-    }
-
-    private void refresh() {
-        resetSkip();
-        memeLoader.reset();
-        memeLoader.setListener(refreshListener);
-        refresh=true;
-        memeLoader.load(skip, LIMIT);
-    }
 
 
     private void resetSkip() {
@@ -189,22 +188,102 @@ public class MemeListFragment extends Fragment {
     }
 
 
-    public void swapLoader(MemeLoader loader){//todo analayze this
+    SearchLoader searchLoader;
+    List<HomeElement> tempList;
+    int tempSkip;
+
+    boolean searchMode;
+
+    String searchText;
+    String[] searchTags;
+    boolean disableScrollListener;
+    public void setSearchMode(boolean searchMode) {
+        disableScrollListener =true;
+        if (!this.searchMode&&searchMode) {
+            searchLoader=new SearchLoader();
+            tempList = new ArrayList<>(memeAdapter.getItems());
+            memeAdapter.clear();
+            UtilKt.log("searchmode true");
+            tempSkip = skip;
+            skip = 0;
+        } else if(this.searchMode&&!searchMode){
+            searchLoader = null;
+            searchText = null;
+            searchTags = null;
+            UtilKt.log("searchmode false");
+            memeAdapter.setAll(new ArrayList<>(tempList));
+            skip = tempSkip;
+            tempSkip=0;
+            tempList=null;
+        }
+        enableScrollListenerLater();
+        this.searchMode = searchMode;
+    }
+
+    private void enableScrollListenerLater() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                disableScrollListener =false;
+            }
+        },100);
+    }
+
+    private void load() {
+        disableScrollListener=true;
+        memeAdapter.setLoading(true);
+        refresh = false;
+        if (searchMode) {
+            searchLoader.setListener(listener);
+            searchLoader.search(searchText, searchTags, skip, LIMIT);
+        }else{
+            memeLoader.setListener(listener);
+            memeLoader.load(skip, LIMIT);
+        }
+        enableScrollListenerLater();
+
+
+    }
+
+    private void refresh(boolean setLoading) {
+        disableScrollListener=true;
         resetSkip();
-        memeAdapter.clear();
-        this.memeLoader=loader==null?emptyLoader:loader;
-        load();
+        memeAdapter.setLoading(setLoading);
+        refresh = true;
+        if(searchMode){
+            searchLoader.reset();
+            searchLoader.setListener(refreshListener);
+            searchLoader.search(searchText, searchTags, skip, LIMIT);
+        }else{
+            memeLoader.reset();
+            memeLoader.setListener(refreshListener);
+            memeLoader.load(skip, LIMIT);
+        }
+        enableScrollListenerLater();
+    }
+
+    public void search(String s, String tags[]) {
+        UtilKt.log("SEARCH");
+        if (searchMode) {
+            searchText = s;
+            searchTags = tags;
+            refresh(true);
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        memeLoader.setListener(refresh?refreshListener:listener);
+        if(searchMode)
+            searchLoader.setListener(refresh ? refreshListener : listener);
+        else
+            memeLoader.setListener(refresh ? refreshListener : listener);
     }
 
     @Override
     public void onStop() {
-        memeLoader.setListener(null);
+        if (memeLoader!= null) memeLoader.setListener(null);
+        if (searchMode&&searchLoader!= null) searchLoader.setListener(null);
         super.onStop();
     }
 }

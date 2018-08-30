@@ -2,16 +2,12 @@ package com.innov8.memeit.Adapters
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Handler
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.TextPaint
 import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
@@ -23,12 +19,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.cloudinary.android.MediaManager
 import com.facebook.drawee.view.SimpleDraweeView
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
 import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
+import com.innov8.memeit.Adapters.ListMemeAdapter.Companion.activeRID
 import com.innov8.memeit.CustomClasses.CustomMethods
 import com.innov8.memeit.CustomClasses.ImageUtils
 import com.innov8.memeit.CustomClasses.LoadingDrawable
@@ -37,6 +35,7 @@ import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.*
 import com.memeit.backend.utilis.OnCompleteListener
+import com.stfalcon.frescoimageviewer.ImageViewer
 import com.varunest.sparkbutton.SparkButton
 import okhttp3.ResponseBody
 
@@ -54,6 +53,7 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
         }
 
         const val LOADING_TYPE = 5864
+
     }
 
     var loading: Boolean = false
@@ -88,6 +88,7 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
 
     fun clear() {
         items.clear()
+        log("setSe","cleared")
         notifyDataSetChanged()
     }
 
@@ -106,8 +107,23 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
                     //do nothing here
                 }
             }
-        } else
-            createHolder(parent, viewType)
+        } else {
+            val memeViewHolder = createHolder(parent, viewType)
+            memeViewHolder.memeClickedListener = {
+                val list: List<Meme> = items.filter { it is Meme }
+                        .map { it as Meme }
+                        .toList()
+                ImageViewer.Builder<Meme>(context, list)
+                        .setFormatter {
+                            MediaManager.get()
+                                    .url()
+                                    .source(it.memeImageUrl)
+                                    .generate()
+                        }.setStartPosition(it)
+                        .show()
+            }
+            memeViewHolder
+        }
     }
 
     override fun getItemCount(): Int = items.size + if (loading) 1 else 0
@@ -131,6 +147,10 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
 }
 
 class ListMemeAdapter(context: Context) : MemeAdapter(context) {
+    companion object {
+        val activeRID = intArrayOf(R.mipmap.laughing, R.mipmap.rofl, R.mipmap.neutral, R.mipmap.angry)
+    }
+
     override fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
         if (viewType != MEME_TYPE)
             throw IllegalStateException("View Type must only be MEME_TYPE in ListMemeAdapter")
@@ -191,6 +211,7 @@ class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
 
 abstract class MemeViewHolder(itemView: View, val memeAdapter: MemeAdapter) : RecyclerView.ViewHolder(itemView) {
     var itemPosition = 0
+    var memeClickedListener: ((Int) -> Unit)? = null
     abstract fun bind(homeElement: HomeElement)
 }
 
@@ -205,11 +226,12 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
     private val reactButton: SparkButton = itemView.findViewById(R.id.react_button)
     private val favButton: SparkButton = itemView.findViewById(R.id.fav_button)
     private val reactGroup: Group = itemView.findViewById(R.id.react_group)
-    private val memeTags:TextView=itemView.findViewById(R.id.meme_tags)
+    private val memeTags: TextView = itemView.findViewById(R.id.meme_tags)
     private lateinit var memeId: String
 
     init {
         memeImageV.hierarchy.setProgressBarImage(LoadingDrawable())
+        memeImageV.setOnClickListener { memeClickedListener?.invoke(itemPosition) }
         commentBtnV.setOnClickListener {
             val meme = memeAdapter.getMemeByID(memeId)
                     ?: throw IllegalStateException("Meme Should not be null")
@@ -224,25 +246,25 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
             memeAdapter.context.startActivity(i)
         }
 
-        val reactListener = View.OnClickListener { view ->
+        val reactListener = OnClickListener { view ->
             var reactionType: Reaction.ReactionType? = null
             var reactRes = 0
             when (view.id) {
                 R.id.react_funny -> {
                     reactionType = Reaction.ReactionType.FUNNY
-                    reactRes = R.mipmap.laughing
+                    reactRes = activeRID[0]
                 }
                 R.id.react_veryfunny -> {
                     reactionType = Reaction.ReactionType.VERY_FUNNY
-                    reactRes = R.mipmap.rofl
+                    reactRes = activeRID[1]
                 }
                 R.id.react_stupid -> {
                     reactionType = Reaction.ReactionType.STUPID
-                    reactRes = R.mipmap.neutral
+                    reactRes = activeRID[2]
                 }
                 R.id.react_angry -> {
                     reactionType = Reaction.ReactionType.ANGERING
-                    reactRes = R.mipmap.angry
+                    reactRes = activeRID[3]
                 }
             }
             react(reactionType, reactRes)
@@ -264,38 +286,53 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
         favButton.isChecked = false
         favButton.setOnClickListener {
             val meme = getCurrentMeme()
-            MemeItMemes.getInstance().addToFavourites(meme.memeId, object : OnCompleteListener<ResponseBody> {
-                override fun onSuccess(responseBody: ResponseBody) {
-                    favButton.playAnimation()
-                    favButton.isChecked = true
-                }
+            if (meme.isMyFavourite)
+                MemeItMemes.getInstance().removeFromFavourites(meme.memeId, object : OnCompleteListener<ResponseBody> {
+                    override fun onSuccess(responseBody: ResponseBody) {
+                        meme.isMyFavourite = false
+                        favButton.isChecked = false
+                    }
 
-                override fun onFailure(error: OnCompleteListener.Error) {
-                    Toast.makeText(this@MemeListViewHolder.memeAdapter.context, "favourite failed\n" + error.message, Toast.LENGTH_SHORT).show()
-                }
-            })
+                    override fun onFailure(error: OnCompleteListener.Error) {
+                        Toast.makeText(this@MemeListViewHolder.memeAdapter.context, "favourite failed\n" + error.message, Toast.LENGTH_SHORT).show()
+                    }
+                })
+            else
+                MemeItMemes.getInstance().addToFavourites(meme.memeId, object : OnCompleteListener<ResponseBody> {
+                    override fun onSuccess(responseBody: ResponseBody) {
+                        meme.isMyFavourite = true
+                        favButton.playAnimation()
+                        favButton.isChecked = true
+                    }
+
+                    override fun onFailure(error: OnCompleteListener.Error) {
+                        Toast.makeText(this@MemeListViewHolder.memeAdapter.context, "favourite failed\n" + error.message, Toast.LENGTH_SHORT).show()
+                    }
+                })
+
         }
         memeMenu.setOnClickListener { showMemeMenu() }
-        memeTags.movementMethod=LinkMovementMethod.getInstance()
-        memeTags.setOnClickListener {showFollowDialog()}
+        memeTags.movementMethod = LinkMovementMethod.getInstance()
+        memeTags.setOnClickListener { showFollowDialog() }
 
     }
-    private fun showFollowDialog(){
-        val meme=getCurrentMeme()
+
+    private fun showFollowDialog() {
+        val meme = getCurrentMeme()
         MaterialDialog.Builder(memeAdapter.context)
-                .items(meme.tags.map {"#$it"})
-                .itemsCallbackMultiChoice(null) {
-                    _, _, _ ->
+                .items(meme.tags.map { "#$it" })
+                .itemsCallbackMultiChoice(null) { _, _, _ ->
                     true
                 }
                 .positiveText("Follow")
                 .negativeText("Cancel")
                 .onPositive { dialog, which ->
-                    val si=dialog.selectedIndices
-                    val selectedTags=meme.tags.filterIndexed { index, _ ->
-                        si?.contains(index)?:false
-                    }.toList()
+                    val si = dialog.selectedIndices
+                    val selectedTags = meme.tags.filterIndexed { index, _ ->
+                        si?.contains(index) ?: false
+                    }.toTypedArray()
                     log(selectedTags)
+                    MemeItUsers.getInstance().followTags(selectedTags,null)
                 }
                 .show()
     }
@@ -303,8 +340,11 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
     private fun react(reactionType: Reaction.ReactionType?, finalReactRes: Int) {
         MemeItMemes.getInstance().reactToMeme(Reaction.create(reactionType, memeId), object : OnCompleteListener<ResponseBody> {
             override fun onSuccess(responseBody: ResponseBody) {
-                reactButton.setActiveImage(finalReactRes)
+                log(activeRID)
+                log(finalReactRes)
+                getCurrentMeme().myReaction = Reaction.create(reactionType, null)
                 reactButton.playAnimation()
+                reactButton.setActiveImage(finalReactRes)
             }
 
             override fun onFailure(error: OnCompleteListener.Error) {
@@ -318,7 +358,6 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
         val v = if (reactGroup.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         reactGroup.visibility = v
     }
-
     override fun bind(homeElement: HomeElement) {
         val meme = homeElement as Meme
         reactGroup.visibility = View.GONE
@@ -329,51 +368,20 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
         ImageUtils.loadImageFromCloudinaryTo(posterPicV, meme.poster.profileUrl)
         adjust(meme.memeImageRatio)
         ImageUtils.loadImageFromCloudinaryTo(memeImageV, meme.memeImageUrl)
-        meme.tags.forEach{
-            log(it)
+        if (meme.tags.isEmpty()) {
+            memeTags.visibility = View.GONE
+        } else {
+            memeTags.visibility = View.VISIBLE
+            memeTags.text = meme.tags.joinToString(", ") { "#$it" }
         }
-        if(meme.tags.isEmpty()){
-            memeTags.visibility=View.GONE
-        }else{
-            memeTags.visibility=View.VISIBLE
-
-            handleTag(meme.tags)
+        if (meme.myReaction !== null) {
+            reactButton.setActiveImage(activeRID[meme.myReaction.type.ordinal])
+            reactButton.isChecked = true
+        } else {
+            reactButton.isChecked = false
         }
+        favButton.isChecked = meme.isMyFavourite
 
-    }
-
-    class MyClickableSpan(val onClick:()->Unit):ClickableSpan(){
-        val color= Color.rgb(19,148,253)
-        override fun onClick(widget: View?) {
-           onClick()
-        }
-
-        override fun updateDrawState(ds: TextPaint) {
-            ds.color=color
-            ds.isUnderlineText= false
-        }
-    }
-    fun handleTag(tags:List<String>){
-        val spanBuilder=SpannableStringBuilder()
-        tags.map {"#$it"}
-                .forEachIndexed {i,it->
-                    val si=spanBuilder.length
-                    spanBuilder.append(it)
-                    val span=MyClickableSpan{
-                        MaterialDialog.Builder(memeAdapter.context)
-                                .title("Do you want to follow this tag?")
-                                .content(it)
-                                .contentColor(Color.rgb(19,148,253))
-                                .positiveText("Follow")
-                                .negativeText("Cancel")
-                                .onPositive { _, _->
-                                    //todo follow tag
-                                }.show()
-                    }
-                    spanBuilder.setSpan(span,si,spanBuilder.length,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                    if(i+1<tags.size)spanBuilder.append(", ")
-                }
-        memeTags.setText(spanBuilder,TextView.BufferType.SPANNABLE)
     }
 
 
@@ -411,8 +419,6 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
             }
             false
         })
-
-
         menu.show()
     }
 
@@ -423,11 +429,14 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
 
 class MemeGridViewHolder(itemView: View, memeAdapter: MemeAdapter, screen_width: Int) : MemeViewHolder(itemView, memeAdapter) {
     private val memeImageV: SimpleDraweeView = itemView.findViewById(R.id.meme_image)
+
     init {
         val width = screen_width / GridMemeAdapter.GRID_SPAN_COUNT
         val lp = FrameLayout.LayoutParams(width, width)
         memeImageV.layoutParams = lp
+        memeImageV.setOnClickListener { memeClickedListener?.invoke(itemPosition) }
     }
+
     override fun bind(homeElement: HomeElement) {
         val meme = homeElement as Meme
         ImageUtils.loadImageFromCloudinaryTo(memeImageV, meme.memeImageUrl)

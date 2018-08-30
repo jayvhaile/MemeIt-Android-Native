@@ -43,6 +43,10 @@ public class Meme  implements Parcelable,HomeElement {
     private Double point;
     @SerializedName("type")
     private String type;
+    @SerializedName("fav")
+    private boolean isMyFavourite;
+    @SerializedName("mr")
+    private Reaction[] myReaction;
 
 
     public static Meme createMeme(String memeImageUrl,double memeImageRatio, MemeType type) {
@@ -113,7 +117,9 @@ public class Meme  implements Parcelable,HomeElement {
         parcel.writeLong(commentCount);
         parcel.writeDouble(point);
         parcel.writeDouble(memeImageRatio);
+        parcel.writeByte((byte) (isMyFavourite ? 1 : 0));
         parcel.writeParcelable(poster, i);
+        parcel.writeParcelable(getMyReaction(),i);
     }
 
     protected Meme(Parcel in) {
@@ -126,7 +132,10 @@ public class Meme  implements Parcelable,HomeElement {
         commentCount = in.readLong();
         point = in.readDouble();
         memeImageRatio = in.readDouble();
+        isMyFavourite=in.readByte() != 0;
         poster = in.readParcelable(Poster.class.getClassLoader());
+        Reaction r=in.readParcelable(Reaction.class.getClassLoader());
+        setMyReaction(r);
     }
 
     public static final Creator<Meme> CREATOR = new Creator<Meme>() {
@@ -191,6 +200,23 @@ public class Meme  implements Parcelable,HomeElement {
 
     public double getMemeImageRatio() {
         return memeImageRatio==null?1.0:memeImageRatio;
+    }
+
+    public boolean isMyFavourite() {
+        return isMyFavourite;
+    }
+
+    public Reaction getMyReaction() {
+        if(myReaction==null ||myReaction.length==0)return null;
+        return myReaction[0];
+    }
+
+    public void setMyFavourite(boolean myFavourite) {
+        isMyFavourite = myFavourite;
+    }
+
+    public void setMyReaction(Reaction myReaction) {
+        this.myReaction = new Reaction[]{myReaction};
     }
 
     @Override

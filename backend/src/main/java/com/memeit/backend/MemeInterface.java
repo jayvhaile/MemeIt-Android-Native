@@ -9,6 +9,7 @@ import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.Reaction;
 import com.memeit.backend.dataclasses.Tag;
 import com.memeit.backend.dataclasses.User;
+import com.memeit.backend.dataclasses.Username;
 
 import java.util.List;
 
@@ -38,12 +39,20 @@ interface MemeInterface {
     @POST("auth/signup")
     public Call<AuthToken> signUpWithEmail(@Body AuthInfo user);
 
+
+
     @POST("auth/signup/google")
     public Call<AuthToken> signUpWithGoogle(@Body AuthInfo user);
 
     @DELETE("user/me")
     public Call<AuthToken> deleteMe(@Body AuthInfo user);
 
+    @GET("auth/username")
+    public Call<Username> isUsernameAvailable(@Query("username") String username);
+    @PUT("auth/username")
+    public Call<ResponseBody> updateUsername(@Body String username);
+    @PUT("auth/password")
+    public Call<ResponseBody> updatePassword(@Body String password);
 
     //=========================User Related=====================================================
     //------GET------
@@ -73,6 +82,8 @@ interface MemeInterface {
     public Call<List<User>> getFollowingListForUser(@Path("id") String uid,
                                                     @Query("skip") int skip,
                                                     @Query("limit") int limit);
+    @GET("user/me/tags")
+    public Call<List<Tag>> getMyTags();
 
 
     @GET("user/me/notifications")
@@ -101,8 +112,25 @@ interface MemeInterface {
 
 
     //------PUT------
-    @PUT("user/me")
-    public Call<User> uploadUserData(@Body User user);
+    @PUT("user/me/setup")
+    public Call<ResponseBody> uploadUserData(@Body User user);
+
+    @PUT("user/me/name")
+    public Call<ResponseBody> updateName(@Body String name);
+    @PUT("user/me/profile_pic")
+    public Call<ResponseBody> updateProfilePic(@Body String pic);
+    @PUT("user/me/cover_pic")
+    public Call<ResponseBody> updateCoverPic(@Body String cpic);
+
+    @POST("user/me/follow_tags")
+    public Call<ResponseBody> setFollowingTags(@Body String [] tags);
+
+    @PUT("user/me/follow_tags")
+    public Call<ResponseBody> followTags(@Body String [] tags);
+
+    @DELETE("user/me/follow_tags")
+    public Call<ResponseBody> unfollowTag(@Body String tag);
+
 
     @PUT("user/me/notifications/markseenall")
     public Call<ResponseBody> markNotificationSeen();

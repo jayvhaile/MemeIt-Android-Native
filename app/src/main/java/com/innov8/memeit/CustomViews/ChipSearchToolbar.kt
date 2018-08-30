@@ -2,6 +2,7 @@ package com.innov8.memeit.CustomViews
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -70,7 +71,9 @@ class ChipSearchToolbar : LinearLayout,MenuItem.OnActionExpandListener{
         val list: RecyclerView = v.findViewById(R.id.sug_list)
         popupWindow = PopupWindow(v, 280.fromDP(context), 180.fromDP(context))
 
-        popupWindow.elevation = 2.fromDP(context).toFloat()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            popupWindow.elevation = 2.fromDP(context).toFloat()
+        }
         list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         list.adapter = adapter
 

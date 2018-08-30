@@ -16,6 +16,7 @@ import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.CustomClasses.UserListLoader;
 import com.innov8.memeit.Fragments.ProfileFragments.UserListFragment;
 import com.innov8.memeit.R;
+import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
@@ -163,7 +164,6 @@ public class ProfileFragment extends Fragment {
         }
         followerV.setText(CustomMethods.formatNumber(userData.getFollowerCount()));
         memeCountV.setText(CustomMethods.formatNumber(userData.getPostCount()));
-        Toast.makeText(getContext(),userData.getName()+"\n"+userData.isFollowedByMe()+"\n"+userData.isFollowingMe(), Toast.LENGTH_SHORT).show();
         if(userData.isFollowedByMe()){
             followBtnV.setText("Unfollow");
         }else{
@@ -208,10 +208,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private boolean isMe() {
-        return TextUtils.isEmpty(userID);
-        //todo jv check also if the user id equals this user's
-        //todo biruk remove this funny todo
-        //todo how tf is that funny
+        return TextUtils.isEmpty(userID)|| MemeItAuth.getInstance().getUserID().equals(userID);
     }
 
 }
