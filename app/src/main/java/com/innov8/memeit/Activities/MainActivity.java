@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.innov8.memegenerator.MemeChooser;
 import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Error error) {
-                Toast.makeText(MainActivity.this, "error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Snackbar.make(mToolbar.getRootView(),"Something went wrong",Snackbar.LENGTH_SHORT).show();
             }
         });
     }

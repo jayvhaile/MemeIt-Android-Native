@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.memeit.backend.dataclasses.Comment;
 
@@ -98,7 +99,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<ViewHolder> {
             commentV.setText(comment.getComment());
             ImageUtils.loadImageFromCloudinaryTo(posterPicV,comment.getPoster().getProfileUrl());
             posterNameV.setText(comment.getPoster().getName());
-            //todo biruk format and bind the date
+            dateV.setText(CustomMethods.convertDate(comment.getDate()));
         }
     }
 }

@@ -28,6 +28,7 @@ import com.innov8.memeit.R;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -211,6 +212,26 @@ public class CustomMethods {
             sA[i] = list.get(i);
         }
         return sA;
+    }
+
+    public static String convertDate(long time){
+        String string = "";
+        long minute = 60000;
+        long hour = 3600000;
+        long day = 86400000;
+        long currentTime = System.currentTimeMillis();
+        long difference = currentTime - time;
+        long month;
+
+        if(difference < minute) string = "Less than a minute ago";
+        else if(difference >= minute && difference < hour)
+            string = ((int) difference / minute) + " mins ago";
+        else if(difference >= hour && difference < day)
+            string = ((int) difference / hour)  + " mins ago";
+        else if(difference >= day && difference < day * 30)
+            string = ((int) difference / day)  + " days ago";
+        else string = ((int) difference / (day*30))  + " months ago";
+        return string;
     }
 }
 

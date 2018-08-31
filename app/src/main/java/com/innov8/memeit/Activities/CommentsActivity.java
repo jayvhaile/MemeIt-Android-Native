@@ -2,12 +2,14 @@ package com.innov8.memeit.Activities;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.material.snackbar.Snackbar;
 import com.innov8.memeit.Adapters.CommentsAdapter;
 import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.R;
@@ -91,7 +93,8 @@ public class CommentsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Error error) {
-                Toast.makeText(CommentsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.coordinators),"Something went wrong",Snackbar.LENGTH_SHORT).show();
+                Log.w("getCommentsFormeme",error.getMessage());
             }
         });
     }
@@ -106,7 +109,7 @@ public class CommentsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Error error) {
-                Toast.makeText(CommentsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.coordinators),"Something went wrong",Snackbar.LENGTH_SHORT).show();
             }
         });
     }

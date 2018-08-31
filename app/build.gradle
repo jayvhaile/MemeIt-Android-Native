@@ -55,9 +55,13 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 //    implementation 'com.github.pchmn:MaterialChipsInput:1.0.8'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+
+    implementation 'com.google.firebase:firebase-messaging:17.3.0'
 
 }
 repositories {
     mavenCentral()
     0
 }
+apply plugin: 'com.google.gms.google-services'
