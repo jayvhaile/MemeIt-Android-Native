@@ -45,17 +45,15 @@ public class MemeItAuth {
     private static final String PREFERENCE_UID = "__uid__";
     private static final String PREFERENCE_SIGNIN_METHOD = "__signin_method__";
     static final String PREFERENCE_USER_DATA_SAVED = "__user_data_saved__";
-    private Context mContext;
-    private SharedPreferences preferences;
+//    private Context mContext;
 
-    private MemeItAuth(Context context) {
-        mContext = context;
-        preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+    private MemeItAuth() {
+
     }
-    public static void init(Context context){
+    public static void init(){
         if (memeItAuth != null)
             throw new RuntimeException("MemeItAuth already initialized");
-        memeItAuth = new MemeItAuth(context);
+        memeItAuth = new MemeItAuth();
     }
 
     public static MemeItAuth getInstance() {
@@ -64,19 +62,21 @@ public class MemeItAuth {
         return memeItAuth;
     }
 
-    public boolean isSignedIn() {
+    public boolean isSignedIn(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean tokenExists = preferences.getString(PREFERENCE_TOKEN, null) != null;
         if (!tokenExists) return false;
-        SignInMethod method = getSignedInMethod();
+        SignInMethod method = getSignedInMethod(context );
         if (method == null) return false;
         if (method == SignInMethod.GOOGLE)
-            return GoogleSignIn.getLastSignedInAccount(mContext) != null;
+            return GoogleSignIn.getLastSignedInAccount(context) != null;
         if (method == SignInMethod.FACEBOOK)
             return false;//todo:jv -check if facebook sign-in status
         else
             return true;
     }
-    public void isUserDataSaved(OnCompleteListener<Boolean> listener){
+    public void isUserDataSaved(Context context,OnCompleteListener<Boolean> listener){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         if ( preferences.getBoolean(PREFERENCE_USER_DATA_SAVED, false)){
             listener.onSuccess(true);
         }else{
@@ -85,7 +85,8 @@ public class MemeItAuth {
         }
     }
 
-    public SignInMethod getSignedInMethod() {
+    public SignInMethod getSignedInMethod(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String m = preferences.getString(PREFERENCE_SIGNIN_METHOD, null);
         if (m == null) return null;
         try {
@@ -95,8 +96,7 @@ public class MemeItAuth {
         }
     }
 
-
-    public void getUser(final OnCompleteListener<User> listener) {
+/* public void getUser(final OnCompleteListener<User> listener) {
         if (!isSignedIn())
             checkAndFireError(listener, OTHER_ERROR.setMessage("User not signed in"));
         else {
@@ -114,11 +114,12 @@ public class MemeItAuth {
             });
 
         }
-    }
+    }*/
+
 
     public static final String TAG = "MemeItAuth";
 
-    public void signUpWithUsername(String username,String email, String password, final OnCompleteListener<Void> listener) {
+    public void signUpWithUsername(final Context context, String username, String email, String password, final OnCompleteListener<Void> listener) {
         AuthInfo user = new AuthInfo(username,email, password);
         MemeItClient.getInstance().getInterface()
                 .signUpWithEmail(user)
@@ -127,7 +128,7 @@ public class MemeItAuth {
                     public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                         if (response.isSuccessful()) {
                             AuthToken token = response.body();
-                            setSignedIn(SignInMethod.USERNAME, token);
+                            setSignedIn(context,SignInMethod.USERNAME, token);
                             checkAndFireSuccess(listener, null);
                         } else {
                             checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
@@ -137,7 +138,7 @@ public class MemeItAuth {
     }
 
 
-    public void signInWithUsername(String username, String password, final OnCompleteListener<Void> listener) {
+    public void signInWithUsername(final Context context, String username, String password, final OnCompleteListener<Void> listener) {
         AuthInfo user = new AuthInfo(username, password);
         MemeItClient.getInstance().getInterface()
                 .loginWithEmail(user)
@@ -146,7 +147,7 @@ public class MemeItAuth {
                     public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                         if (response.isSuccessful()) {
                             AuthToken token = response.body();
-                            setSignedIn(SignInMethod.USERNAME, token);
+                            setSignedIn(context,SignInMethod.USERNAME, token);
                             checkAndFireSuccess(listener, null);
                         } else {
                             checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
@@ -174,7 +175,7 @@ public class MemeItAuth {
         fragment.startActivityForResult(gc, GOOGLE_SIGNIN_REQUEST_CODE);
     }
 
-    public void handleGoogleSignInResult(Intent data, final OnCompleteListener<Void> listener) {
+    public void handleGoogleSignInResult(final Context context, Intent data, final OnCompleteListener<Void> listener) {
         try {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             final GoogleSignInAccount account = task.getResult(ApiException.class);
@@ -186,7 +187,7 @@ public class MemeItAuth {
                         public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                             if (response.isSuccessful()) {
                                 AuthToken token = response.body();
-                                setSignedIn(SignInMethod.GOOGLE, token);
+                                setSignedIn(context,SignInMethod.GOOGLE, token);
                                 checkAndFireSuccess(listener, null);
                             } else {
                                 //todo sign out from google
@@ -210,7 +211,7 @@ public class MemeItAuth {
         }
     }
 
-    public void handleGoogleSignUpResult(Intent data, final OnCompleteListener<User> listener) {
+    public void handleGoogleSignUpResult(final Context context, Intent data, final OnCompleteListener<User> listener) {
         try {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             final GoogleSignInAccount account = task.getResult(ApiException.class);
@@ -222,7 +223,7 @@ public class MemeItAuth {
                         public void onResponse(Call<AuthToken> call, Response<AuthToken> response) {
                             if (response.isSuccessful()) {
                                 AuthToken token = response.body();
-                                setSignedIn(SignInMethod.GOOGLE, token);
+                                setSignedIn(context,SignInMethod.GOOGLE, token);
                                 Uri u=account.getPhotoUrl();
                                 String url=u==null?null:u.toString();
                                 User user = new User(account.getDisplayName(),url);
@@ -253,21 +254,25 @@ public class MemeItAuth {
         //todo: jv -implement sign in with facebook
     }
 
-    private void setSignedIn(SignInMethod signInMethod, AuthToken token) {
+    private void setSignedIn(Context context,SignInMethod signInMethod, AuthToken token) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         preferences.edit()
                 .putString(PREFERENCE_TOKEN, token.getToken())
                 .putString(PREFERENCE_UID, token.getUid())
                 .putString(PREFERENCE_SIGNIN_METHOD, signInMethod.toString())
                 .apply();
     }
-    public String getToken(){
+    public String getToken(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(PREFERENCE_TOKEN,null);
     }
-    public String getUserID(){
+    public String getUserID(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(PREFERENCE_UID,null);
     }
 
-    public void signOut() {
+    public void signOut(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         preferences.edit()
                 .remove(PREFERENCE_TOKEN)
                 .remove(PREFERENCE_UID)

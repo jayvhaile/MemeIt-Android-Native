@@ -25,14 +25,6 @@
             android:background="@drawable/bottom_nav_back"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/memeit_toolbar"
-            android:contentInsetLeft="0dp"
-            android:contentInsetStart="0dp"
-            app:contentInsetLeft="0dp"
-            app:contentInsetStart="0dp"
-            android:contentInsetRight="0dp"
-            android:contentInsetEnd="0dp"
-            app:contentInsetRight="0dp"
-            app:contentInsetEnd="0dp"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <!--<include layout="@layout/custom_toolbar" />-->

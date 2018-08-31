@@ -151,7 +151,7 @@ class ChipSearchToolbar : LinearLayout,MenuItem.OnActionExpandListener{
         editText.imeOptions=EditorInfo.IME_ACTION_SEARCH
         editText.inputType=InputType.TYPE_CLASS_TEXT
 
-        editText.setOnEditorActionListener { v, actionId, event ->
+        editText.setOnEditorActionListener { _, actionId, _ ->
            if(actionId==EditorInfo.IME_ACTION_SEARCH){
                val text=getSearchText()
                val tags=getSearchTags()

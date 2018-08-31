@@ -208,7 +208,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private boolean isMe() {
-        return TextUtils.isEmpty(userID)|| MemeItAuth.getInstance().getUserID().equals(userID);
+        return TextUtils.isEmpty(userID)|| MemeItAuth.getInstance().getUserID(getContext()).equals(userID);
     }
 
 }

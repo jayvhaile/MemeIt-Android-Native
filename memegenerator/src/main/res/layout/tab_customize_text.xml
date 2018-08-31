@@ -102,7 +102,6 @@
             app:layout_columnWeight="1"
             app:layout_gravity="center_vertical"
             app:layout_row="0"
-            android:min="8"
             android:max="200"
             />
 

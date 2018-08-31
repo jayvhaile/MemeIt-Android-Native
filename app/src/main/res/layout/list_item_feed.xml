@@ -83,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="320dp"
             android:background="#ddd"
-            android:src="@mipmap/got" />
+            android:src="@drawable/got" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -119,8 +119,8 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:padding="3dp"
-                    android:src="@mipmap/like_outline"
-                    tools:src="@mipmap/like_solid_alt" />
+                    android:src="@drawable/like_outline"
+                    tools:src="@drawable/like_solid_alt" />
 
                 <com.innov8.memeit.CustomClasses.FontTextView
                     android:layout_width="wrap_content"
@@ -134,7 +134,7 @@
                     android:layout_height="36dp"
                     android:padding="3dp"
                     android:rotation="180"
-                    android:src="@mipmap/like_outline" />
+                    android:src="@drawable/like_outline" />
 
                 <com.innov8.memeit.CustomClasses.FontTextView
                     android:layout_width="wrap_content"

@@ -46,7 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@mipmap/guy_2" />
+        tools:src="@drawable/guy_2" />
 
     <ImageView
         android:id="@+id/change_pp"
@@ -54,7 +54,7 @@
         android:layout_height="30dp"
         android:layout_marginBottom="8dp"
         android:alpha="1"
-        android:src="@mipmap/take_photo"
+        android:src="@drawable/take_photo"
         app:layout_constraintBottom_toTopOf="@+id/namesettings"
         app:layout_constraintEnd_toEndOf="@+id/settings_pp"
         app:layout_constraintHorizontal_bias="1.0"
@@ -179,7 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_below="@id/sdf2"
                     android:layout_marginLeft="16dp"
-                    android:src="@mipmap/laughing"
+                    android:src="@drawable/laughing"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     tools:text="Jeff Beso"
@@ -407,7 +407,7 @@
             <!--android:layout_marginTop="4dp"-->
             <!--app:layout_constraintStart_toStartOf="@+id/fontTextView34"-->
             <!--app:layout_constraintTop_toBottomOf="@+id/fontTextView34"-->
-            <!--tools:src="@mipmap/laughing" />-->
+            <!--tools:src="@drawablelaughing" />-->
         <!--<View-->
             <!--android:id="@+id/views2"-->
             <!--android:layout_width="match_parent"-->

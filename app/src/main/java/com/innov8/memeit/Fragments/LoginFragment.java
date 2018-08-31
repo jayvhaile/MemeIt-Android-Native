@@ -67,7 +67,7 @@ public class LoginFragment extends AuthFragment implements View.OnClickListener 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MemeItAuth.GOOGLE_SIGNIN_REQUEST_CODE)
-            MemeItAuth.getInstance().handleGoogleSignInResult(data, signInCompletedListener);
+            MemeItAuth.getInstance().handleGoogleSignInResult(getContext(),data, signInCompletedListener);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class LoginFragment extends AuthFragment implements View.OnClickListener 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    MemeItAuth.getInstance().signInWithUsername(username, password, signInCompletedListener);
+                    MemeItAuth.getInstance().signInWithUsername(getContext(),username, password, signInCompletedListener);
 
                 }
             }, 2000);

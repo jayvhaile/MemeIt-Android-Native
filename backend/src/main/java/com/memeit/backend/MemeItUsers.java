@@ -1,5 +1,6 @@
 package com.memeit.backend;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.memeit.backend.dataclasses.Badge;
@@ -243,8 +244,8 @@ public class MemeItUsers {
      *
      * @param listener the Listener to be called when the action is completed
      */
-    public void deleteMe(OnCompleteListener<ResponseBody> listener) {
-        MemeItAuth.getInstance().signOut();
+    public void deleteMe(Context context,OnCompleteListener<ResponseBody> listener) {
+        MemeItAuth.getInstance().signOut(context);
         MemeItClient.getInstance().getInterface()
                 .deleteMe()
                 .enqueue(new MyCallBack<ResponseBody>(listener));

@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Authenticator;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
@@ -40,7 +39,6 @@ public class MemeItClient{
     private static final long CACHE_SIZE=10;
     private static final long MAX_CACHE_DAYS=30;
     private Cache cache;
-    private Context mContext;
     BroadcastReceiver connectionReceiver;
     ConnectivityManager cm ;
     boolean isConnected;
@@ -57,14 +55,13 @@ public class MemeItClient{
 
 
     private MemeItClient(final Context context, String BASE_URL) {
-        mContext=context;
-        initConnectionListener();
-        MemeItAuth.init(context);
-        initCache();
+        initConnectionListener(context);
+        MemeItAuth.init();
+        initCache(context);
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 //.addInterceptor(provideOfflineCacheInterceptor())
                 //.addNetworkInterceptor(provideCacheInterceptor())
-                .addInterceptor(provideAuthInterceptor())
+                .addInterceptor(provideAuthInterceptor(context))
                 .cache(cache);
 
 
@@ -82,8 +79,8 @@ public class MemeItClient{
         PrefUtils.init(context);
 
     }
-    private void initConnectionListener(){
-        cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+    private void initConnectionListener(Context context){
+        cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         connectionReceiver=new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -92,17 +89,17 @@ public class MemeItClient{
                 Log.d(TAG, "onReceive: "+isConnected);
             }
         };
-        mContext.registerReceiver(connectionReceiver,
+        context.registerReceiver(connectionReceiver,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
     }
-    private void initCache() {
+    private void initCache(Context context) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                cache = new Cache(new File(mContext.getDataDir(), "memeit-http‐cache"),
+                cache = new Cache(new File(context.getDataDir(), "memeit-http‐cache"),
                         10 * 1024 * 1024); // 10 MB
             }else{
-                cache = new Cache(new File(mContext.getCacheDir(), "memeit-http‐cache"),
+                cache = new Cache(new File(context.getCacheDir(), "memeit-http‐cache"),
                         10 * 1024 * 1024); // 10 MB
             }
         } catch (Exception e) {
@@ -153,11 +150,11 @@ public class MemeItClient{
             }
         };
     }
-    private Interceptor provideAuthInterceptor(){
+    private Interceptor provideAuthInterceptor(final Context context){
        return new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-                String token = MemeItAuth.getInstance().getToken();
+                String token = MemeItAuth.getInstance().getToken(context);
                 if (TextUtils.isEmpty(token))
                     return chain.proceed(chain.request());
                 Request request = chain.request();

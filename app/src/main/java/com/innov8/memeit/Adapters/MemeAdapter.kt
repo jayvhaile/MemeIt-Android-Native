@@ -148,7 +148,7 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
 
 class ListMemeAdapter(context: Context) : MemeAdapter(context) {
     companion object {
-        val activeRID = intArrayOf(R.mipmap.laughing, R.mipmap.rofl, R.mipmap.neutral, R.mipmap.angry)
+        val activeRID = intArrayOf(R.drawable.laughing, R.drawable.rofl, R.drawable.neutral, R.drawable.angry)
     }
 
     override fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
@@ -326,7 +326,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
                 }
                 .positiveText("Follow")
                 .negativeText("Cancel")
-                .onPositive { dialog, which ->
+                .onPositive { dialog, _ ->
                     val si = dialog.selectedIndices
                     val selectedTags = meme.tags.filterIndexed { index, _ ->
                         si?.contains(index) ?: false
@@ -340,11 +340,10 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, val screen_wi
     private fun react(reactionType: Reaction.ReactionType?, finalReactRes: Int) {
         MemeItMemes.getInstance().reactToMeme(Reaction.create(reactionType, memeId), object : OnCompleteListener<ResponseBody> {
             override fun onSuccess(responseBody: ResponseBody) {
-                log(activeRID)
-                log(finalReactRes)
                 getCurrentMeme().myReaction = Reaction.create(reactionType, null)
-                reactButton.playAnimation()
                 reactButton.setActiveImage(finalReactRes)
+                reactButton.playAnimation()
+                reactButton.isChecked=true
             }
 
             override fun onFailure(error: OnCompleteListener.Error) {
@@ -531,7 +530,7 @@ class MemeTemplateSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : M
     )
 
     init {
-        btns.forEachIndexed { i, btn ->
+        btns.forEachIndexed { _, btn ->
             btn.setOnClickListener {
 
             }
@@ -555,6 +554,6 @@ class MemeTemplateSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : M
 
 class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
     override fun bind(homeElement: HomeElement) {
-        val ad = homeElement as AdElement
+//        val ad = homeElement as AdElement
     }
 }

@@ -32,20 +32,20 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
     implementation 'com.google.android.gms:play-services-auth:16.0.0'
     implementation 'se.emilsjolander:StickyScrollViewItems:1.1.0'
-    implementation 'com.zhihu.android:matisse:0.5.1'
+//    implementation 'com.zhihu.android:matisse:0.5.1'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
-    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+//    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
     implementation 'com.cloudinary:cloudinary-android:1.24.0'
     //image server
     implementation project(path: ':memegenerator')
     //the meme generator module
     implementation project(path: ':backend')
     //the backend api module
-    implementation 'com.github.ybq:Android-SpinKit:1.1.0'
+//    implementation 'com.github.ybq:Android-SpinKit:1.1.0'
     implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
     //Custom Tablayout
     implementation 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
-    implementation 'com.github.BrotherV:Floating-ArcMenu:1.1.0.2'
+//    implementation 'com.github.BrotherV:Floating-ArcMenu:1.1.0.2'
     implementation 'com.facebook.fresco:fresco:1.9.0'
     implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
@@ -53,7 +53,7 @@ dependencies {
     implementation 'com.squareup.okio:okio:1.15.0'
     implementation 'com.github.varunest:sparkbutton:1.0.5'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'com.github.pchmn:MaterialChipsInput:1.0.8'
+//    implementation 'com.github.pchmn:MaterialChipsInput:1.0.8'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
 
 }

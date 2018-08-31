@@ -2,7 +2,6 @@ package com.memeit.backend.kotlin
 
 import android.content.Context
 import android.os.Build
-import com.memeit.backend.MemeItAuth
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -49,7 +48,7 @@ class MemeItClient private constructor(val context: Context, val baseUrl: String
 
     private fun provideAuthInterceptor(): Interceptor {
         return Interceptor {
-            val token = MemeItAuth.getInstance().token
+            val token = "" //MemeItAuth.getInstance().token
             if (token.isEmpty())
                 return@Interceptor it.proceed(it.request())
             val req = it.request().newBuilder().header("authorization", token)

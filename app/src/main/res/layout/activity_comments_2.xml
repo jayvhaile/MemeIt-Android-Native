@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content" />
             <ImageView
                 android:id="@+id/comment_button"
-                android:src="@mipmap/send"
+                android:src="@drawable/send"
                 android:layout_width="55dp"
                 android:padding="6dp"
                 android:layout_marginLeft="5dp"

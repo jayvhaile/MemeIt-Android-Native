@@ -17,29 +17,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@mipmap/many_pics_optimized" />
+            android:src="@drawable/many_pics_optimized" />
 
         <ImageView
             android:id="@+id/background_login_2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@mipmap/many_pics_optimized" />
+            android:src="@drawable/many_pics_optimized" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
             android:scaleType="centerCrop"
-            android:src="@mipmap/loginbg" />
+            android:src="@drawable/loginbg" />
 
         <ImageView
             android:layout_width="260dp"
             android:layout_height="110dp"
-            android:layout_centerHorizontal="true"
             android:layout_gravity="top|center_horizontal"
             android:layout_marginTop="16dp"
-            android:background="@mipmap/memeitworldofmemes" />
+            android:background="@drawable/memeitworldofmemes" />
 
     </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

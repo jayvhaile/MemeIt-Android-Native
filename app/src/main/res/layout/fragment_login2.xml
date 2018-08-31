@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@mipmap/many_pics_optimized">
+    tools:background="drawable/any_pics_optimized">
 
     <EditText
         android:id="@+id/login_username"
@@ -70,7 +70,7 @@
         android:layout_height="46dp"
         android:layout_marginTop="8dp"
         android:scaleType="fitCenter"
-        android:src="@mipmap/orsignup"
+        app:srcCompat="@drawable/orsignup"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
@@ -82,7 +82,7 @@
         android:layout_height="@dimen/auth_icon_size"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:src="@mipmap/google"
+        app:srcCompat="@drawable/google"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
@@ -92,7 +92,7 @@
         android:layout_height="@dimen/auth_icon_size"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:src="@mipmap/fb"
+        app:srcCompat="@drawable/fb"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 

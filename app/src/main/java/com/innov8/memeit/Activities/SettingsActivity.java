@@ -126,14 +126,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public Drawable getDefaultReactionDrawable(){
         switch (sharedPrefs.getDefaultReaction()){
             case FUNNY:
-                return context.getResources().getDrawable(R.mipmap.laughing);
+                return context.getResources().getDrawable(R.drawable.laughing);
             case VERY_FUNNY:
-                return context.getResources().getDrawable(R.mipmap.rofl);
+                return context.getResources().getDrawable(R.drawable.rofl);
             case STUPID:
-                return context.getResources().getDrawable(R.mipmap.neutral);
+                return context.getResources().getDrawable(R.drawable.neutral);
             case ANGERING:
-                return context.getResources().getDrawable(R.mipmap.angry);
-                default: return context.getResources().getDrawable(R.mipmap.laughing);
+                return context.getResources().getDrawable(R.drawable.angry);
+                default: return context.getResources().getDrawable(R.drawable.laughing);
         }
     }
 

@@ -48,12 +48,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!MemeItAuth.getInstance().isSignedIn()) {
+        if (!MemeItAuth.getInstance().isSignedIn(this)) {
             startActivity(new Intent(this, AuthActivity.class));
             finish();
             return;
         }
-        MemeItAuth.getInstance().isUserDataSaved(new OnCompleteListener<Boolean>() {
+        MemeItAuth.getInstance().isUserDataSaved(this,new OnCompleteListener<Boolean>() {
             @Override
             public void onSuccess(Boolean saved) {
                 if (saved) {
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MemeItAuth.getInstance().signOut();
+                MemeItAuth.getInstance().signOut(MainActivity.this);
                 recreate();
             }
         });

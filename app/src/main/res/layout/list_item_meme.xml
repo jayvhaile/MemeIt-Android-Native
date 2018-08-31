@@ -78,7 +78,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toEndOf="@+id/meme_image"
-        app:srcCompat="@mipmap/laughing" />
+        app:srcCompat="@drawable/laughing" />
 
     <ImageView
         android:id="@+id/react_veryfunny"
@@ -96,7 +96,7 @@
         app:layout_constraintLeft_toRightOf="@id/react_funny"
         app:layout_constraintRight_toLeftOf="@+id/react_stupid"
         app:layout_constraintStart_toEndOf="@+id/react_funny"
-        app:srcCompat="@mipmap/rofl" />
+        app:srcCompat="@drawable/rofl" />
 
     <ImageView
         android:id="@+id/react_stupid"
@@ -112,7 +112,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toEndOf="@+id/react_veryfunny"
-        app:srcCompat="@mipmap/neutral" />
+        app:srcCompat="@drawable/neutral" />
 
     <ImageView
         android:id="@+id/react_angry"
@@ -124,7 +124,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toEndOf="@+id/react_stupid"
-        app:srcCompat="@mipmap/angry" />
+        app:srcCompat="@drawable/angry" />
     <!--react counts-->
     <com.innov8.memeit.CustomClasses.FontTextView
         android:id="@+id/reacation_count_funny"
@@ -178,9 +178,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/meme_tags"
-        app:sparkbutton_activeImage="@mipmap/laughing"
+        app:sparkbutton_activeImage="@drawable/laughing"
         app:sparkbutton_iconSize="28dp"
-        app:sparkbutton_inActiveImage="@mipmap/laughing"
+        app:sparkbutton_inActiveImage="@drawable/laughing_inactive_light"
         app:sparkbutton_primaryColor="@color/spark_primary_emoji"
         app:sparkbutton_secondaryColor="@color/spark_secondary" />
 

@@ -18,7 +18,7 @@ interface MemeLoader<T> {
         const val FAVOURITE_LOADER: Byte = 3
         const val USER_POST_MEME_LOADER: Byte = 4
         const val EMPTY_LOADER: Byte = 5
-        fun create(type: Byte, context: Context, userID: String? = null):MemeLoader<out HomeElement> =
+        fun create(type: Byte, context: Context, userID: String? = null): MemeLoader<out HomeElement> =
                 when (type) {
                     HOME_LOADER -> HomeLoader(context)
                     TRENDING_LOADER -> TrendingLoader()
@@ -110,26 +110,25 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
         val suggestionLoadedOrFailed = suggestionLoaded || suggestionFailed
         log("suggestion status", "failed:" + suggestionFailed, "loaded: " + suggestionLoaded)
         val templateLoadedOrFailed = templateLoaded || templateFailed
-        if (memeLoadedOrFailed && suggestionLoadedOrFailed && templateLoadedOrFailed) {
-            if (memeFailed) {
-                log("meme loading failed. sending error")
-                listener?.onFailure(tempError)
-            } else {
-                log("baking results")
-                val homeElements = mutableListOf<HomeElement>()
-                //todo make performance consideration here
-                tempMemes!!.forEach {
-                    homeElements.add(it)
-                    index++
-                    if (index % offset == 0) {
-                        val x = loadShit()
-                        if (x != null) {
-                            homeElements.add(x)
-                        }
+        if (memeFailed) {
+            log("meme loading failed. sending error")
+            listener?.onFailure(tempError)
+        } else if (memeLoadedOrFailed && suggestionLoadedOrFailed && templateLoadedOrFailed) {
+            log("baking results")
+            val homeElements = mutableListOf<HomeElement>()
+            //todo make performance consideration here
+            tempMemes!!.forEach {
+                homeElements.add(it)
+                index++
+                if (index % offset == 0) {
+                    val x = loadShit()
+                    if (x != null) {
+                        homeElements.add(x)
                     }
                 }
-                listener?.onSuccess(homeElements)
             }
+            listener?.onSuccess(homeElements)
+
         }
     }
 

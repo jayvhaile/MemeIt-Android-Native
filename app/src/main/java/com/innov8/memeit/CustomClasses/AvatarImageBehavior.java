@@ -44,7 +44,8 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
 
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AvatarImageBehavior);
-            mCustomStartXPosition = a.getDimension(R.styleable.AvatarImageBehavior_startXPosition, 0);
+
+
             mCustomStartYPosition = a.getDimension(R.styleable.AvatarImageBehavior_startYPosition, 0);
             mCustomFinalYPosition = a.getDimension(R.styleable.AvatarImageBehavior_finalYPosition, 0);
             mCustomStartToolbarPosition = a.getDimension(R.styleable.AvatarImageBehavior_startToolbarPosition, 0);
@@ -56,7 +57,7 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
 
         mAvatarMaxSize = mContext.getResources().getDimension(R.dimen.image_width);
         mtoolbarh = mContext.getResources().getDimension(R.dimen.toolbar_height)*2;
-
+        mCustomStartXPosition = context.getResources().getDisplayMetrics().widthPixels/2;
         mFinalLeftAvatarPadding = context.getResources().getDimension(
                 R.dimen.spacing_normal);
     }
@@ -74,7 +75,7 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
             AppBarLayout apb = (AppBarLayout) dependency;
             float expandedPercentageFactor = ((dependency.getBottom())- mtoolbarh) / mAppBarStartBottom;
 
-            float mStartXPosition=mCustomStartXPosition+(mStartWidth/2f);
+            float mStartXPosition=mCustomStartXPosition;
             if (expandedPercentageFactor < mChangeBehaviorPoint) {
                // child.setColorFilter(Color.argb(50, 255, 0, 0));
                 float heightFactor = (mChangeBehaviorPoint - expandedPercentageFactor) / mChangeBehaviorPoint;

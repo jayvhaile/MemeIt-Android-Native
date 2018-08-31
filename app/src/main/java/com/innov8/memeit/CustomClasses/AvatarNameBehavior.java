@@ -76,7 +76,7 @@ public class AvatarNameBehavior extends CoordinatorLayout.Behavior<TextView> {
 
             angle= angle*Math.PI/180;
             float cr= (float) ((Math.sin(angle)*cw/2)+(Math.cos(angle)*ch/2));
-            float m= (float) (margin-((margin)*Math.cos(angle)));
+            float m= (float) (margin-((margin*0.5f)*Math.cos(angle)));
             float radius=(size/2)+m+cr;
 
 

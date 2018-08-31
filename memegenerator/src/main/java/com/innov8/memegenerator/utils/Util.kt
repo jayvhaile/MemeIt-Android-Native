@@ -14,6 +14,7 @@ import androidx.appcompat.widget.*
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import java.io.ByteArrayOutputStream
 
 class MyAsyncTask<Return>: AsyncTask<Unit, Unit, Return>(){
@@ -78,7 +79,7 @@ fun TabLayout.onTabSelected(onSelected:(TabLayout.Tab)->Unit){
 fun log(vararg messages: Any) {
     Log.d("#MemeIt", messages.joinToString (" , "))
 }
- fun androidx.recyclerview.widget.RecyclerView.initWithGrid(spanCount:Int, orientation:Int= androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, rev:Boolean=false){
+ fun androidx.recyclerview.widget.RecyclerView.initWithGrid(spanCount:Int, orientation:Int= RecyclerView.VERTICAL, rev:Boolean=false){
     val glm= androidx.recyclerview.widget.GridLayoutManager(this.context, spanCount, orientation, rev)
     this.layoutManager=glm
     this.itemAnimator= androidx.recyclerview.widget.DefaultItemAnimator()

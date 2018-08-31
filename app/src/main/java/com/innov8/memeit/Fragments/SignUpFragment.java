@@ -74,7 +74,7 @@ public class SignUpFragment extends AuthFragment implements View.OnClickListener
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MemeItAuth.GOOGLE_SIGNIN_REQUEST_CODE) {
-            MemeItAuth.getInstance().handleGoogleSignUpResult(data, new OnCompleteListener<User>() {
+            MemeItAuth.getInstance().handleGoogleSignUpResult(getContext(),data, new OnCompleteListener<User>() {
                 @Override
                 public void onSuccess(User user) {
                    getAuthActivity().setupFragment.fromGoogle(user.getName(), user.getImageUrl());
@@ -118,7 +118,7 @@ public class SignUpFragment extends AuthFragment implements View.OnClickListener
             getAuthActivity().showError("Password should at least be 8 in length!");
         }else{
             setLoading(true);
-            MemeItAuth.getInstance().signUpWithUsername(username,email, password, onCompleteListener);
+            MemeItAuth.getInstance().signUpWithUsername(getContext(),username,email, password, onCompleteListener);
         }
     }
 }
