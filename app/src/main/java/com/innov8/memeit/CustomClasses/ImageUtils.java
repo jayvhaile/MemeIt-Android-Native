@@ -1,22 +1,14 @@
 package com.innov8.memeit.CustomClasses;
 
 import android.content.Context;
-import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cloudinary.Transformation;
 import com.cloudinary.Url;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.ResponsiveUrl;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
@@ -35,7 +27,7 @@ public class ImageUtils {
             sdv.setImageURI((Uri) null);
             return;
         }
-        Transformation t=new Transformation().quality("10");
+        Transformation t=new Transformation().quality("50");
         Url a=MediaManager.get().url().transformation(t).source(id);
         MediaManager.get().responsiveUrl(ResponsiveUrl.Preset.FIT)
                 .stepSize(50)
