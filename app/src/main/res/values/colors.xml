@@ -20,4 +20,7 @@
     <color name="blue" >#2196F3</color>
     <color name="purple" >#9C27B0</color>
     <color name="orange">#F44336</color>
+    <color name="white_light">#62ffffff</color>
+
+    <color name="black_light">#4a000000</color>
 </resources>
