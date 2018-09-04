@@ -26,7 +26,7 @@ import retrofit2.http.Query;
 /**
  * Created by Jv on 6/17/2018.
  */
-interface MemeInterface {
+public interface MemeInterface {
     //=============================Auth Related=================================================
 
     //------POST------
@@ -50,9 +50,9 @@ interface MemeInterface {
     @GET("auth/username")
     public Call<Username> isUsernameAvailable(@Query("username") String username);
     @PUT("auth/username")
-    public Call<ResponseBody> updateUsername(@Body String username);
+    public Call<ResponseBody> updateUsername(@Body User username);
     @PUT("auth/password")
-    public Call<ResponseBody> updatePassword(@Body String password);
+    public Call<ResponseBody> updatePassword(@Body AuthInfo password);
 
     //=========================User Related=====================================================
     //------GET------
@@ -116,11 +116,11 @@ interface MemeInterface {
     public Call<ResponseBody> uploadUserData(@Body User user);
 
     @PUT("user/me/name")
-    public Call<ResponseBody> updateName(@Body String name);
+    public Call<ResponseBody> updateName(@Body User name);
     @PUT("user/me/profile_pic")
-    public Call<ResponseBody> updateProfilePic(@Body String pic);
+    public Call<ResponseBody> updateProfilePic(@Body User pic);
     @PUT("user/me/cover_pic")
-    public Call<ResponseBody> updateCoverPic(@Body String cpic);
+    public Call<ResponseBody> updateCoverPic(@Body User cpic);
 
     @POST("user/me/follow_tags")
     public Call<ResponseBody> setFollowingTags(@Body String [] tags);

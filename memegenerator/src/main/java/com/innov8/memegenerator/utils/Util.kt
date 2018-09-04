@@ -7,14 +7,11 @@ import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat.PNG
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.appcompat.widget.*
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayout
 import java.io.ByteArrayOutputStream
 
 class MyAsyncTask<Return>: AsyncTask<Unit, Unit, Return>(){
@@ -140,10 +137,10 @@ fun Float.fromSP(context:Context):Float{
 fun Float.toDP(context:Context):Float{
     return this/context.resources.displayMetrics.density
 }
-fun Float.fromDP(context:Context):Float{
+fun Float.fromDPToPX(context:Context):Float{
     return this*context.resources.displayMetrics.density
 }
-fun Int.fromDP(context:Context):Int{
+fun Int.fromDPToPX(context:Context):Int{
     return (this*context.resources.displayMetrics.density).toInt()
 }
 fun Context.goTo(clazz: Class<out Activity>){

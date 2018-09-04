@@ -22,7 +22,28 @@ public class SharedPrefs {
         LOW, MEDIUM, HIGH
     }
     public enum QualityPreset {
-        LOW, MEDIUM, HIGH
+        VERY_LOW(10),LOW(25), MEDIUM(50), HIGH(75),VERY_HIGH(100);
+        final int quality;
+
+        QualityPreset(int quality) {
+            this.quality = quality;
+        }
+
+        public int getQuality() {
+            return quality;
+        }
+
+        @Override
+        public String toString() {
+            String s= super.toString();
+            String words[]=s.split("_");
+
+            StringBuilder sb=new StringBuilder();
+            for (String word:words) {
+                sb.append(word.charAt(0)+word.substring(1).toLowerCase());
+            }
+            return sb.toString();
+        }
     }
 
     public static final String SETTINGS = "SettingPrefs";
@@ -70,6 +91,7 @@ public class SharedPrefs {
             case ANGERING:reaction="angry";
             default:reaction = "funny";
         }
+
         editor.putString("defaultReaction",reaction);
         editor.apply();
     }
@@ -121,29 +143,15 @@ public class SharedPrefs {
         editor.apply();
     }
     public void setImageQuality(QualityPreset cacheSize){
-        String size;
-        switch (cacheSize){
-            case LOW:size = "LOW";
-            case MEDIUM:size = "MEDIUM";
-            case HIGH:size = "HIGH";
-            default:size = "HIGH";
-        }
-        editor.putString("imageQuality",size);
+        editor.putInt("imageQuality",cacheSize.ordinal());
         editor.apply();
     }
     public QualityPreset getImageQuality(){
-        QualityPreset qualityPresets;
-        switch (preferences.getString("imageQuality","HIGH")){
-            case "LOW":qualityPresets = QualityPreset.LOW;
-            case "medium" : qualityPresets = QualityPreset.MEDIUM;
-            case "HIGH" : qualityPresets = QualityPreset.HIGH;
-            default: qualityPresets = QualityPreset.HIGH;
-        }
-        return qualityPresets;
+        return QualityPreset.values()[preferences.getInt("imageQuality",2)];
     }
     public CachePreset getCacheSize(){
         CachePreset qualityPresets;
-        switch (preferences.getString("imageQuality","HIGH")){
+        switch (preferences.getString("cachesize","HIGH")){
             case "LOW":qualityPresets = CachePreset.LOW;
             case "medium" : qualityPresets = CachePreset.MEDIUM;
             case "HIGH" : qualityPresets = CachePreset.HIGH;

@@ -42,14 +42,14 @@
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/notification_second_image"
         android:layout_width="50dp"
-        tools:visibility="visible"
-        android:visibility="gone"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <com.innov8.memeit.CustomClasses.FontTextView
         android:id="@+id/notification_time"

@@ -1,4 +1,4 @@
-package com.innov8.memeit;
+package com.innov8.memeit.Services;
 
 import android.app.Service;
 import android.content.Intent;

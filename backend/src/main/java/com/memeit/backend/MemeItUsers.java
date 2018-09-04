@@ -1,14 +1,19 @@
 package com.memeit.backend;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.memeit.backend.dataclasses.AuthInfo;
 import com.memeit.backend.dataclasses.Badge;
+import com.memeit.backend.dataclasses.MyUser;
 import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.Tag;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.dataclasses.Username;
 import com.memeit.backend.utilis.MyCallBack;
+import com.memeit.backend.utilis.MyCallBack2;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.memeit.backend.utilis.PrefUtils;
 import com.memeit.backend.utilis.Utils;
@@ -37,14 +42,35 @@ public class MemeItUsers {
         return memeItUsers;
     }
 
+    public MyUser getMyUser(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return MyUser.createFromCache(sp);
+    }
+
     /**
      * this is to get the user detail
      *
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getMyUserDetail(OnCompleteListener<User> listener) {
+    public void getMyUserDetail(final Context context,final OnCompleteListener<User> listener) {
         MemeItClient.getInstance().getInterface()
-                .getMyUser().enqueue(new MyCallBack<User>(listener));
+                .getMyUser().enqueue(new MyCallBack2<User, User>(listener) {
+
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+
+                if (response.isSuccessful()) {
+                    MyUser mu = response.body().toMyUser();
+                    mu.save(context);
+                    Log.d("fukas", "onResponse: " + mu.getUserID());
+                    Log.d("fukas", "onResponse: " + mu.getUsername());
+                    Log.d("fukas", "onResponse: " + response.body().getUsername());
+                    Log.d("fukas", "onResponse: " + mu.getName());
+                    Utils.checkAndFireSuccess(listener, response.body());
+                } else
+                    Utils.checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
+            }
+        });
     }
 
     /**
@@ -53,9 +79,11 @@ public class MemeItUsers {
      * @param uid      the id of the user to get detail for
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getUserDetailFor(String uid, OnCompleteListener<User> listener) {
+    public void getUserDetailFor(String uid, final OnCompleteListener<User> listener) {
+        Log.d("fukas", "  ");
+
         MemeItClient.getInstance().getInterface()
-                .getUserById(uid).enqueue(new MyCallBack<User>(listener) );
+                .getUserById(uid).enqueue(new MyCallBack<User>(listener));
     }
 
     /**
@@ -67,7 +95,7 @@ public class MemeItUsers {
      **/
     public void getNotificationList(int skip, int limit, OnCompleteListener<List<Notification>> listener) {
         MemeItClient.getInstance().getInterface()
-                .getMyNotifications(skip,limit)
+                .getMyNotifications(skip, limit)
                 .enqueue(new MyCallBack<List<Notification>>(listener));
     }
 
@@ -90,7 +118,7 @@ public class MemeItUsers {
      **/
     public void getMyFollowerList(int skip, int limit, OnCompleteListener<List<User>> listener) {
         MemeItClient.getInstance().getInterface()
-                .getMyFollowersList(skip,limit)
+                .getMyFollowersList(skip, limit)
                 .enqueue(new MyCallBack<List<User>>(listener));
     }
 
@@ -103,10 +131,9 @@ public class MemeItUsers {
      **/
     public void getMyFollowingList(int skip, int limit, OnCompleteListener<List<User>> listener) {
         MemeItClient.getInstance().getInterface()
-                .getMyFollowingList(skip,limit)
+                .getMyFollowingList(skip, limit)
                 .enqueue(new MyCallBack<List<User>>(listener));
     }
-
 
 
     /**
@@ -119,7 +146,7 @@ public class MemeItUsers {
      **/
     public void getFollowerListFor(String uid, int skip, int limit, OnCompleteListener<List<User>> listener) {
         MemeItClient.getInstance().getInterface()
-                .getFollowersListForUser(uid,skip,limit)
+                .getFollowersListForUser(uid, skip, limit)
                 .enqueue(new MyCallBack<List<User>>(listener));
     }
 
@@ -132,11 +159,12 @@ public class MemeItUsers {
      * @param listener the Listener to be called when the action is completed
      **/
     public void getFollowingListFor(String uid, int skip, int limit, OnCompleteListener<List<User>> listener) {
-        Log.d("ufak", "getFollowingListFor: "+uid);
+        Log.d("ufak", "getFollowingListFor: " + uid);
         MemeItClient.getInstance().getInterface()
-                .getFollowingListForUser(uid,skip,limit)
+                .getFollowingListForUser(uid, skip, limit)
                 .enqueue(new MyCallBack<List<User>>(listener));
     }
+
     /**
      * this is to get the list of badges the user gained
      *
@@ -147,6 +175,7 @@ public class MemeItUsers {
                 .getMyBadges()
                 .enqueue(new MyCallBack<List<Badge>>(listener));
     }
+
     /**
      * this is to get the list of badges a specified user gained
      *
@@ -158,7 +187,8 @@ public class MemeItUsers {
                 .getBadgesFor(uid)
                 .enqueue(new MyCallBack<List<Badge>>(listener));
     }
-    public void getUserSuggestions(OnCompleteListener<List<User>> listener){
+
+    public void getUserSuggestions(OnCompleteListener<List<User>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getUserSuggestions()
                 .enqueue(new MyCallBack<List<User>>(listener));
@@ -207,7 +237,7 @@ public class MemeItUsers {
                             PrefUtils.get().edit()
                                     .putBoolean(PREFERENCE_USER_DATA_SAVED, true)
                                     .apply();
-                            Utils.checkAndFireSuccess(listener,response.body());
+                            Utils.checkAndFireSuccess(listener, response.body());
                         } else {
                             Utils.checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
                         }
@@ -244,60 +274,95 @@ public class MemeItUsers {
      *
      * @param listener the Listener to be called when the action is completed
      */
-    public void deleteMe(Context context,OnCompleteListener<ResponseBody> listener) {
+    public void deleteMe(Context context, OnCompleteListener<ResponseBody> listener) {
         MemeItAuth.getInstance().signOut(context);
         MemeItClient.getInstance().getInterface()
                 .deleteMe()
                 .enqueue(new MyCallBack<ResponseBody>(listener));
     }
 
-    public void isUsernameAvailable(String username,OnCompleteListener<Username> listener){
+    public void isUsernameAvailable(final String username, final OnCompleteListener<Username> listener) {
         MemeItClient.getInstance().getInterface()
                 .isUsernameAvailable(username)
                 .enqueue(new MyCallBack<Username>(listener));
     }
-    public void updateUsername(String username,OnCompleteListener<ResponseBody> listener){
+
+    public void updateUsername(final Context context, final String username, final OnCompleteListener<ResponseBody> listener) {
         MemeItClient.getInstance().getInterface()
-                .updateUsername(username)
+                .updateUsername(User.username(username))
+                .enqueue(new MyCallBack2<ResponseBody, ResponseBody>(listener) {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            getMyUser(context).setUsername(username).save(context);
+                            Utils.checkAndFireSuccess(listener, response.body());
+                        } else
+                            Utils.checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
+                    }
+                });
+    }
+
+    public void updatePassword(String password, OnCompleteListener<ResponseBody> listener) {
+        MemeItClient.getInstance().getInterface()
+                .updatePassword(AuthInfo.ofPassword(password))
                 .enqueue(new MyCallBack<ResponseBody>(listener));
     }
-    public void updatePassword(String password,OnCompleteListener<ResponseBody> listener){
+
+    public void updateName(final Context context, final String name, final OnCompleteListener<ResponseBody> listener) {
         MemeItClient.getInstance().getInterface()
-                .updatePassword(password)
+                .updateName(User.name(name))
+                .enqueue(new MyCallBack2<ResponseBody, ResponseBody>(listener) {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            getMyUser(context).setName(name).save(context);
+                            Utils.checkAndFireSuccess(listener, response.body());
+                        } else
+                            Utils.checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
+                    }
+                });
+    }
+
+    public void updateProfilePic(final Context context, final String url, final OnCompleteListener<ResponseBody> listener) {
+        MemeItClient.getInstance().getInterface()
+                .updateProfilePic(User.pic(url))
+                .enqueue(new MyCallBack2<ResponseBody, ResponseBody>(listener) {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            getMyUser(context).setPic(url).save(context);
+                            Utils.checkAndFireSuccess(listener, response.body());
+                        } else
+                            Utils.checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
+                    }
+                });
+    }
+
+    public void updateCoverPic(String url, OnCompleteListener<ResponseBody> listener) {
+        MemeItClient.getInstance().getInterface()
+                .updateCoverPic(User.cpic(url))
                 .enqueue(new MyCallBack<ResponseBody>(listener));
     }
-    public void updateName(String name,OnCompleteListener<ResponseBody> listener){
-        MemeItClient.getInstance().getInterface()
-                .updateName(name)
-                .enqueue(new MyCallBack<ResponseBody>(listener));
-    }
-    public void updateProfilePic(String url,OnCompleteListener<ResponseBody> listener){
-        MemeItClient.getInstance().getInterface()
-                .updateProfilePic(url)
-                .enqueue(new MyCallBack<ResponseBody>(listener));
-    }
-    public void updateCoverPic(String url,OnCompleteListener<ResponseBody> listener){
-        MemeItClient.getInstance().getInterface()
-                .updateCoverPic(url)
-                .enqueue(new MyCallBack<ResponseBody>(listener));
-    }
-    public void setFollowingTags(String [] tags,OnCompleteListener<ResponseBody> listener){
+
+    public void setFollowingTags(String[] tags, OnCompleteListener<ResponseBody> listener) {
         MemeItClient.getInstance().getInterface()
                 .setFollowingTags(tags)
                 .enqueue(new MyCallBack<ResponseBody>(listener));
     }
 
-    public void followTags(String [] tags,OnCompleteListener<ResponseBody> listener){
+    public void followTags(String[] tags, OnCompleteListener<ResponseBody> listener) {
         MemeItClient.getInstance().getInterface()
                 .followTags(tags)
                 .enqueue(new MyCallBack<ResponseBody>(listener));
     }
-    public void unFollowTags(String  tag,OnCompleteListener<ResponseBody> listener){
+
+    public void unFollowTags(String tag, OnCompleteListener<ResponseBody> listener) {
         MemeItClient.getInstance().getInterface()
                 .unfollowTag(tag)
                 .enqueue(new MyCallBack<ResponseBody>(listener));
     }
-    public void getFollowingTags(OnCompleteListener<List<Tag>> listener){
+
+    public void getFollowingTags(OnCompleteListener<List<Tag>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getMyTags()
                 .enqueue(new MyCallBack<List<Tag>>(listener));

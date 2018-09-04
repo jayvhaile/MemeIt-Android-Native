@@ -12,7 +12,7 @@ import java.util.List;
  * Created by Jv on 6/30/2018.
  */
 
-public class Meme  implements Parcelable,HomeElement {
+public class Meme  implements HomeElement, Parcelable {
     @Override
     public int getItemType() {
         return HomeElementKt.getMEME_TYPE();

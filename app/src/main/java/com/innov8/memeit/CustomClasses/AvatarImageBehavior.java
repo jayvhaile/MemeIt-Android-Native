@@ -56,7 +56,7 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
         }
 
         mAvatarMaxSize = mContext.getResources().getDimension(R.dimen.image_width);
-        mtoolbarh = mContext.getResources().getDimension(R.dimen.toolbar_height)*2;
+        mtoolbarh = mContext.getResources().getDimension(R.dimen.toolbar_height)+CustomMethods.convertDPtoPX(context,48);
         mCustomStartXPosition = context.getResources().getDisplayMetrics().widthPixels/2;
         mFinalLeftAvatarPadding = context.getResources().getDimension(
                 R.dimen.spacing_normal);

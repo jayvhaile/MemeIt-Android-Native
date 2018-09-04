@@ -1,4 +1,4 @@
-package com.innov8.memegenerator.adapters
+package com.innov8.memeit.Adapters
 
 import android.content.Context
 import android.view.View
@@ -7,6 +7,8 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.innov8.memegenerator.R
+import com.innov8.memegenerator.adapters.ListAdapter
+import com.innov8.memegenerator.adapters.MyViewHolder
 import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.utils.getDrawableIdByName
 

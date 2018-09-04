@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.innov8.memegenerator.MemeChooser;
 import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.MemeLoader;
@@ -17,6 +16,7 @@ import com.innov8.memeit.CustomViews.ChipSearchToolbar;
 import com.innov8.memeit.Fragments.MemeListFragment;
 import com.innov8.memeit.Fragments.ProfileFragment;
 import com.innov8.memeit.R;
+import com.innov8.memeit.SettingsActivity;
 import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         // Setting viewpager pagerAdapter
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(0);
         rootNav = new SlidingRootNavBuilder(this)
                 .withSavedState(savedInstanceState)
                 .withContentClickableWhenMenuOpened(false)
@@ -227,7 +228,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private class MyPagerAdapter extends FragmentPagerAdapter {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    private static class MyPagerAdapter extends FragmentPagerAdapter {
         List<? extends Fragment> fragments;
 
         public MyPagerAdapter(FragmentManager fm) {

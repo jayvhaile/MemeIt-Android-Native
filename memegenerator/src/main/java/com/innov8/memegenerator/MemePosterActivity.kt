@@ -69,6 +69,7 @@ class MemePosterActivity : AppCompatActivity() {
                             postBtn.revertAnimation()
                             toast("Meme Posted to MemeIt!")
                             statusV.text="Meme Posted"
+                            //todo goto the post
                         }
 
                         override fun onFailure(error: OnCompleteListener.Error) {

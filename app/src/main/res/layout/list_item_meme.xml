@@ -27,8 +27,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
         android:text="MemeFactory"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constraintLeft_toRightOf="@+id/follower_poster_pp"
         app:layout_constraintTop_toTopOf="@+id/follower_poster_pp" />
 
@@ -36,6 +37,8 @@
         android:id="@+id/meme_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/meme_poster_name"
         app:layout_constraintTop_toBottomOf="@+id/meme_poster_name"
         tools:text="2 hours ago" />
@@ -61,7 +64,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        app:failureImage="@drawable/ic_sync_problem"/>
+        app:failureImage="@drawable/ic_sync_problem"
+        app:retryImage="@drawable/ic_sync_problem"/>
 
     <View
         android:id="@+id/tint"
@@ -256,7 +260,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="56dp" />
+        app:layout_constraintGuide_begin="60dp" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/react_group"

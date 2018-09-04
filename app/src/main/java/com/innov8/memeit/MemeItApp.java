@@ -3,6 +3,8 @@ import android.app.Application;
 
 import com.cloudinary.android.MediaManager;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.memeit.backend.MemeItClient;
 
 import java.util.HashMap;
@@ -14,12 +16,17 @@ public class MemeItApp extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        MemeItClient.init(getApplicationContext(),  SERVER_URL);
+        MemeItClient.init(getApplicationContext(),                                                      SERVER_URL);
         Map config = new HashMap();
         config.put("cloud_name", "innov8");
         config.put("api_key", "591249199742556");
         config.put("api_secret", "yT2mxv0vQrEWjzsPrmyD6xu5a-Y");
         MediaManager.init(this, config);
-        Fresco.initialize(this);
+        ImagePipelineConfig configf= ImagePipelineConfig.newBuilder(this)
+                .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
+                .setResizeAndRotateEnabledForNetwork(true)
+                .setDownsampleEnabled(true)
+                .build();
+        Fresco.initialize(this,configf);
     }
 }

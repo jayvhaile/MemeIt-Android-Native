@@ -217,6 +217,10 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             }
         }, 300)
     }
+    fun loadBitmab(bitmap: Bitmap){
+        clearMemeItems()
+        image=bitmap
+    }
     fun captureMeme():Bitmap{
         selectedView?.setItemSelected(false)
         isDrawingCacheEnabled=true

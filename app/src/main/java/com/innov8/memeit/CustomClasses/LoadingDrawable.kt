@@ -2,16 +2,16 @@ package com.innov8.memeit.CustomClasses
 
 import android.animation.ValueAnimator
 import android.graphics.*
-import android.graphics.drawable.Drawable
 import android.util.Log
+import com.facebook.drawee.drawable.ProgressBarDrawable
 
 //todo change the px to dp
-class LoadingDrawable : Drawable() {
+class LoadingDrawable : ProgressBarDrawable() {
     override fun onLevelChange(level: Int): Boolean {
         super.onLevelChange(level)
-        if (level>100)return false
-        sweepAngle=sweepInitialAngle+(360f-sweepInitialAngle)*(level/100f)
-        Log.d("fuck",level.toString()+"\t"+(360f-sweepInitialAngle)*(level/100f))
+        if (level>10000)return false
+        sweepAngle=sweepInitialAngle+(360f-sweepInitialAngle)*(level/10000f)
+        Log.d("fuck",level.toString()+"\t"+(360f-sweepInitialAngle)*(level/10000f))
         invalidateSelf()
         return true
     }

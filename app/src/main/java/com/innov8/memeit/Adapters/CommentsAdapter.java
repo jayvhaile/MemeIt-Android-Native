@@ -1,9 +1,6 @@
 package com.innov8.memeit.Adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +9,15 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
+import com.innov8.memeit.R;
 import com.memeit.backend.dataclasses.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.innov8.memeit.R;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 /**
  * Created by Jv on 7/5/2018.
  */
@@ -99,7 +100,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<ViewHolder> {
             commentV.setText(comment.getComment());
             ImageUtils.loadImageFromCloudinaryTo(posterPicV,comment.getPoster().getProfileUrl());
             posterNameV.setText(comment.getPoster().getName());
-            dateV.setText(CustomMethods.convertDate(comment.getDate()));
+            dateV.setText(CustomMethods.convertDate(Long.parseLong(comment.getDate())));
         }
     }
 }

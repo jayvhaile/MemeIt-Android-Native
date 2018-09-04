@@ -2,12 +2,14 @@ package com.innov8.memeit.Fragments.ProfileFragments;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.innov8.memeit.Adapters.UserListAdapter;
+import com.innov8.memeit.CustomClasses.FollowerLoader;
 import com.innov8.memeit.CustomClasses.MemeLoader;
 import com.innov8.memeit.CustomClasses.UserListLoader;
 import com.innov8.memeit.R;
@@ -70,6 +72,7 @@ public class UserListFragment extends Fragment {
 
             @Override
             public void onFailure(OnCompleteListener.Error error) {
+                if(getContext()==null)return;
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
@@ -87,6 +90,13 @@ public class UserListFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         };
+
+        followerAdapter = new UserListAdapter(getContext());
+        if(savedInstanceState!=null){
+            List<User> users=savedInstanceState.<User>getParcelableArrayList("users");
+            followerAdapter.setAll(users);
+        }else
+            load();
     }
 
     @Override
@@ -100,7 +110,6 @@ public class UserListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout=view.findViewById(R.id.swipe_to_refresh);
         followerList=view.findViewById(R.id.followers_recycler_view);
-        followerAdapter = new UserListAdapter(getContext());
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -111,11 +120,20 @@ public class UserListFragment extends Fragment {
         DefaultItemAnimator animator=new DefaultItemAnimator();
         followerList.setItemAnimator(animator);
         followerList.setAdapter(followerAdapter);
-        load();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        Log("onsave");
+        Log(""+followerAdapter.getItems().size());
+        outState.putParcelableArrayList("users",followerAdapter.getItems());
+        super.onSaveInstanceState(outState);
     }
     private boolean refresh;
     private void load(){
         refresh=false;
+        Log("load "+skip);
         userListLoader.setListener(listener);
         userListLoader.load(skip,LIMIT);
     }
@@ -127,12 +145,14 @@ public class UserListFragment extends Fragment {
     }
     @Override
     public void onStart() {
+        Log("onStart: ");
         super.onStart();
         userListLoader.setListener(refresh?refreshListener:listener);
     }
-
+    static final String TAG="fukuku";
     @Override
     public void onStop() {
+        Log( "onStop:");
         userListLoader.setListener(null);
         super.onStop();
     }
@@ -142,6 +162,9 @@ public class UserListFragment extends Fragment {
     }
     private void incSkip(){
         skip+=LIMIT;
+    }
+    private void Log(String m){
+        if(userListLoader instanceof FollowerLoader)Log.d(TAG, m);
     }
 
 }

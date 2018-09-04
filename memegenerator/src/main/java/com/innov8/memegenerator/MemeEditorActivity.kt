@@ -1,6 +1,9 @@
 package com.innov8.memegenerator
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
@@ -14,6 +17,7 @@ import com.innov8.memegenerator.memeEngine.MemeEditorInterface
 import com.innov8.memegenerator.memeEngine.MemeEditorView
 import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.models.TextStyleProperty
+import com.innov8.memegenerator.utils.AsyncLoader
 
 class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
@@ -76,15 +80,27 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                     MemePosterActivity.bitmap=bitmap
                     startActivity(intent)
                 },
-                MyToolbarmenu(R.drawable.ic_left_menu_preview)
+                MyToolbarmenu(R.drawable.ic_left_menu_preview){
+                    memeEditorView.scaleX=memeEditorView.scaleX*1.2f
+                    memeEditorView.scaleY=memeEditorView.scaleY*1.2f
+                }
         ))
 
         val json: String? = intent.getStringExtra("string")
+        val uri: String? = intent.getStringExtra("uri")
 
         if (json != null) {
             val gson = Gson()
             val memeTemplate = gson.fromJson(json, MemeTemplate::class.java)
             memeEditorView.loadMemeTemplate(memeTemplate)
+        }else if(uri!=null){
+            AsyncLoader<Bitmap>({
+                val stream= contentResolver.openInputStream(Uri.parse(uri))
+                BitmapFactory.decodeStream(stream)
+            }).load {
+                memeEditorView.loadBitmab(it)
+            }
+
         }
 
 

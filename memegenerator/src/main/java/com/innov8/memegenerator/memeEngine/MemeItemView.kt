@@ -9,7 +9,7 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import com.innov8.memegenerator.utils.fromDP
+import com.innov8.memegenerator.utils.fromDPToPX
 
 
 open class MemeItemView : View {
@@ -75,11 +75,11 @@ open class MemeItemView : View {
         upaint.strokeJoin = Paint.Join.ROUND
         upaint.strokeCap = Paint.Cap.BUTT
         upaint.color = Color.argb(60, 255, 255, 255)
-        minimumWidth = 50f.fromDP(context).toInt()
-        minimumHeight = 30f.fromDP(context).toInt()
+        minimumWidth = 50f.fromDPToPX(context).toInt()
+        minimumHeight = 30f.fromDPToPX(context).toInt()
         mDetector = GestureDetector(context, MyListener())
-        resizeOffset = 28f.fromDP(context).toInt()
-        topOffeset = 24f.fromDP(context).toInt()
+        resizeOffset = 28f.fromDPToPX(context).toInt()
+        topOffeset = 24f.fromDPToPX(context).toInt()
     }
 
     override fun onDraw(canvas: Canvas?) {

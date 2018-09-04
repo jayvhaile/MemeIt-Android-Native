@@ -1,8 +1,6 @@
 package com.innov8.memeit.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.Notification;
 import com.innov8.memeit.R;
 import com.memeit.backend.dataclasses.Reaction;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,7 +40,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Notification currentNotif = notifications.get(position);
+        /*Notification currentNotif = notifications.get(position);
         switch (currentNotif.getType()){
             case COMMENT:
                 holder.notificationTitle.setText(String.format("%s has commented on your meme.", currentNotif.getCommenter()));
@@ -70,7 +65,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 break;
         }
         holder.notificationTime.setText(currentNotif.getType() != Notification.Type.GENERAL ? CustomMethods.convertDate(currentNotif.getTime()) : currentNotif.getGeneralDetail());
-        holder.notificationDot.setColorFilter(getDotColor(currentNotif.getType()));
+        holder.notificationDot.setColorFilter(getDotColor(currentNotif.getType()));*/
     }
 
     @Override
@@ -81,7 +76,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     public int getReaction(Reaction.ReactionType reaction){
-        switch (reaction){
+       /* switch (reaction){
             case FUNNY:
                 return R.mipmap.laughing;
             case VERY_FUNNY:
@@ -91,7 +86,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             case ANGERING:
                 return R.mipmap.angry;
             default: return R.mipmap.laughing;
-        }
+        }*/
+       return 0;
     }
 
 

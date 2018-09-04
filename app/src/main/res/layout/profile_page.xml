@@ -157,7 +157,7 @@
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
-        <com.kekstudio.dachshundtablayout.DachshundTabLayout
+       <!-- <com.kekstudio.dachshundtablayout.DachshundTabLayout
             android:tag="sticky"
             android:id="@+id/tabs_profile"
             android:layout_width="match_parent"
@@ -170,7 +170,12 @@
             app:ddAnimatedIndicator="lineMove"
             app:ddIndicatorColor="#ff5656"
             app:tabSelectedTextColor="#000"
-            app:tabTextColor="#5a5a5a" />
+            app:tabTextColor="#5a5a5a" />-->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs_profile"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:tabIndicatorColor="#ff5e00" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager

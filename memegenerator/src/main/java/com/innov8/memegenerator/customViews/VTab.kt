@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.innov8.memegenerator.R
 
 class VTab : LinearLayout {
@@ -86,7 +87,7 @@ class VTab : LinearLayout {
         invalidate()
     }
     fun item(id:Int,onClick: (index:Int) -> Unit = {}):VTabItems{
-        return VTabItems(context.resources.getDrawable(id),onClick)
+        return VTabItems(VectorDrawableCompat.create(resources,id, null)!!,onClick)
     }
     class VTabItems(val drawable: Drawable, val onClick: (index:Int) -> Unit = {})
 

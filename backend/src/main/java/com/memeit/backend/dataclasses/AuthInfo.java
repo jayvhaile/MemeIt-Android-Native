@@ -6,6 +6,11 @@ public class AuthInfo {
     private String password;
     private String gid;
 
+    public static AuthInfo ofPassword(String password){
+        AuthInfo a=new AuthInfo();
+        a.password=password;
+        return a;
+    }
     public AuthInfo(String username,String email, String password) {
         this.username=username;
         this.email = email;
@@ -18,6 +23,9 @@ public class AuthInfo {
     public AuthInfo(String email, String gid,Void placeholder) {
         this.email = email;
         this.gid=gid;
+    }
+
+    public AuthInfo() {
     }
 
     public String getEmail() {

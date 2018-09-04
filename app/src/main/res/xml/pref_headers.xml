@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference android:title="Account">
+        <intent
+            android:targetClass="com.innov8.memeit.AccountPref"
+            android:targetPackage="com.innov8.memeit" />
+    </Preference>
+    <Preference android:title="Notification">
+        <intent
+            android:targetClass="com.innov8.memeit.NotificationPref"
+            android:targetPackage="com.innov8.memeit" />
+    </Preference>
+    <Preference android:title="Data and Storage">
+        <intent
+            android:targetClass="com.innov8.memeit.DataAndStoragePref"
+            android:targetPackage="com.innov8.memeit" />
+    </Preference>
+    <Preference android:title="Privacy and Security">
+        <intent
+            android:targetClass="com.innov8.memeit.PrivacyAndSecurityPref"
+            android:targetPackage="com.innov8.memeit" />
+    </Preference>
+</PreferenceScreen>

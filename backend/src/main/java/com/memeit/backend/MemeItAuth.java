@@ -15,6 +15,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.memeit.backend.dataclasses.AuthInfo;
 import com.memeit.backend.dataclasses.AuthToken;
+import com.memeit.backend.dataclasses.MyUser;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.MyCallBack;
 import com.memeit.backend.utilis.MyCallBack2;
@@ -258,18 +259,15 @@ public class MemeItAuth {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         preferences.edit()
                 .putString(PREFERENCE_TOKEN, token.getToken())
-                .putString(PREFERENCE_UID, token.getUid())
                 .putString(PREFERENCE_SIGNIN_METHOD, signInMethod.toString())
                 .apply();
+        new MyUser(token.getUid()).save(preferences);
     }
     public String getToken(Context context){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(PREFERENCE_TOKEN,null);
     }
-    public String getUserID(Context context){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREFERENCE_UID,null);
-    }
+
 
     public void signOut(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);

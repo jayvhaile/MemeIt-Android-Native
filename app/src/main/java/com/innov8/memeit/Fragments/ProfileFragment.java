@@ -16,8 +16,9 @@ import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.CustomClasses.UserListLoader;
 import com.innov8.memeit.Fragments.ProfileFragments.UserListFragment;
 import com.innov8.memeit.R;
-import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.MemeItUsers;
+import com.memeit.backend.dataclasses.Meme;
+import com.memeit.backend.dataclasses.MyUser;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
 
@@ -36,8 +37,6 @@ import static android.view.View.VISIBLE;
 
 
 public class ProfileFragment extends Fragment {
-
-
     String userID;
 
     public static ProfileFragment newInstance(String uid) {
@@ -85,7 +84,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         tabLayout = view.findViewById(R.id.tabs_profile);
         pager = view.findViewById(R.id.profile_viewpager);
-        adapter = new ViewPagerAdapter(getFragmentManager());
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
 
@@ -131,8 +130,12 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-
+        MyUser myUser= MemeItUsers.getInstance().getMyUser(getContext());
+        nameV.setText(myUser.getName());
+        ImageUtils.loadImageFromCloudinaryTo(profileV, myUser.getImageUrl());
+        if(userData!=null)updateView();
         loadData();
+
     }
 
     User userData;
@@ -151,7 +154,7 @@ public class ProfileFragment extends Fragment {
             }
         };
         if (isMe())
-            MemeItUsers.getInstance().getMyUserDetail(onCompleteListener);
+            MemeItUsers.getInstance().getMyUserDetail(getContext(), onCompleteListener);
         else
             MemeItUsers.getInstance().getUserDetailFor(userID, onCompleteListener);
 
@@ -159,18 +162,15 @@ public class ProfileFragment extends Fragment {
 
     private void updateView() {
         nameV.setText(userData.getName());
-        if (!TextUtils.isEmpty(userData.getImageUrl())) {
-            ImageUtils.loadImageFromCloudinaryTo(profileV, userData.getImageUrl());
-        }
+        ImageUtils.loadImageFromCloudinaryTo(profileV, userData.getImageUrl());
+
         followerV.setText(CustomMethods.formatNumber(userData.getFollowerCount()));
         memeCountV.setText(CustomMethods.formatNumber(userData.getPostCount()));
-        if(userData.isFollowedByMe()){
+        if (userData.isFollowedByMe()) {
             followBtnV.setText("Unfollow");
-        }else{
+        } else {
             followBtnV.setText("Follow");
         }
-
-
     }
 
 
@@ -187,9 +187,9 @@ public class ProfileFragment extends Fragment {
                 case 0:
                     return MemeListFragment.newInstanceForUserPosts(userID);
                 case 1:
-                    return UserListFragment.newInstance(UserListLoader.FOLLOWING_LOADER,userID);
+                    return UserListFragment.newInstance(UserListLoader.FOLLOWING_LOADER, userID);
                 case 2:
-                    return UserListFragment.newInstance(UserListLoader.FOLLOWER_LOADER,userID);
+                    return UserListFragment.newInstance(UserListLoader.FOLLOWER_LOADER, userID);
 
                 default:
                     throw new IllegalArgumentException("Should be 1-3");
@@ -208,7 +208,13 @@ public class ProfileFragment extends Fragment {
     }
 
     private boolean isMe() {
-        return TextUtils.isEmpty(userID)|| MemeItAuth.getInstance().getUserID(getContext()).equals(userID);
+        String id = null;
+        try {
+            id = MemeItUsers.getInstance().getMyUser(getContext()).getUserID();
+        } catch (NullPointerException e) {
+
+        }
+        return TextUtils.isEmpty(userID) || userID.equals(id);
     }
 
 }

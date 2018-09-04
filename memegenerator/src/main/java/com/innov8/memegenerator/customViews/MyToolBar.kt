@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.innov8.memegenerator.utils.fromDP
+import com.innov8.memegenerator.utils.fromDPToPX
 
 class MyToolBar : LinearLayout {
     lateinit var leftMenuHolder:LinearLayout
@@ -38,9 +38,9 @@ class MyToolBar : LinearLayout {
         val lp=LayoutParams(0,LayoutParams.MATCH_PARENT,1f)
         addView(leftMenuHolder,lp)
         addView(rightMenuHolder,lp)
-        menusLayoutParams= LayoutParams(40f.fromDP(context).toInt(),56f.fromDP(context).toInt())
+        menusLayoutParams= LayoutParams(40f.fromDPToPX(context).toInt(),56f.fromDPToPX(context).toInt())
 
-        padding=16f.fromDP(context).toInt()
+        padding=16f.fromDPToPX(context).toInt()
     }
     fun addLeftMenu(t:MyToolbarmenu){
         val item = generateItem(t)

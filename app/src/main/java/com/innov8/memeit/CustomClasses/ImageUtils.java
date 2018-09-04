@@ -3,6 +3,7 @@ package com.innov8.memeit.CustomClasses;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.cloudinary.Transformation;
@@ -22,7 +23,7 @@ import java.io.File;
 
 public class ImageUtils {
     private static final String TAG="ImageUtils";
-    public static void loadImageFromCloudinaryTo(final SimpleDraweeView sdv, String id){
+    public static void loadImageFromCloudinaryTo(final SimpleDraweeView sdv, final String id){
         if(TextUtils.isEmpty(id)){
             sdv.setImageURI((Uri) null);
             return;
@@ -30,11 +31,12 @@ public class ImageUtils {
         Transformation t=new Transformation().quality("50");
         Url a=MediaManager.get().url().transformation(t).source(id);
         MediaManager.get().responsiveUrl(ResponsiveUrl.Preset.FIT)
-                .stepSize(50)
+                .stepSize(100)
                 .generate(a, sdv, new ResponsiveUrl.Callback() {
                     @Override
                     public void onUrlReady(Url url) {
                         String u=url.generate();
+                        Log.d(TAG, "id: "+id+"\turl: "+u);
                         sdv.setImageURI(u);
                     }
                 });
