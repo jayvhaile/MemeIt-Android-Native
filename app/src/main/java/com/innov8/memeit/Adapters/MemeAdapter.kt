@@ -107,7 +107,7 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
             val view = inflater.inflate(R.layout.item_list_meme_loading, parent, false)
             val progress=view.findViewById<ProgressBar>(R.id.meme_loading)
             val d=CubeGrid()
-            d.color= Color.RED
+            d.color= Color.rgb(255,100,0)
             progress.indeterminateDrawable=d
             object : MemeViewHolder(view, this) {
                 override fun bind(homeElement: HomeElement) {
