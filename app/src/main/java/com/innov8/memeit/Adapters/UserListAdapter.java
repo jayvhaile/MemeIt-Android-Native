@@ -12,6 +12,7 @@ import com.innov8.memegenerator.adapters.MyViewHolder;
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton;
 import com.innov8.memegenerator.loading_button_lib.interfaces.OnAnimationEndListener;
 import com.innov8.memeit.CustomClasses.FontTextView;
+import com.innov8.memeit.CustomViews.TextDrawable;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
@@ -41,10 +42,13 @@ public class UserListAdapter extends ListAdapter<User> {
         TextView followerName;
         TextView followerDetail;
         CircularProgressButton followButton;
+        private TextDrawable textDrawable;
 
         public UserListViewHolder(@NonNull View itemView) {
             super(itemView);
-            followerImage = itemView.findViewById(R.id.follower_poster_pp);
+            textDrawable= new TextDrawable(getMContext());
+            followerImage = itemView.findViewById(R.id.notif_icon);
+            followerImage.getHierarchy().setPlaceholderImage(textDrawable);
             followerName = itemView.findViewById(R.id.follower_name);
             followButton = itemView.findViewById(R.id.follower_follow_btn);
             followerDetail = itemView.findViewById(R.id.follower_detail);
@@ -93,7 +97,6 @@ public class UserListAdapter extends ListAdapter<User> {
                     }
                 }
             });
-
             followButton.setTypeface(tf);
         }
 
@@ -101,6 +104,7 @@ public class UserListAdapter extends ListAdapter<User> {
             followerName.setText(user.getName());
             followerDetail.setText(user.getPostCount() + " posts");
             followerImage.setImageURI(user.getImageUrl());
+            textDrawable.setText(String.valueOf(user.getName().charAt(0)));
             if (user.isFollowedByMe()) {
                 followButton.setText("Unfollow");
             } else {

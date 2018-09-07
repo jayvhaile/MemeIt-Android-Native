@@ -29,21 +29,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2"/>
+
     <com.innov8.memegenerator.customViews.VTab
         android:id="@+id/vtab"
         android:layout_width="56dp"
         android:layout_height="0dp"
         android:background="#eee"
+        app:item_color="#777"
+        app:item_padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:item_color="#777"
-        app:selected_background_tint="#709f"
-        app:item_padding="16dp"/>
+        app:selected_background_tint="#709f" />
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/vtab"

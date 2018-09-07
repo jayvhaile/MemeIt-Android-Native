@@ -1,5 +1,6 @@
 package com.innov8.memeit;
 import android.app.Application;
+import android.preference.PreferenceManager;
 
 import com.cloudinary.android.MediaManager;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -16,7 +17,7 @@ public class MemeItApp extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        MemeItClient.init(getApplicationContext(),                                                      SERVER_URL);
+        MemeItClient.init(getApplicationContext(),SERVER_URL);
         Map config = new HashMap();
         config.put("cloud_name", "innov8");
         config.put("api_key", "591249199742556");
@@ -28,5 +29,6 @@ public class MemeItApp extends Application{
                 .setDownsampleEnabled(true)
                 .build();
         Fresco.initialize(this,configf);
+        PreferenceManager.setDefaultValues(this,R.xml.preferences,false);
     }
 }

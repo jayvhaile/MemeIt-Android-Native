@@ -5,13 +5,13 @@ import com.memeit.backend.dataclasses.AuthToken;
 import com.memeit.backend.dataclasses.Badge;
 import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.Meme;
-import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.Reaction;
 import com.memeit.backend.dataclasses.Tag;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.dataclasses.Username;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -87,8 +87,8 @@ public interface MemeInterface {
 
 
     @GET("user/me/notifications")
-    public Call<List<Notification>> getMyNotifications(@Query("skip") int skip,
-                                                       @Query("limit") int limit);
+    public Call<List<Map<String,Object>>> getMyNotifications(@Query("skip") int skip,
+                                                      @Query("limit") int limit);
 
     @GET("user/me/notifications/count")
     public Call<Integer> getNotifCount();
@@ -135,8 +135,8 @@ public interface MemeInterface {
     @PUT("user/me/notifications/markseenall")
     public Call<ResponseBody> markNotificationSeen();
 
-    @PUT("user/me/notifications/markseen")
-    public Call<ResponseBody> markSingleNotificationSeen(@Body String nid);
+    @PUT("user/me/notifications/{id}/markseen")
+    public Call<ResponseBody> markSingleNotificationSeen(@Path("id") String nid);
 
     //-----Delete-----
 

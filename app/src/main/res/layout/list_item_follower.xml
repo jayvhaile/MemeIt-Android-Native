@@ -7,7 +7,7 @@
     android:background="#fff">
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/follower_poster_pp"
+        android:id="@+id/notif_icon"
         android:layout_width="@dimen/profile_mini_size"
         android:layout_height="@dimen/profile_mini_size"
         android:layout_marginLeft="@dimen/left_margin"
@@ -29,8 +29,8 @@
         android:text="Jv"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/follower_poster_pp"
-        app:layout_constraintTop_toTopOf="@+id/follower_poster_pp" />
+        app:layout_constraintLeft_toRightOf="@+id/notif_icon"
+        app:layout_constraintTop_toTopOf="@+id/notif_icon" />
 
     <TextView
         android:id="@+id/follower_detail"

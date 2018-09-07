@@ -61,7 +61,8 @@ class PhotosAdapter(val context: Context) : RecyclerView.Adapter<PhotosAdapter.P
         }
         var item_position:Int=0;
         fun bind(uri: String) {
-            val r = ResizeOptions(screenWidth/3,screenWidth/3,1024f)
+            val r = ResizeOptions(screenWidth/
+                    3,screenWidth/3,1024f)
             val req=ImageRequestBuilder.fromRequest(ImageRequest.fromUri(uri))
                     .setLocalThumbnailPreviewsEnabled(true)
                     .setResizeOptions(r)

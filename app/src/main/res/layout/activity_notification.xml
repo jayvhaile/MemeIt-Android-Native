@@ -4,33 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f0f0f5"
     tools:context=".Activities.NotificationActivity">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/notf_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        app:srcCompat="@drawable/ic_clear_black_24dp"
-        android:tint="#fff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <View
-        android:layout_width="5dp"
-        android:layout_height="match_parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:background="#33000000"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="#fff"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/memeit_toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
+    <View
+        android:id="@+id/view2"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginLeft="21dp"
+        android:background="#addd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notf_toolbar" />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notf_toolbar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notif_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

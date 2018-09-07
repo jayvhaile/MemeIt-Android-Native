@@ -9,6 +9,8 @@ android {
         buildToolsVersion='28.0.2'
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "androidx.support.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -30,6 +32,11 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okio:okio:1.15.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.19.0'
+    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
 }
 repositories {
     mavenCentral()

@@ -1,18 +1,19 @@
 package com.innov8.memeit
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceActivity
 import android.preference.PreferenceFragment
+import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
-import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.CustomClasses.ImageUtils
+import com.innov8.memeit.CustomViews.TextDrawable
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.MyUser
 import com.memeit.backend.utilis.Listener
@@ -21,22 +22,24 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_settings2.*
 import okhttp3.ResponseBody
 
-val PREF_NAME = "pref_name"
-val PREF_USERNAME = "pref_username"
-
 class SettingsActivity : AppCompatActivity() {
+
+
     lateinit var user: MyUser
+    lateinit var textDrawable:TextDrawable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings2)
+        textDrawable= TextDrawable(this)
         load()
         initListenrs()
     }
-
     fun load() {
         user = MemeItUsers.getInstance().getMyUser(this)
         namesettings.text=user.name
         usernamesettings.text="@${user.username}"
+        textDrawable.text=user.name[0].toString()
+        settings_pp.hierarchy.setPlaceholderImage(textDrawable)
         ImageUtils.loadImageFromCloudinaryTo(settings_pp, user.imageUrl)
     }
     fun initListenrs(){
@@ -74,7 +77,6 @@ class SettingsActivity : AppCompatActivity() {
             val result = CropImage.getActivityResult(data)
             if (resultCode == Activity.RESULT_OK) {
                 val image_url = result.uri
-                log("yihu",image_url.toString())
                 if (result.uri==null)return
                 val dialog=MaterialDialog.Builder(this)
                         .title("Uploading Image")
@@ -116,43 +118,25 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-}
 
-class Prefheaders : PreferenceFragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        addPreferencesFromResource(R.xml.pref_headers)
+    companion object {
+        const val PREF_KEY_IMAGE_QUALITY="pref_image_quality"
+
+        fun getImageQuality(context:Context):Int{
+            val pref=PreferenceManager.getDefaultSharedPreferences(context)
+            val quality= listOf(10,25,50,75,100)
+            val values=context.resources.getStringArray(R.array.pref_image_quality)
+            val value=pref.getString(PREF_KEY_IMAGE_QUALITY,"")
+            return quality[values.indexOf(value)]
+        }
     }
 }
 
-class AccountPref : PreferenceActivity() {
+class PrefFragment : PreferenceFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        addPreferencesFromResource(R.xml.pref_account)
+        addPreferencesFromResource(R.xml.preferences)
     }
-
-}
-
-class NotificationPref : PreferenceActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        addPreferencesFromResource(R.xml.pref_notifications)
-    }
-}
-
-class DataAndStoragePref : PreferenceActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        addPreferencesFromResource(R.xml.pref_data_and_storage)
-    }
-}
-
-class PrivacyAndSecurityPref : PreferenceActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        addPreferencesFromResource(R.xml.pref_privacy_and_security)
-    }
-
 }
 
 

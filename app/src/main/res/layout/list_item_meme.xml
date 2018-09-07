@@ -9,7 +9,7 @@
     android:background="@drawable/bottom_nav_back">
     <!--====================================================THE TOP PARTS-->
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/follower_poster_pp"
+        android:id="@+id/notif_icon"
         android:layout_width="@dimen/profile_mini_size"
         android:layout_height="@dimen/profile_mini_size"
         android:layout_marginLeft="16dp"
@@ -30,8 +30,8 @@
         android:layout_marginTop="8dp"
         android:text="MemeFactory"
         android:textSize="16sp"
-        app:layout_constraintLeft_toRightOf="@+id/follower_poster_pp"
-        app:layout_constraintTop_toTopOf="@+id/follower_poster_pp" />
+        app:layout_constraintLeft_toRightOf="@+id/notif_icon"
+        app:layout_constraintTop_toTopOf="@+id/notif_icon" />
 
     <com.innov8.memeit.CustomClasses.FontTextView
         android:id="@+id/meme_time"

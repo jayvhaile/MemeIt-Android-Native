@@ -1,6 +1,5 @@
 package com.memeit.backend.dataclasses;
 
-import android.net.ParseException;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -19,17 +18,17 @@ public class Comment implements Parcelable{
     @SerializedName("comment")
     private String comment;
     @SerializedName("date")
-    private String date;
+    private Long date;
 
     @SerializedName("poster")
     private Poster poster;
 
-    protected Comment(Parcel in) {
+    private Comment(Parcel in) {
         posterID = in.readString();
         memeID = in.readString();
         commentID = in.readString();
         comment = in.readString();
-        date = in.readString();
+        date = in.readLong();
         poster = in.readParcelable(Poster.class.getClassLoader());
     }
 
@@ -104,7 +103,7 @@ public class Comment implements Parcelable{
         return comment;
     }
 
-    public String getDate() {
+    public Long getDate() {
         return date;
     }
 
@@ -120,7 +119,7 @@ public class Comment implements Parcelable{
         parcel.writeString(memeID);
         parcel.writeString(commentID);
         parcel.writeString(comment);
-        parcel.writeString(date);
+        parcel.writeLong(date);
         parcel.writeParcelable(poster, i);
     }
 }

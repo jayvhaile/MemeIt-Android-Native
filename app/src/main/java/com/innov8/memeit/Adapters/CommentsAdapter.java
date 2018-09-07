@@ -100,7 +100,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<ViewHolder> {
             commentV.setText(comment.getComment());
             ImageUtils.loadImageFromCloudinaryTo(posterPicV,comment.getPoster().getProfileUrl());
             posterNameV.setText(comment.getPoster().getName());
-            dateV.setText(CustomMethods.convertDate(Long.parseLong(comment.getDate())));
+            dateV.setText(CustomMethods.convertDate(comment.getDate()));
         }
     }
 }

@@ -8,7 +8,6 @@ import android.util.Log;
 import com.memeit.backend.dataclasses.AuthInfo;
 import com.memeit.backend.dataclasses.Badge;
 import com.memeit.backend.dataclasses.MyUser;
-import com.memeit.backend.dataclasses.Notification;
 import com.memeit.backend.dataclasses.Tag;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.dataclasses.Username;
@@ -19,6 +18,7 @@ import com.memeit.backend.utilis.PrefUtils;
 import com.memeit.backend.utilis.Utils;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -62,10 +62,6 @@ public class MemeItUsers {
                 if (response.isSuccessful()) {
                     MyUser mu = response.body().toMyUser();
                     mu.save(context);
-                    Log.d("fukas", "onResponse: " + mu.getUserID());
-                    Log.d("fukas", "onResponse: " + mu.getUsername());
-                    Log.d("fukas", "onResponse: " + response.body().getUsername());
-                    Log.d("fukas", "onResponse: " + mu.getName());
                     Utils.checkAndFireSuccess(listener, response.body());
                 } else
                     Utils.checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
@@ -80,8 +76,6 @@ public class MemeItUsers {
      * @param listener the Listener to be called when the action is completed
      **/
     public void getUserDetailFor(String uid, final OnCompleteListener<User> listener) {
-        Log.d("fukas", "  ");
-
         MemeItClient.getInstance().getInterface()
                 .getUserById(uid).enqueue(new MyCallBack<User>(listener));
     }
@@ -93,10 +87,10 @@ public class MemeItUsers {
      * @param limit    to limit the number of retrieved notifications
      * @param listener the Listener to be called when the action is completed
      **/
-    public void getNotificationList(int skip, int limit, OnCompleteListener<List<Notification>> listener) {
+    public void getNotificationList(int skip, int limit, OnCompleteListener<List<Map<String,Object>>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getMyNotifications(skip, limit)
-                .enqueue(new MyCallBack<List<Notification>>(listener));
+                .enqueue(new MyCallBack<>(listener));
     }
 
     /**
@@ -106,7 +100,7 @@ public class MemeItUsers {
      **/
     public void getNotificationCount(OnCompleteListener<Integer> listener) {
         MemeItClient.getInstance().getInterface()
-                .getNotifCount().enqueue(new MyCallBack<Integer>(listener));
+                .getNotifCount().enqueue(new MyCallBack<>(listener));
     }
 
     /**

@@ -17,7 +17,6 @@ import com.cloudinary.android.callback.UploadCallback;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.innov8.memeit.Activities.MainActivity;
 import com.innov8.memeit.CustomClasses.CustomMethods;
-import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
@@ -50,8 +49,6 @@ public class SetupFragment extends AuthFragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setup_profile2, container, false);
         nameV = view.findViewById(R.id.name_setup);
-        EditText username = view.findViewById(R.id.name_setup);
-        EditText tags = view.findViewById(R.id.tags_setup);
         CustomMethods.makeEditTextsAvenir(getActivity(), view, R.id.name_setup, R.id.tags_setup);
         profileV = view.findViewById(R.id.profile_pic);
         profileV.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +64,8 @@ public class SetupFragment extends AuthFragment implements View.OnClickListener 
         actionButton=view.findViewById(R.id.finish);
         actionButton.setOnClickListener(this);
         nameV.setText(name);
-        ImageUtils.loadImageFromUriTo(profileV, image_url);
+        profileV.setImageURI(image_url);
+
         return view;
     }
 

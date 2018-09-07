@@ -141,14 +141,15 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
                 y = (ch / 2f) - (h / 2f)
             }
 
-            rect = Rect(x.toInt(), y.toInt(),x.toInt()+ w.toInt(), y.toInt()+h.toInt())
+            rect = Rect(x.toInt(), y.toInt(), x.toInt() + w.toInt(), y.toInt() + h.toInt())
             canvas.drawBitmap(img, null, rect, null)
 
 
         }
         super.onDraw(canvas)
     }
-    var rect=Rect(0,0,0,0)
+
+    var rect = Rect(0, 0, 0, 0)
     override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
         val eleft: Int = this.paddingLeft
         val etop: Int = this.paddingTop
@@ -170,7 +171,7 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             curTop = if (child.left < etop) etop else child.top
             curRight = if (curLeft + child.measuredWidth > eright) eright else curLeft + child.measuredWidth
             curBottom = if (curTop + child.measuredHeight > ebottom) ebottom else curTop + child.measuredHeight
-            child.layout(curLeft, curTop, curRight, curBottom)
+            child.layout(curLeft, curTop, curRight  , curBottom)
         }
     }
 
@@ -182,22 +183,22 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
-    fun removeSelectedItem(clazz:(Class<out MemeItemView>)=MemeItemView::class.java) {
-        if (selectedView != null && selectedView!!.javaClass==clazz) {
+    fun removeSelectedItem(clazz: (Class<out MemeItemView>) = MemeItemView::class.java) {
+        if (selectedView != null && selectedView!!.javaClass == clazz) {
             removeMemeItemView(selectedView!!)
         }
     }
 
     fun clearMemeItems() {
-       removeAllViews()
+        removeAllViews()
     }
 
 
-    fun generateAllTextProperty():List<TextProperty>{
-       val list= mutableListOf<TextProperty>()
-        for (index in 0 until  childCount){
-            val  v=super.getChildAt(index)
-            if(v is MemeTextView){
+    fun generateAllTextProperty(): List<TextProperty> {
+        val list = mutableListOf<TextProperty>()
+        for (index in 0 until childCount) {
+            val v = super.getChildAt(index)
+            if (v is MemeTextView) {
                 list.add(v.generateTextProperty(width.toFloat(), height.toFloat()))
             }
         }
@@ -205,52 +206,59 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
     }
 
 
-    fun loadMemeTemplate(memeTemplate: MemeTemplate){
+    fun loadMemeTemplate(memeTemplate: MemeTemplate) {
         Handler().postDelayed({
             clearMemeItems()
-            image=context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
+            image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
             memeTemplate.textProperties.forEach {
-                val memeTextView=MemeTextView(context)
+                val memeTextView = MemeTextView(context)
                 addMemeItemView(memeTextView)
-                memeTextView.applyTextProperty(it,width.toFloat(),height.toFloat())
+                memeTextView.applyTextProperty(it, width.toFloat(), height.toFloat())
 
             }
         }, 300)
     }
-    fun loadBitmab(bitmap: Bitmap){
-        clearMemeItems()
-        image=bitmap
-    }
-    fun captureMeme():Bitmap{
-        selectedView?.setItemSelected(false)
-        isDrawingCacheEnabled=true
-        val bitmap= getDrawingCache(true).copy(Bitmap.Config.ARGB_8888,false)
-        log("view",width,height)
-        log("bitmap",bitmap.width,bitmap.height)
 
-        val rb=Bitmap.createBitmap(bitmap,rect.left,rect.top,
-                rect.right-rect.left,rect.bottom-rect.top)
-        log("bitmap",rb.width,rb.height)
+    fun loadBitmab(bitmap: Bitmap) {
+        clearMemeItems()
+        image = bitmap
+    }
+
+    fun captureMeme(): Bitmap {
+        selectedView?.setItemSelected(false)
+        isDrawingCacheEnabled = true
+        val bitmap = getDrawingCache(true).copy(Bitmap.Config.ARGB_8888, false)
+        log("view", width, height)
+        log("bitmap", bitmap.width, bitmap.height)
+
+        val rb = Bitmap.createBitmap(bitmap, rect.left, rect.top,
+                rect.right - rect.left, rect.bottom - rect.top)
+        log("bitmap", rb.width, rb.height)
 
         destroyDrawingCache()
         return rb
     }
-    fun getRatio():Float{
-        val w=rect.right-rect.left
-        val h=rect.bottom-rect.top
 
-        return w.toFloat()/h
+    fun getRatio(): Float {
+        val w = rect.right - rect.left
+        val h = rect.bottom - rect.top
+
+        return w.toFloat() / h
     }
-    fun getTexts():List<String>{
-        val x= mutableListOf<String>()
-        for (i in 0 until childCount){
-            val v=getChildAt(i)
-            if( v is MemeTextView ){
+
+    fun getTexts(): List<String> {
+        val x = mutableListOf<String>()
+        for (i in 0 until childCount) {
+            val v = getChildAt(i)
+            if (v is MemeTextView) {
                 x.add(v.text)
             }
         }
         return x
     }
+}
 
+fun Float.minmax(min: Float, max: Float): Float {
+    return if (this < min) min else if (this > max) max else this
 }
 

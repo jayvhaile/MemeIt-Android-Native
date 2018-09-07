@@ -129,6 +129,14 @@ public class MemeListFragment extends Fragment {
             memeAdapter = MemeAdapter.Companion.create(memeAdapterType, getContext());
     }
 
+    public void swapAdapter(byte adapterType){
+        memeAdapterType=adapterType;
+        List<HomeElement> elem=new ArrayList<>(memeAdapter.getItems());
+        memeAdapter=null;
+        initAdapter();
+        memeAdapter.addAll(elem);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

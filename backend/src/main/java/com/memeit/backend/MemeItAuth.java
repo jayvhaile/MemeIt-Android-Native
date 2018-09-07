@@ -17,9 +17,9 @@ import com.memeit.backend.dataclasses.AuthInfo;
 import com.memeit.backend.dataclasses.AuthToken;
 import com.memeit.backend.dataclasses.MyUser;
 import com.memeit.backend.dataclasses.User;
-import com.memeit.backend.utilis.MyCallBack;
 import com.memeit.backend.utilis.MyCallBack2;
 import com.memeit.backend.utilis.OnCompleteListener;
+import com.memeit.backend.utilis.PrefUtils;
 
 import java.io.IOException;
 
@@ -76,13 +76,25 @@ public class MemeItAuth {
         else
             return true;
     }
-    public void isUserDataSaved(Context context,OnCompleteListener<Boolean> listener){
+    public void isUserDataSaved(Context context, final OnCompleteListener<Boolean> listener){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         if ( preferences.getBoolean(PREFERENCE_USER_DATA_SAVED, false)){
             listener.onSuccess(true);
         }else{
             MemeItClient.getInstance().getInterface()
-                    .isMyUserDataSaved().enqueue(new MyCallBack<Boolean>(listener));
+                    .isMyUserDataSaved().enqueue(new MyCallBack2<Boolean, Boolean>(listener) {
+                @Override
+                public void onResponse(Call <Boolean>call, Response<Boolean> response) {
+                    if(response.isSuccessful()){
+                        PrefUtils.get().edit()
+                                .putBoolean(PREFERENCE_USER_DATA_SAVED, response.body())
+                                .apply();
+                        checkAndFireSuccess(listener,response.body());
+                    }else{
+                        checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
+                    }
+                }
+            });
         }
     }
 
@@ -96,27 +108,6 @@ public class MemeItAuth {
             return null;
         }
     }
-
-/* public void getUser(final OnCompleteListener<User> listener) {
-        if (!isSignedIn())
-            checkAndFireError(listener, OTHER_ERROR.setMessage("User not signed in"));
-        else {
-            MemeItClient.getInstance().getInterface().getMyUser()
-                    .enqueue(new MyCallBack<User>(listener) {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if (response.isSuccessful()) {
-                        checkAndFireSuccess(listener, response.body());
-                    } else {
-                        //todo handle possible server error responses
-                        checkAndFireError(listener, OTHER_ERROR.setMessage(response.message()));
-                    }
-                }
-            });
-
-        }
-    }*/
-
 
     public static final String TAG = "MemeItAuth";
 

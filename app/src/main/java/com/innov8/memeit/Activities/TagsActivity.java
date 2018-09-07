@@ -1,9 +1,5 @@
 package com.innov8.memeit.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 
 import com.innov8.memeit.Adapters.TagsAdapter;
@@ -11,6 +7,10 @@ import com.innov8.memeit.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class TagsActivity extends AppCompatActivity {
     TagsAdapter tagsAdapter;

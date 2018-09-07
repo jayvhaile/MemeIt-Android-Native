@@ -1,14 +1,15 @@
 package com.innov8.memeit.Activities;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
-import com.innov8.memegenerator.MemeTemplateMaker;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.MemeLoader;
 import com.innov8.memeit.CustomViews.BottomNavigation;
@@ -18,7 +19,9 @@ import com.innov8.memeit.Fragments.ProfileFragment;
 import com.innov8.memeit.R;
 import com.innov8.memeit.SettingsActivity;
 import com.memeit.backend.MemeItAuth;
+import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.utilis.OnCompleteListener;
+import com.minibugdev.drawablebadge.DrawableBadge;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
@@ -57,15 +60,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Boolean saved) {
                 if (saved) {
+                    Log.d("fukina", "isUserDataSaved: true");
+
                     initUI(savedInstanceState);
                 } else {
+                    Log.d("fukina", "isUserDataSaved: false");
                     goToSignUpDetails();
                 }
             }
 
             @Override
             public void onFailure(Error error) {
-                Snackbar.make(mToolbar.getRootView(),"Something went wrong",Snackbar.LENGTH_SHORT).show();
+                Log.d("fukina", "isUserDataSaved: error "+error.getMessage());
+
+                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+//                Snackbar.make(mToolbar.getRootView(),"Something went wrong",Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -185,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ChipSearchToolbar searchToolbar;
     MenuItem searchItem;
+    MenuItem notifItem;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -215,7 +225,29 @@ public class MainActivity extends AppCompatActivity {
                 return null;
             }
         });
+        notifItem = menu.findItem(R.id.menu_notif);
+        loadNotifCount();
+
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void loadNotifCount() {
+        if(notifItem==null)return;
+        MemeItUsers.getInstance().getNotificationCount(new OnCompleteListener<Integer>() {
+            @Override
+            public void onSuccess(Integer integer) {
+                Drawable d=new DrawableBadge.Builder(MainActivity.this)
+                        .drawableResId(R.drawable.ic_notifications_black_24dp)
+                        .maximumCounter(99)
+                        .build()
+                        .get(integer);
+                notifItem.setIcon(d);
+            }
+
+            @Override
+            public void onFailure(Error error) {
+            }
+        });
     }
 
     @Override
@@ -223,9 +255,15 @@ public class MainActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.menu_notif:
-                startActivity(new Intent(this, MemeTemplateMaker.class));
+                startActivity(new Intent(this, NotificationActivity.class));
         }
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadNotifCount();
     }
 
     @Override

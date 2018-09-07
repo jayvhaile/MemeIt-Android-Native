@@ -48,13 +48,15 @@ dependencies {
     implementation 'com.squareup.okio:okio:1.15.0'
     implementation 'com.github.varunest:sparkbutton:1.0.5'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-messaging:17.3.0'
+//    implementation 'com.google.firebase:firebase-core:16.0.1'
+//    implementation 'com.google.firebase:firebase-messaging:17.3.0'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0"
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
+    implementation 'com.github.minibugdev:drawablebadge:1.0.3'
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
 //    implementation 'com.github.pchmn:MaterialChipsInput:1.0.8'
 //    implementation 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
