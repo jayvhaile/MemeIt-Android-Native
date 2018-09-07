@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <View
-        android:id="@+id/notification_dot"
+        android:id="@+id/notif_dot"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:layout_marginStart="32dp"
@@ -29,7 +29,7 @@
         app:cardElevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/notification_dot"
+        app:layout_constraintStart_toEndOf="@+id/notif_dot"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content">
 
             <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/follower_poster_pp"
+                android:id="@+id/notif_icon"
                 android:layout_width="@dimen/profile_mini_size"
                 android:layout_height="@dimen/profile_mini_size"
                 android:layout_marginLeft="16dp"
@@ -51,14 +51,14 @@
                 app:roundAsCircle="true" />
 
             <TextView
-                android:id="@+id/fontTextView2"
+                android:id="@+id/notif_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:text="Meri Reacted to yor post"
-                app:layout_constraintStart_toEndOf="@+id/follower_poster_pp"
-                app:layout_constraintTop_toTopOf="@+id/follower_poster_pp" />
+                app:layout_constraintStart_toEndOf="@+id/notif_icon"
+                app:layout_constraintTop_toTopOf="@+id/notif_icon" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -86,7 +86,7 @@
                 app:layout_constraintDimensionRatio="w,16:9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/follower_poster_pp" />
+                app:layout_constraintTop_toBottomOf="@+id/notif_icon" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

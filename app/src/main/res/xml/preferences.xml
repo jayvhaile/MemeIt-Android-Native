@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Account">
+        <EditTextPreference
+            android:key="edit_text_preference_1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Password" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Data Usage">
+
+        <ListPreference
+            android:defaultValue="@string/pref_image_quality_def"
+            android:dialogTitle="Choose Image Quality"
+            android:entries="@array/pref_image_quality"
+            android:entryValues="@array/pref_image_quality"
+            android:key="pref_image_quality"
+            android:title="Image Quality" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Storage">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="switch_preference_1"
+            android:title="Enable Disk Caching" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Notification">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="switch_preference_1"
+            android:title="Enable Notifications" />
+
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Privacy">
+
+    </PreferenceCategory>
+</PreferenceScreen>
