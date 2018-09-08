@@ -8,7 +8,7 @@
     android:layout_marginBottom="8dp"
     android:background="@drawable/bottom_nav_back">
     <!--====================================================THE TOP PARTS-->
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.innov8.memeit.CustomViews.ProfileDraweeView
         android:id="@+id/notif_icon"
         android:layout_width="@dimen/profile_mini_size"
         android:layout_height="@dimen/profile_mini_size"
@@ -63,9 +63,7 @@
         app:actualImageScaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline12"
-        app:failureImage="@drawable/ic_sync_problem"
-        app:retryImage="@drawable/ic_sync_problem"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline12"/>
 
     <View
         android:id="@+id/tint"

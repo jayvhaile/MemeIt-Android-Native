@@ -28,9 +28,10 @@ import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.Adapters.ListMemeAdapter.Companion.activeRID
 import com.innov8.memeit.CustomClasses.ImageUtils
 import com.innov8.memeit.CustomClasses.LoadingDrawable
-import com.innov8.memeit.CustomViews.TextDrawable
+import com.innov8.memeit.CustomViews.ProfileDraweeView
 import com.innov8.memeit.R
 import com.innov8.memeit.formateAsDate
+import com.innov8.memeit.prefix
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.*
@@ -117,7 +118,7 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
             }
         } else {
             val memeViewHolder = createHolder(parent, viewType)
-            memeViewHolder.memeClickedListener = { v ->
+            memeViewHolder.memeClickedListener = { memeID ->
                 val list: List<Meme> = items.filter { it is Meme }
                         .map { it as Meme }
                         .toList()
@@ -131,7 +132,7 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
                                     .generate()
                         }
                         .setCustomDraweeHierarchyBuilder(hierarchy)
-                        .setStartPosition(v)
+                        .setStartPosition(list.map { it.memeId }.indexOf(memeID))
                         .show()
             }
             memeViewHolder
@@ -222,12 +223,12 @@ class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
 
 abstract class MemeViewHolder(itemView: View, val memeAdapter: MemeAdapter) : RecyclerView.ViewHolder(itemView) {
     var itemPosition = 0
-    var memeClickedListener: ((Int) -> Unit)? = null
+    var memeClickedListener: ((String) -> Unit)? = null
     abstract fun bind(homeElement: HomeElement)
 }
 
 class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
-    private val posterPicV: SimpleDraweeView = itemView.findViewById(R.id.notif_icon)
+    private val posterPicV: ProfileDraweeView = itemView.findViewById(R.id.notif_icon)
     private val memeImageV: SimpleDraweeView = itemView.findViewById(R.id.meme_image)
     private val commentBtnV: ImageButton = itemView.findViewById(R.id.meme_comment)
     private val posterNameV: TextView = itemView.findViewById(R.id.meme_poster_name)
@@ -240,12 +241,10 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
     private val reactGroup: Group = itemView.findViewById(R.id.react_group)
     private val memeTags: TextView = itemView.findViewById(R.id.meme_tags)
 
-    private val textDrawable = TextDrawable(memeAdapter.context)
 
     init {
-        posterPicV.hierarchy.setPlaceholderImage(textDrawable)
         memeImageV.hierarchy.setProgressBarImage(LoadingDrawable())
-        memeImageV.setOnClickListener { memeClickedListener?.invoke(itemPosition) }
+        memeImageV.setOnClickListener { memeClickedListener?.invoke(getCurrentMeme().memeId) }
         commentBtnV.setOnClickListener {
             val meme = getCurrentMeme()
             val intent = Intent(memeAdapter.context, CommentsActivity::class.java)
@@ -254,7 +253,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         }
         posterPicV.setOnClickListener {
             val i = Intent(memeAdapter.context, ProfileActivity::class.java)
-            i.putExtra("uid", getCurrentMeme().poster.id)
+            i.putExtra("user", getCurrentMeme().poster.toUser())
             memeAdapter.context.startActivity(i)
         }
 
@@ -374,7 +373,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         adjust(meme.memeImageRatio)
         reactGroup.visibility = View.GONE
         posterNameV.text = meme.poster.name
-        textDrawable.text = meme.poster.name[0].toString()
+        posterPicV.text = meme.poster.name.prefix()
         reactionCountV.text = String.format("%d people reacted", meme.reactionCount)
         commentCountV.text = meme.commentCount.toString()
         ImageUtils.loadImageFromCloudinaryTo(posterPicV, meme.poster.profileUrl)
@@ -447,12 +446,17 @@ class MemeGridViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         val width = memeAdapter.screenWidth / GridMemeAdapter.GRID_SPAN_COUNT
         val lp = FrameLayout.LayoutParams(width, width)
         memeImageV.layoutParams = lp
-        memeImageV.setOnClickListener { memeClickedListener?.invoke(itemPosition) }
+        memeImageV.setOnClickListener { memeClickedListener?.invoke(getCurrentMeme().memeId) }
+        memeImageV.hierarchy.setProgressBarImage(LoadingDrawable())
     }
 
     override fun bind(homeElement: HomeElement) {
         val meme = homeElement as Meme
         ImageUtils.loadImageFromCloudinaryTo(memeImageV, meme.memeImageUrl)
+
+    }
+    private fun getCurrentMeme(): Meme {
+        return memeAdapter.items[itemPosition] as Meme
     }
 }
 

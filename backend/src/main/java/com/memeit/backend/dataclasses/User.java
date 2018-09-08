@@ -71,6 +71,16 @@ public class User implements Parcelable {
         this.name = name;
         this.pic = imageUrl;
     }
+    public User(Poster poster){
+        this.uid=poster.getID();
+        this.name=poster.getName();
+        this.pic=poster.getProfileUrl();
+    }
+    public User(String uid,String name,String pic){
+        this.uid=uid;
+        this.name=name;
+        this.pic=pic;
+    }
 
     public String getUserID() {
         return uid;

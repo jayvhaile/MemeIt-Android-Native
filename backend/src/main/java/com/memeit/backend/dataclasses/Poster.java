@@ -58,4 +58,8 @@ public class Poster implements Parcelable {
     public String getProfileUrl() {
         return profileUrl;
     }
+
+    public User toUser(){
+       return new User(this);
+    }
 }

@@ -90,6 +90,7 @@ public class MemeListFragment extends Fragment {
 
             @Override
             public void onFailure(Error error) {
+                if(getContext()==null) return;
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                 memeAdapter.setLoading(false);
             }

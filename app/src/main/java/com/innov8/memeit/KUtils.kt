@@ -43,3 +43,7 @@ fun formatDate(date: Long): String {
     return formated
 }
 fun Long.formateAsDate():String= formatDate(this)
+
+fun String?.prefix():String{
+    return if(this===null)"..." else this[0].toString()
+}

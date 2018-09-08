@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.tabs.TabLayout;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.CustomClasses.UserListLoader;
-import com.innov8.memeit.CustomViews.TextDrawable;
+import com.innov8.memeit.CustomViews.ProfileDraweeView;
 import com.innov8.memeit.Fragments.ProfileFragments.UserListFragment;
+import com.innov8.memeit.KUtilsKt;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.MyUser;
@@ -46,6 +46,14 @@ public class ProfileFragment extends Fragment {
         pf.setArguments(bundle);
         return pf;
     }
+    public static ProfileFragment newInstance(User user) {
+        ProfileFragment pf = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("user", user);
+        bundle.putString("uid", user.getUserID());
+        pf.setArguments(bundle);
+        return pf;
+    }
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -58,8 +66,10 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
+        if (getArguments() != null){
             userID = getArguments().getString("uid", null);
+            userData=getArguments().getParcelable("user");
+        }
     }
 
 
@@ -76,9 +86,9 @@ public class ProfileFragment extends Fragment {
     TextView nameV;
     TextView followerV;
     TextView memeCountV;
-    SimpleDraweeView profileV;
+    ProfileDraweeView profileV;
     TextView followBtnV;
-    TextDrawable textDrawable;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -93,8 +103,6 @@ public class ProfileFragment extends Fragment {
         followerV = view.findViewById(R.id.profile_followers_count);
         memeCountV = view.findViewById(R.id.profile_meme_count);
         profileV = view.findViewById(R.id.profile_image);
-        textDrawable=new TextDrawable(getContext());
-        profileV.getHierarchy().setPlaceholderImage(textDrawable);
 
         followBtnV = view.findViewById(R.id.profile_follow_btn);
         followBtnV.setVisibility(isMe() ? GONE : VISIBLE);
@@ -131,12 +139,16 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-        MyUser myUser= MemeItUsers.getInstance().getMyUser(getContext());
-        nameV.setText(myUser.getName());
-//        textDrawable.setText(String.valueOf(myUser.getName().charAt(0)));
-        ImageUtils.loadImageFromCloudinaryTo(profileV, myUser.getImageUrl());
-        if(userData!=null)updateView();
+        if (isMe()) loadFast();
+        if (userData != null) updateView();
         loadData();
+    }
+
+    private void loadFast() {
+        MyUser myUser = MemeItUsers.getInstance().getMyUser(getContext());
+        nameV.setText(myUser.getName());
+        profileV.setText(KUtilsKt.prefix(myUser.getName()));
+        ImageUtils.loadImageFromCloudinaryTo(profileV, myUser.getImageUrl());
 
     }
 
@@ -164,10 +176,8 @@ public class ProfileFragment extends Fragment {
 
     private void updateView() {
         nameV.setText(userData.getName());
-        textDrawable.setText(String.valueOf(userData.getName().charAt(0)));
-
+        profileV.setText(KUtilsKt.prefix(userData.getName()));
         ImageUtils.loadImageFromCloudinaryTo(profileV, userData.getImageUrl());
-
         followerV.setText(CustomMethods.formatNumber(userData.getFollowerCount()));
         memeCountV.setText(CustomMethods.formatNumber(userData.getPostCount()));
         if (userData.isFollowedByMe()) {
@@ -181,6 +191,7 @@ public class ProfileFragment extends Fragment {
     class ViewPagerAdapter extends FragmentPagerAdapter {
         String titles[] = {"Memes", "Following", "Followers"};
         Fragment[] fragments;
+
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
             fragments = new Fragment[]{MemeListFragment.newInstanceForUserPosts(userID),

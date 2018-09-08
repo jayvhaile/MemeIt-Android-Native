@@ -1,18 +1,21 @@
 package com.innov8.memeit.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.innov8.memegenerator.adapters.ListAdapter;
 import com.innov8.memegenerator.adapters.MyViewHolder;
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton;
 import com.innov8.memegenerator.loading_button_lib.interfaces.OnAnimationEndListener;
+import com.innov8.memeit.Activities.ProfileActivity;
 import com.innov8.memeit.CustomClasses.FontTextView;
-import com.innov8.memeit.CustomViews.TextDrawable;
+import com.innov8.memeit.CustomClasses.ImageUtils;
+import com.innov8.memeit.CustomViews.ProfileDraweeView;
+import com.innov8.memeit.KUtilsKt;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
@@ -38,26 +41,23 @@ public class UserListAdapter extends ListAdapter<User> {
     }
 
     public class UserListViewHolder extends MyViewHolder<User> {
-        SimpleDraweeView followerImage;
+        ProfileDraweeView followerImage;
         TextView followerName;
         TextView followerDetail;
         CircularProgressButton followButton;
-        private TextDrawable textDrawable;
 
         public UserListViewHolder(@NonNull View itemView) {
             super(itemView);
-            textDrawable= new TextDrawable(getMContext());
             followerImage = itemView.findViewById(R.id.notif_icon);
-            followerImage.getHierarchy().setPlaceholderImage(textDrawable);
             followerName = itemView.findViewById(R.id.follower_name);
             followButton = itemView.findViewById(R.id.follower_follow_btn);
             followerDetail = itemView.findViewById(R.id.follower_detail);
             followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String t=followButton.getText().toString();
+                    String t = followButton.getText().toString();
                     followButton.startAnimation();
-                    User user=getItemAt(getItem_position());
+                    User user = getItemAt(getItem_position());
                     if (t.equalsIgnoreCase("unfollow")) {
                         MemeItUsers.getInstance().unFollowUser(user.getUserID(), new OnCompleteListener<ResponseBody>() {
                             @Override
@@ -73,7 +73,7 @@ public class UserListAdapter extends ListAdapter<User> {
                             @Override
                             public void onFailure(Error error) {
                                 followButton.revertAnimation();
-                                Toast.makeText(getMContext(), "Error "+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getMContext(), "Error " + error.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else {
@@ -91,10 +91,18 @@ public class UserListAdapter extends ListAdapter<User> {
                             @Override
                             public void onFailure(Error error) {
                                 followButton.revertAnimation();
-                                Toast.makeText(getMContext(), "Error "+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getMContext(), "Error " + error.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
+                }
+            });
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getMContext(), ProfileActivity.class);
+                    i.putExtra("user", getItemAt(getItem_position()));
+                    getMContext().startActivity(i);
                 }
             });
             followButton.setTypeface(tf);
@@ -103,8 +111,8 @@ public class UserListAdapter extends ListAdapter<User> {
         public void bind(User user) {
             followerName.setText(user.getName());
             followerDetail.setText(user.getPostCount() + " posts");
-            followerImage.setImageURI(user.getImageUrl());
-            textDrawable.setText(String.valueOf(user.getName().charAt(0)));
+            followerImage.setText(KUtilsKt.prefix(user.getName()));
+            ImageUtils.loadImageFromCloudinaryTo(followerImage, user.getImageUrl());
             if (user.isFollowedByMe()) {
                 followButton.setText("Unfollow");
             } else {

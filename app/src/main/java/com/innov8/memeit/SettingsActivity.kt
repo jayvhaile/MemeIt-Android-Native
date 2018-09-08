@@ -13,7 +13,6 @@ import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.CustomClasses.ImageUtils
-import com.innov8.memeit.CustomViews.TextDrawable
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.MyUser
 import com.memeit.backend.utilis.Listener
@@ -26,11 +25,9 @@ class SettingsActivity : AppCompatActivity() {
 
 
     lateinit var user: MyUser
-    lateinit var textDrawable:TextDrawable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings2)
-        textDrawable= TextDrawable(this)
         load()
         initListenrs()
     }
@@ -38,8 +35,7 @@ class SettingsActivity : AppCompatActivity() {
         user = MemeItUsers.getInstance().getMyUser(this)
         namesettings.text=user.name
         usernamesettings.text="@${user.username}"
-        textDrawable.text=user.name[0].toString()
-        settings_pp.hierarchy.setPlaceholderImage(textDrawable)
+        settings_pp.text=user.name.prefix()
         ImageUtils.loadImageFromCloudinaryTo(settings_pp, user.imageUrl)
     }
     fun initListenrs(){

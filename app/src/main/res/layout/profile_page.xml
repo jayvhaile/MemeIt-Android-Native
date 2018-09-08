@@ -188,7 +188,7 @@
 
 
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.innov8.memeit.CustomViews.ProfileDraweeView
         android:id="@+id/profile_image"
         android:layout_width="@dimen/image_width"
         android:layout_height="@dimen/image_width"

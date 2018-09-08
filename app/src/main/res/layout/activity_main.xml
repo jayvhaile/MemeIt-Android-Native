@@ -26,9 +26,6 @@
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/memeit_toolbar"
             app:layout_scrollFlags="scroll|enterAlways">
-
-            <!--<include layout="@layout/custom_toolbar" />-->
-
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

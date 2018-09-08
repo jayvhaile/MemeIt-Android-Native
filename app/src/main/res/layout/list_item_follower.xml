@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/follower_list_height"
-    android:background="#fff">
+    android:background="?attr/selectableItemBackground">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.innov8.memeit.CustomViews.ProfileDraweeView
         android:id="@+id/notif_icon"
         android:layout_width="@dimen/profile_mini_size"
         android:layout_height="@dimen/profile_mini_size"

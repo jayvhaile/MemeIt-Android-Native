@@ -2,6 +2,7 @@ package com.innov8.memeit.Activities;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -101,15 +102,17 @@ public class MainActivity extends AppCompatActivity {
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(0);
-        rootNav = new SlidingRootNavBuilder(this)
+        SlidingRootNavBuilder sbd=new SlidingRootNavBuilder(this)
                 .withSavedState(savedInstanceState)
                 .withContentClickableWhenMenuOpened(false)
                 .withRootViewElevationPx(5)
                 .withRootViewScale(0.5f)
-                .withMenuLayout(R.layout.menu_drawer2)
-                .withToolbarMenuToggle(mToolbar)
-                .inject();
+                .withMenuLayout(R.layout.menu_drawer2);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            sbd.withToolbarMenuToggle(mToolbar);
+        }
+        rootNav = sbd.inject();
 
         findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override

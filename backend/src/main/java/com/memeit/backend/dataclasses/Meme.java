@@ -12,12 +12,13 @@ import java.util.List;
  * Created by Jv on 6/30/2018.
  */
 
-public class Meme  implements HomeElement, Parcelable {
+public class Meme implements HomeElement, Parcelable {
     @Override
     public int getItemType() {
         return HomeElementKt.getMEME_TYPE();
     }
- public enum MemeType {
+
+    public enum MemeType {
         IMAGE, GIF
     }
 
@@ -49,16 +50,16 @@ public class Meme  implements HomeElement, Parcelable {
     private Reaction[] myReaction;
 
 
-    public static Meme createMeme(String memeImageUrl,double memeImageRatio, MemeType type) {
-        return new Meme(memeImageUrl,memeImageRatio, type, new ArrayList<String>(), new ArrayList<String>());
+    public static Meme createMeme(String memeImageUrl, double memeImageRatio, MemeType type) {
+        return new Meme(memeImageUrl, memeImageRatio, type, new ArrayList<String>(), new ArrayList<String>());
     }
 
-    public static Meme createMeme(String memeImageUrl,double memeImageRatio, MemeType type, List<String> texts) {
-        return new Meme(memeImageUrl,memeImageRatio, type, texts, new ArrayList<String>());
+    public static Meme createMeme(String memeImageUrl, double memeImageRatio, MemeType type, List<String> texts) {
+        return new Meme(memeImageUrl, memeImageRatio, type, texts, new ArrayList<String>());
     }
 
-    public static Meme createMeme(String memeImageUrl,double memeImageRatio, MemeType type, List<String> texts, List<String> tags) {
-        return new Meme(memeImageUrl,memeImageRatio, type, texts, tags);
+    public static Meme createMeme(String memeImageUrl, double memeImageRatio, MemeType type, List<String> texts, List<String> tags) {
+        return new Meme(memeImageUrl, memeImageRatio, type, texts, tags);
     }
 
     public static Meme forID(String memeID) {
@@ -74,12 +75,17 @@ public class Meme  implements HomeElement, Parcelable {
         this.memeId = memeId;
     }
 
-    private Meme(String memeImageUrl,double memeImageRatio, MemeType type, List<String> texts, List<String> tags) {
+    public Meme(String memeId, String img) {
+        this.memeId = memeId;
+        this.memeImageUrl = img;
+    }
+
+    private Meme(String memeImageUrl, double memeImageRatio, MemeType type, List<String> texts, List<String> tags) {
         this.memeImageUrl = memeImageUrl;
         this.tags = tags;
         this.texts = texts;
         this.type = type.toString().toLowerCase();
-        this.memeImageRatio=memeImageRatio;
+        this.memeImageRatio = memeImageRatio;
     }
 
     private Meme(List<String> texts, List<String> tags, String mid) {
@@ -88,11 +94,11 @@ public class Meme  implements HomeElement, Parcelable {
         this.texts = texts;
     }
 
-    private Meme(String memeId, Poster poster, String memeImageUrl,double memeImageRatio, List<String> tags, List<String> texts, Long date, Long reactionCount, Long commentCount, Double point) {
+    private Meme(String memeId, Poster poster, String memeImageUrl, double memeImageRatio, List<String> tags, List<String> texts, Long date, Long reactionCount, Long commentCount, Double point) {
         this.memeId = memeId;
         this.poster = poster;
         this.memeImageUrl = memeImageUrl;
-        this.memeImageRatio=memeImageRatio;
+        this.memeImageRatio = memeImageRatio;
         this.tags = tags;
         this.texts = texts;
         this.date = date;
@@ -110,16 +116,26 @@ public class Meme  implements HomeElement, Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(memeId);
         parcel.writeString(memeImageUrl);
-        parcel.writeStringList(tags);
-        parcel.writeStringList(texts);
-        parcel.writeLong(date);
-        parcel.writeLong(reactionCount);
-        parcel.writeLong(commentCount);
-        parcel.writeDouble(point);
-        parcel.writeDouble(memeImageRatio);
+
+        //todo fix this shit
+        if (tags != null)
+            parcel.writeStringList(tags);
+        if (texts != null)
+            parcel.writeStringList(texts);
+        if (date != null)
+            parcel.writeLong(date);
+        if (reactionCount != null)
+            parcel.writeLong(reactionCount);
+        if (commentCount != null)
+            parcel.writeLong(commentCount);
+        if (point != null)
+            parcel.writeDouble(point);
+        if (memeImageRatio != null)
+            parcel.writeDouble(memeImageRatio);
         parcel.writeByte((byte) (isMyFavourite ? 1 : 0));
-        parcel.writeParcelable(poster, i);
-        parcel.writeParcelable(getMyReaction(),i);
+        if (poster != null)
+            parcel.writeParcelable(poster, i);
+        parcel.writeParcelable(getMyReaction(), i);
     }
 
     protected Meme(Parcel in) {
@@ -132,9 +148,9 @@ public class Meme  implements HomeElement, Parcelable {
         commentCount = in.readLong();
         point = in.readDouble();
         memeImageRatio = in.readDouble();
-        isMyFavourite=in.readByte() != 0;
+        isMyFavourite = in.readByte() != 0;
         poster = in.readParcelable(Poster.class.getClassLoader());
-        Reaction r=in.readParcelable(Reaction.class.getClassLoader());
+        Reaction r = in.readParcelable(Reaction.class.getClassLoader());
         setMyReaction(r);
     }
 
@@ -199,7 +215,7 @@ public class Meme  implements HomeElement, Parcelable {
     }
 
     public double getMemeImageRatio() {
-        return memeImageRatio==null?1.0:memeImageRatio;
+        return memeImageRatio == null ? 1.0 : memeImageRatio;
     }
 
     public boolean isMyFavourite() {
@@ -207,7 +223,7 @@ public class Meme  implements HomeElement, Parcelable {
     }
 
     public Reaction getMyReaction() {
-        if(myReaction==null ||myReaction.length==0)return null;
+        if (myReaction == null || myReaction.length == 0) return null;
         return myReaction[0];
     }
 
@@ -234,9 +250,9 @@ public class Meme  implements HomeElement, Parcelable {
     }
 
     @Override
-    protected Meme clone()  {
-        Meme meme=new Meme();
-        meme.memeId=memeId;
+    protected Meme clone() {
+        Meme meme = new Meme();
+        meme.memeId = memeId;
         meme.poster = poster;
         meme.memeImageUrl = memeImageUrl;
         meme.tags = tags;
@@ -245,7 +261,7 @@ public class Meme  implements HomeElement, Parcelable {
         meme.reactionCount = reactionCount;
         meme.commentCount = commentCount;
         meme.point = point;
-        meme.memeImageRatio=memeImageRatio;
+        meme.memeImageRatio = memeImageRatio;
         return meme;
     }
 
@@ -275,7 +291,7 @@ public class Meme  implements HomeElement, Parcelable {
     }
 
     public Meme refresh(Meme meme) {
-        Meme m=clone();
+        Meme m = clone();
         m.commentCount = meme.commentCount;
         m.reactionCount = meme.reactionCount;
         m.point = meme.point;
