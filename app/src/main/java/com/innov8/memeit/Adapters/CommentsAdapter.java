@@ -49,7 +49,7 @@ public class CommentsAdapter extends ListAdapter<Comment> {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getMContext(), ProfileActivity.class);
-                    i.putExtra("user", getItemAt(getItem_position()));
+                    i.putExtra("user", getItemAt(getItem_position()).getPoster().toUser());
                     getMContext().startActivity(i);
                 }
             });

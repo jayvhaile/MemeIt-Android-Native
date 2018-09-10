@@ -19,7 +19,6 @@ import com.cloudinary.android.MediaManager
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
 import com.innov8.memegenerator.utils.fromDPToPX
 import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.toast
@@ -31,6 +30,7 @@ import com.innov8.memeit.CustomClasses.LoadingDrawable
 import com.innov8.memeit.CustomViews.ProfileDraweeView
 import com.innov8.memeit.R
 import com.innov8.memeit.formateAsDate
+import com.innov8.memeit.load
 import com.innov8.memeit.prefix
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
@@ -123,7 +123,7 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
                         .map { it as Meme }
                         .toList()
                 val hierarchy = GenericDraweeHierarchyBuilder.newInstance(context.resources)
-                        .setProgressBarImage(LoadingDrawable())
+                        .setProgressBarImage(LoadingDrawable(context))
                 ImageViewer.Builder<Meme>(context, list)
                         .setFormatter {
                             MediaManager.get()
@@ -191,6 +191,8 @@ class GridMemeAdapter(context: Context) : MemeAdapter(context) {
 }
 
 class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
+    val usersPool=RecyclerView.RecycledViewPool()
+    val temlplatesPool=RecyclerView.RecycledViewPool()
     override fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
         when (viewType) {
             MEME_TYPE -> {
@@ -200,17 +202,17 @@ class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
             }
             USER_SUGGESTION_TYPE -> {
                 val inflater = LayoutInflater.from(context)
-                val v = inflater.inflate(R.layout.list_item_user_suggestion, parent, false)
+                val v = inflater.inflate(R.layout.list_item_list, parent, false)
                 return UserSuggestionHolder(v, this)
             }
             MEME_TEMPLATE_SUGGESTION_TYPE -> {
                 val inflater = LayoutInflater.from(context)
-                val v = inflater.inflate(R.layout.list_item_meme_template_suggestion, parent, false)
+                val v = inflater.inflate(R.layout.list_item_list, parent, false)
                 return MemeTemplateSuggestionHolder(v, this)
             }
             AD_TYPE -> {
                 val inflater = LayoutInflater.from(context)
-                val v = inflater.inflate(R.layout.list_item_user_suggestion, parent, false)
+                val v = inflater.inflate(R.layout.list_item_ad, parent, false)
                 return AdHolder(v, this)
             }
             else -> {
@@ -243,7 +245,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 
 
     init {
-        memeImageV.hierarchy.setProgressBarImage(LoadingDrawable())
+        memeImageV.hierarchy.setProgressBarImage(LoadingDrawable(memeAdapter.context))
         memeImageV.setOnClickListener { memeClickedListener?.invoke(getCurrentMeme().memeId) }
         commentBtnV.setOnClickListener {
             val meme = getCurrentMeme()
@@ -331,6 +333,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
     private fun showFollowDialog() {
         val meme = getCurrentMeme()
         MaterialDialog.Builder(memeAdapter.context)
+                .title("Choose Tags to follow")
                 .items(meme.tags.map { "#$it" })
                 .itemsCallbackMultiChoice(null) { _, _, _ ->
                     true
@@ -370,7 +373,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 
     override fun bind(homeElement: HomeElement) {
         val meme = homeElement as Meme
-        adjust(meme.memeImageRatio)
+
         reactGroup.visibility = View.GONE
         posterNameV.text = meme.poster.name
         posterPicV.text = meme.poster.name.prefix()
@@ -391,20 +394,21 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
             reactButton.isChecked = false
         }
         favButton.isChecked = meme.isMyFavourite
-        ImageUtils.loadImageFromCloudinaryTo(memeImageV, meme.memeImageUrl)
+        val w = memeAdapter.screenWidth
+        var h = (w/ meme.memeImageRatio).toInt()
+
+        val maxHeight = memeAdapter.screenHeight - 200.fromDPToPX(memeAdapter.context)
+        val minHeight = 200.fromDPToPX(memeAdapter.context)
+        h = if (h < minHeight) minHeight else if (h > maxHeight) maxHeight else h
+        memeImageV.layoutParams.width = w
+        memeImageV.layoutParams.height = h
+        memeImageV.requestLayout()
+        memeImageV.load(meme.memeImageUrl,w,h)
     }
 
 
     private fun adjust(ratio: Double) {
-        val width = memeAdapter.screenWidth
-        var height = (width / ratio).toInt()
 
-        val maxHeight = memeAdapter.screenHeight - 200.fromDPToPX(memeAdapter.context)
-        val minHeight = 200.fromDPToPX(memeAdapter.context)
-        height = if (height < minHeight) minHeight else if (height > maxHeight) maxHeight else height
-        memeImageV.layoutParams.width = width
-        memeImageV.layoutParams.height = height
-        memeImageV.requestLayout()
     }
 
     private fun showMemeMenu() {
@@ -447,7 +451,7 @@ class MemeGridViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         val lp = FrameLayout.LayoutParams(width, width)
         memeImageV.layoutParams = lp
         memeImageV.setOnClickListener { memeClickedListener?.invoke(getCurrentMeme().memeId) }
-        memeImageV.hierarchy.setProgressBarImage(LoadingDrawable())
+        memeImageV.hierarchy.setProgressBarImage(LoadingDrawable(memeAdapter.context))
     }
 
     override fun bind(homeElement: HomeElement) {
@@ -461,111 +465,41 @@ class MemeGridViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 }
 
 class UserSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
-    private val images: List<SimpleDraweeView> = listOf(
-            itemView.findViewById(R.id.suggestion_pp1),
-            itemView.findViewById(R.id.suggestion_pp2),
-            itemView.findViewById(R.id.suggestion_pp3),
-            itemView.findViewById(R.id.suggestion_pp4)
-    )
-    private val texts: List<TextView> = listOf(
-            itemView.findViewById(R.id.suggestion_name1),
-            itemView.findViewById(R.id.suggestion_name2),
-            itemView.findViewById(R.id.suggestion_name3),
-            itemView.findViewById(R.id.suggestion_name4)
-    )
-    private val buttons: List<CircularProgressButton> = listOf(
-            itemView.findViewById(R.id.suggestion_follow_btn1),
-            itemView.findViewById(R.id.suggestion_follow_btn2),
-            itemView.findViewById(R.id.suggestion_follow_btn3),
-            itemView.findViewById(R.id.suggestion_follow_btn4)
-    )
-
-
+    val list:RecyclerView=itemView.findViewById(R.id.list_recyc)
+    val title:TextView=itemView.findViewById(R.id.list_title)
+    private val adapter:UserSugAdapter= UserSugAdapter(memeAdapter.context)
     init {
-        val listener: (View) -> Unit = {
-            val i = it.tag?.toString()?.toInt() ?: 0
-            val user = (memeAdapter.items[itemPosition] as UserSuggestion).users[i]
-            buttons[i].startAnimation()
+        list.layoutManager=LinearLayoutManager(memeAdapter.context,RecyclerView.HORIZONTAL,false)
+        list.adapter=adapter
+        title.text="User Suggestions"
+        memeAdapter as HomeMemeAdapter
 
-            MemeItUsers.getInstance().followUser(user.userID, object : OnCompleteListener<ResponseBody> {
-                override fun onSuccess(t: ResponseBody?) {
-                    buttons[i].revertAnimation {
-                        images[i].visibility = View.GONE
-                        texts[i].visibility = View.GONE
-                        buttons[i].visibility = View.GONE
-                        memeAdapter.context.toast("Now Following User")
-                    }
-                }
-
-                override fun onFailure(error: OnCompleteListener.Error?) {
-                    buttons[i].revertAnimation {
-                        memeAdapter.context.toast("Failed To Follow user " + error?.message)
-                    }
-                }
-            })
-
-        }
-        buttons.forEachIndexed { i, btn ->
-            btn.setOnClickListener {
-                it.tag = i
-                it.setOnClickListener(listener)
-            }
-        }
+        list.setRecycledViewPool(memeAdapter.usersPool)
     }
-
     override fun bind(homeElement: HomeElement) {
-        val userSuggestion = homeElement as UserSuggestion
-        for (i in 0 until 4) {
-            if (i < userSuggestion.users.size) {
-                images[i].visibility = View.VISIBLE
-                texts[i].visibility = View.VISIBLE
-                buttons[i].visibility = View.VISIBLE
-                images[i].setImageURI(userSuggestion.users[i].imageUrl)//todo replace with loadimageto
-                texts[i].text = userSuggestion.users[i].name
-            } else {
-                images[i].visibility = View.GONE
-                texts[i].visibility = View.GONE
-                buttons[i].visibility = View.GONE
-            }
-        }
+        val a=homeElement as UserSuggestion
+        adapter.setAll(a.users)
     }
 }
 
 class MemeTemplateSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
-    private val imgs: List<SimpleDraweeView> = listOf(
-            itemView.findViewById(R.id.suggestion_pp1),
-            itemView.findViewById(R.id.suggestion_pp2),
-            itemView.findViewById(R.id.suggestion_pp3),
-            itemView.findViewById(R.id.suggestion_pp4)
-    )
-    private val btns: List<CircularProgressButton> = listOf(
-            itemView.findViewById(R.id.suggestion_follow_btn1),
-            itemView.findViewById(R.id.suggestion_follow_btn2),
-            itemView.findViewById(R.id.suggestion_follow_btn3),
-            itemView.findViewById(R.id.suggestion_follow_btn4)
-    )
+    val list:RecyclerView=itemView.findViewById(R.id.list_recyc)
+    val title:TextView=itemView.findViewById(R.id.list_title)
 
+    private val adapter:TemplateSugAdapter= TemplateSugAdapter(memeAdapter.context)
     init {
-        btns.forEachIndexed { _, btn ->
-            btn.setOnClickListener {
+        list.layoutManager=LinearLayoutManager(memeAdapter.context,RecyclerView.HORIZONTAL,false)
+        list.adapter=adapter
+        title.text="Meme Templates to Edit"
+        memeAdapter as HomeMemeAdapter
+        list.setRecycledViewPool(memeAdapter.temlplatesPool)
 
-            }
-        }
     }
-
     override fun bind(homeElement: HomeElement) {
-        val templateSuggestion = homeElement as MemeTemplateSuggestion
-        for (i in 0 until 4) {
-            if (i < templateSuggestion.templates.size) {
-                imgs[i].visibility = View.VISIBLE
-                btns[i].visibility = View.VISIBLE
-                imgs[i].setImageURI(templateSuggestion.templates[i])
-            } else {
-                imgs[i].visibility = View.GONE
-                btns[i].visibility = View.GONE
-            }
-        }
+        val a=homeElement as MemeTemplateSuggestion
+        adapter.setAll(a.templates)
     }
+
 }
 
 class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {

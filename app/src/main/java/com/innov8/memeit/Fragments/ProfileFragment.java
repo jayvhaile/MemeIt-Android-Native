@@ -22,10 +22,9 @@ import com.memeit.backend.dataclasses.MyUser;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -37,7 +36,7 @@ import static android.view.View.VISIBLE;
 
 
 public class ProfileFragment extends Fragment {
-    String userID;
+    private String userID;
 
     public static ProfileFragment newInstance(String uid) {
         ProfileFragment pf = new ProfileFragment();
@@ -46,6 +45,7 @@ public class ProfileFragment extends Fragment {
         pf.setArguments(bundle);
         return pf;
     }
+
     public static ProfileFragment newInstance(User user) {
         ProfileFragment pf = new ProfileFragment();
         Bundle bundle = new Bundle();
@@ -66,40 +66,35 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null){
+        if (getArguments() != null) {
             userID = getArguments().getString("uid", null);
-            userData=getArguments().getParcelable("user");
+            userData = getArguments().getParcelable("user");
         }
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.profile_page, container, false);
     }
 
-    TabLayout tabLayout;
-    ViewPager pager;
-    ViewPagerAdapter adapter;
-    List<Fragment> fragments;
-
-    TextView nameV;
-    TextView followerV;
-    TextView memeCountV;
-    ProfileDraweeView profileV;
-    TextView followBtnV;
+    private TextView nameV;
+    private TextView followerV;
+    private TextView memeCountV;
+    private ProfileDraweeView profileV;
+    private TextView followBtnV;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tabLayout = view.findViewById(R.id.tabs_profile);
-        pager = view.findViewById(R.id.profile_viewpager);
-        adapter = new ViewPagerAdapter(getChildFragmentManager());
+        TabLayout tabLayout = view.findViewById(R.id.tabs_profile);
+        ViewPager pager = view.findViewById(R.id.profile_viewpager);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
         nameV = view.findViewById(R.id.profile_name);
-
-
+        Toolbar t = view.findViewById(R.id.toolbar);
+        t.inflateMenu(R.menu.profile_page_menu);
         followerV = view.findViewById(R.id.profile_followers_count);
         memeCountV = view.findViewById(R.id.profile_meme_count);
         profileV = view.findViewById(R.id.profile_image);
@@ -152,7 +147,7 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    User userData;
+    private User userData;
 
     private void loadData() {
         OnCompleteListener<User> onCompleteListener = new OnCompleteListener<User>() {
@@ -192,7 +187,7 @@ public class ProfileFragment extends Fragment {
         String titles[] = {"Memes", "Following", "Followers"};
         Fragment[] fragments;
 
-        public ViewPagerAdapter(FragmentManager manager) {
+        ViewPagerAdapter(FragmentManager manager) {
             super(manager);
             fragments = new Fragment[]{MemeListFragment.newInstanceForUserPosts(userID),
                     UserListFragment.newInstance(UserListLoader.FOLLOWING_LOADER, userID),
@@ -220,10 +215,9 @@ public class ProfileFragment extends Fragment {
         String id = null;
         try {
             id = MemeItUsers.getInstance().getMyUser(getContext()).getUserID();
-        } catch (NullPointerException e) {
+        } catch (NullPointerException ignored) {
 
         }
         return TextUtils.isEmpty(userID) || userID.equals(id);
     }
-
 }

@@ -117,14 +117,16 @@ class SettingsActivity : AppCompatActivity() {
 
     companion object {
         const val PREF_KEY_IMAGE_QUALITY="pref_image_quality"
+        val quality= listOf(10,25,50,75,100)
+        val factor= listOf(.4f,.6f,.8f,.9f,1f)
 
-        fun getImageQuality(context:Context):Int{
+        fun getImageQualityLevel(context:Context):Int{
             val pref=PreferenceManager.getDefaultSharedPreferences(context)
-            val quality= listOf(10,25,50,75,100)
             val values=context.resources.getStringArray(R.array.pref_image_quality)
             val value=pref.getString(PREF_KEY_IMAGE_QUALITY,"")
-            return quality[values.indexOf(value)]
+            return values.indexOf(value)
         }
+
     }
 }
 

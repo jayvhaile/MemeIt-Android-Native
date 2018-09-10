@@ -1,6 +1,8 @@
 package com.innov8.memeit.Activities
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.MediaStore
@@ -9,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -61,8 +64,10 @@ class MemeChooserPagerAdapter(mgr: FragmentManager) : FragmentPagerAdapter(mgr) 
 class TemplateFragment : Fragment() {
     private lateinit var memeTemplatesListAdapter: MemeTemplatesListAdapter
     private lateinit var gson: Gson
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+
+    override fun onCreate(state: Bundle?) {
+        super.onCreate(state)
         memeTemplatesListAdapter = MemeTemplatesListAdapter(context!!)
         gson = Gson()
         MemeTemplate.loadLocalTemplates(context!!) {
@@ -85,18 +90,62 @@ class TemplateFragment : Fragment() {
         meme_template_list.initWithGrid(2)
         meme_template_list.adapter = memeTemplatesListAdapter
     }
+
+
 }
-class PhotosChooserFragment:Fragment(),LoaderManager.LoaderCallbacks<Cursor>{
+
+abstract class Frag:Fragment(),LoaderManager.LoaderCallbacks<Cursor>{
+    private var inPermission=false
+    private val REQUEST_PERMS = 120
+    override fun onCreate(state: Bundle?) {
+        super.onCreate(state)
+        inPermission=state?.getBoolean("inperm",false)?:false
+
+        if (hasFilesPermission()) {
+            load()
+        }
+        else if (!inPermission) {
+            inPermission=true
+            requestPermissions(arrayOf(READ_EXTERNAL_STORAGE),
+                    REQUEST_PERMS)
+        }
+    }
+    fun load(){
+        LoaderManager.getInstance(this).initLoader(0,null,this)
+    }
+    private fun hasFilesPermission():Boolean{
+        return checkSelfPermission(context!!, READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED
+    }
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+        inPermission = false
+        if (requestCode == REQUEST_PERMS) {
+            if (hasFilesPermission()) {
+                load()
+            } else {
+                //todo show em not working without permission
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("inperm",inPermission)
+    }
+
+}
+class PhotosChooserFragment:Frag(){
     private lateinit var photosAdapter: PhotosAdapter
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+    override fun onCreate(state: Bundle?) {
+        super.onCreate(state)
         photosAdapter= PhotosAdapter(context!!)
         photosAdapter.OnItemClicked={
             val intent= Intent(context,MemeEditorActivity::class.java)
             intent.putExtra("uri",it)
             startActivity(intent)
         }
-        LoaderManager.getInstance(this).initLoader(0,null,this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -125,7 +174,7 @@ class PhotosChooserFragment:Fragment(),LoaderManager.LoaderCallbacks<Cursor>{
         photosAdapter.swapCursor(null)
     }
 }
-class VideoChooserFragment:Fragment(),LoaderManager.LoaderCallbacks<Cursor>{
+class VideoChooserFragment:Frag(){
     private lateinit var videosAdapter: VideoAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,7 +184,6 @@ class VideoChooserFragment:Fragment(),LoaderManager.LoaderCallbacks<Cursor>{
             intent.putExtra("uri",it)
             startActivity(intent)
         }
-        LoaderManager.getInstance(this).initLoader(0,null,this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

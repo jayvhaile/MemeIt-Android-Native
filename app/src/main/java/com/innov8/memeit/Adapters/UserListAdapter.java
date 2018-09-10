@@ -18,6 +18,7 @@ import com.innov8.memeit.CustomViews.ProfileDraweeView;
 import com.innov8.memeit.KUtilsKt;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
+import com.memeit.backend.dataclasses.MyUser;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
 
@@ -28,16 +29,20 @@ import okhttp3.ResponseBody;
 
 public class UserListAdapter extends ListAdapter<User> {
     Typeface tf;
-
+    MyUser myUser;
     public UserListAdapter(@NotNull Context mContext) {
         super(mContext, R.layout.list_item_follower);
         tf = Typeface.createFromAsset(getMContext().getAssets(), FontTextView.asset);
+        myUser=MemeItUsers.getInstance().getMyUser(mContext);
     }
 
     @NotNull
     @Override
     public MyViewHolder<User> createViewHolder(@NotNull View view) {
         return new UserListViewHolder(view);
+    }
+    private boolean isMe(String id){
+        return myUser.getUserID().equals(id);
     }
 
     public class UserListViewHolder extends MyViewHolder<User> {
@@ -113,11 +118,17 @@ public class UserListAdapter extends ListAdapter<User> {
             followerDetail.setText(user.getPostCount() + " posts");
             followerImage.setText(KUtilsKt.prefix(user.getName()));
             ImageUtils.loadImageFromCloudinaryTo(followerImage, user.getImageUrl());
-            if (user.isFollowedByMe()) {
-                followButton.setText("Unfollow");
-            } else {
-                followButton.setText("Follow");
+            if(isMe(user.getUserID())){
+                followButton.setVisibility(View.GONE);
+            }else{
+                followButton.setVisibility(View.VISIBLE);
+                if (user.isFollowedByMe()) {
+                    followButton.setText("Unfollow");
+                } else {
+                    followButton.setText("Follow");
+                }
             }
+
 
         }
     }

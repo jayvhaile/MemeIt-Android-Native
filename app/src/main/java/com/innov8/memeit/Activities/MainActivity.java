@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.MemeLoader;
@@ -86,14 +87,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
+    AppBarLayout appbar;
     private void initUI(Bundle savedInstanceState) {
 
         setContentView(R.layout.activity_main);
         viewPager = findViewById(R.id.main_viewpager);
         bottom_nav = findViewById(R.id.bottom_nav);
+        appbar=findViewById(R.id.appbar);
         mToolbar = findViewById(R.id.toolbar2);
-        mToolbar = findViewById(R.id.toolbar2);
+
         initToolbar();
         initBottomNav();
 
@@ -140,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if(searchItem.isActionViewExpanded())
                     searchItem.collapseActionView();
+                appbar.setExpanded(true,false);
                 switch (item.getItemId()) {
                     case R.id.menu_home:
                         setTitle(0);

@@ -7,34 +7,24 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import com.innov8.memegenerator.customViews.MyToolBar
 import com.innov8.memegenerator.customViews.MyToolbarmenu
-import com.innov8.memegenerator.customViews.VTab
 import com.innov8.memegenerator.fragments.*
 import com.innov8.memegenerator.memeEngine.EditType
 import com.innov8.memegenerator.memeEngine.ItemSelectedInterface
 import com.innov8.memegenerator.memeEngine.MemeEditorInterface
-import com.innov8.memegenerator.memeEngine.MemeEditorView
 import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.models.TextStyleProperty
 import com.innov8.memegenerator.utils.AsyncLoader
+import kotlinx.android.synthetic.main.meme_editor_layout2.*
 
 class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
 
-    lateinit var vTab: VTab
-    lateinit var vPager: androidx.viewpager.widget.ViewPager
-    lateinit var memeEditorView: MemeEditorView
-    lateinit var myToolBar: MyToolBar
     lateinit var fragments: List<MemeEditorFragment>
-    var memeEditorInterfaces = mutableListOf<MemeEditorInterface>()
+    private var memeEditorInterfaces = mutableListOf<MemeEditorInterface>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.meme_editor_layout2)
-        memeEditorView = findViewById(R.id.imageView3)
-        vTab = findViewById(R.id.vtab)
-        myToolBar = findViewById(R.id.toolbar)
-        vPager = findViewById(R.id.pager)
 
 
         val memeTextEditorFragment = MemeTextEditorFragment()
@@ -49,30 +39,30 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                 MemeStickerEditorFragment(),
                 MemePaintEditorFragment()
         )
-
+        vtab.select(2)
 
 
 
         val adapter = MyPagerAdapter(supportFragmentManager)
 
-        vPager.adapter = adapter
+        pager.adapter = adapter
 
-        vPager.offscreenPageLimit = 1
+        pager.offscreenPageLimit = 1
 
-        val onVtab: (Int) -> Unit = { index ->
-            vPager.currentItem = index
-            myToolBar.setRightMenus(fragments[index].menus)
+        val onSelect: (Int) -> Unit = { index ->
+            pager.currentItem = index
+            toolbar.setRightMenus(fragments[index].menus)
             fireOnEditTypeChanged(EditType.values()[index])
         }
-        vTab.items = listOf(
-                vTab.item(R.drawable.ic_bottom_layout, onVtab),
-                vTab.item(R.drawable.ic_image_black, onVtab),
-                vTab.item(R.drawable.ic_bottom_text, onVtab),
-                vTab.item(R.drawable.ic_bottom_sticker, onVtab),
-                vTab.item(R.drawable.ic_format_paint, onVtab)
+        vtab.items = listOf(
+                vtab.item(R.drawable.ic_bottom_layout, onSelect),
+                vtab.item(R.drawable.ic_image_black, onSelect),
+                vtab.item(R.drawable.ic_bottom_text, onSelect),
+                vtab.item(R.drawable.ic_bottom_sticker, onSelect),
+                vtab.item(R.drawable.ic_format_paint, onSelect)
         )
 
-        myToolBar.setLeftMenus(listOf(
+        toolbar.setLeftMenus(listOf(
                 MyToolbarmenu(R.drawable.ic_left_menu_done){
                     val bitmap=memeEditorView.captureMeme()
                     val intent= Intent(this,MemePosterActivity::class.java)
@@ -94,10 +84,10 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             val memeTemplate = gson.fromJson(json, MemeTemplate::class.java)
             memeEditorView.loadMemeTemplate(memeTemplate)
         }else if(uri!=null){
-            AsyncLoader<Bitmap>({
+            AsyncLoader<Bitmap> {
                 val stream= contentResolver.openInputStream(Uri.parse(uri))
                 BitmapFactory.decodeStream(stream)
-            }).load {
+            }.load {
                 memeEditorView.loadBitmab(it)
             }
 
@@ -107,7 +97,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
     }
 
     override fun onTextItemSelected(textStyleProperty: TextStyleProperty) {
-        vPager.setCurrentItem(2, false)
+        pager.setCurrentItem(2, false)
     }
 
     private inner class MyPagerAdapter(fm: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {

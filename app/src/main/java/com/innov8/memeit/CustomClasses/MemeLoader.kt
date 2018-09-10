@@ -169,7 +169,7 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
         val templates = memeTemplates ?: return null
         return if (templates.size >= templatelastIndex + 2) {
             val t = mutableListOf<String>()
-            for (i in 0 until 4) {
+            for (i in 0 until 10) {
                 if (templates.size > templatelastIndex) {
                     val tt = templates[templatelastIndex++]
                     var uri: String = tt.imageURL
@@ -185,7 +185,7 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
     }
 
     private fun bakeAD(): AdElement? {
-        return null
+        return AdElement()
     }
 
     override fun reset() {

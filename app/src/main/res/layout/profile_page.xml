@@ -26,7 +26,6 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:title="John"
             app:titleEnabled="false">
 
 
@@ -147,7 +146,7 @@
                </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/main.toolbar"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:background="#0000"
@@ -157,20 +156,6 @@
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
-       <!-- <com.kekstudio.dachshundtablayout.DachshundTabLayout
-            android:tag="sticky"
-            android:id="@+id/tabs_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="#fff"
-            app:tabGravity="fill"
-            app:tabIndicatorColor="#ff5656"
-            app:tabMode="fixed"
-            app:ddAnimatedIndicator="lineMove"
-            app:ddIndicatorColor="#ff5656"
-            app:tabSelectedTextColor="#000"
-            app:tabTextColor="#5a5a5a" />-->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_profile"
             android:layout_width="match_parent"
@@ -200,10 +185,7 @@
         app:finalYPosition="28dp"
         app:layout_behavior="com.innov8.memeit.CustomClasses.AvatarImageBehavior"
         app:startHeight="2dp"
-        app:startToolbarPosition="2dp"
-        app:roundAsCircle="true"
-        app:roundingBorderColor="#fff"
-        app:roundingBorderWidth="2dp"/>
+        app:startToolbarPosition="2dp"/>
     <com.innov8.memeit.CustomClasses.FontTextView
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"

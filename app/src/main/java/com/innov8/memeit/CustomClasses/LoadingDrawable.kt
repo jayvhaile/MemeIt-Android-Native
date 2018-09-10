@@ -1,12 +1,14 @@
 package com.innov8.memeit.CustomClasses
 
 import android.animation.ValueAnimator
+import android.content.Context
 import android.graphics.*
 import android.util.Log
 import com.facebook.drawee.drawable.ProgressBarDrawable
+import com.innov8.memegenerator.utils.fromDPToPX
 
 //todo change the px to dp
-class LoadingDrawable : ProgressBarDrawable() {
+class LoadingDrawable (val context:Context): ProgressBarDrawable() {
     override fun onLevelChange(level: Int): Boolean {
         super.onLevelChange(level)
         if (level>10000)return false
@@ -31,9 +33,9 @@ class LoadingDrawable : ProgressBarDrawable() {
 
     var c:Long=0
 
-    val radius=60f
-    val strokeSize=8f
-    val paddingSize=4f
+    val radius=16f.fromDPToPX(context)
+    val strokeSize=2f.fromDPToPX(context)
+    val paddingSize=1f.fromDPToPX(context)
     val sweepInitialAngle=20f
     var sweepAngle=sweepInitialAngle
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)

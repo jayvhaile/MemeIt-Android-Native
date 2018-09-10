@@ -132,10 +132,10 @@ public interface MemeInterface {
     public Call<ResponseBody> unfollowTag(@Body String tag);
 
 
-    @PUT("user/me/notifications/markseenall")
+    @POST("user/me/notifications/markseenall")
     public Call<ResponseBody> markNotificationSeen();
 
-    @PUT("user/me/notifications/{id}/markseen")
+    @POST("user/me/notifications/{id}/markseen")
     public Call<ResponseBody> markSingleNotificationSeen(@Path("id") String nid);
 
     //-----Delete-----
