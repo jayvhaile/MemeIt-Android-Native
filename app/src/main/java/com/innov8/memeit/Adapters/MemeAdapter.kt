@@ -20,10 +20,10 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memegenerator.utils.fromDPToPX
-import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
+import com.innov8.memeit.Activities.log
 import com.innov8.memeit.Adapters.ListMemeAdapter.Companion.activeRID
 import com.innov8.memeit.CustomClasses.ImageUtils
 import com.innov8.memeit.CustomClasses.LoadingDrawable
@@ -403,7 +403,8 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         memeImageV.layoutParams.width = w
         memeImageV.layoutParams.height = h
         memeImageV.requestLayout()
-        memeImageV.load(meme.memeImageUrl,w,h)
+        memeImageV.load(meme.memeImageUrl,w,h,meme.type)
+        log("type",meme.type.toString())
     }
 
 

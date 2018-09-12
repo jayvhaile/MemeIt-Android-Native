@@ -131,6 +131,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        int selected=savedInstanceState.getInt("selected");
+        bottom_nav.select(selected,true);
+    }
 
     private void initToolbar() {
         this.setSupportActionBar(this.mToolbar);
@@ -140,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         bottom_nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if(searchItem.isActionViewExpanded())
+                if(searchItem!=null&&searchItem.isActionViewExpanded())
                     searchItem.collapseActionView();
                 appbar.setExpanded(true,false);
                 switch (item.getItemId()) {
@@ -275,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt("selected",bottom_nav.getSelectedIndex());
     }
 
     private static class MyPagerAdapter extends FragmentPagerAdapter {

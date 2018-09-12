@@ -40,7 +40,7 @@
         </service>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".Activities.MemeChooser"/>
-        <activity android:name=".Activities.TagsActivity"/>
+        <activity android:name=".Activities.TagsActivity" android:parentActivityName=".Activities.MainActivity"/>
     </application>
 
 </manifest>

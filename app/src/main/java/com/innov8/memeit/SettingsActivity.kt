@@ -18,7 +18,7 @@ import com.memeit.backend.dataclasses.MyUser
 import com.memeit.backend.utilis.Listener
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
-import kotlinx.android.synthetic.main.activity_settings2.*
+import kotlinx.android.synthetic.main.activity_settings.*
 import okhttp3.ResponseBody
 
 class SettingsActivity : AppCompatActivity() {
@@ -27,7 +27,7 @@ class SettingsActivity : AppCompatActivity() {
     lateinit var user: MyUser
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings2)
+        setContentView(R.layout.activity_settings)
         load()
         initListenrs()
     }

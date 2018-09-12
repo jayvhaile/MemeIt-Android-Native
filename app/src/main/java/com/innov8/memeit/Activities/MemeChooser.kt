@@ -141,11 +141,6 @@ class PhotosChooserFragment:Frag(){
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
         photosAdapter= PhotosAdapter(context!!)
-        photosAdapter.OnItemClicked={
-            val intent= Intent(context,MemeEditorActivity::class.java)
-            intent.putExtra("uri",it)
-            startActivity(intent)
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -179,11 +174,6 @@ class VideoChooserFragment:Frag(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         videosAdapter= VideoAdapter(context!!)
-        videosAdapter.OnItemClicked={
-            val intent= Intent(context,MemeEditorActivity::class.java)
-            intent.putExtra("uri",it)
-            startActivity(intent)
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

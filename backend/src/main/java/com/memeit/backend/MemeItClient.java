@@ -59,8 +59,8 @@ public class MemeItClient{
         MemeItAuth.init();
         initCache(context);
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .addInterceptor(provideOfflineCacheInterceptor())
-                .addNetworkInterceptor(provideCacheInterceptor())
+                //.addInterceptor(provideOfflineCacheInterceptor())
+                //.addNetworkInterceptor(provideCacheInterceptor())
                 .addInterceptor(provideAuthInterceptor(context))
                 .cache(cache);
 

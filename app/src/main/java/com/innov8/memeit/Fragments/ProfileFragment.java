@@ -1,15 +1,18 @@
 package com.innov8.memeit.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
+import com.innov8.memeit.Activities.TagsActivity;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.CustomClasses.UserListLoader;
@@ -35,7 +38,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClickListener {
     private String userID;
 
     public static ProfileFragment newInstance(String uid) {
@@ -95,6 +98,7 @@ public class ProfileFragment extends Fragment {
         nameV = view.findViewById(R.id.profile_name);
         Toolbar t = view.findViewById(R.id.toolbar);
         t.inflateMenu(R.menu.profile_page_menu);
+        t.setOnMenuItemClickListener(this);
         followerV = view.findViewById(R.id.profile_followers_count);
         memeCountV = view.findViewById(R.id.profile_meme_count);
         profileV = view.findViewById(R.id.profile_image);
@@ -180,6 +184,17 @@ public class ProfileFragment extends Fragment {
         } else {
             followBtnV.setText("Follow");
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_profile_tag:
+                startActivity(new Intent(getContext(), TagsActivity.class));
+                return true;
+
+        }
+        return false;
     }
 
 

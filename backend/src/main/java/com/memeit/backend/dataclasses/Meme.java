@@ -211,7 +211,11 @@ public class Meme implements HomeElement, Parcelable {
     }
 
     public MemeType getType() {
-        return MemeType.valueOf(type.toUpperCase());
+        try {
+            return MemeType.valueOf(type.toUpperCase());
+        } catch (NullPointerException e) {
+            return MemeType.IMAGE;
+        }
     }
 
     public double getMemeImageRatio() {

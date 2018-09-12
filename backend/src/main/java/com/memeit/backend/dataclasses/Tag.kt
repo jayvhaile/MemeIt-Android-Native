@@ -1,3 +1,3 @@
 package com.memeit.backend.dataclasses
 
-data class Tag(val tag:String,val count:Int,val date:Long)
+data class Tag(val tag:String,val count:Int,val date:Long,val followed:Boolean=false)

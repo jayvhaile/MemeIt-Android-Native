@@ -7,6 +7,15 @@
             android:singleLine="true"
             android:title="Password" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="Memes">
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/pref_image_quality"
+            android:entryValues="@array/pref_image_quality"
+            android:key="list_preference_1"
+            android:title="Default Reaction" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="Data Usage">
 
         <ListPreference
@@ -16,6 +25,10 @@
             android:entryValues="@array/pref_image_quality"
             android:key="pref_image_quality"
             android:title="Image Quality" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="switch_preference_1"
+            android:title="Automatically Load Video" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Storage">
         <SwitchPreference
@@ -29,6 +42,10 @@
             android:defaultValue="true"
             android:key="switch_preference_1"
             android:title="Enable Notifications" />
+        <RingtonePreference
+            android:defaultValue=""
+            android:key="ringtone_preference_1"
+            android:title="Notification Sound" />
 
 
     </PreferenceCategory>

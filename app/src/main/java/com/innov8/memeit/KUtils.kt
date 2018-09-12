@@ -1,13 +1,20 @@
 package com.innov8.memeit
 
+import android.graphics.drawable.Animatable
 import com.cloudinary.Transformation
 import com.cloudinary.android.MediaManager
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.drawee.view.SimpleDraweeView
+import com.facebook.fresco.animation.drawable.AnimatedDrawable2
+import com.facebook.fresco.animation.drawable.AnimationListener
+import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.innov8.memeit.Activities.log
+import com.memeit.backend.dataclasses.Meme
+import com.memeit.backend.dataclasses.Meme.MemeType.IMAGE
 import kotlinx.coroutines.experimental.*
 import java.text.SimpleDateFormat
 
@@ -57,42 +64,108 @@ fun String?.prefix(): String {
     return if (this === null) "..." else this[0].toString()
 }
 
-fun SimpleDraweeView.load(id: String, width: Int= 100, height: Int = 100) {
-    val tlow = Transformation<Transformation<*>>().quality("5")
-            .width(50)
-            .height(50)
-            .crop("fit")
-            .effect("blur", 100)
+fun SimpleDraweeView.load(id: String,width: Int= 100, height: Int = 100,memeType:Meme.MemeType) {
+     if(memeType== IMAGE){
+         val tlow = Transformation<Transformation<*>>().quality("5")
+                 .width(50)
+                 .height(50)
+                 .crop("fit")
+                 .effect("blur", 100)
 
-    val level = SettingsActivity.getImageQualityLevel(context)
-    val quality=SettingsActivity.quality[level]
-    val fac=SettingsActivity.factor[level]
-    val thigh = Transformation<Transformation<*>>()
-            .quality(quality)
-            .crop("fit")
+         val level = SettingsActivity.getImageQualityLevel(context)
+         val quality=SettingsActivity.quality[level]
+         val fac=SettingsActivity.factor[level]
+         val thigh = Transformation<Transformation<*>>()
+                 .quality(quality)
+                 .crop("fit")
 
 
-    if (width > 0 && height > 0) {
-        val w:Int=(width*fac).step(50)
-        val h:Int=(height*fac).step(50)
-        thigh.width(w).height(h)
-    }else
-        throw IllegalArgumentException("width or height cant be 0")
+         if (width > 0 && height > 0) {
+             val w:Int=(width*fac).step(50)
+             val h:Int=(height*fac).step(50)
+             thigh.width(w).height(h)
+         }else
+             throw IllegalArgumentException("width or height cant be 0")
 
-    val low = MediaManager.get().url().transformation(tlow).source(id).generate()
-    val high = MediaManager.get().url().transformation(thigh).source(id).generate()
+         val low = MediaManager.get().url().transformation(tlow).source(id).generate()
+         val high = MediaManager.get().url().transformation(thigh).source(id).generate()
 
-    log(low)
-    log(high)
-    val lowReq = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(low))
-            .setPostprocessor(IterativeBoxBlurPostProcessor(3))
-            .build()
-    val c = Fresco.newDraweeControllerBuilder()
-            .setLowResImageRequest(lowReq)
-            .setImageRequest(ImageRequest.fromUri(high))
-            .setOldController(controller)
-            .build()
-    controller = c
+         log("foko====",high)
+
+         val lowReq = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(low))
+                 .setPostprocessor(IterativeBoxBlurPostProcessor(3))
+                 .build()
+         val c = Fresco.newDraweeControllerBuilder()
+                 .setLowResImageRequest(lowReq)
+                 .setImageRequest(ImageRequest.fromUri(high))
+                 .setOldController(controller)
+                 .build()
+         controller = c
+     }else{
+
+         val url = MediaManager.get().url().resourcType("video")
+                 .format("gif")
+                 .generate(id)
+         log("foko****",url)
+
+         class m: BaseControllerListener<ImageInfo>() {
+             override fun onFailure(id: String?, throwable: Throwable?) {
+                 super.onFailure(id, throwable)
+                 log("foko failure",throwable?.message?:"xx")
+             }
+
+             override fun onRelease(id: String?) {
+                 super.onRelease(id)
+             }
+
+             override fun onSubmit(id: String?, callerContext: Any?) {
+                 super.onSubmit(id, callerContext)
+             }
+
+             override fun onIntermediateImageSet(id: String?, imageInfo: ImageInfo?) {
+                 super.onIntermediateImageSet(id, imageInfo)
+             }
+
+             override fun onIntermediateImageFailed(id: String?, throwable: Throwable?) {
+                 super.onIntermediateImageFailed(id, throwable)
+             }
+
+             override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
+                 super.onFinalImageSet(id, imageInfo, animatable)
+                 if(animatable!=null){
+                     val a=animatable as AnimatedDrawable2
+
+                     a.setAnimationListener(object :AnimationListener{
+                         override fun onAnimationRepeat(p0: AnimatedDrawable2?) {
+                         }
+
+                         override fun onAnimationStart(p0: AnimatedDrawable2?) {
+                         }
+
+                         override fun onAnimationFrame(p0: AnimatedDrawable2?, p1: Int) {
+                         }
+
+                         override fun onAnimationStop(p0: AnimatedDrawable2?) {
+                             p0?.start()
+                         }
+
+                         override fun onAnimationReset(p0: AnimatedDrawable2?) {
+                             p0?.start()
+                         }
+
+                     })
+                 }
+             }
+         }
+         val c = Fresco.newDraweeControllerBuilder()
+                 .setUri(url)
+                 .setAutoPlayAnimations(true)
+                 .setControllerListener(m())
+                 .build()
+         controller = c
+
+     }
+
 }
 
 fun Float.step(step:Int):Int{

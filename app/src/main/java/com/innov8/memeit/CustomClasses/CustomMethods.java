@@ -28,7 +28,6 @@ import com.innov8.memeit.R;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -172,13 +171,20 @@ public class CustomMethods {
         }
     }
 
-    public static String formatNumber(int num, String suffix) {
-        if (num < 1000) {
-            return String.format("%d %s", num, suffix);
-        } else {
+    public static String formatNumber(int num, String suffix,String suffixPlural) {
+        if (num >= 1000000) {
+            float d = num / 1000000.0f;
+            return String.format("%.2fm %s", d, suffixPlural);
+        } else if(num>=1000){
             float d = num / 1000.0f;
-            return String.format("%.2fk %s", d, suffix);
-        }
+            return String.format("%.2fk %s", d, suffixPlural);
+        }else if(num>1){
+            return String.format("%d %s", num, suffixPlural);
+        }else if(num==1){
+            return String.format("%d %s", num, suffix);
+        }else{
+            return String.format("no %s", num, suffix);
+       }
 
     }
 

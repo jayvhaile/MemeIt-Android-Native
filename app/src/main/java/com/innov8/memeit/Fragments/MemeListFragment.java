@@ -109,6 +109,8 @@ public class MemeListFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         };
+        initAdapter();
+        initLoader();
     }
 
     private void initLoader() {
@@ -148,8 +150,7 @@ public class MemeListFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initAdapter();
-        initLoader();
+
         swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh);
         memeList = view.findViewById(R.id.meme_recycler_view);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

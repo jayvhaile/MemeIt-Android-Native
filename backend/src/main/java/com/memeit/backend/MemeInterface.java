@@ -40,7 +40,6 @@ public interface MemeInterface {
     public Call<AuthToken> signUpWithEmail(@Body AuthInfo user);
 
 
-
     @POST("auth/signup/google")
     public Call<AuthToken> signUpWithGoogle(@Body AuthInfo user);
 
@@ -49,8 +48,10 @@ public interface MemeInterface {
 
     @GET("auth/username")
     public Call<Username> isUsernameAvailable(@Query("username") String username);
+
     @PUT("auth/username")
     public Call<ResponseBody> updateUsername(@Body User username);
+
     @PUT("auth/password")
     public Call<ResponseBody> updatePassword(@Body AuthInfo password);
 
@@ -82,13 +83,16 @@ public interface MemeInterface {
     public Call<List<User>> getFollowingListForUser(@Path("id") String uid,
                                                     @Query("skip") int skip,
                                                     @Query("limit") int limit);
-    @GET("user/me/tags")
-    public Call<List<Tag>> getMyTags();
 
+
+    @GET("user/me/tags")
+    public Call<List<Tag>> getMyTags(
+            @Query("skip") int skip,
+            @Query("limit") int limit);
 
     @GET("user/me/notifications")
-    public Call<List<Map<String,Object>>> getMyNotifications(@Query("skip") int skip,
-                                                      @Query("limit") int limit);
+    public Call<List<Map<String, Object>>> getMyNotifications(@Query("skip") int skip,
+                                                              @Query("limit") int limit);
 
     @GET("user/me/notifications/count")
     public Call<Integer> getNotifCount();
@@ -117,19 +121,21 @@ public interface MemeInterface {
 
     @PUT("user/me/name")
     public Call<ResponseBody> updateName(@Body User name);
+
     @PUT("user/me/profile_pic")
     public Call<ResponseBody> updateProfilePic(@Body User pic);
+
     @PUT("user/me/cover_pic")
     public Call<ResponseBody> updateCoverPic(@Body User cpic);
 
     @POST("user/me/follow_tags")
-    public Call<ResponseBody> setFollowingTags(@Body String [] tags);
+    public Call<ResponseBody> setFollowingTags(@Body String[] tags);
 
     @PUT("user/me/follow_tags")
-    public Call<ResponseBody> followTags(@Body String [] tags);
+    public Call<ResponseBody> followTags(@Body String[] tags);
 
     @DELETE("user/me/follow_tags")
-    public Call<ResponseBody> unfollowTag(@Body String tag);
+    public Call<ResponseBody> unfollowTag(@Query("tag") String tag);
 
 
     @POST("user/me/notifications/markseenall")
@@ -224,6 +230,7 @@ public interface MemeInterface {
 
     @DELETE("meme/react")
     public Call<ResponseBody> unreactToMeme(@Body String mid);
+
 
 
     @GET("meme/tags/popular")

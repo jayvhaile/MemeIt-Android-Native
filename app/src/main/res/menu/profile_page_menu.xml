@@ -2,7 +2,13 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:id="@+id/menu_profile_tag"
+        android:title="Tags"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/tag2"
 
+        />
     <item
         android:title="Edit"
         app:showAsAction="never" />

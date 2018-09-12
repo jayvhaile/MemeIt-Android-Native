@@ -356,9 +356,9 @@ public class MemeItUsers {
                 .enqueue(new MyCallBack<ResponseBody>(listener));
     }
 
-    public void getFollowingTags(OnCompleteListener<List<Tag>> listener) {
+    public void getFollowingTags(int skip, int limit,OnCompleteListener<List<Tag>> listener) {
         MemeItClient.getInstance().getInterface()
-                .getMyTags()
+                .getMyTags(skip, limit)
                 .enqueue(new MyCallBack<List<Tag>>(listener));
     }
 
