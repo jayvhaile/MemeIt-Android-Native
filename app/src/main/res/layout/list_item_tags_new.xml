@@ -3,14 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="156dp"
+    android:layout_height="150dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginBottom="8dp"
     android:orientation="vertical"
+    app:cardCornerRadius="8dp"
     app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:minWidth="156dp">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/imageView15"
@@ -36,14 +40,16 @@
 
         <com.innov8.memeit.CustomClasses.FontTextView
             android:id="@+id/follow_tag"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:paddingLeft="24dp"
+            android:paddingTop="4dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="4dp"
             android:text="Follow"
             android:textColor="#313131"
-            android:textSize="19sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -59,7 +65,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:textColor="#fff"
-            android:textSize="22sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/follow_tag"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,9 +76,8 @@
             android:id="@+id/tag_post_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:alpha="0.8"
-            android:textColor="#fff"
+            android:layout_marginTop="8dp"
+            android:textColor="#cfff"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tag"

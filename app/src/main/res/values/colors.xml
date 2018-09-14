@@ -27,4 +27,26 @@
     <color name="white_light">#62ffffff</color>
 
     <color name="black_light">#4a000000</color>
+
+    <string-array name="tag_colors">
+        <item>#EF5350</item>
+        <item>#EC407A</item>
+        <item>#AB47BC</item>
+        <item>#7E57C2</item>
+        <item>#5C6BC0</item>
+        <item>#42A5F5</item>
+        <item>#29B6FC</item>
+        <item>#26C6DA</item>
+        <item>#26A69A</item>
+        <item>#66BB6A</item>
+        <item>#9CCC65</item>
+        <item>#D4E157</item>
+        <item>#FFEE58</item>
+        <item>#FFCA28</item>
+        <item>#FFA726</item>
+        <item>#FF7043</item>
+        <item>#8D6E63</item>
+        <item>#BDBDBD</item>
+        <item>#78909C</item>
+    </string-array>
 </resources>

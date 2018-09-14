@@ -361,5 +361,10 @@ public class MemeItUsers {
                 .getMyTags(skip, limit)
                 .enqueue(new MyCallBack<List<Tag>>(listener));
     }
+    public void getFollowingTagsFor(String uid,int skip, int limit,OnCompleteListener<List<Tag>> listener) {
+        MemeItClient.getInstance().getInterface()
+                .getTagsFor(uid,skip, limit)
+                .enqueue(new MyCallBack<List<Tag>>(listener));
+    }
 
 }

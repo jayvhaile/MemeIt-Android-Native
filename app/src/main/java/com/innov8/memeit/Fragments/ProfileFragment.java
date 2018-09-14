@@ -190,7 +190,11 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_profile_tag:
-                startActivity(new Intent(getContext(), TagsActivity.class));
+                Intent intent=new Intent(getContext(), TagsActivity.class);
+                if(!isMe()){
+                    intent.putExtra("uid",userData.getUserID());
+                }
+                startActivity(intent);
                 return true;
 
         }

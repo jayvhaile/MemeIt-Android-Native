@@ -89,6 +89,11 @@ public interface MemeInterface {
     public Call<List<Tag>> getMyTags(
             @Query("skip") int skip,
             @Query("limit") int limit);
+    @GET("user/{id}/tags")
+    public Call<List<Tag>> getTagsFor(
+            @Path("id") String uid,
+            @Query("skip") int skip,
+            @Query("limit") int limit);
 
     @GET("user/me/notifications")
     public Call<List<Map<String, Object>>> getMyNotifications(@Query("skip") int skip,
