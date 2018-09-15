@@ -27,8 +27,9 @@
     <color name="white_light">#62ffffff</color>
 
     <color name="black_light">#4a000000</color>
+    <color name="white">#fff</color>
 
-    <string-array name="tag_colors">
+    <string-array name="tagColors">
         <item>#EF5350</item>
         <item>#EC407A</item>
         <item>#AB47BC</item>

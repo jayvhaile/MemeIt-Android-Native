@@ -20,7 +20,7 @@ class TagsAdapter(context: Context) : ListAdapter<Tag>(context, R.layout.list_it
     }
 
 
-    private val colors = context.resources.getStringArray(R.array.tag_colors)
+    private val colors = context.resources.getStringArray(R.array.tagColors)
             .map { Color.parseColor(it) }
 
     private fun getColor(tag: String): Int {
