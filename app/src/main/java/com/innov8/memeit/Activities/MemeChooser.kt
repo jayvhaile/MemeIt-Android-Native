@@ -6,7 +6,6 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -201,7 +200,4 @@ class VideoChooserFragment:Frag(){
     override fun onLoaderReset(loader: Loader<Cursor>) {
         videosAdapter.swapCursor(null)
     }
-}
-fun Any.log(vararg m:Any){
-    Log.d(this::class.java.simpleName,m.joinToString (", "))
 }

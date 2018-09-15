@@ -5,10 +5,8 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.innov8.memegenerator.R
 
@@ -19,12 +17,12 @@ class VTab : LinearLayout {
             field = value
             init()
         }
-    var selectedTint: Int = 0
-    var selectedBackgroundTint: Int = 0
-    var itemColor: Int = 0
-    var itemBackgroundColor: Int = 0
+    private var selectedTint: Int = 0
+    private var selectedBackgroundTint: Int = 0
+    private var itemColor: Int = 0
+    private var itemBackgroundColor: Int = 0
     var itemPadding: Int = 0
-    lateinit var itemlayoutParam: LayoutParams
+    private lateinit var itemLayoutParam: LayoutParams
 
     constructor(context: Context) : super(context)
 
@@ -36,6 +34,7 @@ class VTab : LinearLayout {
         setup(context, attrs)
 
     }
+
     private fun setup(context: Context, attrs: AttributeSet?) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.VTab, 0, 0)
         try {
@@ -47,36 +46,30 @@ class VTab : LinearLayout {
         } finally {
             a.recycle()
         }
-        itemlayoutParam = LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f)
+        itemLayoutParam = LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f)
         orientation = VERTICAL
     }
-    fun log(s:String){
-        Log.d("fuck",s)
-    }
+
     fun init() {
         removeAllViews()
-        log("init "+items.size)
-        items.forEachIndexed({index, item ->
-            var imgV = ImageView(context)
+        items.forEachIndexed { index, item ->
+            val imgV = ImageView(context)
             imgV.setImageDrawable(item.drawable)
-            imgV.setOnClickListener({ view ->
+            imgV.setOnClickListener {
                 select(index)
-                Toast.makeText(context,"clicked "+index,Toast.LENGTH_SHORT)
                 item.onClick(index)
-            })
+            }
             imgV.setPadding(itemPadding, 0, itemPadding, 0)
-            addView(imgV,itemlayoutParam)
-        } )
+            addView(imgV, itemLayoutParam)
+        }
         select(0)
 
     }
+
     fun select(x: Int) {
-        log("select"+0)
         for (i in 0 until childCount) {
-            log("select loop"+i)
             val iv = getChildAt(i) as ImageView
             if (i == x) {
-                log("match"+x)
                 iv.setColorFilter(selectedTint, PorterDuff.Mode.SRC_IN)
                 iv.setBackgroundColor(selectedBackgroundTint)
                 continue
@@ -86,10 +79,12 @@ class VTab : LinearLayout {
         }
         invalidate()
     }
-    fun item(id:Int,onClick: (index:Int) -> Unit = {}):VTabItems{
-        return VTabItems(VectorDrawableCompat.create(resources,id, null)!!,onClick)
+
+    fun item(id: Int, onClick: (index: Int) -> Unit = {}): VTabItems {
+        return VTabItems(VectorDrawableCompat.create(resources, id, null)!!, onClick)
     }
-    class VTabItems(val drawable: Drawable, val onClick: (index:Int) -> Unit = {})
+
+    class VTabItems(val drawable: Drawable, val onClick: (index: Int) -> Unit = {})
 
 
 }
