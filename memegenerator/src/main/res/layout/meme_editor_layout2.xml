@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
+
     <com.innov8.memegenerator.memeEngine.MemeEditorView
         android:id="@+id/memeEditorView"
         android:layout_width="0dp"

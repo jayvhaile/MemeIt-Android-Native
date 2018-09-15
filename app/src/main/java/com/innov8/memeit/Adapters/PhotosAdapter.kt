@@ -17,7 +17,7 @@ import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memegenerator.MemePosterActivity
-import com.innov8.memeit.Activities.log
+import com.innov8.memeit.log
 import com.innov8.memeit.R
 
 class PhotosAdapter(val context: Context) : RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder>() {

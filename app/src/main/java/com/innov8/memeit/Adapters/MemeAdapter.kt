@@ -23,7 +23,7 @@ import com.innov8.memegenerator.utils.fromDPToPX
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
-import com.innov8.memeit.Activities.log
+import com.innov8.memeit.log
 import com.innov8.memeit.Adapters.ListMemeAdapter.Companion.activeRID
 import com.innov8.memeit.CustomClasses.ImageUtils
 import com.innov8.memeit.CustomClasses.LoadingDrawable
