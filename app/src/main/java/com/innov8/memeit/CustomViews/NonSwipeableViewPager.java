@@ -1,13 +1,14 @@
-package com.innov8.memeit.CustomClasses;
+package com.innov8.memeit.CustomViews;
 
 import android.content.Context;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
 import java.lang.reflect.Field;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * Created by Biruk on 5/12/2018.

@@ -14,6 +14,7 @@ public class Reaction implements Parcelable {
         type = in.readInt();
         memeID = in.readString();
         reactorID = in.readString();
+        poster=in.readParcelable(Poster.class.getClassLoader());
     }
 
     public static final Creator<Reaction> CREATOR = new Creator<Reaction>() {
@@ -38,7 +39,11 @@ public class Reaction implements Parcelable {
         dest.writeInt(type);
         dest.writeString(memeID);
         dest.writeString(reactorID);
+        if (poster != null)
+        dest.writeParcelable(poster,flags);
     }
+
+
 
     public enum ReactionType{
         FUNNY(2f),VERY_FUNNY(3f),STUPID(-1f),ANGERING(-2F);
@@ -59,6 +64,8 @@ public class Reaction implements Parcelable {
     private String memeID;
     @SerializedName("rid")
     private String reactorID;
+    @SerializedName("poster")
+    private Poster poster;
 
 
     public static Reaction create(ReactionType type,String memeID){
@@ -78,5 +85,9 @@ public class Reaction implements Parcelable {
 
     public String getReactorID() {
         return reactorID;
+    }
+
+    public Poster getPoster() {
+        return poster;
     }
 }

@@ -21,17 +21,14 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memegenerator.utils.fromDPToPX
 import com.innov8.memegenerator.utils.toast
+import com.innov8.memeit.*
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
-import com.innov8.memeit.log
+import com.innov8.memeit.Activities.ReactorListActivity
 import com.innov8.memeit.Adapters.ListMemeAdapter.Companion.activeRID
 import com.innov8.memeit.CustomClasses.ImageUtils
 import com.innov8.memeit.CustomClasses.LoadingDrawable
 import com.innov8.memeit.CustomViews.ProfileDraweeView
-import com.innov8.memeit.R
-import com.innov8.memeit.formateAsDate
-import com.innov8.memeit.load
-import com.innov8.memeit.prefix
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.*
@@ -256,6 +253,11 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         posterPicV.setOnClickListener {
             val i = Intent(memeAdapter.context, ProfileActivity::class.java)
             i.putExtra("user", getCurrentMeme().poster.toUser())
+            memeAdapter.context.startActivity(i)
+        }
+        reactionCountV.setOnClickListener {
+            val i = Intent(memeAdapter.context, ReactorListActivity::class.java)
+            i.putExtra("mid", getCurrentMeme().memeId)
             memeAdapter.context.startActivity(i)
         }
 

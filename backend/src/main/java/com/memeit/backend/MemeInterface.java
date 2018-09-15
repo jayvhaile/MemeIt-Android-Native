@@ -197,6 +197,10 @@ public interface MemeInterface {
                                              @Query("skip") int skip,
                                              @Query("limit") int limit);
 
+    @GET("meme/{mid}/reactions")
+    public Call<List<Reaction>> getReactorsForMeme(@Path("mid") String mid,
+                                                 @Query("skip") int skip,
+                                                 @Query("limit") int limit);
     @GET("meme/comment")
     public Call<List<Comment>> getCommentForMeme(@Query("mid") String mid,
                                                  @Query("skip") int skip,

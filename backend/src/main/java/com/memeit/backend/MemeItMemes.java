@@ -156,7 +156,11 @@ public class MemeItMemes {
                 .getFilteredMemes(text,tags, skip, limit)
                 .enqueue(new MyCallBack<List<Meme>>(listener));
     }
-
+    public void getReactorsForMeme(String mid, int skip, int limit, OnCompleteListener<List<Reaction>> listener) {
+        MemeItClient.getInstance().getInterface()
+                .getReactorsForMeme(mid, skip, limit)
+                .enqueue(new MyCallBack<>(listener));
+    }
     public void getCommentsForMeme(String mid, int skip, int limit, OnCompleteListener<List<Comment>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getCommentForMeme(mid, skip, limit)

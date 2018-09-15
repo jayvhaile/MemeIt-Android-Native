@@ -1,7 +1,12 @@
 package com.innov8.memeit
 
+import android.content.Context
 import android.graphics.drawable.Animatable
+import android.graphics.drawable.Drawable
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.cloudinary.Transformation
 import com.cloudinary.android.MediaManager
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -13,8 +18,10 @@ import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
+import com.innov8.memeit.CustomViews.ProfileDraweeView
 import com.memeit.backend.dataclasses.Meme
 import com.memeit.backend.dataclasses.Meme.MemeType.IMAGE
+import com.memeit.backend.dataclasses.Reaction
 import kotlinx.coroutines.experimental.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -161,6 +168,25 @@ fun SimpleDraweeView.load(id: String,width: Int= 100, height: Int = 100,memeType
 
 }
 
+fun ProfileDraweeView.loadImage(url:String?,width:Float,height: Float){
+
+}
+
+
+fun Reaction.getDrawable(context: Context,active:Boolean=true):Drawable{
+    //todo include the inactive ones too
+    val activeRID = intArrayOf(R.drawable.laughing, R.drawable.rofl, R.drawable.neutral, R.drawable.angry)
+    return VectorDrawableCompat.create(context.resources,activeRID[type.ordinal],null)!!
+}
+fun Reaction.getDrawableID(active:Boolean=true):Int{
+    //todo include the inactive ones too
+    val activeRID = intArrayOf(R.drawable.laughing, R.drawable.rofl, R.drawable.neutral, R.drawable.angry)
+    return activeRID[type.ordinal]
+}
+
+fun RecyclerView.makeLinear(orientation: Int=RecyclerView.VERTICAL){
+    this.layoutManager=LinearLayoutManager(context,orientation,false)
+}
 fun Float.step(step:Int):Int{
     val x=Math.max(this/step,1f).toInt()
     return x*step
@@ -169,3 +195,4 @@ fun Float.step(step:Int):Int{
 fun Any.log(vararg m:Any){
     Log.d(this::class.java.simpleName, m.joinToString(", "))
 }
+
