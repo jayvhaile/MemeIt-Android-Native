@@ -16,18 +16,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.MainActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".Activities.ProfileActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"
             tools:replace="android:theme" />
-        <activity android:name=".UserProfileActivity" />
         <activity android:name=".Activities.AuthActivity" />
         <activity android:name=".Activities.CommentsActivity" />
         <activity android:name=".Activities.AboutActivity" />
@@ -51,13 +50,6 @@
         <!-- android:name="com.google.firebase.messaging.default_notification_color" -->
         <!-- android:resource="@color/colorAccent" /> -->
         <activity android:name=".Activities.TagsActivity" />
-        <activity android:name=".Activities.IntroActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Activities.IntroActivity"/>
     </application>
-
 </manifest>
