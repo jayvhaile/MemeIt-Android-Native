@@ -6,4 +6,139 @@
     android:layout_height="match_parent"
     tools:context=".Activities.IntroActivity">
 
+    <ImageView
+        android:id="@+id/intro_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/gradient_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/intro_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.innov8.memeit.CustomClasses.FontTextView
+        android:id="@+id/fontTextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="40dp"
+        android:text="Already have an account?"
+        android:textColor="#fff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.381"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.innov8.memeit.CustomClasses.FontTextView
+        android:id="@+id/fontTextView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  Login!"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/fontTextView2"
+        app:layout_constraintStart_toEndOf="@+id/fontTextView2"
+        app:layout_constraintTop_toTopOf="@+id/fontTextView2" />
+
+    <ImageView
+        android:id="@+id/create_account"
+        android:layout_width="300dp"
+        android:layout_height="95dp"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:src="@drawable/create_account"
+        app:layout_constraintBottom_toTopOf="@+id/fontTextView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/create_account"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <View
+            android:id="@+id/dot_1"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="#fff" />
+
+        <View
+            android:id="@+id/dot_2"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            tools:alpha = ".5"
+            android:background="@drawable/circle"
+            android:backgroundTint="#fff" />
+
+        <View
+            android:id="@+id/dot_3"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginLeft="4dp"
+            tools:alpha = ".5"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="#fff" />
+
+        <View
+            android:id="@+id/dot_4"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginLeft="4dp"
+            tools:alpha = ".5"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="#fff" />
+
+        <View
+            android:id="@+id/dot_5"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginLeft="4dp"
+            tools:alpha = ".5"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="#fff" />
+    </LinearLayout>
+
+    <com.innov8.memeit.CustomClasses.FontTextView
+        android:id="@+id/fontTextView12"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="13dp"
+        android:gravity="center"
+        android:paddingLeft="38dp"
+        android:paddingRight="36dp"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at velit tortor. Pellentesque porttitor aliquet pulvinar."
+        android:textColor="#fff"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>
