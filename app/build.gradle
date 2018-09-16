@@ -51,8 +51,10 @@ dependencies {
     implementation 'com.squareup.okio:okio:1.15.0'
     implementation 'com.github.varunest:sparkbutton:1.0.5'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
 //    implementation 'com.google.firebase:firebase-core:16.0.1'
 //    implementation 'com.google.firebase:firebase-messaging:17.3.0'
+
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0"
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
@@ -65,6 +67,7 @@ dependencies {
 //    implementation 'com.github.apl-devs:appintro:v4.2.3'
     implementation 'com.daimajia.easing:library:2.0@aar'
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
+    implementation 'com.google.firebase:firebase-dynamic-links:16.1.1'
 //    implementation 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
 //    implementation 'com.github.BrotherV:Floating-ArcMenu:1.1.0.2'
 //    implementation 'se.emi  NBlsjolander:StickyScrollViewItems:1.1.0'

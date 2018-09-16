@@ -202,7 +202,7 @@ class GridMemeAdapter(context: Context) : MemeAdapter(context) {
             throw IllegalStateException("View Type must only be MEME_TYPE in GridMemeAdapter")
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.list_item_meme_grid, parent, false)
-        return MemeGridViewHolder(view, this)
+        return MemeListViewHolder.MemeGridViewHolder(view, this)
     }
 
     override fun createLayoutManager(): RecyclerView.LayoutManager = GridLayoutManager(context, GRID_SPAN_COUNT, RecyclerView.VERTICAL, false)
@@ -446,7 +446,11 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 
     private fun showMemeMenu() {
         val menu = PopupMenu(memeAdapter.context, memeMenu)
-        menu.menuInflater.inflate(R.menu.meme_menu, menu.menu)
+        if (MemeItUsers.getInstance().getMyUser(memeAdapter.context).userID.equals(getCurrentMeme().poster.id))
+            menu.menuInflater.inflate(R.menu.meme_menu, menu.menu)
+        else
+            menu.menuInflater.inflate(R.menu.meme_menu_not_own, menu.menu)
+
         menu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_delete_meme -> {
@@ -464,7 +468,22 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
                     })
                     return@OnMenuItemClickListener true
                 }
+                R.id.menu_report_meme->{
+                    var reportCondidions : Array<String> = arrayOf("Pornography","Abuse","Violence","Not appropriate","Other")
+                    MaterialDialog.Builder(memeAdapter.context)
+                            .title("Report")
+                            .items("Pornography","Abuse","Violence","Not appropriate","Other")
+                            .itemsCallbackMultiChoice(null) { _, _, _ ->
+                                true
+                            }
+                            .positiveText("Report")
+                            .negativeText("Cancel")
+                            .onPositive { dialog, _ ->
+                                //todo jv finish this up this shit giving me a hard time
+                            }
+                            .show()
 
+                }
             }
             false
         })
