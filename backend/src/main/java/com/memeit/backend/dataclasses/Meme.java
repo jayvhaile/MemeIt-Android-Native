@@ -18,12 +18,18 @@ public class Meme implements HomeElement, Parcelable {
         return HomeElementKt.getMEME_TYPE();
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public enum MemeType {
         IMAGE, GIF
     }
 
     @SerializedName("mid")
     private String memeId;
+    @SerializedName("desc")
+    private String description;
     @SerializedName("poster")
     private Poster poster;
     @SerializedName("img_url")
@@ -50,16 +56,16 @@ public class Meme implements HomeElement, Parcelable {
     private Reaction[] myReaction;
 
 
-    public static Meme createMeme(String memeImageUrl, double memeImageRatio, MemeType type) {
-        return new Meme(memeImageUrl, memeImageRatio, type, new ArrayList<String>(), new ArrayList<String>());
+    public static Meme createMeme(String memeImageUrl, double memeImageRatio, MemeType type,String desc) {
+        return new Meme(memeImageUrl, memeImageRatio, type, desc,new ArrayList<String>(), new ArrayList<String>());
     }
 
-    public static Meme createMeme(String memeImageUrl, double memeImageRatio, MemeType type, List<String> texts) {
-        return new Meme(memeImageUrl, memeImageRatio, type, texts, new ArrayList<String>());
+    public static Meme createMeme(String memeImageUrl, double memeImageRatio, MemeType type, String desc,List<String> texts) {
+        return new Meme(memeImageUrl, memeImageRatio, type, desc,texts, new ArrayList<String>());
     }
 
-    public static Meme createMeme(String memeImageUrl, double memeImageRatio, MemeType type, List<String> texts, List<String> tags) {
-        return new Meme(memeImageUrl, memeImageRatio, type, texts, tags);
+    public static Meme createMeme(String memeImageUrl, double memeImageRatio, MemeType type,String desc, List<String> texts, List<String> tags) {
+        return new Meme(memeImageUrl, memeImageRatio, type,desc, texts, tags);
     }
 
     public static Meme forID(String memeID) {
@@ -80,7 +86,7 @@ public class Meme implements HomeElement, Parcelable {
         this.memeImageUrl = img;
     }
 
-    private Meme(String memeImageUrl, double memeImageRatio, MemeType type, List<String> texts, List<String> tags) {
+    private Meme(String memeImageUrl, double memeImageRatio, MemeType type,String desc, List<String> texts, List<String> tags) {
         this.memeImageUrl = memeImageUrl;
         this.tags = tags;
         this.texts = texts;
@@ -116,6 +122,7 @@ public class Meme implements HomeElement, Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(memeId);
         parcel.writeString(memeImageUrl);
+        parcel.writeString(description);
 
         //todo fix this shit
         if (tags != null)
@@ -141,6 +148,7 @@ public class Meme implements HomeElement, Parcelable {
     protected Meme(Parcel in) {
         memeId = in.readString();
         memeImageUrl = in.readString();
+        description = in.readString();
         tags = in.createStringArrayList();
         texts = in.createStringArrayList();
         date = in.readLong();
