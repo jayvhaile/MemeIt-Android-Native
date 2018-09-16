@@ -6,21 +6,44 @@
     android:layout_height="match_parent"
     tools:context=".Activities.IntroActivity">
 
-    <ImageView
-        android:id="@+id/intro_bg"
+    <FrameLayout
+        android:id="@+id/holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/gradient_1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/background_login_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/many_pics_optimized" />
+
+        <ImageView
+            android:id="@+id/background_login_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/many_pics_optimized" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/loginbg" />
+
+    </FrameLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/intro_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,16 +55,16 @@
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="96dp"
         android:text="Already have an account?"
         android:textColor="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.381"
+        app:layout_constraintHorizontal_bias="0.38"
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.innov8.memeit.CustomClasses.FontTextView
-        android:id="@+id/fontTextView10"
+        android:id="@+id/intro_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="  Login!"
@@ -53,13 +76,12 @@
 
     <ImageView
         android:id="@+id/create_account"
-        android:layout_width="300dp"
-        android:layout_height="95dp"
+        android:layout_width="280dp"
+        android:layout_height="0dp"
         android:gravity="center"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
         android:src="@drawable/create_account"
         app:layout_constraintBottom_toTopOf="@+id/fontTextView2"
+        app:layout_constraintDimensionRatio="h,7:2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -71,74 +93,59 @@
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/create_account"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <View
             android:id="@+id/dot_1"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:background="@drawable/circle"
             android:backgroundTint="#fff" />
 
         <View
             android:id="@+id/dot_2"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            tools:alpha = ".5"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:background="@drawable/circle"
-            android:backgroundTint="#fff" />
+            android:backgroundTint="#fff"
+            tools:alpha=".5" />
 
         <View
             android:id="@+id/dot_3"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginLeft="4dp"
-            tools:alpha = ".5"
-            android:layout_marginRight="4dp"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:background="@drawable/circle"
-            android:backgroundTint="#fff" />
+            android:backgroundTint="#fff"
+            tools:alpha=".5" />
 
         <View
             android:id="@+id/dot_4"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginLeft="4dp"
-            tools:alpha = ".5"
-            android:layout_marginRight="4dp"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:background="@drawable/circle"
-            android:backgroundTint="#fff" />
+            android:backgroundTint="#fff"
+            tools:alpha=".5" />
 
         <View
             android:id="@+id/dot_5"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginLeft="4dp"
-            tools:alpha = ".5"
-            android:layout_marginRight="4dp"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:background="@drawable/circle"
-            android:backgroundTint="#fff" />
+            android:backgroundTint="#fff"
+            tools:alpha=".5" />
     </LinearLayout>
 
-    <com.innov8.memeit.CustomClasses.FontTextView
-        android:id="@+id/fontTextView12"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="13dp"
-        android:gravity="center"
-        android:paddingLeft="38dp"
-        android:paddingRight="36dp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at velit tortor. Pellentesque porttitor aliquet pulvinar."
-        android:textColor="#fff"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

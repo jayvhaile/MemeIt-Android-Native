@@ -17,7 +17,33 @@
         <item>High</item>
         <item>Very High</item>
     </string-array>
+    <string name="intro_slide2_title">MemeIt</string>
+    <string name="intro_slide3_title">MemeIt</string>
+    <string name="intro_slide4_title">MemeIt</string>
+    <string name="intro_slide5_title">MemeIt</string>
+
     <string name="pref_image_quality_def">Medium</string>
+    <string name="intro_slide1_description">Your window to the wonderful world of memes.</string>
+    <string name="intro_slide2_description">Your window to the wonderful world of memes.</string>
+    <string name="intro_slide3_description">Your window to the wonderful world of memes.</string>
+    <string name="intro_slide4_description">Your window to the wonderful world of memes.</string>
+    <string name="intro_slide5_description">Your window to the wonderful world of memes.</string>
+
+    <string-array name="intro_slide_title">
+        <item>MemeIt</item>
+        <item>@string/intro_slide2_title</item>
+        <item>@string/intro_slide3_title</item>
+        <item>@string/intro_slide4_title</item>
+        <item>@string/intro_slide5_title</item>
+    </string-array>
+
+    <string-array name="intro_slide_description">
+        <item>@string/intro_slide1_description</item>
+        <item>@string/intro_slide2_description</item>
+        <item>@string/intro_slide3_description</item>
+        <item>@string/intro_slide4_description</item>
+        <item>@string/intro_slide5_description</item>
+    </string-array>
 
 
 </resources>

@@ -34,30 +34,23 @@ class MemeChooser : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meme_chooser)
-        adapter= MemeChooserPagerAdapter(supportFragmentManager)
-        pager.adapter=adapter
+        adapter = MemeChooserPagerAdapter(supportFragmentManager)
+        pager.adapter = adapter
         tabs.setupWithViewPager(pager)
     }
 }
 
 class MemeChooserPagerAdapter(mgr: FragmentManager) : FragmentPagerAdapter(mgr) {
     private val titles = listOf("Templates", "Photos", "Videos")
-    override fun getCount(): Int {
-        return 3
-    }
-
-    override fun getItem(position: Int): Fragment {
-        return when(position){
-            0->TemplateFragment()
-            1->PhotosChooserFragment()
-            2->VideoChooserFragment()
-            else ->TemplateFragment()
-        }
-    }
-
-    override fun getPageTitle(position: Int): String? {
-        return titles[position]
-    }
+    override fun getCount(): Int = 3
+    override fun getItem(position: Int): Fragment =
+            when (position) {
+                0 -> TemplateFragment()
+                1 -> PhotosChooserFragment()
+                2 -> VideoChooserFragment()
+                else -> TemplateFragment()
+            }
+    override fun getPageTitle(position: Int): String? = titles[position]
 }
 
 class TemplateFragment : Fragment() {
@@ -75,8 +68,8 @@ class TemplateFragment : Fragment() {
 
         memeTemplatesListAdapter.OnItemClicked = {
             val json = gson.toJson(it)
-            val intent= Intent(context,MemeEditorActivity::class.java)
-            intent.putExtra("string",json)
+            val intent = Intent(context, MemeEditorActivity::class.java)
+            intent.putExtra("string", json)
             startActivity(intent)
         }
     }
@@ -93,28 +86,31 @@ class TemplateFragment : Fragment() {
 
 }
 
-abstract class Frag:Fragment(),LoaderManager.LoaderCallbacks<Cursor>{
-    private var inPermission=false
-    private val REQUEST_PERMS = 120
+private const val REQUEST_PERMS = 120
+
+abstract class Frag : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
+    private var inPermission = false
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
-        inPermission=state?.getBoolean("inperm",false)?:false
+        inPermission = state?.getBoolean("inperm", false) ?: false
 
         if (hasFilesPermission()) {
             load()
-        }
-        else if (!inPermission) {
-            inPermission=true
+        } else if (!inPermission) {
+            inPermission = true
             requestPermissions(arrayOf(READ_EXTERNAL_STORAGE),
                     REQUEST_PERMS)
         }
     }
-    fun load(){
-        LoaderManager.getInstance(this).initLoader(0,null,this)
+
+    fun load() {
+        LoaderManager.getInstance(this).initLoader(0, null, this)
     }
-    private fun hasFilesPermission():Boolean{
+
+    private fun hasFilesPermission(): Boolean {
         return checkSelfPermission(context!!, READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED
     }
+
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>,
                                             grantResults: IntArray) {
@@ -130,16 +126,17 @@ abstract class Frag:Fragment(),LoaderManager.LoaderCallbacks<Cursor>{
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean("inperm",inPermission)
+        outState.putBoolean("inperm", inPermission)
     }
 
 }
-class PhotosChooserFragment:Frag(){
+
+class PhotosChooserFragment : Frag() {
     private lateinit var photosAdapter: PhotosAdapter
 
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
-        photosAdapter= PhotosAdapter(context!!)
+        photosAdapter = PhotosAdapter(context!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -149,11 +146,11 @@ class PhotosChooserFragment:Frag(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         meme_template_list.initWithGrid(3)
-        meme_template_list.adapter=photosAdapter
+        meme_template_list.adapter = photosAdapter
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        return CursorLoader(context!!,MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        return CursorLoader(context!!, MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 null,
                 null,
                 null,
@@ -168,11 +165,12 @@ class PhotosChooserFragment:Frag(){
         photosAdapter.swapCursor(null)
     }
 }
-class VideoChooserFragment:Frag(){
+
+class VideoChooserFragment : Frag() {
     private lateinit var videosAdapter: VideoAdapter
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        videosAdapter= VideoAdapter(context!!)
+    override fun onCreate(state: Bundle?) {
+        super.onCreate(state)
+        videosAdapter = VideoAdapter(context!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -182,11 +180,11 @@ class VideoChooserFragment:Frag(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         meme_template_list.initWithGrid(3)
-        meme_template_list.adapter=videosAdapter
+        meme_template_list.adapter = videosAdapter
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        return CursorLoader(context!!,MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+        return CursorLoader(context!!, MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 null,
                 null,
                 null,

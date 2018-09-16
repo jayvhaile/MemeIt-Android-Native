@@ -197,6 +197,10 @@ public interface MemeInterface {
                                              @Query("skip") int skip,
                                              @Query("limit") int limit);
 
+    @GET("meme/{mid}/reactions")
+    public Call<List<Reaction>> getReactorsForMeme(@Path("mid") String mid,
+                                                 @Query("skip") int skip,
+                                                 @Query("limit") int limit);
     @GET("meme/comment")
     public Call<List<Comment>> getCommentForMeme(@Query("mid") String mid,
                                                  @Query("skip") int skip,
@@ -230,6 +234,18 @@ public interface MemeInterface {
     @PUT("meme/comment")
     public Call<ResponseBody> updateComment(@Body Comment comment);
 
+
+
+    @POST("meme/comment/{cid}/like")
+    public Call<ResponseBody> likeComment(@Path("cid") String commentID);
+    @POST("meme/comment/{cid}/dislike")
+    public Call<ResponseBody> dislikeComment(@Path("cid") String commentID);
+
+
+    @DELETE("meme/comment/{cid}/like")
+    public Call<ResponseBody> removeLikeComment(@Path("cid") String commentID);
+    @DELETE("meme/comment/{cid}/dislike")
+    public Call<ResponseBody> removeDislikeComment(@Path("cid") String commentID);
     @POST("meme/react")
     public Call<ResponseBody> reactToMeme(@Body Reaction reaction);
 
@@ -245,5 +261,8 @@ public interface MemeInterface {
 
     @GET("meme/tags/trending")
     Call<List<Tag>> getTrendingTags(@Query("skip") int skip,
+                                    @Query("limit") int limit);
+    @GET("meme/tags/suggested")
+    Call<List<Tag>> getSuggestedTags(@Query("skip") int skip,
                                     @Query("limit") int limit);
 }
