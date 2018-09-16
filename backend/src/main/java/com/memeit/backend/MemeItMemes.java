@@ -267,6 +267,27 @@ public class MemeItMemes {
                 .enqueue(new MyCallBack<Comment>(listener));
     }
 
+    public void likeComment(String commentID,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .likeComment(commentID)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+    public void dislikeComment(String commentID,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .dislikeComment(commentID)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+    public void removeLikeComment(String commentID,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .removeLikeComment(commentID)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+    public void removeDislikeComment(String commentID,OnCompleteListener<ResponseBody> listener){
+        MemeItClient.getInstance().getInterface()
+                .removeDislikeComment(commentID)
+                .enqueue(new MyCallBack<ResponseBody>(listener));
+    }
+
     /**
      * this is to edit a comment
      *

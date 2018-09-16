@@ -132,7 +132,8 @@ class MemePosterActivity : AppCompatActivity() {
 
     private fun prepareRequest(uri: String, ratio: Float): Meme {
         val tags: List<String>? = getTags()
-        return Meme.createMeme(uri, ratio.toDouble(), memeType, texts?.toList(), tags)
+        //todo retrive description
+        return Meme.createMeme(uri, ratio.toDouble(), memeType,"", texts?.toList(), tags)
 
     }
 

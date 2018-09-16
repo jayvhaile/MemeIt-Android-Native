@@ -9,6 +9,7 @@ import android.os.Parcelable;
 public class User implements Parcelable {
     private String uid;
     private String name;
+    private String bio;
     private String username;
     private String pic;
     private String cpic;
@@ -21,6 +22,7 @@ public class User implements Parcelable {
     protected User(Parcel in) {
         uid = in.readString();
         name = in.readString();
+        bio = in.readString();
         username = in.readString();
         pic = in.readString();
         cpic = in.readString();
@@ -134,6 +136,7 @@ public class User implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(uid);
         dest.writeString(name);
+        dest.writeString(bio);
         dest.writeString(username);
         dest.writeString(pic);
         dest.writeString(cpic);
@@ -142,5 +145,9 @@ public class User implements Parcelable {
         dest.writeInt(postCount);
         dest.writeByte((byte) (isFollowingMe ? 1 : 0));
         dest.writeByte((byte) (isFollowedByMe ? 1 : 0));
+    }
+
+    public String getBio() {
+        return bio;
     }
 }
