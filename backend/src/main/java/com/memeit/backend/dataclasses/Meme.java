@@ -15,7 +15,7 @@ import java.util.List;
 public class Meme implements HomeElement, Parcelable {
     @Override
     public int getItemType() {
-        return HomeElementKt.getMEME_TYPE();
+        return HomeElementKt.MEME_TYPE;
     }
 
     public String getDescription() {

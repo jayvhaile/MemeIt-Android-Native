@@ -5,6 +5,7 @@ import com.facebook.common.util.UriUtil
 import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.utils.AsyncLoader
 import com.innov8.memegenerator.utils.getDrawableIdByName
+import com.innov8.memeit.trim
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.*
@@ -37,13 +38,16 @@ interface MemeLoader<T> {
 }
 
 class HomeLoader(val context: Context, override var listener: OnCompleteListener<List<HomeElement>>? = null) : MemeLoader<HomeElement> {
-    var userSuggestions: List<User>? = null
-    var memeTemplates: List<MemeTemplate>? = null
+    private var userSuggestions: List<User>? = null
+    private var tagsSuggestions: List<Tag>? = null
+    private var memeTemplates: List<MemeTemplate>? = null
 
-    var suggestionLoaded = false
-    var suggestionFailed = true
-    var templateLoaded = false
-    var templateFailed = true
+    private var usersLoaded = false
+    private var usersFailed = true
+    private var tagsLoaded = false
+    private var tagsFailed = true
+    private var templateLoaded = false
+    private var templateFailed = true
     var memeLoaded = false
     var memeFailed = false
 
@@ -62,14 +66,26 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
     })
 
     override fun load(skip: Int, limit: Int) {
-        if (!suggestionLoaded && suggestionFailed) {
-            suggestionFailed = false
+        if (!usersLoaded && usersFailed) {
+            usersFailed = false
             MemeItUsers.getInstance().getUserSuggestions(Listener<List<User>>({
                 userSuggestions = it
-                suggestionLoaded = true
+                usersLoaded = true
                 bake()
             },{
-                suggestionFailed = true
+                usersFailed = true
+                bake()
+            }))
+
+        }
+        if (!tagsLoaded && tagsFailed) {
+            tagsFailed = false
+            MemeItMemes.getInstance().getSuggestedTags(0,300,Listener<List<Tag>>({
+                tagsSuggestions = it
+                tagsLoaded = true
+                bake()
+            },{
+                tagsFailed = true
                 bake()
             }))
 
@@ -92,11 +108,12 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
     var type = 0
 
     private fun bake() {
-        val suggestionLoadedOrFailed = suggestionLoaded || suggestionFailed
+        val usersLoadedOrFailed = usersLoaded || usersFailed
+        val tagsLoadedOrFailed = tagsLoaded || tagsFailed
         val templateLoadedOrFailed = templateLoaded || templateFailed
         if (memeFailed) {
             listener?.onFailure(tempError)
-        } else if (memeLoaded && suggestionLoadedOrFailed && templateLoadedOrFailed) {
+        } else if (memeLoaded && usersLoadedOrFailed && tagsLoadedOrFailed&&templateLoadedOrFailed) {
             AsyncLoader<List<HomeElement>> {
                 val homeElements = mutableListOf<HomeElement>()
                 tempMemes!!.forEach {
@@ -117,55 +134,58 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
         }
     }
 
-    private fun loadShit(triedUser: Boolean = false, triedTemp: Boolean = false, triedAd: Boolean = false): HomeElement? {
+    private fun loadShit(triedUser: Boolean = false, triedTagg:Boolean=false,triedTemp: Boolean = false, triedAd: Boolean = false): HomeElement? {
         return if (triedAd && triedTemp && triedUser) null
         else {
-            val t = type % 3
+            val t = type % 4
             type++
             when (t) {
                 0 -> {
-                    if (suggestionFailed) loadShit(true, triedTemp, triedAd)
-                    bakeSuggestion() ?: loadShit(true, triedTemp, triedAd)
+                    bakeSuggestion() ?: loadShit(true,triedTagg, triedTemp, triedAd)
                 }
-                1 -> bakeTemplate() ?: loadShit(triedUser, true, triedAd)
-                else -> bakeAD() ?: loadShit(triedUser, triedTemp, true)
+                1->bakeTags()?:loadShit(triedUser,true,triedTemp,triedAd)
+                2 -> bakeTemplate() ?: loadShit(triedUser, triedTagg,true, triedAd)
+                else -> bakeAD() ?: loadShit(triedUser,triedTagg, triedTemp, true)
             }
         }
     }
 
-    var suggestionlastIndex = 0
-    var templatelastIndex = 0
+    private var usersIndex = 0
+    private var tagsIndex = 0
+    private var templateIndex = 0
     private fun bakeSuggestion(): UserSuggestion? {
         val users = userSuggestions ?: return null
-        return if (users.size >= suggestionlastIndex + 2) {
-            val suggestions = mutableListOf<User>()
-            for (i in 0 until 4) {
-                if (users.size > suggestionlastIndex) {
-                    val user: User = users[suggestionlastIndex++]
-                    suggestions.add(user)
-                }
-            }
-            UserSuggestion(suggestions)
+        val rem=(users.size-usersIndex) trim 10
+        return if(rem>2){
+            val u=UserSuggestion(users.subList(usersIndex,usersIndex+rem))
+            usersIndex+=rem
+            u
+        } else null
+    }
+    private fun bakeTags():TagSuggestion?{
+        val tags=tagsSuggestions?:return null
+        val rem=(tags.size-tagsIndex) trim 10
+        return if(rem>2){
+            val t=TagSuggestion(tags.subList(tagsIndex,tagsIndex+rem))
+            tagsIndex+=rem
+            t
         } else null
     }
 
     private fun bakeTemplate(): MemeTemplateSuggestion? {
         val templates = memeTemplates ?: return null
-        return if (templates.size >= templatelastIndex + 2) {
-            val t = mutableListOf<String>()
-            for (i in 0 until 10) {
-                if (templates.size > templatelastIndex) {
-                    val tt = templates[templatelastIndex++]
-                    var uri: String = tt.imageURL
-                    if (tt.dataSource == MemeTemplate.LOCAL_DATA_SOURCE)
-                        uri = UriUtil.getUriForResourceId(context.getDrawableIdByName(tt.imageURL)).toString()
-                    t.add(uri)
-                } else {
-                    break
+        val rem=(templates.size-templateIndex) trim 10
+        return if(rem>2){
+            val m= MemeTemplateSuggestion(templates.subList(templateIndex,templateIndex+rem).map {
+                if(it.dataSource==MemeTemplate.LOCAL_DATA_SOURCE){
+                    UriUtil.getUriForResourceId(context.getDrawableIdByName(it.imageURL)).toString()
+                }else{
+                    ""      //todo handle
                 }
-            }
-            MemeTemplateSuggestion(t)
-        } else null
+            })
+            templateIndex+=rem
+            m
+        }else null
     }
 
     private fun bakeAD(): AdElement? {
@@ -174,19 +194,23 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
 
     override fun reset() {
         userSuggestions = null
+        tagsSuggestions = null
         memeTemplates = null
         tempMemes = null
         tempError = null
-        suggestionLoaded = false
-        suggestionFailed = true
+        usersLoaded = false
+        usersFailed = true
+        tagsLoaded = false
+        tagsFailed = true
         templateLoaded = false
         templateFailed = true
         memeLoaded = false
         memeFailed = false
         index = 0
         type = 0
-        templatelastIndex = 0
-        suggestionlastIndex = 0
+        templateIndex = 0
+        usersIndex = 0
+        tagsIndex=0
     }
 
 

@@ -195,4 +195,5 @@ fun Float.step(step:Int):Int{
 fun Any.log(vararg m:Any){
     Log.d(this::class.java.simpleName, m.joinToString(", "))
 }
+infix fun  Int.trim(max:Int):Int=if(this<max)this else max
 

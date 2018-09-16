@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -163,6 +164,10 @@ public class MemeListFragment extends Fragment {
         DefaultItemAnimator animator = new DefaultItemAnimator();
         memeList.setItemAnimator(animator);
         memeList.setAdapter(memeAdapter);
+        if(memeAdapterType==MemeAdapter.LIST_ADAPTER || memeAdapterType ==MemeAdapter.HOME_ADAPTER){
+            ItemTouchHelper itemTouchhelper = new ItemTouchHelper(memeAdapter.make());
+            itemTouchhelper.attachToRecyclerView(memeList);
+        }
 
         memeList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

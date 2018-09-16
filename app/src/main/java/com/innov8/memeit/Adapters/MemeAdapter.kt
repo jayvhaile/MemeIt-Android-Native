@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.Group
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
@@ -152,7 +153,29 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
 
     open fun createLayoutManager(): RecyclerView.LayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-
+    fun make():MyS=MyS()
+    inner class MyS: SwipeController() {
+        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+            val v=viewHolder as MemeViewHolder
+            return if(items[v.itemPosition] is Meme){
+                 makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+            } else{
+                makeMovementFlags(0,0)
+            }
+        }
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val pos=(viewHolder as MemeViewHolder).itemPosition
+            val meme=items[pos] as Meme
+            when (direction) {
+                ItemTouchHelper.LEFT -> {
+                    context.toast("left")
+                }
+                ItemTouchHelper.RIGHT -> {
+                    context.toast("right")
+                }
+            }
+        }
+    }
 }
 
 class ListMemeAdapter(context: Context) : MemeAdapter(context) {
@@ -189,6 +212,7 @@ class GridMemeAdapter(context: Context) : MemeAdapter(context) {
 
 class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
     val usersPool=RecyclerView.RecycledViewPool()
+    val tagsPool=RecyclerView.RecycledViewPool()
     val temlplatesPool=RecyclerView.RecycledViewPool()
     override fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
         when (viewType) {
@@ -201,6 +225,11 @@ class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
                 val inflater = LayoutInflater.from(context)
                 val v = inflater.inflate(R.layout.list_item_list, parent, false)
                 return UserSuggestionHolder(v, this)
+            }
+            TAG_SUGGESTION_TYPE -> {
+                val inflater = LayoutInflater.from(context)
+                val v = inflater.inflate(R.layout.list_item_list, parent, false)
+                return TagSuggestionHolder(v, this)
             }
             MEME_TEMPLATE_SUGGESTION_TYPE -> {
                 val inflater = LayoutInflater.from(context)
@@ -225,6 +254,7 @@ abstract class MemeViewHolder(itemView: View, val memeAdapter: MemeAdapter) : Re
     var memeClickedListener: ((String) -> Unit)? = null
     abstract fun bind(homeElement: HomeElement)
 }
+
 
 class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
     private val posterPicV: ProfileDraweeView = itemView.findViewById(R.id.notif_icon)
@@ -472,7 +502,7 @@ class UserSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewH
     val title:TextView=itemView.findViewById(R.id.list_title)
     private val adapter:UserSugAdapter= UserSugAdapter(memeAdapter.context)
     init {
-        list.layoutManager=LinearLayoutManager(memeAdapter.context,RecyclerView.HORIZONTAL,false)
+        list.makeLinear(RecyclerView.HORIZONTAL)
         list.adapter=adapter
         title.text="User Suggestions"
         memeAdapter as HomeMemeAdapter
@@ -484,6 +514,22 @@ class UserSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewH
         adapter.setAll(a.users)
     }
 }
+class TagSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
+    val list:RecyclerView=itemView.findViewById(R.id.list_recyc)
+    val title:TextView=itemView.findViewById(R.id.list_title)
+    private val adapter:TagsAdapter= TagsAdapter(memeAdapter.context)
+    init {
+        list.makeLinear(RecyclerView.HORIZONTAL)
+        list.adapter=adapter
+        title.text="Recommended Tags"
+        memeAdapter as HomeMemeAdapter
+        list.setRecycledViewPool(memeAdapter.tagsPool)
+    }
+    override fun bind(homeElement: HomeElement) {
+        val a=homeElement as TagSuggestion
+        adapter.setAll(a.tags)
+    }
+}
 
 class MemeTemplateSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
     val list:RecyclerView=itemView.findViewById(R.id.list_recyc)
@@ -491,7 +537,7 @@ class MemeTemplateSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : M
 
     private val adapter:TemplateSugAdapter= TemplateSugAdapter(memeAdapter.context)
     init {
-        list.layoutManager=LinearLayoutManager(memeAdapter.context,RecyclerView.HORIZONTAL,false)
+        list.makeLinear(RecyclerView.HORIZONTAL)
         list.adapter=adapter
         title.text="Meme Templates to Edit"
         memeAdapter as HomeMemeAdapter
