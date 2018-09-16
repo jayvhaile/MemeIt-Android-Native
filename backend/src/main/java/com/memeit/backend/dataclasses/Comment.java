@@ -19,17 +19,75 @@ public class Comment implements Parcelable{
     private String comment;
     @SerializedName("date")
     private Long date;
+    @SerializedName("likeCount")
+    private Long likeCount;
+    @SerializedName("dislikeCount")
+    private Long dislikeCount;
+
+    private boolean isLikedByMe;
+    private boolean isDislikedByMe;
 
     @SerializedName("poster")
     private Poster poster;
 
-    private Comment(Parcel in) {
+
+    protected Comment(Parcel in) {
         posterID = in.readString();
         memeID = in.readString();
         commentID = in.readString();
         comment = in.readString();
-        date = in.readLong();
+        if (in.readByte() == 0) {
+            date = null;
+        } else {
+            date = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            likeCount = null;
+        } else {
+            likeCount = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            dislikeCount = null;
+        } else {
+            dislikeCount = in.readLong();
+        }
+        isLikedByMe = in.readByte() != 0;
+        isDislikedByMe = in.readByte() != 0;
         poster = in.readParcelable(Poster.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(posterID);
+        dest.writeString(memeID);
+        dest.writeString(commentID);
+        dest.writeString(comment);
+        if (date == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(date);
+        }
+        if (likeCount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(likeCount);
+        }
+        if (dislikeCount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(dislikeCount);
+        }
+        dest.writeByte((byte) (isLikedByMe ? 1 : 0));
+        dest.writeByte((byte) (isDislikedByMe ? 1 : 0));
+        dest.writeParcelable(poster, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Comment> CREATOR = new Creator<Comment>() {
@@ -107,19 +165,4 @@ public class Comment implements Parcelable{
         return date;
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(posterID);
-        parcel.writeString(memeID);
-        parcel.writeString(commentID);
-        parcel.writeString(comment);
-        parcel.writeLong(date);
-        parcel.writeParcelable(poster, i);
-    }
 }

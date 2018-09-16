@@ -3,11 +3,12 @@ package com.innov8.memeit.CustomClasses
 import android.content.Context
 import com.facebook.common.util.UriUtil
 import com.innov8.memegenerator.models.MemeTemplate
+import com.innov8.memegenerator.utils.AsyncLoader
 import com.innov8.memegenerator.utils.getDrawableIdByName
-import com.innov8.memegenerator.utils.log
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.*
+import com.memeit.backend.utilis.Listener
 import com.memeit.backend.utilis.OnCompleteListener
 import java.util.*
 
@@ -32,10 +33,11 @@ interface MemeLoader<T> {
 
     fun load(skip: Int, limit: Int)
     fun reset() {}
+
 }
 
 class HomeLoader(val context: Context, override var listener: OnCompleteListener<List<HomeElement>>? = null) : MemeLoader<HomeElement> {
-    var userSuggestions: Queue<User>? = null
+    var userSuggestions: List<User>? = null
     var memeTemplates: List<MemeTemplate>? = null
 
     var suggestionLoaded = false
@@ -49,40 +51,27 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
     var tempError: OnCompleteListener.Error? = null
 
 
-    val myMemeListener = object : OnCompleteListener<List<Meme>> {
-        override fun onSuccess(t: List<Meme>) {
-            memeLoaded = true
-            tempMemes = t
-            bake()
-        }
-
-        override fun onFailure(error: OnCompleteListener.Error?) {
-            memeFailed = true
-            tempError = error
-        }
-
-    }
+    val myMemeListener = Listener<List<Meme>>({
+        memeLoaded = true
+        tempMemes = it
+        bake()
+    }, {
+        memeFailed = true
+        tempError = it
+        bake()
+    })
 
     override fun load(skip: Int, limit: Int) {
-        log("load called")
-        log("checking if suggestion is not loaded or failed")
-        log("result", suggestionLoaded, suggestionFailed)
         if (!suggestionLoaded && suggestionFailed) {
             suggestionFailed = false
-            MemeItUsers.getInstance().getUserSuggestions(object : OnCompleteListener<List<User>> {
-                override fun onSuccess(t: List<User>) {
-                    userSuggestions = ArrayDeque(t)
-                    suggestionLoaded = true
-                    log("suggestion loaded successfully")
-                    bake()
-                }
-
-                override fun onFailure(error: OnCompleteListener.Error?) {
-                    log("suggestion failed", error?.message ?: "")
-                    suggestionFailed = true
-                }
-
-            })
+            MemeItUsers.getInstance().getUserSuggestions(Listener<List<User>>({
+                userSuggestions = it
+                suggestionLoaded = true
+                bake()
+            },{
+                suggestionFailed = true
+                bake()
+            }))
 
         }
         if (!templateLoaded && templateFailed) {
@@ -94,7 +83,6 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
             }
         }
         memeFailed = false
-        log("loading memes")
         MemeItMemes.getInstance().getHomeMemes(skip, limit, myMemeListener)
 
     }
@@ -104,30 +92,27 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
     var type = 0
 
     private fun bake() {
-        log("bake called", "checking if something is still loading")
-        val memeLoadedOrFailed = memeLoaded || memeFailed
-        log("meme status", "failed:" + memeFailed, "loaded: " + memeLoaded)
         val suggestionLoadedOrFailed = suggestionLoaded || suggestionFailed
-        log("suggestion status", "failed:" + suggestionFailed, "loaded: " + suggestionLoaded)
         val templateLoadedOrFailed = templateLoaded || templateFailed
         if (memeFailed) {
-            log("meme loading failed. sending error")
             listener?.onFailure(tempError)
-        } else if (memeLoadedOrFailed && suggestionLoadedOrFailed && templateLoadedOrFailed) {
-            log("baking results")
-            val homeElements = mutableListOf<HomeElement>()
-            //todo make performance consideration here
-            tempMemes!!.forEach {
-                homeElements.add(it)
-                index++
-                if (index % offset == 0) {
-                    val x = loadShit()
-                    if (x != null) {
-                        homeElements.add(x)
+        } else if (memeLoaded && suggestionLoadedOrFailed && templateLoadedOrFailed) {
+            AsyncLoader<List<HomeElement>> {
+                val homeElements = mutableListOf<HomeElement>()
+                tempMemes!!.forEach {
+                    homeElements.add(it)
+                    index++
+                    if (index % offset == 0) {
+                        val x = loadShit()
+                        if (x != null) {
+                            homeElements.add(x)
+                        }
                     }
                 }
+                homeElements
+            }.load {
+                listener?.onSuccess(it)
             }
-            listener?.onSuccess(homeElements)
 
         }
     }
@@ -152,17 +137,16 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
     var templatelastIndex = 0
     private fun bakeSuggestion(): UserSuggestion? {
         val users = userSuggestions ?: return null
-        return if (users.size < 2) null
-        else {
+        return if (users.size >= suggestionlastIndex + 2) {
             val suggestions = mutableListOf<User>()
             for (i in 0 until 4) {
-                val user: User? = users.poll()
-                if (user == null) break
-                else
+                if (users.size > suggestionlastIndex) {
+                    val user: User = users[suggestionlastIndex++]
                     suggestions.add(user)
+                }
             }
             UserSuggestion(suggestions)
-        }
+        } else null
     }
 
     private fun bakeTemplate(): MemeTemplateSuggestion? {
@@ -202,6 +186,7 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
         index = 0
         type = 0
         templatelastIndex = 0
+        suggestionlastIndex = 0
     }
 
 

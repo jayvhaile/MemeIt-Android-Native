@@ -2,6 +2,7 @@ package com.innov8.memeit.Adapters
 
 import android.content.Context
 import android.view.View
+import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.innov8.memegenerator.adapters.ListAdapter
 import com.innov8.memegenerator.adapters.MyViewHolder
@@ -39,7 +40,7 @@ class TemplateSugAdapter(context: Context) : ListAdapter<String>(context, R.layo
 
     inner class TemplateSugViewHolder(itemView: View) : MyViewHolder<String>(itemView) {
         private val templateV: SimpleDraweeView = itemView.findViewById(R.id.template_sug_pp)
-        private val editBtn: CircularProgressButton = itemView.findViewById(R.id.edit_btn)
+        private val editBtn: TextView = itemView.findViewById(R.id.edit_btn)
 
         init {
             editBtn.setOnClickListener {

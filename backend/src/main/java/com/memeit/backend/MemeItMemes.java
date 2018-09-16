@@ -318,8 +318,12 @@ public class MemeItMemes {
     public void getTrendingTags(int skip, int limit, OnCompleteListener<List<Tag>> listener) {
         MemeItClient.getInstance().getInterface()
                 .getTrendingTags(skip, limit)
-                .enqueue(new MyCallBack<List<Tag>>(listener));
+                .enqueue(new MyCallBack<>(listener));
     }
-
+    public void getSuggestedTags(int skip, int limit, OnCompleteListener<List<Tag>> listener) {
+        MemeItClient.getInstance().getInterface()
+                .getSuggestedTags(skip, limit)
+                .enqueue(new MyCallBack<>(listener));
+    }
 
 }
