@@ -262,9 +262,6 @@ public class CustomMethods {
         });
         v.startAnimation(anim_out);
     }
-    public void showCheckBox(Context c){
-
-    }
 }
 
 

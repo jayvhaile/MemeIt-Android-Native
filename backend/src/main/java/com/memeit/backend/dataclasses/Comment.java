@@ -165,4 +165,59 @@ public class Comment implements Parcelable{
         return date;
     }
 
+    public Long getLikeCount() {
+        return likeCount;
+    }
+
+    public Long getDislikeCount() {
+        return dislikeCount;
+    }
+
+    public boolean isLikedByMe() {
+        return isLikedByMe;
+    }
+
+    public boolean isDislikedByMe() {
+        return isDislikedByMe;
+    }
+
+    public void setPosterID(String posterID) {
+        this.posterID = posterID;
+    }
+
+    public void setMemeID(String memeID) {
+        this.memeID = memeID;
+    }
+
+    public void setCommentID(String commentID) {
+        this.commentID = commentID;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setDate(Long date) {
+        this.date = date;
+    }
+
+    public void setLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public void setDislikeCount(Long dislikeCount) {
+        this.dislikeCount = dislikeCount;
+    }
+
+    public void setLikedByMe(boolean likedByMe) {
+        isLikedByMe = likedByMe;
+    }
+
+    public void setDislikedByMe(boolean dislikedByMe) {
+        isDislikedByMe = dislikedByMe;
+    }
+
+    public void setPoster(Poster poster) {
+        this.poster = poster;
+    }
 }
