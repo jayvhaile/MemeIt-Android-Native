@@ -25,6 +25,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.innov8.memeit.R;
 
 import java.io.FileNotFoundException;
@@ -260,6 +261,9 @@ public class CustomMethods {
             }
         });
         v.startAnimation(anim_out);
+    }
+    public void showCheckBox(Context c){
+
     }
 }
 

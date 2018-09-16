@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:minHeight="300dp"
+        android:layout_height="wrap_content">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/meme_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="320dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/got1" />
+
+        <com.innov8.memegenerator.customViews.FontTextView
+            android:id="@+id/fontTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Post"
+            android:visibility="gone"
+            android:textColor="#313131"
+            android:textSize="22sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/meme_image_view" />
+
+        <com.innov8.memegenerator.customViews.FontTextView
+            android:id="@+id/share"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/share_bg"
+            android:text="Share"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="22sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/hold" />
+
+        <com.innov8.memegenerator.customViews.FontEditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:drawableTint="@color/colorAccent"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="Caption"
+            android:drawablePadding="16dp"
+            android:drawableLeft="@drawable/ic_comment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fontTextView" />
+
+        <com.innov8.memegenerator.customViews.FontEditText
+            android:id="@+id/tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="Tags"
+            android:paddingLeft="42dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/description" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:alpha="0.8"
+            android:tint="@color/colorAccent"
+            android:src="@drawable/hashtag"
+            app:layout_constraintBottom_toBottomOf="@+id/tags"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tags" />
+
+        <FrameLayout
+            android:id="@+id/hold"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tags">
+
+            <com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
+                android:id="@+id/post_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_post_back"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="16dp"
+                android:text="Post on MemeIt"
+                android:textAllCaps="false"
+                android:textColor="#f50"
+                android:textSize="20sp"
+                app:finalCornerAngle="35dp"
+                app:initialCornerAngle="35dp"
+                app:spinning_bar_color="#fff"
+                app:spinning_bar_padding="0dp"
+                app:spinning_bar_width="3dp" />
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

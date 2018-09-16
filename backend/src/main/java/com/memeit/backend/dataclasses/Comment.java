@@ -122,4 +122,28 @@ public class Comment implements Parcelable{
         parcel.writeLong(date);
         parcel.writeParcelable(poster, i);
     }
+
+    public void setPosterID(String posterID) {
+        this.posterID = posterID;
+    }
+
+    public void setMemeID(String memeID) {
+        this.memeID = memeID;
+    }
+
+    public void setCommentID(String commentID) {
+        this.commentID = commentID;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setDate(Long date) {
+        this.date = date;
+    }
+
+    public void setPoster(Poster poster) {
+        this.poster = poster;
+    }
 }
