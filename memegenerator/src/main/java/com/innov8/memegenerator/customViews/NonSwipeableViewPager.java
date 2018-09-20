@@ -1,4 +1,4 @@
-package com.innov8.memeit.CustomViews;
+package com.innov8.memegenerator.customViews;
 
 import android.content.Context;
 import android.util.AttributeSet;

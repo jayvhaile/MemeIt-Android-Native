@@ -64,7 +64,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.innov8.memeit.CustomClasses.FontTextView
-        android:id="@+id/intro_title"
+        android:id="@+id/intro_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="  Login!"

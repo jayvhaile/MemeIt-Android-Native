@@ -14,11 +14,10 @@ class TextPresetsAdapter(context:Context) : ListAdapter<TextPreset>(context,R.la
     }
 
     inner class TextpresetViewHolder(view: View): MyViewHolder<TextPreset>(view) {
-        private val presetV:MemeTextView
-        private val nameV:TextView
+        private val presetV:MemeTextView = view.findViewById(R.id.text_preset_view)
+        private val nameV:TextView = view.findViewById(R.id.text_preset_name)
+
         init {
-            presetV=view.findViewById(R.id.text_preset_view)
-            nameV=view.findViewById(R.id.text_preset_name)
             presetV.onClickListener={
                 onItemClick?.invoke(getItemAt(item_position))
             }

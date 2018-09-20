@@ -113,6 +113,7 @@ public interface MemeInterface {
 
     //------POST-----
 
+
     @POST("user/{id}/follow")
     public Call<ResponseBody> followUser(@Path("id") String uid);
 
@@ -229,7 +230,7 @@ public interface MemeInterface {
     public Call<Comment> postComment(@Body Comment comment);
 
     @DELETE("meme/comment")
-    public Call<ResponseBody> deleteComment(@Body Comment comment);
+    public Call<ResponseBody> deleteComment(@Query("mid")String mid,@Query("cid")String cid);
 
     @PUT("meme/comment")
     public Call<ResponseBody> updateComment(@Body Comment comment);

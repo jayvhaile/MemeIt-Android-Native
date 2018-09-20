@@ -1,5 +1,6 @@
 package com.memeit.backend.kotlin
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import okhttp3.Cache
@@ -11,6 +12,7 @@ import java.io.File
 
 class MemeItClient private constructor(val context: Context, val baseUrl: String) {
     companion object {
+        @SuppressLint("StaticFieldLeak")
         var memeItClient: MemeItClient? = null
         fun init(context: Context, baseUrl: String) {
             if (memeItClient == null)

@@ -1,7 +1,6 @@
 package com.innov8.memegenerator.customViews
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.ImageView
@@ -26,7 +25,6 @@ class MyToolBar : LinearLayout {
     }
     private fun init(context: Context, attrs: AttributeSet?=null) {
         orientation=LinearLayout.HORIZONTAL
-        setBackgroundColor(Color.rgb(255,100,0))
 
         leftMenuHolder=LinearLayout(context)
         leftMenuHolder.orientation= HORIZONTAL

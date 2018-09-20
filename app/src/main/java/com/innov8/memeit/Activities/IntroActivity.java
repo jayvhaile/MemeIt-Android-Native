@@ -1,6 +1,7 @@
 package com.innov8.memeit.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,6 @@ import com.innov8.memeit.R;
 import java.util.Arrays;
 import java.util.List;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,8 +29,6 @@ public class IntroActivity extends AppCompatActivity{
     ViewPager viewPager;
     ViewPagerAdapter adapter;
     View[] dots;
-
-
     Context c;
 
 
@@ -49,15 +47,6 @@ public class IntroActivity extends AppCompatActivity{
             }
             @Override
             public void onPageSelected(int position) {
-                @DrawableRes int res;
-                switch (position){
-                    case 1:res = R.drawable.gradient_1;
-                    case 2:res = R.drawable.gradient_2;
-                    case 3:res = R.drawable.gradient_3;
-                    case 4:res = R.drawable.gradient_4;
-                    case 5:res = R.drawable.gradient_5;
-                    default: res = R.drawable.gradient_1;
-                }
                 selectDot(position);
             }
             @Override
@@ -71,6 +60,21 @@ public class IntroActivity extends AppCompatActivity{
     }
 
     private void init() {
+        findViewById(R.id.create_account).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(IntroActivity.this, AuthActivity.class);
+                intent.putExtra(AuthActivity.STARTING_FRAGMENT_PARAM, AuthActivity.FRAGMENT_SIGNUP);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.intro_login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(IntroActivity.this, AuthActivity.class));
+
+            }
+        });
         viewPager = findViewById(R.id.intro_pager);
         c = this;
         dots = new View[]{
@@ -113,7 +117,7 @@ public class IntroActivity extends AppCompatActivity{
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             ImageView iv=view.findViewById(R.id.intro_image);
-            TextView titleV=view.findViewById(R.id.intro_title);
+            TextView titleV=view.findViewById(R.id.intro_login);
             TextView descV=view.findViewById(R.id.intro_description);
 
 

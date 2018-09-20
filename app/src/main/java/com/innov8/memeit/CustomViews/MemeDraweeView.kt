@@ -4,14 +4,13 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import com.amulyakhare.textdrawable.TextDrawable
-import com.facebook.drawee.generic.RoundingParams
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
-import com.innov8.memegenerator.utils.fromDPToPX
+import com.innov8.memeit.CustomClasses.LoadingDrawable
+import com.innov8.memeit.sp
 
-class ProfileDraweeView:SimpleDraweeView{
-    constructor(context: Context,text:String="",color:Int=Color.RED):super(context){
-        this.text=text
-        this.color=color
+class MemeDraweeView:SimpleDraweeView{
+    constructor(context: Context):super(context){
         init()
     }
     constructor(context: Context, attrs: AttributeSet): super(context, attrs){
@@ -22,29 +21,29 @@ class ProfileDraweeView:SimpleDraweeView{
     }
 
 
-    lateinit var textDrawable:TextDrawable
-    var text:String=""
-        set(value) {
-            field = value
-            init()
-        }
-    var color:Int= Color.RED
-        set(value) {
-            field = value
-            init()
-        }
+
 
     fun init (){
-        textDrawable=TextDrawable
+        val textDrawable=TextDrawable
                 .builder()
                 .beginConfig()
                 .bold()
+                .textColor(Color.GRAY)
+                .fontSize(14.sp)
                 .endConfig()
-                .buildRound(text,color)
+        val r="Loading Meme Failed. Tap to Retry"
+        val f="Loading Meme Failed"
+        val retry=textDrawable.buildRect(r,Color.TRANSPARENT)
+        val failed=textDrawable.buildRect(f,Color.TRANSPARENT)
 
-        val rp=RoundingParams.asCircle()
-        rp.setBorder(Color.WHITE,2f.fromDPToPX(context))
-        hierarchy.roundingParams=rp
-        hierarchy.setPlaceholderImage(textDrawable)
+
+        controller=Fresco.newDraweeControllerBuilder()
+                .setTapToRetryEnabled(true)
+                .build()
+        hierarchy.setRetryImage(retry)
+        hierarchy.setFailureImage(failed)
+        hierarchy.setProgressBarImage(LoadingDrawable(context))
+
+
     }
 }

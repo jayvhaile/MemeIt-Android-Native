@@ -12,8 +12,10 @@ class ColorView : View {
     lateinit var paint: Paint
     var onColorChanged: ((Int) -> Unit)? =null
 
-    fun getColor():Int=paint.color
-    fun setColor(color:Int) {
+
+    var color: Int=Color.GRAY
+        set(value) {
+            field=value
             paint.color = color
             invalidate()
             onColorChanged?.invoke(color)
@@ -22,7 +24,6 @@ class ColorView : View {
 
     constructor(context: Context) : super(context) {
         init()
-        setColor(Color.BLACK)
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
@@ -58,8 +59,10 @@ class ColorView : View {
         val radius = Math.min(measuredWidth, measuredHeight) / 2.0f-strokeWidth
         val c=Math.min(measuredWidth,measuredHeight)/2.0f
         paint.style=Paint.Style.STROKE
+        paint.color=Color.GRAY
         canvas.drawCircle(c, c, radius, paint)
         paint.style=Paint.Style.FILL
+        paint.color=color
         canvas.drawCircle(c, c, radius-(strokeWidth*2), paint)
     }
 

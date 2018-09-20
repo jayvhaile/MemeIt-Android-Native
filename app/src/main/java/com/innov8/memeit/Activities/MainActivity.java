@@ -15,11 +15,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.innov8.memeit.Adapters.MemeAdapter;
 import com.innov8.memeit.CustomClasses.MemeLoader;
 import com.innov8.memeit.CustomViews.BottomNavigation;
-import com.innov8.memeit.CustomViews.ChipSearchToolbar;
+import com.innov8.memeit.CustomViews.SearchToolbar;
 import com.innov8.memeit.Fragments.MemeListFragment;
 import com.innov8.memeit.Fragments.ProfileFragment;
 import com.innov8.memeit.R;
-import com.innov8.memeit.SettingsActivity;
 import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.utilis.OnCompleteListener;
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!MemeItAuth.getInstance().isSignedIn(this)) {
-            startActivity(new Intent(this, AuthActivity.class));
+            startActivity(new Intent(this, IntroActivity.class));
             finish();
             return;
         }
@@ -152,12 +151,12 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.menu_home:
                         setTitle(0);
-                        viewPager.setCurrentItem(0);
+                        viewPager.setCurrentItem(0,false);
                         getSupportActionBar().show();
                         return true;
                     case R.id.menu_trending:
                         setTitle(1);
-                        viewPager.setCurrentItem(1);
+                        viewPager.setCurrentItem(1,false);
                         getSupportActionBar().show();
                         return true;
                     case R.id.menu_create:
@@ -166,11 +165,11 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.menu_favorites:
                         setTitle(2);
                         getSupportActionBar().show();
-                        viewPager.setCurrentItem(2);
+                        viewPager.setCurrentItem(2,false);
                         return true;
                     case R.id.menu_me:
                         getSupportActionBar().hide();
-                        viewPager.setCurrentItem(3);
+                        viewPager.setCurrentItem(3,false);
                         return true;
                 }
                 return false;
@@ -204,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private ChipSearchToolbar searchToolbar;
+    private SearchToolbar searchToolbar;
     MenuItem searchItem;
     MenuItem notifItem;
 
@@ -214,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
         searchItem = menu.findItem(R.id.menu_search);
 
-        searchToolbar = (ChipSearchToolbar) searchItem.getActionView();
+        searchToolbar = (SearchToolbar) searchItem.getActionView();
 
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override

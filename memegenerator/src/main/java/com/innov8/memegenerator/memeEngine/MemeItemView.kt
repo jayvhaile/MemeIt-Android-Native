@@ -79,7 +79,7 @@ open class MemeItemView : View {
         minimumHeight = 30f.fromDPToPX(context).toInt()
         mDetector = GestureDetector(context, MyListener())
         resizeOffset = 28f.fromDPToPX(context).toInt()
-        topOffeset = 24f.fromDPToPX(context).toInt()
+        topOffeset = (24f).fromDPToPX(context).toInt()
     }
 
     override fun onDraw(canvas: Canvas?) {

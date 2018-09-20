@@ -11,11 +11,14 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.snackbar.Snackbar;
 import com.innov8.memeit.Adapters.CommentsAdapter;
-import com.innov8.memeit.CustomClasses.ImageUtils;
+import com.innov8.memeit.CustomViews.ProfileDraweeView;
+import com.innov8.memeit.KUtilsKt;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItMemes;
+import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.Meme;
+import com.memeit.backend.dataclasses.MyUser;
 import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.util.List;
@@ -24,6 +27,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static com.innov8.memeit.KUtilsKt.*;
 
 public class CommentsActivity extends AppCompatActivity {
     public static final String MEME_PARAM_KEY= "meme";
@@ -78,7 +83,12 @@ public class CommentsActivity extends AppCompatActivity {
                 MemeItMemes.getInstance().comment(comment, onCommentCompletedListener);
             }
         });
-        ImageUtils.loadImageFromCloudinaryTo(memeImage,meme.getMemeImageUrl());
+        KUtilsKt.load(memeImage,meme.getMemeImageUrl(),1000,1000,meme.getType());
+        ProfileDraweeView pdv=findViewById(R.id.comment_pp);
+        MyUser u=MemeItUsers.getInstance().getMyUser(this);
+        pdv.setText(KUtilsKt.prefix(u.getName()));
+        float size=dimen(R.dimen.profile_mini_size);
+        loadImage(pdv,u.getImageUrl(),size,size);
         load();
 
     }

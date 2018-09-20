@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.innov8.memeit.CustomViews.NonSwipeableViewPager
+    <com.innov8.memegenerator.customViews.NonSwipeableViewPager
         android:id="@+id/main_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

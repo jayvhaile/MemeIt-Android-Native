@@ -1,17 +1,16 @@
 package com.innov8.memeit.CustomViews
 
 import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.graphics.Color
 import android.os.Build
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -22,12 +21,14 @@ import com.innov8.memegenerator.utils.fromDPToPX
 import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Adapters.TagSuggestionAdapter
+import com.innov8.memeit.DP
 import com.innov8.memeit.R
+import com.innov8.memeit.dp
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.dataclasses.Tag
 import com.memeit.backend.utilis.OnCompleteListener
 
-class ChipSearchToolbar : LinearLayout,MenuItem.OnActionExpandListener{
+class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
     override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
         editText.requestFocusFromTouch()
         return true
@@ -41,7 +42,8 @@ class ChipSearchToolbar : LinearLayout,MenuItem.OnActionExpandListener{
     lateinit var editText: EditText
     lateinit var clearButton: ImageButton
     lateinit var popupWindow: PopupWindow
-    var OnSearch: ((String, Array<String>) -> Unit)? =null
+    var OnSearch: ((String, Array<String>) -> Unit)? = null
+
     constructor(context: Context) : super(context) {
         init()
 
@@ -59,20 +61,22 @@ class ChipSearchToolbar : LinearLayout,MenuItem.OnActionExpandListener{
 
 
     private fun init() {
-        val inflator = LayoutInflater.from(context);
-        editText = inflator.inflate(R.layout.search_edit, null) as EditText
+        val lpt = ViewGroup.LayoutParams(400.dp, LayoutParams.MATCH_PARENT)
+        layoutParams=lpt
+        val inflater = LayoutInflater.from(context);
+        editText = inflater.inflate(R.layout.search_edit, null) as EditText
 
         //editText.inputType = InputType.TYPE_CLASS_TEXT
         editText.maxLines = 1
         editText.hint = "Search Memes"
         adapter = TagSuggestionAdapter(context)
 
-        val v: View = inflator.inflate(R.layout.tag_suggestion, null)
+        val v: View = inflater.inflate(R.layout.tag_suggestion, null)
         val list: RecyclerView = v.findViewById(R.id.sug_list)
         popupWindow = PopupWindow(v, 280.fromDPToPX(context), 180.fromDPToPX(context))
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            popupWindow.elevation = 2.fromDPToPX(context).toFloat()
+            popupWindow.elevation = 2f.DP
         }
         list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         list.adapter = adapter
@@ -80,17 +84,17 @@ class ChipSearchToolbar : LinearLayout,MenuItem.OnActionExpandListener{
         adapter.OnDataChange = {
             if (it.isEmpty() && popupWindow.isShowing)
                 popupWindow.dismiss()
-            else if (it.isNotEmpty() ){
+            else if (it.isNotEmpty()) {
                 popupWindow.showAsDropDown(editText, (-32).fromDPToPX(context), 0)
             }
 
         }
-        adapter.OnItemClicked={
-            val s=editText.text
+        adapter.OnItemClicked = {
+            val s = editText.text
 
-            val i=s.lastIndexOf('#')
+            val i = s.lastIndexOf('#')
 
-            s.replace(i+1,s.length,it.tag.toLowerCase()+" ")
+            s.replace(i + 1, s.length, it.tag.toLowerCase() + " ")
         }
 
 
@@ -103,7 +107,7 @@ class ChipSearchToolbar : LinearLayout,MenuItem.OnActionExpandListener{
         clearButton.setOnClickListener {
             editText.setText("")
         }
-        gravity=Gravity.CENTER_VERTICAL
+        gravity = Gravity.CENTER_VERTICAL
 
         val lp = LayoutParams(200.fromDPToPX(context), LayoutParams.MATCH_PARENT)
         val lp2 = LayoutParams(56.fromDPToPX(context), LayoutParams.MATCH_PARENT)
@@ -116,9 +120,9 @@ class ChipSearchToolbar : LinearLayout,MenuItem.OnActionExpandListener{
             override fun afterTextChanged(s: Editable) {
                 var hash = false
                 var hashSI = -1
-                if(!s.contains('#')){
+                if (!s.contains('#')) {
                     x("")
-                }else {
+                } else {
 
                     for (i in 0 until s.length) {
                         if (hash) {
@@ -148,18 +152,20 @@ class ChipSearchToolbar : LinearLayout,MenuItem.OnActionExpandListener{
             }
 
         })
-        editText.imeOptions=EditorInfo.IME_ACTION_SEARCH
-        editText.inputType=InputType.TYPE_CLASS_TEXT
+        editText.imeOptions = EditorInfo.IME_ACTION_SEARCH
+        editText.inputType = InputType.TYPE_CLASS_TEXT
 
         editText.setOnEditorActionListener { _, actionId, _ ->
-           if(actionId==EditorInfo.IME_ACTION_SEARCH){
-               val text=getSearchText()
-               val tags=getSearchTags()
-               context.toast(text+" "+tags.joinToString(" "))
-               OnSearch?.invoke(text,tags)
-               true
-           }
-            false
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val text = getSearchText()
+                val tags = getSearchTags()
+                context.toast(text + " " + tags.joinToString(" "))
+                OnSearch?.invoke(text, tags)
+                val mgr = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager;
+                mgr.hideSoftInputFromWindow(editText.windowToken, 0)
+                true
+            } else
+                false
         }
 
     }
@@ -187,18 +193,18 @@ class ChipSearchToolbar : LinearLayout,MenuItem.OnActionExpandListener{
         adapter.clear()
     }
 
-    fun getSearchText():String{
+    fun getSearchText(): String {
         return editText.text.split(" ")
                 .filter { !it.startsWith('#') }
-                .joinToString (" ")
+                .joinToString(" ")
     }
-    fun getSearchTags():Array<String>{
+
+    fun getSearchTags(): Array<String> {
         return editText.text.split(" ")
-                .filter { it.startsWith('#')&&it.length>1 }
+                .filter { it.startsWith('#') && it.length > 1 }
                 .map { it.substring(1) }
                 .toTypedArray()
     }
-
 
 
 }

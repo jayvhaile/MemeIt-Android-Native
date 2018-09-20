@@ -1,6 +1,9 @@
 package com.innov8.memeit.Activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,16 +22,18 @@ class TagsActivity : AppCompatActivity() {
     private lateinit var followedTagsAdapter: TagsAdapter
     private lateinit var popularTagsAdapter: TagsAdapter
     private lateinit var trendingTagsAdapter: TagsAdapter
-    private var uid: String?=null
+    private var uid: String? = null
+    private var choose: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         followedTagsAdapter = TagsAdapter(this)
 
-        val loader={
+        val loader = {
             load()
         }
+        choose = intent?.getBooleanExtra("choose", false) ?: false
         uid = intent?.getStringExtra("uid")
-        if(uid==null){
+        if (!choose && uid == null) {
             setContentView(R.layout.activity_tags)
             popularTagsAdapter = TagsAdapter(this)
             trendingTagsAdapter = TagsAdapter(this)
@@ -44,38 +49,64 @@ class TagsActivity : AppCompatActivity() {
             tags_swipe_refresh.setOnRefreshListener(loader)
 
             setSupportActionBar(tags_toolbar)
-        }else{
+        } else {
             setContentView(R.layout.activity_tags_user)
-            followed_tags_users.layoutManager=StaggeredGridLayoutManager(2,RecyclerView.VERTICAL)
-            followed_tags_users.adapter=followedTagsAdapter
+
+            tag_title.text=if(choose)"Popular Tags" else "Followed Tags"
+            followed_tags_users.layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
+            followed_tags_users.adapter = followedTagsAdapter
             setSupportActionBar(tags_toolbar_user)
             tags_swipe_refresh_user.setOnRefreshListener(loader)
         }
-        supportActionBar?.title="Tags"
+        supportActionBar?.title = "Tags"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         loader()
     }
-    private fun load(){
-        if(uid==null){
-            MemeItUsers.getInstance().getFollowingTags(0,1000,Listener<List<Tag>>({
+
+    private fun load() {
+        if (!choose&&uid == null) {
+            MemeItUsers.getInstance().getFollowingTags(0, 1000, Listener<List<Tag>>({
                 followedTagsAdapter.setAll(it)
-                tags_swipe_refresh.isRefreshing=false
-            },{}))
-            MemeItMemes.getInstance().getPopularTags(null,0,100,Listener<List<Tag>>({
+                tags_swipe_refresh.isRefreshing = false
+            }, {}))
+            MemeItMemes.getInstance().getPopularTags(null, 0, 100, Listener<List<Tag>>({
                 popularTagsAdapter.setAll(it)
-                tags_swipe_refresh.isRefreshing=false
-            },{}))
-            MemeItMemes.getInstance().getTrendingTags(0,100,Listener<List<Tag>>({
+                tags_swipe_refresh.isRefreshing = false
+            }, {}))
+            MemeItMemes.getInstance().getTrendingTags(0, 100, Listener<List<Tag>>({
                 trendingTagsAdapter.setAll(it)
-                tags_swipe_refresh.isRefreshing=false
-            },{}))
-        }else{
-            MemeItUsers.getInstance().getFollowingTagsFor(uid,0,1000,Listener<List<Tag>>({
-                followedTagsAdapter.setAll(it)
-                tags_swipe_refresh_user.isRefreshing=false
-            },{}))
+                tags_swipe_refresh.isRefreshing = false
+            }, {}))
+        } else {
+            if (choose) {
+                MemeItMemes.getInstance().getPopularTags(null, 0, 1000, Listener<List<Tag>>({
+                    followedTagsAdapter.setAll(it)
+                    tags_swipe_refresh_user.isRefreshing = false
+                }, {}))
+            } else {
+                MemeItUsers.getInstance().getFollowingTagsFor(uid, 0, 1000, Listener<List<Tag>>({
+                    followedTagsAdapter.setAll(it)
+                    tags_swipe_refresh_user.isRefreshing = false
+                }, {}))
+            }
 
         }
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if(choose)
+            menuInflater.inflate(R.menu.tags_activity_menu,menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.tag_done->{
+                val i = Intent(this, MainActivity::class.java)
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(i)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

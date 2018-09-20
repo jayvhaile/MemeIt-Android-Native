@@ -103,10 +103,21 @@ public class MyUser {
                 .putString(CPIC, cpic)
                 .apply();
     }
-    public void save(Context context) {
-        SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(context);
-        save(sp);
 
+    public void save(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        save(sp);
+    }
+
+    public static void delete(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit()
+                .remove(UID)
+                .remove(USERNAME)
+                .remove(NAME)
+                .remove(PIC)
+                .remove(CPIC)
+                .apply();
     }
 
 

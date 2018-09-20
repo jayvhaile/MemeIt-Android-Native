@@ -10,7 +10,7 @@ import com.innov8.memegenerator.adapters.MyViewHolder
 
 abstract class CursorAdapter<T>(val context: Context, val layoutID: Int) : RecyclerView.Adapter<MyViewHolder<T>>() {
     var cursor: Cursor? = null
-    var OnItemClicked: ((String) -> Unit)? = null
+    var onItemClicked: ((String) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder<T> {
         val view = LayoutInflater.from(context).inflate(layoutID, parent, false)
@@ -39,5 +39,4 @@ abstract class CursorAdapter<T>(val context: Context, val layoutID: Int) : Recyc
         this.cursor = cursor
         notifyDataSetChanged()
     }
-
 }

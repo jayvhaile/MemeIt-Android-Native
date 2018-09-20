@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.SeekBar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.color.ColorChooserDialog
 import com.google.android.material.tabs.TabLayout
 import com.innov8.memegenerator.R
@@ -107,7 +109,7 @@ class TextPresetFragment : androidx.fragment.app.Fragment() {
         textPresetsAdapter.onItemClick = {
             textEditListener.onApplyAll(it.textStyleProperty, false)
         }
-        asyncLoaders = AsyncLoader<List<TextPreset>>({
+        asyncLoaders = AsyncLoader<List<TextPreset>> {
             return@AsyncLoader listOf<TextPreset>(
                     TextPreset("Normal", TextStyleProperty(
                             20f, Color.WHITE, MyTypeFace.byName("Arial")!!,
@@ -128,7 +130,7 @@ class TextPresetFragment : androidx.fragment.app.Fragment() {
                             false, Color.BLACK, 10f
                     ))
             )
-        })
+        }
     }
 
     lateinit var presetList: androidx.recyclerview.widget.RecyclerView
@@ -144,7 +146,7 @@ class TextPresetFragment : androidx.fragment.app.Fragment() {
         presetList = view.findViewById(R.id.frag_text_preset_list)
         presetAdd = view.findViewById(R.id.frag_text_preset_add)
 
-        presetList.initWithGrid(3)
+        presetList.layoutManager=LinearLayoutManager(context,RecyclerView.HORIZONTAL,false)
         presetList.adapter = textPresetsAdapter
     }
 
@@ -222,23 +224,23 @@ class TextCustomizeFragment : androidx.fragment.app.Fragment(), ColorChooserDial
     fun applyTextProperty(tp: TextStyleProperty) {
         val temp=textEditListener
         textEditListener=null
-        textColorV.setColor(tp.textColor)
+        textColorV.color=tp.textColor
        // textfontV.selectedIndex=
         textStyleBoldV.setChecked(true,false)
         textStyleItalicV.setChecked(true,false)
         textStyleAllCapV.setChecked(true,false)
         textSizeV.progress=tp.textSize.toInt()
         textStrokeV.isChecked=tp.stroked
-        textStrokeColorV.setColor(tp.strokeColor)
+        textStrokeColorV.color=tp.strokeColor
         textStrokeSizeV.progress=tp.strokeWidth.toInt()
         textEditListener=temp
     }
 
     override fun onColorSelection(dialog: ColorChooserDialog, selectedColor: Int) {
         if (dialog.tag() == "textColor") {
-            textColorV.setColor(selectedColor)
+            textColorV.color=(selectedColor)
         } else {
-            textStrokeColorV.setColor(selectedColor)
+            textStrokeColorV.color=(selectedColor)
         }
     }
 

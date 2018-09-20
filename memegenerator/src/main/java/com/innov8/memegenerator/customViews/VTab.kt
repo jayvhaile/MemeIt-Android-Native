@@ -46,8 +46,8 @@ class VTab : LinearLayout {
         } finally {
             a.recycle()
         }
-        itemLayoutParam = LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f)
-        orientation = VERTICAL
+        itemLayoutParam = LayoutParams(0,LayoutParams.MATCH_PARENT, 1f)
+        orientation = HORIZONTAL
     }
 
     fun init() {
@@ -59,7 +59,7 @@ class VTab : LinearLayout {
                 select(index)
                 item.onClick(index)
             }
-            imgV.setPadding(itemPadding, 0, itemPadding, 0)
+            imgV.setPadding(0,itemPadding, 0, itemPadding)
             addView(imgV, itemLayoutParam)
         }
         select(0)

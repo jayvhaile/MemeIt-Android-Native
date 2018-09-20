@@ -4,20 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@drawablemany_pics_optimized">
+    tools:background="@drawable/many_pics_optimized">
 
     <com.innov8.memeit.CustomClasses.FontTextView
         android:id="@+id/fontTextView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/fontTextView3"
-        android:layout_alignParentLeft="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginBottom="32dp"
         android:gravity="center"
         android:text="Personalize your account"
         android:textColor="#fff"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/profile_pic" />
+        app:layout_constraintBottom_toTopOf="@+id/profile_pic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/profile_pic"
@@ -32,8 +36,10 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
-        app:placeholderImage="@drawable/circle"
-        app:roundAsCircle="true"/>
+        app:placeholderImage="@drawable/ic_profile"
+        app:roundAsCircle="true"
+        app:roundingBorderWidth="2dp"
+        app:roundingBorderColor="@color/white"/>
 
     <EditText
         android:id="@+id/name_setup"
@@ -44,30 +50,17 @@
         android:hint="Name"
         android:inputType="textEmailAddress"
         android:paddingLeft="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/tags_setup"
-        app:layout_constraintEnd_toStartOf="@+id/guideline8"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/guideline7" />
-
-    <EditText
-        android:id="@+id/tags_setup"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/auth_item_height"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/edittextlogin"
-        android:hint="Tags to Follow"
-        android:inputType="textEmailAddress"
-        android:paddingLeft="16dp"
         app:layout_constraintBottom_toTopOf="@+id/hold"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline7" />
 
+
     <FrameLayout
         android:id="@+id/hold"
         android:layout_width="0dp"
         android:layout_height="@dimen/auth_button_height"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="128dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintHorizontal_bias="0.5"

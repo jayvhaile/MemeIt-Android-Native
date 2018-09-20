@@ -36,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:textColor="#7000"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/meme_poster_name"
         app:layout_constraintTop_toBottomOf="@+id/meme_poster_name"
@@ -53,8 +54,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_more_vert_black_24dp" />
-    <!--===================================================THE MIDDLE PARTS-->
-    <com.facebook.drawee.view.SimpleDraweeView
+    <!--===================================================THE MIDDLE PARTS======================-->
+    <com.innov8.memeit.CustomViews.MemeDraweeView
         android:id="@+id/meme_image"
         tools:background="#000"
         android:layout_width="match_parent"
@@ -206,7 +207,7 @@
     <com.innov8.memegenerator.customViews.FontTextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textColor="#313131"
         android:visibility="visible"

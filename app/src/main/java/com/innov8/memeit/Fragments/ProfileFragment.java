@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.google.android.material.tabs.TabLayout;
 import com.innov8.memeit.Activities.TagsActivity;
 import com.innov8.memeit.CustomClasses.CustomMethods;
-import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.CustomClasses.UserListLoader;
 import com.innov8.memeit.CustomViews.ProfileDraweeView;
 import com.innov8.memeit.Fragments.ProfileFragments.UserListFragment;
@@ -118,6 +117,7 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
 
                         @Override
                         public void onFailure(Error error) {
+                            if(getContext()==null)return;
                             Toast.makeText(getContext(), "failed follow: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -130,6 +130,8 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
 
                         @Override
                         public void onFailure(Error error) {
+                            if(getContext()==null)return;
+
                             Toast.makeText(getContext(), "failed follow: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -138,16 +140,17 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
 
             }
         });
+        size=getResources().getDimension(R.dimen.image_width);
         if (isMe()) loadFast();
         if (userData != null) updateView();
         loadData();
     }
-
+float size;
     private void loadFast() {
         MyUser myUser = MemeItUsers.getInstance().getMyUser(getContext());
         nameV.setText(myUser.getName());
         profileV.setText(KUtilsKt.prefix(myUser.getName()));
-        ImageUtils.loadImageFromCloudinaryTo(profileV, myUser.getImageUrl());
+        KUtilsKt.loadImage(profileV,myUser.getImageUrl(),size,size);
 
     }
 
@@ -163,6 +166,7 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
 
             @Override
             public void onFailure(Error error) {
+                if(getContext()==null)return;
                 Toast.makeText(getActivity(), "failer: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
@@ -176,7 +180,7 @@ public class ProfileFragment extends Fragment implements Toolbar.OnMenuItemClick
     private void updateView() {
         nameV.setText(userData.getName());
         profileV.setText(KUtilsKt.prefix(userData.getName()));
-        ImageUtils.loadImageFromCloudinaryTo(profileV, userData.getImageUrl());
+        KUtilsKt.loadImage(profileV,userData.getImageUrl(),size,size);
         followerV.setText(CustomMethods.formatNumber(userData.getFollowerCount()));
         memeCountV.setText(CustomMethods.formatNumber(userData.getPostCount()));
         if (userData.isFollowedByMe()) {

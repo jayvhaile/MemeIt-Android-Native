@@ -1,5 +1,6 @@
 package com.innov8.memeit.CustomViews;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -46,6 +47,7 @@ public class BottomNavigation extends LinearLayout {
         super(context);
     }
 
+    @SuppressLint("RestrictedApi")
     public BottomNavigation(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setOrientation(HORIZONTAL);
@@ -103,7 +105,7 @@ public class BottomNavigation extends LinearLayout {
 
     public void select(int x, boolean fire) {
         selectedIndex = x;
-        clearTints();
+        if(!isNotTintable(x))clearTints();
         setTinted(x);
         if (fire)
             onNavigationItemSelectedListener.onNavigationItemSelected(menu.getItem(x));

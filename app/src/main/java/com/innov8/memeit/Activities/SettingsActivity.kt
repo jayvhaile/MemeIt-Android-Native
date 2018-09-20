@@ -1,9 +1,11 @@
-package com.innov8.memeit
+package com.innov8.memeit.Activities
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.preference.EditTextPreference
+import android.preference.ListPreference
 import android.preference.PreferenceFragment
 import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +15,8 @@ import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.CustomClasses.ImageUtils
+import com.innov8.memeit.R
+import com.innov8.memeit.prefix
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.MyUser
 import com.memeit.backend.utilis.Listener
@@ -134,6 +138,15 @@ class PrefFragment : PreferenceFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
+
+        for (i in 0 until preferenceScreen.preferenceCount){
+            val p=preferenceScreen.getPreference(i)
+            when (p) {
+                is ListPreference -> p.summary=p.value
+                is EditTextPreference -> p.summary=p.text
+            }
+        }
+
     }
 }
 

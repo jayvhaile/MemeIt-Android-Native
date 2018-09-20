@@ -16,7 +16,6 @@ import com.innov8.memeit.prefix
 import com.memeit.backend.dataclasses.Reaction
 
 class ReactorAdapter(context:Context): ListAdapter<Reaction>(context, R.layout.list_item_reactors) {
-    val size=context.resources.getDimension(R.dimen.profile_mini_size)
     override fun createViewHolder(view: View): MyViewHolder<Reaction> {
        return ReactorsViewHolder(view)
     }
@@ -37,7 +36,7 @@ class ReactorAdapter(context:Context): ListAdapter<Reaction>(context, R.layout.l
             }
         }
         override fun bind(t: Reaction) {
-            reactorPPV.loadImage(t.poster.profileUrl,size,size)
+            reactorPPV.loadImage(t.poster.profileUrl)
             reactorPPV.text=t.poster.name.prefix()
             reactorNameV.text=t.poster.name
             reactorReactionV.setImageResource(t.getDrawableID())

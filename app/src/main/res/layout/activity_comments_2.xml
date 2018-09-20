@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinators"
     android:layout_height="match_parent">
 
@@ -31,41 +32,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    <androidx.cardview.widget.CardView
-        app:cardCornerRadius="16dp"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:minHeight="50dp"
-        android:layout_marginBottom="16dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:layout_behavior="@string/scrolling_behavior">
-        <LinearLayout
-            android:minHeight="50dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.innov8.memeit.CustomClasses.FontEditText
-                android:id="@+id/comment_field"
-                android:background="#fff"
-                android:inputType="textMultiLine"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:minHeight="50dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:hint="Comment"
-                android:paddingLeft="16dp"
-                android:layout_height="wrap_content" />
-            <ImageView
-                android:id="@+id/comment_button"
-                android:src="@drawable/send"
-                android:layout_width="55dp"
-                android:padding="6dp"
-                android:layout_marginLeft="5dp"
-                android:layout_height="50dp" />
-        </LinearLayout>
+        android:background="@drawable/bottom_nav_back"
+        android:gravity="center_vertical"
+        android:minHeight="50dp">
 
-    </androidx.cardview.widget.CardView>
+        <com.innov8.memeit.CustomViews.ProfileDraweeView
+            android:id="@+id/comment_pp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            tools:background="@drawable/circle" />
+
+        <com.innov8.memeit.CustomClasses.FontEditText
+            android:id="@+id/comment_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="Comment"
+            android:inputType="textMultiLine"
+            android:minHeight="50dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp" />
+
+        <ImageView
+            android:id="@+id/comment_button"
+            android:layout_width="55dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="5dp"
+            android:padding="6dp"
+            android:src="@drawable/send" />
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

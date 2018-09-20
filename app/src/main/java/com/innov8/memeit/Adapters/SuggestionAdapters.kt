@@ -19,7 +19,7 @@ class UserSugAdapter(context: Context) : ListAdapter<User>(context, R.layout.lis
 
     inner class UserSugViewHolder(itemView: View) : MyViewHolder<User>(itemView) {
         private val profileV: ProfileDraweeView = itemView.findViewById(R.id.user_sug_pp)
-        private val nameV: ProfileDraweeView = itemView.findViewById(R.id.user_sug_name)
+        private val nameV: TextView = itemView.findViewById(R.id.user_sug_name)
         private val followBtn: CircularProgressButton = itemView.findViewById(R.id.follower_follow_btn)
 
         init {

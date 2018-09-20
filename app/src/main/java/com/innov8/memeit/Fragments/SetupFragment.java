@@ -15,8 +15,7 @@ import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.innov8.memeit.Activities.MainActivity;
-import com.innov8.memeit.CustomClasses.CustomMethods;
+import com.innov8.memeit.Activities.TagsActivity;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.User;
@@ -49,7 +48,6 @@ public class SetupFragment extends AuthFragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setup_profile2, container, false);
         nameV = view.findViewById(R.id.name_setup);
-        CustomMethods.makeEditTextsAvenir(getActivity(), view, R.id.name_setup, R.id.tags_setup);
         profileV = view.findViewById(R.id.profile_pic);
         profileV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,14 +94,17 @@ public class SetupFragment extends AuthFragment implements View.OnClickListener 
         }
     }
 
-    //todo-jv: upload tags and username
     private void uploadData(String name, String image_url) {
         User user = new User(name, image_url);
         MemeItUsers.getInstance().updateMyData(user, new OnCompleteListener<ResponseBody>() {
             @Override
             public void onSuccess(ResponseBody body) {
                 setLoading(false);
-                startActivity(new Intent(getContext(), MainActivity.class));
+                Intent i=new Intent(getContext(), TagsActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.putExtra("choose",true);
+                startActivity(i);
+
             }
 
             @Override

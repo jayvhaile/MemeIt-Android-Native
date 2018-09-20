@@ -13,7 +13,6 @@ import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressB
 import com.innov8.memegenerator.loading_button_lib.interfaces.OnAnimationEndListener;
 import com.innov8.memeit.Activities.ProfileActivity;
 import com.innov8.memeit.CustomClasses.FontTextView;
-import com.innov8.memeit.CustomClasses.ImageUtils;
 import com.innov8.memeit.CustomViews.ProfileDraweeView;
 import com.innov8.memeit.KUtilsKt;
 import com.innov8.memeit.R;
@@ -30,10 +29,12 @@ import okhttp3.ResponseBody;
 public class UserListAdapter extends ListAdapter<User> {
     Typeface tf;
     MyUser myUser;
+    float size;
     public UserListAdapter(@NotNull Context mContext) {
         super(mContext, R.layout.list_item_follower);
         tf = Typeface.createFromAsset(getMContext().getAssets(), FontTextView.asset);
-        myUser=MemeItUsers.getInstance().getMyUser(mContext);
+        myUser= MemeItUsers.getInstance().getMyUser(mContext);
+        size=mContext.getResources().getDimension(R.dimen.profile_mini_size);
     }
 
     @NotNull
@@ -117,7 +118,7 @@ public class UserListAdapter extends ListAdapter<User> {
             followerName.setText(user.getName());
             followerDetail.setText(user.getPostCount() + " posts");
             followerImage.setText(KUtilsKt.prefix(user.getName()));
-            ImageUtils.loadImageFromCloudinaryTo(followerImage, user.getImageUrl());
+            KUtilsKt.loadImage(followerImage,user.getImageUrl(),size,size);
             if(isMe(user.getUserID())){
                 followButton.setVisibility(View.GONE);
             }else{

@@ -104,7 +104,14 @@ public class MemeItClient{
             }
         } catch (Exception e) {
             Log.e(TAG, "Could not create Cache!");
-        };
+        }
+    }
+    public void clearCache(){
+        try {
+            cache.evictAll();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     private Interceptor provideCacheInterceptor() {
         return new Interceptor() {

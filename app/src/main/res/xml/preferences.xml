@@ -28,7 +28,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="switch_preference_1"
-            android:title="Automatically Load Video" />
+            android:title="Automatically Load Gif Memes" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Storage">
         <SwitchPreference
@@ -43,7 +43,6 @@
             android:key="switch_preference_1"
             android:title="Enable Notifications" />
         <RingtonePreference
-            android:defaultValue=""
             android:key="ringtone_preference_1"
             android:title="Notification Sound" />
 

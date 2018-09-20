@@ -79,7 +79,7 @@ class TemplateFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        meme_template_list.initWithGrid(2)
+        meme_template_list.initWithGrid(3)
         meme_template_list.adapter = memeTemplatesListAdapter
     }
 

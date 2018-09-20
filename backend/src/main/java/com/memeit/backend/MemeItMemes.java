@@ -310,7 +310,7 @@ public class MemeItMemes {
      **/
     public void deleteComment(String mid, String cid, OnCompleteListener<ResponseBody> listener) {
         MemeItClient.getInstance().getInterface()
-                .deleteComment(Comment.createCommentForDelete(mid, cid))
+                .deleteComment(mid, cid)
                 .enqueue(new MyCallBack<ResponseBody>(listener));
 
     }

@@ -268,6 +268,8 @@ public class MemeItAuth {
                 .remove(PREFERENCE_SIGNIN_METHOD)
                 .remove(PREFERENCE_USER_DATA_SAVED)
                 .apply();
+        MyUser.delete(context);
+        MemeItClient.getInstance().clearCache();
         //todo clear cache
     }
 }

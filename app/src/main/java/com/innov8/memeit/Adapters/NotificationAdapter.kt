@@ -19,6 +19,7 @@ import com.innov8.memeit.CustomClasses.ImageUtils
 import com.innov8.memeit.CustomViews.ProfileDraweeView
 import com.innov8.memeit.R
 import com.innov8.memeit.formateAsDate
+import com.innov8.memeit.loadImage
 import com.innov8.memeit.prefix
 import com.memeit.backend.dataclasses.*
 
@@ -26,7 +27,6 @@ class NotificationAdapter(val context: Context) : RecyclerView.Adapter<Notificat
 
     val colors = listOf(R.color.blue, R.color.purple, R.color.orange, R.color.greeny)
             .map { idToColor(it) }
-
     fun idToColor(id: Int): Int =
             context.resources.getColor(id)
 
@@ -146,7 +146,9 @@ class FollowingNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : 
     override fun bind(notif: Notification) {
         super.bind(notif)
         notif as FollowingNotification
-        (icon as ProfileDraweeView).text=notif.title.prefix()
+        icon as ProfileDraweeView
+        icon.text=notif.title.prefix()
+        icon.loadImage(notif.followerPic)
         ImageUtils.loadImageFromCloudinaryTo(icon, notif.followerPic)
     }
 
