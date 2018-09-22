@@ -25,7 +25,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.innov8.memeit.R;
 
 import java.io.FileNotFoundException;

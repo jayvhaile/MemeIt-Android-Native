@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="intro_drawables" >
+        <item>@drawable/ic_add_white_24dp</item>
+    </integer-array>
+</resources>

@@ -99,6 +99,8 @@ public class IntroActivity extends AppCompatActivity{
         }
         String []titles;
         String []descriptions;
+        int[] drawables;
+
         int pos;
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +108,7 @@ public class IntroActivity extends AppCompatActivity{
             pos=getArguments().getInt(NUMBER);
             titles = getContext().getResources().getStringArray(R.array.intro_slide_title);
             descriptions = getContext().getResources().getStringArray(R.array.intro_slide_description);
+            drawables = getContext().getResources().getIntArray(R.array.intro_drawables);
         }
 
         @Override

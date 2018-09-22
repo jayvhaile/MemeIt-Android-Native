@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <com.innov8.memeit.CustomClasses.FontTextView
-        android:id="@+id/fontTextView12"
+        android:id="@+id/overlay_tags"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
