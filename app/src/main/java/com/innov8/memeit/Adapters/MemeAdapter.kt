@@ -179,7 +179,7 @@ class GridMemeAdapter(context: Context) : MemeAdapter(context) {
             throw IllegalStateException("View Type must only be MEME_TYPE in GridMemeAdapter")
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.list_item_meme_grid, parent, false)
-        return MemeListViewHolder.MemeGridViewHolder(view, this)
+        return MemeGridViewHolder(view, this)
     }
 
     override fun createLayoutManager(): RecyclerView.LayoutManager = GridLayoutManager(context, GRID_SPAN_COUNT, RecyclerView.VERTICAL, false)
