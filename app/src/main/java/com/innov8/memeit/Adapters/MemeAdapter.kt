@@ -19,7 +19,6 @@ import com.cloudinary.android.MediaManager
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memegenerator.utils.fromDPToPX
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.*
 import com.innov8.memeit.Activities.CommentsActivity
@@ -64,8 +63,6 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
             }
 
         }
-    val screenWidth = context.resources.displayMetrics.widthPixels
-    val screenHeight = context.resources.displayMetrics.heightPixels
     val items = mutableListOf<HomeElement>()
     fun addAll(homeElements: List<HomeElement>) {
         if (homeElements.isEmpty()) return
@@ -428,17 +425,10 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
             reactButton.isChecked = false
         }
         favButton.isChecked = meme.isMyFavourite
-        val w = memeAdapter.screenWidth
-        var h = (w / meme.memeImageRatio).toInt()
-
-        val maxHeight = memeAdapter.screenHeight - 200.fromDPToPX(memeAdapter.context)
-        val minHeight = 200.fromDPToPX(memeAdapter.context)
-        h = if (h < minHeight) minHeight else if (h > maxHeight) maxHeight else h
-        memeImageV.layoutParams.width = w
-        memeImageV.layoutParams.height = h
+        memeImageV.layoutParams.width = screenWidth
+        memeImageV.layoutParams.height = (screenWidth / meme.memeImageRatio).toInt().trim(200.dp, screenHeight-200.dp)
         memeImageV.requestLayout()
-        memeImageV.load(meme.memeImageUrl, w, h, meme.type)
-        log("type", meme.type.toString())
+        memeImageV.loadMeme(meme)
     }
 
     private fun showMemeMenu() {
@@ -494,7 +484,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 
 class MemeGridViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
     private val memeImageV: SimpleDraweeView = itemView.findViewById(R.id.meme_image)
-    val width = memeAdapter.screenWidth / GridMemeAdapter.GRID_SPAN_COUNT
+    val width = screenWidth / GridMemeAdapter.GRID_SPAN_COUNT
 
     init {
         val lp = FrameLayout.LayoutParams(width, width)
@@ -505,7 +495,7 @@ class MemeGridViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 
     override fun bind(homeElement: HomeElement) {
         val meme = homeElement as Meme
-        memeImageV.load(meme.memeImageUrl,width,width,meme.type)
+        memeImageV.loadMeme(meme, width)
     }
 
     private fun getCurrentMeme(): Meme {

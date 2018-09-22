@@ -26,25 +26,28 @@ import com.innov8.memegenerator.memeEngine.TextEditListener
 import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextPreset
 import com.innov8.memegenerator.models.TextStyleProperty
-import com.innov8.memegenerator.utils.*
+import com.innov8.memegenerator.utils.AsyncLoader
+import com.innov8.memegenerator.utils.onProgressChanged
+import com.innov8.memegenerator.utils.onTabSelected
+import com.innov8.memegenerator.utils.replace
 
-class MemeTextEditorFragment : MemeEditorFragment(),ItemSelectedInterface {
+class MemeTextEditorFragment : MemeEditorFragment(), ItemSelectedInterface {
 
     override val menus: List<MyToolbarmenu>
         get() = listOf(
-                MyToolbarmenu(R.drawable.ic_add,{
-                    val t=MemeTextView(context!!,400,100)
+                MyToolbarmenu(R.drawable.ic_add) {
+                    val t = MemeTextView(context!!, 400, 100)
                     memeEditorView?.addMemeItemView(t)
-                    t.text="text"
+                    t.text = "text"
 
-                }),
-                MyToolbarmenu(R.drawable.ic_text_menu_delete,{
+                },
+                MyToolbarmenu(R.drawable.ic_text_menu_delete) {
                     memeEditorView?.removeSelectedItem(MemeTextView::class.java)
-                })
+                }
         )
-    lateinit var textPresetFragment: TextPresetFragment
-    lateinit var textCustomizeFragment: TextCustomizeFragment
-    var memeEditorView:MemeEditorView?=null//todo this should not be here
+    private lateinit var textPresetFragment: TextPresetFragment
+    private lateinit var textCustomizeFragment: TextCustomizeFragment
+    var memeEditorView: MemeEditorView? = null//todo this should not be here
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         textPresetFragment = TextPresetFragment()
@@ -92,40 +95,39 @@ class MemeTextEditorFragment : MemeEditorFragment(),ItemSelectedInterface {
 
     lateinit var textEditListener: TextEditListener
     override fun onTextItemSelected(textStyleProperty: TextStyleProperty) {
-        if(context==null)return
-        log("fukua",isDetached,isAdded,isHidden)
-        if(tabLayout.selectedTabPosition==1)
+        if (context == null) return
+        if (tabLayout.selectedTabPosition == 1)
             textCustomizeFragment.applyTextProperty(textStyleProperty)
     }
 }
 
 class TextPresetFragment : androidx.fragment.app.Fragment() {
     lateinit var textEditListener: TextEditListener
-    var asyncLoaders: AsyncLoader<List<TextPreset>>? = null
-    lateinit var textPresetsAdapter: TextPresetsAdapter
+    private var asyncLoaders: AsyncLoader<List<TextPreset>>? = null
+    private lateinit var textPresetsAdapter: TextPresetsAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         textPresetsAdapter = TextPresetsAdapter(context!!)
         textPresetsAdapter.onItemClick = {
             textEditListener.onApplyAll(it.textStyleProperty, false)
         }
-        asyncLoaders = AsyncLoader<List<TextPreset>> {
-            return@AsyncLoader listOf<TextPreset>(
+        asyncLoaders = AsyncLoader {
+            listOf(
                     TextPreset("Normal", TextStyleProperty(
                             20f, Color.WHITE, MyTypeFace.byName("Arial")!!,
                             false, false, false,
                             true, Color.BLACK, 10f
                     )),
                     TextPreset("Meme", TextStyleProperty(
-                            20f, Color.WHITE,  MyTypeFace.byName("Impact")!!,
+                            20f, Color.WHITE, MyTypeFace.byName("Impact")!!,
                             false, false, true,
                             true, Color.BLACK, 10f
                     )),
                     TextPreset("Red", TextStyleProperty(
-                            20f, Color.RED,  MyTypeFace.byName("Pacifico")!!
+                            20f, Color.RED, MyTypeFace.byName("Pacifico")!!
                     )),
                     TextPreset("Dialog", TextStyleProperty(
-                            20f, Color.YELLOW,  MyTypeFace.byName("Ubuntu")!!,
+                            20f, Color.YELLOW, MyTypeFace.byName("Ubuntu")!!,
                             false, false, false,
                             false, Color.BLACK, 10f
                     ))
@@ -133,8 +135,8 @@ class TextPresetFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    lateinit var presetList: androidx.recyclerview.widget.RecyclerView
-    lateinit var presetAdd: Button
+    private lateinit var presetList: androidx.recyclerview.widget.RecyclerView
+    private lateinit var presetAdd: Button
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_text_presets, container, false)
         initViews(view)
@@ -146,12 +148,12 @@ class TextPresetFragment : androidx.fragment.app.Fragment() {
         presetList = view.findViewById(R.id.frag_text_preset_list)
         presetAdd = view.findViewById(R.id.frag_text_preset_add)
 
-        presetList.layoutManager=LinearLayoutManager(context,RecyclerView.HORIZONTAL,false)
+        presetList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         presetList.adapter = textPresetsAdapter
     }
 
     fun load() {
-        asyncLoaders?.load({ textPresetsAdapter.addAll(it) })
+        asyncLoaders?.load { textPresetsAdapter.addAll(it) }
     }
 }
 
@@ -166,22 +168,22 @@ class TextCustomizeFragment : androidx.fragment.app.Fragment(), ColorChooserDial
         return view
     }
 
-    lateinit var textSizeV: SeekBar
-    lateinit var textColorV: ColorView
-    lateinit var textfontV: FontChooserView
-    lateinit var textStyleBoldV: ToggleImageButton
-    lateinit var textStyleItalicV: ToggleImageButton
-    lateinit var textStyleAllCapV: ToggleImageButton
-    lateinit var textStrokeV: CheckBox
-    lateinit var textStrokeSizeV: SeekBar
-    lateinit var textStrokeColorV: ColorView
+    private lateinit var textSizeV: SeekBar
+    private lateinit var textColorV: ColorView
+    private lateinit var textFontV: FontChooserView
+    private lateinit var textStyleBoldV: ToggleImageButton
+    private lateinit var textStyleItalicV: ToggleImageButton
+    private lateinit var textStyleAllCapV: ToggleImageButton
+    private lateinit var textStrokeV: CheckBox
+    private lateinit var textStrokeSizeV: SeekBar
+    private lateinit var textStrokeColorV: ColorView
 
-    var textEditListener: TextEditListener?=null
-    lateinit var colorChooserDialog: ColorChooserDialog
+    var textEditListener: TextEditListener? = null
+    private lateinit var colorChooserDialog: ColorChooserDialog
     private fun init(view: View) {
         textSizeV = view.findViewById(R.id.opt_text_size)
         textColorV = view.findViewById(R.id.opt_text_color)
-        textfontV = view.findViewById(R.id.opt_text_font)
+        textFontV = view.findViewById(R.id.opt_text_font)
         textStyleBoldV = view.findViewById(R.id.opt_text_bold)
         textStyleItalicV = view.findViewById(R.id.opt_text_italic)
         textStyleAllCapV = view.findViewById(R.id.opt_text_allcap)
@@ -192,8 +194,8 @@ class TextCustomizeFragment : androidx.fragment.app.Fragment(), ColorChooserDial
         colorChooserDialog = ColorChooserDialog.Builder(context!!, R.string.color_chooser_dialog_title)
                 .dynamicButtonColor(false)
                 .build()
-        textColorV.setOnClickListener({ colorChooserDialog.show(childFragmentManager, "textColor") })
-        textStrokeColorV.setOnClickListener({ colorChooserDialog.show(childFragmentManager, "textStrokeColor") })
+        textColorV.setOnClickListener { colorChooserDialog.show(childFragmentManager, "textColor") }
+        textStrokeColorV.setOnClickListener { colorChooserDialog.show(childFragmentManager, "textStrokeColor") }
     }
 
 
@@ -201,46 +203,46 @@ class TextCustomizeFragment : androidx.fragment.app.Fragment(), ColorChooserDial
         textColorV.onColorChanged = { color ->
             textEditListener?.onTextColorChanged(color)
         }
-        textfontV.setOnItemSelectedListener({ _, _, _, _ ->
-            textEditListener?.onTextFontChanged(textfontV.getSelectedFont())
-        })
-        textSizeV.onProgressChanged { progress, fromuser ->
-             textEditListener?.onTextSizeChanged(progress.toFloat())
+        textFontV.setOnItemSelectedListener { _, _, _, _ ->
+            textEditListener?.onTextFontChanged(textFontV.getSelectedFont())
         }
-        textStrokeV.setOnCheckedChangeListener({ compoundButton, b ->
+        textSizeV.onProgressChanged { progress, _ ->
+            textEditListener?.onTextSizeChanged(progress.toFloat())
+        }
+        textStrokeV.setOnCheckedChangeListener { _, b ->
             textEditListener?.onTextSetStroked(b)
-        })
-        textStrokeColorV.onColorChanged = {  color ->
+        }
+        textStrokeColorV.onColorChanged = { color ->
             textEditListener?.onTextStrokrColorChanged(color)
         }
-        textStrokeSizeV.onProgressChanged { progress, fromUser ->
+        textStrokeSizeV.onProgressChanged { progress, _ ->
             textEditListener?.onTextStrokeChanged(progress.toFloat())
         }
-        textStyleAllCapV.onCheckChanged = { checked, fromUser ->
+        textStyleAllCapV.onCheckChanged = { checked, _ ->
             textEditListener?.onTextSetAllCap(checked)
         }
     }
 
     fun applyTextProperty(tp: TextStyleProperty) {
-        val temp=textEditListener
-        textEditListener=null
-        textColorV.color=tp.textColor
-       // textfontV.selectedIndex=
-        textStyleBoldV.setChecked(true,false)
-        textStyleItalicV.setChecked(true,false)
-        textStyleAllCapV.setChecked(true,false)
-        textSizeV.progress=tp.textSize.toInt()
-        textStrokeV.isChecked=tp.stroked
-        textStrokeColorV.color=tp.strokeColor
-        textStrokeSizeV.progress=tp.strokeWidth.toInt()
-        textEditListener=temp
+        val temp = textEditListener
+        textEditListener = null
+        textColorV.color = tp.textColor
+        // textFontV.selectedIndex=
+        textStyleBoldV.setChecked(true, false)
+        textStyleItalicV.setChecked(true, false)
+        textStyleAllCapV.setChecked(true, false)
+        textSizeV.progress = tp.textSize.toInt()
+        textStrokeV.isChecked = tp.stroked
+        textStrokeColorV.color = tp.strokeColor
+        textStrokeSizeV.progress = tp.strokeWidth.toInt()
+        textEditListener = temp
     }
 
     override fun onColorSelection(dialog: ColorChooserDialog, selectedColor: Int) {
         if (dialog.tag() == "textColor") {
-            textColorV.color=(selectedColor)
+            textColorV.color = (selectedColor)
         } else {
-            textStrokeColorV.color=(selectedColor)
+            textStrokeColorV.color = (selectedColor)
         }
     }
 

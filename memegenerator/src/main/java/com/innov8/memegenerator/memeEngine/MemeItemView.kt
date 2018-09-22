@@ -20,19 +20,16 @@ open class MemeItemView : View {
         this.memeItemWidth = memeItemWidth
         this.memeItemHeight = memeItemHeight
         init()
-
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         isInMemeEditor = false
         init()
-
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         isInMemeEditor = false
         init()
-
     }
 
     lateinit var mDetector: GestureDetector
@@ -74,7 +71,7 @@ open class MemeItemView : View {
         upaint.strokeWidth = 5f
         upaint.strokeJoin = Paint.Join.ROUND
         upaint.strokeCap = Paint.Cap.BUTT
-        upaint.color = Color.argb(60, 255, 255, 255)
+        upaint.color = Color.argb(150, 255, 0,0)
         minimumWidth = 50f.fromDPToPX(context).toInt()
         minimumHeight = 30f.fromDPToPX(context).toInt()
         mDetector = GestureDetector(context, MyListener())

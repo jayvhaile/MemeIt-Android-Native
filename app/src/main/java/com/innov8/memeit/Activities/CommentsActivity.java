@@ -83,7 +83,7 @@ public class CommentsActivity extends AppCompatActivity {
                 MemeItMemes.getInstance().comment(comment, onCommentCompletedListener);
             }
         });
-        KUtilsKt.load(memeImage,meme.getMemeImageUrl(),1000,1000,meme.getType());
+        KUtilsKt.loadMeme(memeImage,meme,0,0);
         ProfileDraweeView pdv=findViewById(R.id.comment_pp);
         MyUser u=MemeItUsers.getInstance().getMyUser(this);
         pdv.setText(KUtilsKt.prefix(u.getName()));

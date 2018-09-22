@@ -12,6 +12,7 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2
+import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.request.ImageRequest
@@ -19,6 +20,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.innov8.memeit.Activities.SettingsActivity
 import com.innov8.memeit.CustomViews.ProfileDraweeView
 import com.memeit.backend.dataclasses.Meme
+import com.memeit.backend.dataclasses.Meme.MemeType.GIF
 import com.memeit.backend.dataclasses.Meme.MemeType.IMAGE
 import com.memeit.backend.dataclasses.Reaction
 import kotlinx.coroutines.experimental.*
@@ -70,70 +72,118 @@ fun String?.prefix(): String {
     return if (this === null) "..." else this[0].toString()
 }
 
-fun SimpleDraweeView.load(id: String, width: Int = 100, height: Int = 100, memeType: Meme.MemeType) {
-    if (memeType == IMAGE) {
-        val tlow = Transformation<Transformation<*>>().quality("5")
-                .width(50)
-                .height(50)
-                .crop("fit")
-                .effect("blur", 100)
+val screenWidth: Int
+    get() = it.resources.displayMetrics.widthPixels
+val screenHeight: Int
+    get() = it.resources.displayMetrics.heightPixels
 
-        val level = SettingsActivity.getImageQualityLevel(context)
-        val quality = SettingsActivity.quality[level]
-        val fac = SettingsActivity.factor[level]
-        val thigh = Transformation<Transformation<*>>()
-                .quality(quality)
-                .crop("fit")
+private fun SimpleDraweeView.loadImageMeme(id: String, ratio: Float = 1f, resizeWidth: Int, resizeHeight: Int) {
+    val tlow = Transformation<Transformation<*>>().quality("5")
+            .width(50)
+            .height(50)
+            .crop("fit")
+            .effect("blur", 60)
 
-
-        if (width > 0 && height > 0) {
-            val w: Int = (width * fac).step(50)
-            val h: Int = (height * fac).step(50)
-            thigh.width(w).height(h)
-        } else
-            throw IllegalArgumentException("width or height cant be 0")
-
-        val low = MediaManager.get().url().transformation(tlow).source(id).generate()
-        val high = MediaManager.get().url().transformation(thigh).source(id).generate()
+    val level = SettingsActivity.getImageQualityLevel(context)
+    val quality = SettingsActivity.quality[level]
+    val fac = SettingsActivity.factor[level]
 
 
-        val lowReq = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(low))
-                .setPostprocessor(IterativeBoxBlurPostProcessor(3))
+    val w = (screenWidth * fac) step 50
+    val h = ((screenWidth / ratio).toInt()
+            .trim(200.dp, screenHeight - 200.dp) * fac) step 50
+    val thigh = Transformation<Transformation<*>>()
+            .quality(quality)
+            .crop("fit")
+            .width(w)
+            .height(h)
+
+    val low = MediaManager.get().url().transformation(tlow).source(id).generate()
+    val high = MediaManager.get().url().transformation(thigh).source(id).generate()
+
+
+    val lowReq = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(low))
+            .setPostprocessor(IterativeBoxBlurPostProcessor(2))
+            .build()
+    var req = ImageRequest.fromUri(high)
+    if (resizeWidth > 0 && resizeHeight > 0)
+        req = ImageRequestBuilder.fromRequest(req)
+                .setResizeOptions(ResizeOptions.forDimensions(resizeWidth, resizeHeight))
                 .build()
-        val c = Fresco.newDraweeControllerBuilder()
-                .setLowResImageRequest(lowReq)
-                .setImageRequest(ImageRequest.fromUri(high))
-                .setOldController(controller)
-                .build()
-        controller = c
-    } else {
-        val t=Transformation<Transformation<*>>().effect("loop")
-
-        val url = MediaManager.get().url().resourcType("video")
-                .format("gif")
-                .transformation(t)
-                .generate(id)
-
-        class m : BaseControllerListener<ImageInfo>() {
-            override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
-                if (animatable != null) {
-                    val a = animatable as AnimatedDrawable2
-                    a.start()
-                }
-            }
-        }
-        controller = Fresco.newDraweeControllerBuilder()
-                .setUri(url)
-                .setAutoPlayAnimations(false)
-                .setControllerListener(m())
-                .build()
-    }
-
+    val c = Fresco.newDraweeControllerBuilder()
+            .setLowResImageRequest(lowReq)
+            .setImageRequest(req)
+            .setOldController(controller)
+            .build()
+    controller = c
 }
 
-fun ProfileDraweeView.loadImage(url: String?, width: Float=R.dimen.profile_mini_size.dimen(), height: Float=width) {
-    url?:return
-    log("awrk",url)
+private fun SimpleDraweeView.loadGifMeme(id: String, ratio: Float, resizeWidth: Int, resizeHeight: Int) {
+
+    val level = SettingsActivity.getImageQualityLevel(context)
+    val quality = SettingsActivity.quality[level]
+    val fac = SettingsActivity.factor[level]
+
+
+    val w = (screenWidth * fac) step 50
+    val h = ((screenWidth / ratio).toInt()
+            .trim(200.dp, screenHeight - 200.dp) * fac) step 50
+
+    val tb = Transformation<Transformation<*>>()
+            .quality(quality)
+            .crop("fit")
+            .width(w)
+            .height(h)
+    val thumb = MediaManager.get().url().resourcType("video")
+            .format("jpg")
+            .transformation(tb)
+            .generate(id)
+    val t = Transformation<Transformation<*>>()
+            .effect("loop")
+            .quality(quality)
+            .crop("fit")
+            .width(w)
+            .height(h)
+
+    val url = MediaManager.get().url().resourcType("video")
+            .format("gif")
+            .transformation(t)
+            .generate(id)
+
+    class m : BaseControllerListener<ImageInfo>() {
+        override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
+            if (animatable != null) {
+                val a = animatable as AnimatedDrawable2
+                a.start()
+            }
+        }
+    }
+    var req = ImageRequest.fromUri(url)
+    if (resizeWidth > 0 && resizeHeight > 0)
+        req = ImageRequestBuilder.fromRequest(req)
+                .setResizeOptions(ResizeOptions.forDimensions(resizeWidth, resizeHeight))
+                .build()
+
+    controller = Fresco.newDraweeControllerBuilder()
+            .setLowResImageRequest(ImageRequest.fromUri(thumb))
+            .setImageRequest(req)
+            .setAutoPlayAnimations(false)
+            .setControllerListener(m())
+            .build()
+}
+
+fun SimpleDraweeView.loadMeme(meme: Meme, resizeWidth: Int = 0, resizeHeight: Int = width) {
+    if (meme.type == IMAGE) loadImageMeme(meme.memeImageUrl, meme.memeImageRatio.toFloat(), resizeWidth, resizeHeight)
+    else if (meme.type == GIF) loadGifMeme(meme.memeImageUrl,meme.memeImageRatio.toFloat(),resizeWidth, resizeHeight)
+}
+
+
+fun ProfileDraweeView.loadImage(url: String?, width: Float = R.dimen.profile_mini_size.dimen(), height: Float = width) {
+    if(url==null){
+        setImageURI(url as String?)
+        return
+    }
+
     val level = SettingsActivity.getImageQualityLevel(context)
     val quality = SettingsActivity.quality[level]
     val t = Transformation<Transformation<*>>()
@@ -143,13 +193,9 @@ fun ProfileDraweeView.loadImage(url: String?, width: Float=R.dimen.profile_mini_
             .crop("fit")
 
     val u = MediaManager.get().url().source(url).generate()
-    log("awrk",u)
+    log("awrk", u)
 
     setImageRequest(ImageRequest.fromUri(u))
-
-
-
-
 
 
 }
@@ -158,7 +204,7 @@ fun ProfileDraweeView.loadImage(url: String?, width: Float=R.dimen.profile_mini_
 fun Reaction.getDrawable(active: Boolean = true): Drawable {
     val activeRID = intArrayOf(R.drawable.laughing, R.drawable.rofl, R.drawable.neutral, R.drawable.angry)
     val inactiveRID = intArrayOf(R.drawable.laughing_inactive_light, R.drawable.rofl_inactive, R.drawable.neutral_inactive, R.drawable.angry_inactive)
-    return VectorDrawableCompat.create(it.resources, if(active)activeRID[type.ordinal] else inactiveRID[type.ordinal], null)!!
+    return VectorDrawableCompat.create(it.resources, if (active) activeRID[type.ordinal] else inactiveRID[type.ordinal], null)!!
 }
 
 fun Reaction.getDrawableID(active: Boolean = true): Int {
@@ -166,14 +212,14 @@ fun Reaction.getDrawableID(active: Boolean = true): Int {
     val activeRID = intArrayOf(R.drawable.laughing, R.drawable.rofl, R.drawable.neutral, R.drawable.angry)
     val inactiveRID = intArrayOf(R.drawable.laughing_inactive_light, R.drawable.rofl_inactive, R.drawable.neutral_inactive, R.drawable.angry_inactive)
 
-    return if(active)activeRID[type.ordinal] else inactiveRID[type.ordinal]
+    return if (active) activeRID[type.ordinal] else inactiveRID[type.ordinal]
 }
 
 fun RecyclerView.makeLinear(orientation: Int = RecyclerView.VERTICAL) {
     this.layoutManager = LinearLayoutManager(context, orientation, false)
 }
 
-fun Float.step(step: Int): Int {
+infix fun Float.step(step: Int): Int {
     val x = Math.max(this / step, 1f).toInt()
     return x * step
 }
@@ -212,10 +258,10 @@ fun Int.dimenI(): Int = it.resources.getDimension(this).toInt()
 fun Int.dimen(): Float = it.resources.getDimension(this)
 fun Int.color(): Int = it.resources.getColor(this)
 fun Int.string(): String = it.resources.getString(this)
-fun Int.strinArray(): Array<String> =it.resources.getStringArray(this)
+fun Int.strinArray(): Array<String> = it.resources.getStringArray(this)
 
 infix fun Int.trim(max: Int): Int = if (this < max) this else max
-
+fun Int.trim(min: Int, max: Int): Int = if (this < min) min else if (this > max) max else this
 val Float.DP: Float
     get() {
         return this * it.resources.displayMetrics.density

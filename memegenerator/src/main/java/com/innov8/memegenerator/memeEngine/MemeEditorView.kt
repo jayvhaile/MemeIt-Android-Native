@@ -2,9 +2,7 @@ package com.innov8.memegenerator.memeEngine
 
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Rect
+import android.graphics.*
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
@@ -13,6 +11,7 @@ import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextProperty
 import com.innov8.memegenerator.models.TextStyleProperty
+import com.innov8.memegenerator.utils.fromDPToPX
 import com.innov8.memegenerator.utils.getDrawableIdByName
 import com.innov8.memegenerator.utils.loadBitmap
 import com.innov8.memegenerator.utils.log
@@ -104,52 +103,40 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         super.removeView(child)
     }
 
-    var image: Bitmap? = null
+    /*var image: Bitmap? = null
         set(value) {
             field = value
             invalidate()
+        }*/
+    private var memeLayout: MemeLayout? = null
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    fun setLayout(memeLayout: MemeLayout) {
+        this.memeLayout = memeLayout
+        this.memeLayout?.invalidate = {
+            paint.color = this.memeLayout?.backgroudColor ?: Color.BLACK
+            invalidate()
         }
+        this.memeLayout?.invalidate?.invoke()
+    }
 
     override fun onDraw(canvas: Canvas) {
         background.draw(canvas)
-        if (image != null) {
-            val img: Bitmap = image!!
-            val w: Float
-            val h: Float
-            val x: Float
-            val y: Float
-
-            val iw = img.width.toFloat()
-            val ih = img.height.toFloat()
-            val cw = width.toFloat()
-            val ch = height.toFloat()
-
-            val ir = iw / ih
-            val cr = cw / ch
-
-            if (ir < cr) {
-                val hr = ch / ih
-                w = iw * hr
-                h = ch
-                x = (cw / 2.0f) - (w / 2.0f)
-                y = 0f
-            } else {
-                val wr = cw / iw
-                w = cw
-                h = ih * wr
-                x = 0f
-                y = (ch / 2f) - (h / 2f)
+        if (memeLayout != null) {
+            val ml = memeLayout!!
+            canvas.drawRect(ml.drawingRect, paint)
+            for (i in 0 until ml.getCount()) {
+                canvas.drawBitmap(ml.images[i],
+                        null,
+                        ml.getDrawingRectAt(i),
+                        null)
             }
-
-            rect = Rect(x.toInt(), y.toInt(), x.toInt() + w.toInt(), y.toInt() + h.toInt())
-            canvas.drawBitmap(img, null, rect, null)
-
-
+            super.onDraw(canvas)
         }
-        super.onDraw(canvas)
+
+
     }
 
-    var rect = Rect(0, 0, 0, 0)
     override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
         val eleft: Int = this.paddingLeft
         val etop: Int = this.paddingTop
@@ -171,7 +158,7 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             curTop = if (child.left < etop) etop else child.top
             curRight = if (curLeft + child.measuredWidth > eright) eright else curLeft + child.measuredWidth
             curBottom = if (curTop + child.measuredHeight > ebottom) ebottom else curTop + child.measuredHeight
-            child.layout(curLeft, curTop, curRight  , curBottom)
+            child.layout(curLeft, curTop, curRight, curBottom)
         }
     }
 
@@ -209,7 +196,14 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
     fun loadMemeTemplate(memeTemplate: MemeTemplate) {
         Handler().postDelayed({
             clearMemeItems()
-            image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
+            val image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
+            val memeLayout = SingleImage(width, height, image)
+            memeLayout.topMargin = 100.fromDPToPX(context)
+
+            memeLayout.backgroudColor = Color.WHITE
+
+            setLayout(memeLayout)
+
             memeTemplate.textProperties.forEach {
                 val memeTextView = MemeTextView(context)
                 addMemeItemView(memeTextView)
@@ -221,7 +215,10 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
 
     fun loadBitmab(bitmap: Bitmap) {
         clearMemeItems()
-        image = bitmap
+        val memeLayout = SingleImage(width, height, bitmap)
+        memeLayout.topMargin = 100.fromDPToPX(context)
+        memeLayout.backgroudColor = Color.YELLOW
+        setLayout(memeLayout)
     }
 
     fun captureMeme(): Bitmap {
@@ -231,15 +228,23 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         log("view", width, height)
         log("bitmap", bitmap.width, bitmap.height)
 
+        val rect=memeLayout!!.drawingRect.toRect()
         val rb = Bitmap.createBitmap(bitmap, rect.left, rect.top,
                 rect.right - rect.left, rect.bottom - rect.top)
-        log("bitmap", rb.width, rb.height)
+
 
         destroyDrawingCache()
         return rb
     }
 
+    fun RectF.toRect():Rect{
+        return Rect(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+    }
+    fun Rect.toRectF():RectF{
+        return RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
+    }
     fun getRatio(): Float {
+        val rect=memeLayout!!.drawingRect.toRect()
         val w = rect.right - rect.left
         val h = rect.bottom - rect.top
 

@@ -82,7 +82,7 @@ class MemeTemplateMaker : AppCompatActivity() {
                             meme_template_index
                             if(!load()){
                                 var bitmap = loadBitmap(getDrawableIdByName(String.format("meme_%02d", meme_template_index)), .3f)
-                                memeEditorView.image = bitmap
+                                memeEditorView.loadBitmab(bitmap)
                                 meme_template_index++
                             }
                         }
@@ -108,7 +108,7 @@ class MemeTemplateMaker : AppCompatActivity() {
             } else
                 memeTemplates.add(newItem)
             memeEditorView.clearMemeItems()
-            memeEditorView.image = bitmap
+            memeEditorView.loadBitmab(bitmap)
             meme_template_index++
 
         } else {

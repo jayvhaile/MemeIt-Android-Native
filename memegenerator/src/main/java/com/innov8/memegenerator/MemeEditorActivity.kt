@@ -12,6 +12,7 @@ import com.innov8.memegenerator.fragments.*
 import com.innov8.memegenerator.memeEngine.EditType
 import com.innov8.memegenerator.memeEngine.ItemSelectedInterface
 import com.innov8.memegenerator.memeEngine.MemeEditorInterface
+import com.innov8.memegenerator.memeEngine.MemeStickerView
 import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.models.TextStyleProperty
 import com.innov8.memegenerator.utils.AsyncLoader
@@ -29,18 +30,29 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
         val memeTextEditorFragment = MemeTextEditorFragment()
         memeTextEditorFragment.textEditListener = memeEditorView.textEditListener
-        memeTextEditorFragment.memeEditorView=memeEditorView
+        memeTextEditorFragment.memeEditorView = memeEditorView
         memeEditorView.itemSelectedInterface = memeTextEditorFragment
 
+        val memeStickerEditorFragment = MemeStickerEditorFragment()
+        memeStickerEditorFragment.memeEditorView = memeEditorView
+
+        memeStickerEditorFragment.setOnStickerSelected { url ->
+            AsyncLoader {
+                val x=url.substring(9)
+                BitmapFactory.decodeStream(assets.open(x))
+            }.load {
+                val memeStickerView = MemeStickerView(this, it)
+                memeEditorView.addMemeItemView(memeStickerView)
+            }
+        }
         fragments = listOf(
                 MemeLayoutEditorFragment(),
                 MemeImageEditorFragment(),
                 memeTextEditorFragment,
-                MemeStickerEditorFragment(),
+                memeStickerEditorFragment,
                 MemePaintEditorFragment()
         )
         vtab.select(2)
-
 
 
         val adapter = MyPagerAdapter(supportFragmentManager)
@@ -63,16 +75,16 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         )
 
         toolbar.setLeftMenus(listOf(
-                MyToolbarmenu(R.drawable.ic_left_menu_done){
-                    val bitmap=memeEditorView.captureMeme()
-                    val intent= Intent(this,MemePosterActivity::class.java)
-                    intent.putExtra("texts",memeEditorView.getTexts().toTypedArray())
-                    MemePosterActivity.bitmap=bitmap
+                MyToolbarmenu(R.drawable.ic_left_menu_done) {
+                    val bitmap = memeEditorView.captureMeme()
+                    val intent = Intent(this, MemePosterActivity::class.java)
+                    intent.putExtra("texts", memeEditorView.getTexts().toTypedArray())
+                    MemePosterActivity.bitmap = bitmap
                     startActivity(intent)
                 },
-                MyToolbarmenu(R.drawable.ic_left_menu_preview){
-                    memeEditorView.scaleX=memeEditorView.scaleX*1.2f
-                    memeEditorView.scaleY=memeEditorView.scaleY*1.2f
+                MyToolbarmenu(R.drawable.ic_left_menu_preview) {
+                    memeEditorView.scaleX = memeEditorView.scaleX * 1.2f
+                    memeEditorView.scaleY = memeEditorView.scaleY * 1.2f
                 }
         ))
 
@@ -83,9 +95,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             val gson = Gson()
             val memeTemplate = gson.fromJson(json, MemeTemplate::class.java)
             memeEditorView.loadMemeTemplate(memeTemplate)
-        }else if(uri!=null){
+        } else if (uri != null) {
             AsyncLoader<Bitmap> {
-                val stream= contentResolver.openInputStream(Uri.parse(uri))
+                val stream = contentResolver.openInputStream(Uri.parse(uri))
                 BitmapFactory.decodeStream(stream)
             }.load {
                 memeEditorView.loadBitmab(it)
@@ -104,7 +116,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
 
         override fun getCount(): Int = fragments.count()
-        override fun getItem(pos: Int): androidx.fragment.app.Fragment =fragments[pos]
+        override fun getItem(pos: Int): androidx.fragment.app.Fragment = fragments[pos]
 
 
     }
