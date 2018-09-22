@@ -2,6 +2,7 @@ package com.innov8.memegenerator;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,6 +25,7 @@ public class ParentActivity extends AppCompatActivity {
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
+
     protected void setupToolbar(String title) {
         mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle(title);

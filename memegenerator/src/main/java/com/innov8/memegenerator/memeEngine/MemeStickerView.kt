@@ -28,9 +28,9 @@ class MemeStickerView : MemeItemView {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
         bitmap ?: return
         canvas?.drawBitmap(bitmap!!, srcRect, destRect, paint)
+        super.onDraw(canvas)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {

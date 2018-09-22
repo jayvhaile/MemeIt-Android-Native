@@ -26,7 +26,8 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.meme_editor_layout2)
-
+        val memeLayoutEditorFragment=MemeLayoutEditorFragment()
+        memeLayoutEditorFragment.layoutEditInterface=memeEditorView.layoutEditInterface
 
         val memeTextEditorFragment = MemeTextEditorFragment()
         memeTextEditorFragment.textEditListener = memeEditorView.textEditListener
@@ -35,6 +36,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
         val memeStickerEditorFragment = MemeStickerEditorFragment()
         memeStickerEditorFragment.memeEditorView = memeEditorView
+
 
         memeStickerEditorFragment.setOnStickerSelected { url ->
             AsyncLoader {
@@ -46,7 +48,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             }
         }
         fragments = listOf(
-                MemeLayoutEditorFragment(),
+                memeLayoutEditorFragment,
                 MemeImageEditorFragment(),
                 memeTextEditorFragment,
                 memeStickerEditorFragment,

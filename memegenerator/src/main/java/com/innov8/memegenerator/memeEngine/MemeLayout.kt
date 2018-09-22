@@ -38,6 +38,13 @@ abstract class MemeLayout(val maxWidth:Int,val maxHeight:Int,val images:List<Bit
             invalidate?.invoke()
         }
 
+    fun setMargin(left: Int, top: Int = left, right: Int = left, bottom: Int = left){
+        leftMargin=left
+        topMargin=top
+        rightMargin=right
+        bottomMargin=bottom
+    }
+
 
 
     private fun calc(){
@@ -49,8 +56,10 @@ abstract class MemeLayout(val maxWidth:Int,val maxHeight:Int,val images:List<Bit
 
         val iw = innerWidth().toFloat()
         val ih = innerHeight().toFloat()
-        val cw = maxWidth.toFloat()-horizontalMargin()
-        val ch = maxHeight.toFloat()-verticalMargin()
+        val tw = maxWidth.toFloat()
+        val th = maxHeight.toFloat()
+        val cw = tw-horizontalMargin()
+        val ch = th-verticalMargin()
 
         val ir = iw / ih
         val cr = cw / ch
@@ -59,14 +68,14 @@ abstract class MemeLayout(val maxWidth:Int,val maxHeight:Int,val images:List<Bit
             val hr = ch / ih
             w = iw * hr+horizontalMargin()
             h = ch+verticalMargin()
-            x = (cw / 2.0f) - (w / 2.0f)
+            x = (tw / 2.0f) - (w / 2.0f)
             y = 0f
         } else {
             val wr = cw / iw
             w = cw+horizontalMargin()
             h = ih * wr+verticalMargin()
             x = 0f
-            y = (ch / 2f) - (h / 2f)
+            y = (th / 2f) - (h / 2f)
         }
         drawingRect=RectF(x,y,x+w,y+h)
         invalidate?.invoke()

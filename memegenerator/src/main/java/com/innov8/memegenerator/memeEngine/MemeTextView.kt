@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextProperty
 import com.innov8.memegenerator.models.TextStyleProperty
+import com.innov8.memegenerator.utils.fromDPToPX
 import com.innov8.memegenerator.utils.fromSP
 import com.innov8.memegenerator.utils.toSP
 
@@ -189,6 +190,15 @@ class MemeTextView : MemeItemView {
         strokeColor = tp.strokeColor
         dl.paint.strokeWidth = tp.strokeWidth
         this.text = if(text.isEmpty()) this.text else text
+    }
+    override fun copy():MemeTextView{
+        val tp=generateTextProperty(maxWidth.toFloat(), maxHeight.toFloat())
+        val nt=MemeTextView(context,width,height)
+        nt.applyTextProperty(tp,maxWidth.toFloat(),maxHeight.toFloat())
+        nt.x+=10.fromDPToPX(context)
+        nt.y+=10.fromDPToPX(context)
+        nt.text=text
+        return nt
     }
 
 }

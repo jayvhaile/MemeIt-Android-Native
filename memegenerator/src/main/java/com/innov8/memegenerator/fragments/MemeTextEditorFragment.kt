@@ -35,6 +35,13 @@ class MemeTextEditorFragment : MemeEditorFragment(), ItemSelectedInterface {
 
     override val menus: List<MyToolbarmenu>
         get() = listOf(
+                MyToolbarmenu(R.drawable.ic_text_copy) {
+                    val x=memeEditorView?.getSelectedview<MemeTextView>()
+                    if(x!=null){
+                        val n:MemeTextView=x.copy()
+                        memeEditorView?.addMemeItemView(n)
+                    }
+                },
                 MyToolbarmenu(R.drawable.ic_add) {
                     val t = MemeTextView(context!!, 400, 100)
                     memeEditorView?.addMemeItemView(t)

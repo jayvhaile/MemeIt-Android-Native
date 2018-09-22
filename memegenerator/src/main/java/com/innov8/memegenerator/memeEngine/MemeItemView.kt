@@ -73,7 +73,7 @@ open class MemeItemView : View {
         upaint.strokeCap = Paint.Cap.BUTT
         upaint.color = Color.argb(150, 255, 0,0)
         minimumWidth = 50f.fromDPToPX(context).toInt()
-        minimumHeight = 30f.fromDPToPX(context).toInt()
+        minimumHeight = 50f.fromDPToPX(context).toInt()
         mDetector = GestureDetector(context, MyListener())
         resizeOffset = 28f.fromDPToPX(context).toInt()
         topOffeset = (24f).fromDPToPX(context).toInt()
@@ -117,6 +117,9 @@ open class MemeItemView : View {
         var d = this.toDouble()
         return d >= a.toDouble() && d <= b.toDouble()
 
+    }
+    open fun copy():MemeItemView?{
+        return null
     }
 
     internal inner class MyListener : GestureDetector.SimpleOnGestureListener() {
