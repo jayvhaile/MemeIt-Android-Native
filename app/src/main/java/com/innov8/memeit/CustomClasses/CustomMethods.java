@@ -26,9 +26,25 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.facebook.binaryresource.BinaryResource;
+import com.facebook.binaryresource.FileBinaryResource;
+import com.facebook.cache.common.CacheKey;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.DataSource;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imageformat.ImageFormat;
+import com.facebook.imageformat.ImageFormatChecker;
+import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.request.ImageRequest;
 import com.innov8.memeit.R;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -36,6 +52,8 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+
+import static com.facebook.imageformat.DefaultImageFormats.GIF;
 
 /*
  * Created by Biruk on 5/11/2018.
