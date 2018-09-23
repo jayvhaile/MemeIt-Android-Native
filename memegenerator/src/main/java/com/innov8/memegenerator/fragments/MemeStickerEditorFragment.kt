@@ -28,16 +28,14 @@ class MemeStickerEditorFragment : MemeEditorFragment() {
 
     val spanCount=6
     lateinit var adapter: StickersAdapter
-    private lateinit var emoji_list: List<String>
-    private lateinit var meme_face_list: List<String>
 
-    var eloaded = false
-    var mloaded = false
-    var ewaiting = false
-    var mwaiting = false
+
+    var lists= mutableListOf<List<String>>(listOf(), listOf(), listOf())
+
     var onItemClick: ((String) -> Unit)={url->
         AsyncLoader {
             val x=url.substring(9)
+            //todo downsample the bitmaps
             BitmapFactory.decodeStream(context!!.assets.open(x))
         }.load {bitmap->
             val memeStickerView = MemeStickerView(context!!, bitmap)
@@ -52,19 +50,14 @@ class MemeStickerEditorFragment : MemeEditorFragment() {
         super.onCreate(savedInstanceState)
         adapter = StickersAdapter(context!!,spanCount)
         adapter.onItemClick=this.onItemClick
-        AsyncLoader {
-            context!!.assets.list(path[0])?.map { "asset:///${path[0]}/$it" } ?: listOf()
-        }.load {
-            emoji_list = it
-            if (ewaiting) adapter.setAll(it)
-            eloaded = true
-        }
-        AsyncLoader {
-            context!!.assets.list(path[1])?.map { "asset:///${path[1]}/$it" } ?: listOf()
-        }.load {
-            meme_face_list = it
-            if (mwaiting) adapter.setAll(it)
-            mloaded = true
+        path.forEachIndexed { i, s ->
+            AsyncLoader {
+                context!!.assets.list(s)?.map { "asset:///$s/$it" } ?: listOf()
+            }.load {
+                lists[i]= it
+                if (waiting[i]) adapter.setAll(it)
+                loaded[i] = true
+            }
         }
     }
 
@@ -94,20 +87,17 @@ class MemeStickerEditorFragment : MemeEditorFragment() {
         load()
     }
 
-    val path = listOf("emoji_stickers", "meme_stickers")
-    private fun load(pos: Int = 0) {
-        if (pos == 0) {
-            ewaiting = !eloaded
-            mwaiting = false
-            if (eloaded)
-                adapter.setAll(emoji_list)
+    val loaded= mutableListOf(false,false,false)
+    val waiting= mutableListOf(false,false,false)
 
-        } else {
-            ewaiting = false
-            mwaiting = !mloaded
-            if (mloaded)
-                adapter.setAll(meme_face_list)
+    val path = listOf("emoji_stickers", "meme_stickers","bubbles")
+    private fun load(pos: Int = 0) {
+        waiting[pos]=!loaded[pos]
+        waiting.forEachIndexed {i, b->
+            if(i!=pos)waiting[i]=false
         }
+        if(loaded[pos])
+            adapter.setAll(lists[pos])
     }
 
 

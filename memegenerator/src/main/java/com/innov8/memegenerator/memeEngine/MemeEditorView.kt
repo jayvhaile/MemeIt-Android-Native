@@ -235,10 +235,6 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             clearMemeItems()
             val image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
             val memeLayout = SingleImage(width, height, image)
-            memeLayout.topMargin = 100.fromDPToPX(context)
-
-            memeLayout.backgroudColor = Color.WHITE
-
             setLayout(memeLayout)
 
             memeTemplate.textProperties.forEach {
@@ -253,8 +249,6 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
     fun loadBitmab(bitmap: Bitmap) {
         clearMemeItems()
         val memeLayout = SingleImage(width, height, bitmap)
-        memeLayout.topMargin = 100.fromDPToPX(context)
-        memeLayout.backgroudColor = Color.YELLOW
         setLayout(memeLayout)
     }
 
