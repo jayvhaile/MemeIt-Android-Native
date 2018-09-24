@@ -11,7 +11,15 @@ import com.innov8.memegenerator.utils.fromDPToPX
 class ColorChooser : LinearLayout {
 
 
-    var colorList = listOf(Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.CYAN)
+    var colorList = listOf(Color.RED,
+            Color.BLUE,
+            Color.YELLOW,
+            Color.GREEN,
+            Color.CYAN,
+            Color.MAGENTA,
+            Color.GRAY,
+            Color.WHITE,
+            Color.BLACK)
 
     var onColorChoosed: ((color: Int) -> Unit)? = null
 
@@ -31,12 +39,11 @@ class ColorChooser : LinearLayout {
 
     private val childParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
     private val padding = 8.fromDPToPX(context)
-    private val radius = 16f.fromDPToPX(context)
+    private val radius = 32f.fromDPToPX(context)
+    private val strokeWidth = 4f.fromDPToPX(context)
     private val onClick: (View) -> Unit = {
         it as ColorView2
-        for (i in 0 until childCount) {
-            it.choosed = i == it.id
-        }
+        choose(it.id)
         onColorChoosed?.invoke(colorList[it.id])
     }
 
@@ -50,9 +57,10 @@ class ColorChooser : LinearLayout {
     }
 
     private fun create(color: Int, index: Int = childCount): ColorView2 {
-        val colorView = ColorView2(context, color, radius = radius)
+        val colorView = ColorView2(context, color, radius = radius,strokeWidth = strokeWidth)
         colorView.setPadding(padding, padding, padding, padding)
         colorView.id = index
+
         colorView.setOnClickListener(onClick)
         addView(colorView, childParams)
         return colorView

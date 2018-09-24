@@ -122,7 +122,7 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
                 is MemeTextView -> itemSelectedInterface?.onTextItemSelected(item.generateTextStyleProperty())
             }
         }
-        background=CheckerBoardDrawable(12f.fromDPToPX(context),Color.LTGRAY,Color.GRAY)
+//        background=CheckerBoardDrawable(12f.fromDPToPX(context),Color.LTGRAY,Color.GRAY)
     }
 
     private var memeLayout: MemeLayout? = null
