@@ -48,9 +48,9 @@ public class MemeItMemes {
                     }
                 });
     }
-    public void getMemeById(final Meme meme, final OnCompleteListener<Meme> listener) {
+    public void getMemeById(String mid, final OnCompleteListener<Meme> listener) {
         MemeItClient.getInstance().getInterface()
-                .getMemeById(meme.getMemeId())
+                .getMemeById(mid)
                 .enqueue(new MyCallBack<>(listener));
     }
 
