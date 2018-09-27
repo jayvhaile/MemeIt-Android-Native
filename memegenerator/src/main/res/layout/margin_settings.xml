@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.gridlayout.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:columnCount="2"
+    app:rowCount="5"
+    tools:background="#000">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lock"
+        android:textColor="#fff"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="0" />
+
+    <RadioGroup
+        android:id="@+id/margin_radio_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:checkedButton="@+id/radio_none"
+        android:orientation="horizontal"
+        app:layout_column="1"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center_vertical"
+        app:layout_row="0">
+
+        <RadioButton
+            android:id="@+id/radio_none"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="None"
+            android:textColor="#fff"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radio_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="All"
+            android:textColor="#fff"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radio_left_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Left-Right"
+            android:textColor="#fff"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radio_top_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Top-Bottom"
+            android:textColor="#fff"
+            android:textSize="12sp" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Left"
+        android:textColor="#fff"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="1" />
+
+    <com.warkiz.widget.IndicatorSeekBar
+        android:id="@+id/margin_left_seek"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_column="1"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center_vertical"
+        app:layout_row="1"
+        app:isb_max="250"
+
+        app:isb_ticks_count="51"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Right"
+        android:textColor="#fff"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="2"
+        />
+
+    <com.warkiz.widget.IndicatorSeekBar
+        android:id="@+id/margin_right_seek"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_column="1"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center_vertical"
+        app:layout_row="2"
+        app:isb_max="250"
+        app:isb_ticks_count="51"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Top"
+        android:textColor="#fff"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="3" />
+
+    <com.warkiz.widget.IndicatorSeekBar
+        android:id="@+id/margin_top_seek"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_column="1"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center_vertical"
+        app:layout_row="3"
+        app:isb_max="250"
+
+        app:isb_ticks_count="51"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bottom"
+        android:textColor="#fff"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="4" />
+
+    <com.warkiz.widget.IndicatorSeekBar
+        android:id="@+id/margin_bottom_seek"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_column="1"
+        app:layout_columnWeight="1"
+        app:layout_gravity="center_vertical"
+        app:layout_row="4"
+        app:isb_max="250"
+        app:isb_ticks_count="51"/>
+</androidx.gridlayout.widget.GridLayout>

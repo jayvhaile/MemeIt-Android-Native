@@ -7,10 +7,12 @@ import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import com.innov8.memegenerator.customViews.CheckerBoardDrawable
 import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextProperty
 import com.innov8.memegenerator.models.TextStyleProperty
+import com.innov8.memegenerator.utils.dp
 import com.innov8.memegenerator.utils.getDrawableIdByName
 import com.innov8.memegenerator.utils.loadBitmap
 import com.innov8.memegenerator.utils.log
@@ -39,9 +41,9 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
     var selectedView: MemeItemView? = null
 
 
-
     lateinit var textEditListener: TextEditListener
     lateinit var layoutEditInterface: LayoutEditInterface
+    lateinit var stickerEditInterface: StickerEditInterface
     lateinit var selectionListner: (memeItemView: MemeItemView) -> Unit
     private fun init() {
         textEditListener = object : TextEditListener {
@@ -87,29 +89,34 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
 
 
         }
-        layoutEditInterface=object: LayoutEditInterface {
+        layoutEditInterface = object : LayoutEditInterface {
             override fun onAllMarginSet(left: Int, top: Int, right: Int, bottom: Int) {
-                memeLayout?.setMargin(left,top,right,bottom)
+                memeLayout?.setMargin(left, top, right, bottom)
             }
 
             override fun onLeftMargin(size: Int) {
-                memeLayout?.leftMargin=size
+                memeLayout?.leftMargin = size
             }
 
             override fun onRightMargin(size: Int) {
-                memeLayout?.rightMargin=size
+                memeLayout?.rightMargin = size
             }
 
             override fun onTopMargin(size: Int) {
-                memeLayout?.topMargin=size
+                memeLayout?.topMargin = size
             }
 
             override fun onBottomMargin(size: Int) {
-                memeLayout?.bottomMargin=size
+                memeLayout?.bottomMargin = size
             }
 
             override fun onBackgroundColorChanged(color: Int) {
-                memeLayout?.backgroudColor=color
+                memeLayout?.backgroudColor = color
+            }
+        }
+        stickerEditInterface=object: StickerEditInterface {
+            override fun onAddSticker(memeStickerView: MemeStickerView) {
+                addMemeItemView(memeStickerView)
             }
         }
         selectionListner = {
@@ -120,7 +127,7 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
                 is MemeTextView -> itemSelectedInterface?.onTextItemSelected(item.generateTextStyleProperty())
             }
         }
-//        background=CheckerBoardDrawable(12f.dp(context),Color.LTGRAY,Color.GRAY)
+        background = CheckerBoardDrawable(12f.dp(context), Color.LTGRAY, Color.GRAY)
     }
 
     private var memeLayout: MemeLayout? = null
@@ -129,16 +136,17 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
     fun addMemeItemView(child: MemeItemView) {
         super.addView(child)
         child.onSelection = selectionListner
-        child.setItemSelected(true,true)
-        child.onRemoveListener={removeMemeItemView(it)}
-        child.onCopyListener={ it.copy()?.let { it1 -> addMemeItemView(it1) } }
+        child.setItemSelected(true, true)
+        child.onRemoveListener = { removeMemeItemView(it) }
+        child.onCopyListener = { it.copy()?.let { it1 -> addMemeItemView(it1) } }
     }
-    fun x(a:Int,b:Int=if(a>0)a else 0 ){
+
+    fun x(a: Int, b: Int = if (a > 0) a else 0) {
 
     }
 
     fun removeMemeItemView(child: MemeItemView) {
-        if(child.itemSelected)selectedView=null
+        if (child.itemSelected) selectedView = null
         super.removeView(child)
     }
 
@@ -207,10 +215,11 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
             removeMemeItemView(selectedView!!)
         }
     }
-    inline fun <reified T:MemeItemView> getSelectedview():T?{
-        return if(this.selectedView !=null&&selectedView!!.javaClass==T::class.java){
-                selectedView as T
-        }else null
+
+    inline fun <reified T : MemeItemView> getSelectedview(): T? {
+        return if (this.selectedView != null && selectedView!!.javaClass == T::class.java) {
+            selectedView as T
+        } else null
     }
 
     fun clearMemeItems() {
@@ -259,7 +268,7 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         log("view", width, height)
         log("bitmap", bitmap.width, bitmap.height)
 
-        val rect=memeLayout!!.drawingRect.toRect()
+        val rect = memeLayout!!.drawingRect.toRect()
         val rb = Bitmap.createBitmap(bitmap, rect.left, rect.top,
                 rect.right - rect.left, rect.bottom - rect.top)
 
@@ -268,14 +277,16 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         return rb
     }
 
-    fun RectF.toRect():Rect{
+    fun RectF.toRect(): Rect {
         return Rect(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
     }
-    fun Rect.toRectF():RectF{
+
+    fun Rect.toRectF(): RectF {
         return RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
     }
+
     fun getRatio(): Float {
-        val rect=memeLayout!!.drawingRect.toRect()
+        val rect = memeLayout!!.drawingRect.toRect()
         val w = rect.right - rect.left
         val h = rect.bottom - rect.top
 

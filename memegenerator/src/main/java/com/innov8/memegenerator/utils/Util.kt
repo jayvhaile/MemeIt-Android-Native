@@ -8,8 +8,10 @@ import android.graphics.Bitmap.CompressFormat.PNG
 import android.graphics.BitmapFactory
 import android.graphics.RectF
 import android.os.AsyncTask
+import android.os.Build
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -179,3 +181,16 @@ fun Bitmap.toByteArray(format:Bitmap.CompressFormat=PNG, quality:Int=100):ByteAr
     return stream.toByteArray()
 }
 fun MotionEvent.inRect(rectF: RectF):Boolean=rectF.contains(this.x,this.y)
+fun Activity.makeFullScreen() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    } else {
+        window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    }
+}

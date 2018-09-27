@@ -48,6 +48,11 @@ public class MemeItMemes {
                     }
                 });
     }
+    public void getMemeById(final Meme meme, final OnCompleteListener<Meme> listener) {
+        MemeItClient.getInstance().getInterface()
+                .getMemeById(meme.getMemeId())
+                .enqueue(new MyCallBack<>(listener));
+    }
 
     /**
      * this is to get home page meme list for a logged in user

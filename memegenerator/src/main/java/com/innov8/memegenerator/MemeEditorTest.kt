@@ -1,16 +1,14 @@
 package com.innov8.memegenerator
 
-import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
-import android.os.Build
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.HorizontalScrollView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
@@ -22,17 +20,21 @@ import com.innov8.memegenerator.adapters.StickersAdapter
 import com.innov8.memegenerator.adapters.TextPresetsAdapter
 import com.innov8.memegenerator.customViews.ColorChooser
 import com.innov8.memegenerator.customViews.FontChooser
+import com.innov8.memegenerator.customViews.MarginControl
+import com.innov8.memegenerator.memeEngine.LayoutEditInterface
+import com.innov8.memegenerator.memeEngine.MemeStickerView
+import com.innov8.memegenerator.memeEngine.StickerEditInterface
 import com.innov8.memegenerator.memeEngine.TextEditListener
 import com.innov8.memegenerator.models.MemeTemplate
-import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextPreset
-import com.innov8.memegenerator.models.TextStyleProperty
 import com.innov8.memegenerator.utils.AsyncLoader
 import com.innov8.memegenerator.utils.dp
+import com.innov8.memegenerator.utils.makeFullScreen
 import com.innov8.memegenerator.utils.onTabSelected
 import com.warkiz.widget.IndicatorSeekBar
 import kotlinx.android.synthetic.main.bottom_tab.*
 import kotlinx.android.synthetic.main.meme_editor.*
+import kotlinx.android.synthetic.main.meme_editor_layout2.*
 import kotlinx.android.synthetic.main.sticker_frag.*
 import kotlinx.android.synthetic.main.text_pager.*
 
@@ -53,10 +55,18 @@ class MemeEditorTest : AppCompatActivity() {
 
         contraintSet1.clone(contraint_layout)
 
+        val lf = LayoutFrag()
+        lf.layoutEditListener = memeEditorView2.layoutEditInterface
+        val sf = StickerFrag()
+        sf.stickerEditInterface = memeEditorView2.stickerEditInterface
         closeableFragments = mapOf(
-                "text" to CloseableFragment(TextEditor(), 152.dp(this)),
-                "sticker" to CloseableFragment(StickerFrag(), (80+56).dp(this))
+                "layout" to CloseableFragment(lf, 152.dp(this)),
+                "text" to CloseableFragment(TextEditor(), 152.dp(this), TextPresetFragment(), 80.dp(this)),
+                "sticker" to CloseableFragment(sf, (80 + 56).dp(this))
         )
+        layout.setOnClickListener {
+            open("layout")
+        }
         text.setOnClickListener {
             open("text")
         }
@@ -64,9 +74,19 @@ class MemeEditorTest : AppCompatActivity() {
             open("sticker")
         }
 
+        done.setOnClickListener {
+            val bitmap = memeEditorView2.captureMeme()
+            val intent = Intent(this, MemePosterActivity::class.java)
+            intent.putExtra("texts", memeEditorView2.getTexts().toTypedArray())
+            MemePosterActivity.bitmap = bitmap
+            startActivity(intent)
+        }
+
         MemeTemplate.loadLocalTemplates(this) {
             memeEditorView2.loadMemeTemplate(it[3])
+            memeEditorView2.clearMemeItems()
         }
+
 
     }
 
@@ -138,17 +158,45 @@ class MemeEditorTest : AppCompatActivity() {
 
 }
 
-fun Activity.makeFullScreen() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
-    } else {
-        window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_FULLSCREEN)
+class LayoutFrag : Fragment() {
+    private val views = mutableListOf<View>()
+
+    var layoutEditListener: LayoutEditInterface? = null
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.layout_pager, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val mc = MarginControl(context!!)
+        mc.layoutEditInterface = layoutEditListener
+        views.add(mc)
+        val cc = ColorChooser(context!!)
+        cc.onColorChoosed = {
+            layoutEditListener?.onBackgroundColorChanged(it)
+        }
+        views.add(cc)
+        text_pager.adapter = Adapter(context!!)
+        pager_tab.setupWithViewPager(text_pager)
+    }
+
+
+    inner class Adapter(context: Context) : ViewAdapter(context) {
+        private var titles = listOf("Margin", "Background")
+
+
+        init {
+
+        }
+
+        override fun getItem(position: Int): View = views[position]
+
+
+        override fun getCount(): Int = titles.size
+
+        override fun getPageTitle(position: Int): CharSequence? = titles[position]
+
     }
 }
 
@@ -165,14 +213,11 @@ class TextEditor : Fragment() {
     }
 
 
-    class Adapter(context: Context) : ViewAdapter(context) {
+    inner class Adapter(context: Context) : ViewAdapter(context) {
         private var titles = listOf("Color", "Size", "Font", "Style", "Stroke", "Background")
 
         val views = MutableList(titles.size) {
-            val hsv = HorizontalScrollView(context)
-            hsv.addView(ColorChooser(context))
-            hsv.isHorizontalScrollBarEnabled = false
-            hsv as View
+            ColorChooser(context) as View
         }
 
         init {
@@ -194,78 +239,37 @@ class TextEditor : Fragment() {
 
     }
 
-    abstract class ViewAdapter(val context: Context) : PagerAdapter() {
 
-
-        override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
-        final override fun instantiateItem(container: ViewGroup, position: Int): Any {
-            val view = getItem(position);
-            container.addView(view)
-            return view
-        }
-
-        abstract fun getItem(position: Int): View
-        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-            container.removeView(`object` as View?)
-        }
-
-    }
 }
-class TextPresetFragment : androidx.fragment.app.Fragment() {
-    lateinit var textEditListener: TextEditListener
-    private var asyncLoaders: AsyncLoader<List<TextPreset>>? = null
+
+class TextPresetFragment : Fragment() {
+    var textEditListener: TextEditListener? = null
     private lateinit var textPresetsAdapter: TextPresetsAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         textPresetsAdapter = TextPresetsAdapter(context!!)
         textPresetsAdapter.onItemClick = {
-            textEditListener.onApplyAll(it.textStyleProperty, false)
+            textEditListener?.onApplyAll(it.textStyleProperty, false)
         }
-        asyncLoaders = AsyncLoader {
-            listOf(
-                    TextPreset("Normal", TextStyleProperty(
-                            20f, Color.WHITE, MyTypeFace.byName("Arial")!!,
-                            false, false, false,
-                            true, Color.BLACK, 10f
-                    )),
-                    TextPreset("Meme", TextStyleProperty(
-                            20f, Color.WHITE, MyTypeFace.byName("Impact")!!,
-                            false, false, true,
-                            true, Color.BLACK, 10f
-                    )),
-                    TextPreset("Red", TextStyleProperty(
-                            20f, Color.RED, MyTypeFace.byName("Pacifico")!!
-                    )),
-                    TextPreset("Dialog", TextStyleProperty(
-                            20f, Color.YELLOW, MyTypeFace.byName("Ubuntu")!!,
-                            false, false, false,
-                            false, Color.BLACK, 10f
-                    ))
-            )
-        }
+        TextPreset.loadPresets { textPresetsAdapter.setAll(it) }
+
     }
 
     private lateinit var presetList: androidx.recyclerview.widget.RecyclerView
     private lateinit var presetAdd: Button
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_text_presets, container, false)
-        initViews(view)
-        load()
-        return view
+        return inflater.inflate(R.layout.fragment_text_presets, container, false)
     }
 
-    private fun initViews(view: View) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         presetList = view.findViewById(R.id.frag_text_preset_list)
         presetAdd = view.findViewById(R.id.frag_text_preset_add)
-
         presetList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         presetList.adapter = textPresetsAdapter
     }
-
-    fun load() {
-        asyncLoaders?.load { textPresetsAdapter.addAll(it) }
-    }
 }
+
 class StickerPack(val name: String, val urls: List<String>) {
     companion object {
         private val stickers = mapOf("Emojis" to "emoji_stickers",
@@ -276,7 +280,8 @@ class StickerPack(val name: String, val urls: List<String>) {
             AsyncLoader {
                 val list = MutableList(stickers.size) { index: Int ->
                     val (name, path) = stickers.toList()[index]
-                    val urls = context.assets.list(path)?.map { "asset:///$path/$it" } ?: listOf()
+                    val urls = context.assets.list(path)?.map { "asset:///$path/$it" }
+                            ?: listOf()
                     StickerPack(name, urls)
                 }
                 list.add(StickerPack("My Stickers", listOf()))//todo load my stickers
@@ -293,6 +298,8 @@ class StickerFrag : Fragment() {
     var stickers: List<StickerPack>? = null
     var loaded = false
     var load = false
+    var stickerEditInterface: StickerEditInterface? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         stickersAdapter = StickersAdapter(context!!)
@@ -301,10 +308,19 @@ class StickerFrag : Fragment() {
             if (load) load()
         }
 
+        stickersAdapter.onItemClick = { url ->
+            AsyncLoader {
+                val x = url.substring(9)
+                BitmapFactory.decodeStream(context!!.assets.open(x))
+            }.load { bitmap ->
+                val memeStickerView = MemeStickerView(context!!, bitmap)
+                stickerEditInterface?.onAddSticker(memeStickerView)
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        retainInstance=true
+        retainInstance = true
         return inflater.inflate(R.layout.sticker_frag, container, false)
     }
 
@@ -318,11 +334,12 @@ class StickerFrag : Fragment() {
         }
         load()
     }
+
     private fun load() {
         if (stickers != null) {
             if (!loaded) {
                 stickers!!.forEachIndexed { index, it ->
-                    pager_tab.addTab(pager_tab.newTab().setText(it.name), index==0)
+                    pager_tab.addTab(pager_tab.newTab().setText(it.name), index == 0)
                 }
                 loaded = true
             }
@@ -333,6 +350,23 @@ class StickerFrag : Fragment() {
         super.onDestroyView()
         loaded = false
         load = false
+    }
+
+}
+
+abstract class ViewAdapter(val context: Context) : PagerAdapter() {
+
+
+    override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
+    final override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val view = getItem(position);
+        container.addView(view)
+        return view
+    }
+
+    abstract fun getItem(position: Int): View
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(`object` as View?)
     }
 
 }

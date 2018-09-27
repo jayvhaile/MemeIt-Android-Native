@@ -5,10 +5,11 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import com.innov8.memegenerator.utils.dp
 
-class ColorChooser : LinearLayout {
+class ColorChooser : HorizontalScrollView {
 
 
     var colorList = listOf(Color.RED,
@@ -46,23 +47,23 @@ class ColorChooser : LinearLayout {
         choose(it.id)
         onColorChoosed?.invoke(colorList[it.id])
     }
+    val linearLayout=LinearLayout(context)
 
     private fun init() {
-        orientation = HORIZONTAL
+        linearLayout.orientation = LinearLayout.HORIZONTAL
 
-        gravity = Gravity.CENTER_HORIZONTAL
-        colorList.forEachIndexed { index, color ->
-            create(color, index)
-        }
+        linearLayout.gravity = Gravity.CENTER_HORIZONTAL
+        colorList.forEach{create(it)}
+        addView(linearLayout)
     }
 
-    private fun create(color: Int, index: Int = childCount): ColorView2 {
+    private fun create(color: Int, index: Int = linearLayout.childCount): ColorView2 {
         val colorView = ColorView2(context, color, radius = radius,strokeWidth = strokeWidth)
         colorView.setPadding(padding, padding, padding, padding)
         colorView.id = index
 
         colorView.setOnClickListener(onClick)
-        addView(colorView, childParams)
+        linearLayout.addView(colorView, childParams)
         return colorView
     }
 
@@ -75,8 +76,8 @@ class ColorChooser : LinearLayout {
     }
 
     private fun choose(index: Int) {
-        for (i in 0 until childCount) {
-            val view = getChildAt(i) as ColorView2
+        for (i in 0 until linearLayout.childCount) {
+            val view = linearLayout.getChildAt(i) as ColorView2
             view.choosed = view.id == index
         }
     }

@@ -84,7 +84,7 @@
         android:layout_marginRight="8dp"
         app:srcCompat="@drawable/google"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/done" />
 
     <ImageView
         android:id="@+id/login_facebook"
@@ -94,7 +94,7 @@
         android:layout_marginLeft="8dp"
         app:srcCompat="@drawable/fb"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/done" />
 
     <com.innov8.memeit.CustomClasses.FontTextView
         android:id="@+id/rel"

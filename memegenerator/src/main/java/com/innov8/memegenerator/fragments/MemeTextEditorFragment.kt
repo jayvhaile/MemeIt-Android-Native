@@ -1,20 +1,16 @@
 package com.innov8.memegenerator.fragments
 
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.SeekBar
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.color.ColorChooserDialog
 import com.google.android.material.tabs.TabLayout
 import com.innov8.memegenerator.R
-import com.innov8.memegenerator.adapters.TextPresetsAdapter
+import com.innov8.memegenerator.TextPresetFragment
 import com.innov8.memegenerator.customViews.ColorView
 import com.innov8.memegenerator.customViews.FontChooserView
 import com.innov8.memegenerator.customViews.MyToolbarmenu
@@ -23,10 +19,7 @@ import com.innov8.memegenerator.memeEngine.ItemSelectedInterface
 import com.innov8.memegenerator.memeEngine.MemeEditorView
 import com.innov8.memegenerator.memeEngine.MemeTextView
 import com.innov8.memegenerator.memeEngine.TextEditListener
-import com.innov8.memegenerator.models.MyTypeFace
-import com.innov8.memegenerator.models.TextPreset
 import com.innov8.memegenerator.models.TextStyleProperty
-import com.innov8.memegenerator.utils.AsyncLoader
 import com.innov8.memegenerator.utils.onProgressChanged
 import com.innov8.memegenerator.utils.onTabSelected
 import com.innov8.memegenerator.utils.replace
@@ -108,61 +101,7 @@ class MemeTextEditorFragment : MemeEditorFragment(), ItemSelectedInterface {
     }
 }
 
-class TextPresetFragment : androidx.fragment.app.Fragment() {
-    lateinit var textEditListener: TextEditListener
-    private var asyncLoaders: AsyncLoader<List<TextPreset>>? = null
-    private lateinit var textPresetsAdapter: TextPresetsAdapter
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        textPresetsAdapter = TextPresetsAdapter(context!!)
-        textPresetsAdapter.onItemClick = {
-            textEditListener.onApplyAll(it.textStyleProperty, false)
-        }
-        asyncLoaders = AsyncLoader {
-            listOf(
-                    TextPreset("Normal", TextStyleProperty(
-                            20f, Color.WHITE, MyTypeFace.byName("Arial")!!,
-                            false, false, false,
-                            true, Color.BLACK, 10f
-                    )),
-                    TextPreset("Meme", TextStyleProperty(
-                            20f, Color.WHITE, MyTypeFace.byName("Impact")!!,
-                            false, false, true,
-                            true, Color.BLACK, 10f
-                    )),
-                    TextPreset("Red", TextStyleProperty(
-                            20f, Color.RED, MyTypeFace.byName("Pacifico")!!
-                    )),
-                    TextPreset("Dialog", TextStyleProperty(
-                            20f, Color.YELLOW, MyTypeFace.byName("Ubuntu")!!,
-                            false, false, false,
-                            false, Color.BLACK, 10f
-                    ))
-            )
-        }
-    }
 
-    private lateinit var presetList: androidx.recyclerview.widget.RecyclerView
-    private lateinit var presetAdd: Button
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_text_presets, container, false)
-        initViews(view)
-        load()
-        return view
-    }
-
-    private fun initViews(view: View) {
-        presetList = view.findViewById(R.id.frag_text_preset_list)
-        presetAdd = view.findViewById(R.id.frag_text_preset_add)
-
-        presetList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        presetList.adapter = textPresetsAdapter
-    }
-
-    fun load() {
-        asyncLoaders?.load { textPresetsAdapter.addAll(it) }
-    }
-}
 
 class TextCustomizeFragment : androidx.fragment.app.Fragment(), ColorChooserDialog.ColorCallback {
 

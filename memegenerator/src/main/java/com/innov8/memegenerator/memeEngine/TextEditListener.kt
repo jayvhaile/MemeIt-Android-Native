@@ -24,3 +24,6 @@ interface LayoutEditInterface {
     fun onBottomMargin(size: Int)
     fun onBackgroundColorChanged(color: Int)
 }
+interface StickerEditInterface{
+    fun onAddSticker(memeStickerView:MemeStickerView)
+}
