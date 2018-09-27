@@ -7,12 +7,10 @@ import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import com.innov8.memegenerator.customViews.CheckerBoardDrawable
 import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextProperty
 import com.innov8.memegenerator.models.TextStyleProperty
-import com.innov8.memegenerator.utils.fromDPToPX
 import com.innov8.memegenerator.utils.getDrawableIdByName
 import com.innov8.memegenerator.utils.loadBitmap
 import com.innov8.memegenerator.utils.log
@@ -122,7 +120,7 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
                 is MemeTextView -> itemSelectedInterface?.onTextItemSelected(item.generateTextStyleProperty())
             }
         }
-//        background=CheckerBoardDrawable(12f.fromDPToPX(context),Color.LTGRAY,Color.GRAY)
+//        background=CheckerBoardDrawable(12f.dp(context),Color.LTGRAY,Color.GRAY)
     }
 
     private var memeLayout: MemeLayout? = null
@@ -132,6 +130,8 @@ class MemeEditorView : ViewGroup, MemeEditorInterface {
         super.addView(child)
         child.onSelection = selectionListner
         child.setItemSelected(true,true)
+        child.onRemoveListener={removeMemeItemView(it)}
+        child.onCopyListener={ it.copy()?.let { it1 -> addMemeItemView(it1) } }
     }
     fun x(a:Int,b:Int=if(a>0)a else 0 ){
 

@@ -16,20 +16,12 @@
         android:gravity="center"
         android:textSize="16sp"
         android:textColor="#f09"/>
-    <androidx.viewpager.widget.ViewPager
+    <com.innov8.memegenerator.customViews.NonSwipeableViewPager
         android:id="@+id/text_pager"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="center_vertical"
-        >
-    </androidx.viewpager.widget.ViewPager>
+        />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/pager_tab"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        app:tabTextColor="#fff"
-        app:tabSelectedTextColor="#f06"
-        app:tabIndicatorColor="#f06"
-        app:tabMode="scrollable"/>
+    <include layout="@layout/bottom_tab" />
 </LinearLayout>

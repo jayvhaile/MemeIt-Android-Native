@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import com.amulyakhare.textdrawable.TextDrawable
 import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
-import com.innov8.memegenerator.utils.fromDPToPX
+import com.innov8.memegenerator.utils.dp
 
 class ProfileDraweeView:SimpleDraweeView{
     constructor(context: Context,text:String="",color:Int=Color.RED):super(context){
@@ -43,7 +43,7 @@ class ProfileDraweeView:SimpleDraweeView{
                 .buildRound(text,color)
 
         val rp=RoundingParams.asCircle()
-        rp.setBorder(Color.WHITE,2f.fromDPToPX(context))
+        rp.setBorder(Color.WHITE,2f.dp(context))
         hierarchy.roundingParams=rp
         hierarchy.setPlaceholderImage(textDrawable)
     }

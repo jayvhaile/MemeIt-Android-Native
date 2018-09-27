@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
-import com.innov8.memegenerator.utils.fromDPToPX
+import com.innov8.memegenerator.utils.dp
 
 class ColorChooser : LinearLayout {
 
@@ -38,9 +38,9 @@ class ColorChooser : LinearLayout {
     }
 
     private val childParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-    private val padding = 8.fromDPToPX(context)
-    private val radius = 32f.fromDPToPX(context)
-    private val strokeWidth = 4f.fromDPToPX(context)
+    private val padding = 8.dp(context)
+    private val radius = 28f.dp(context)
+    private val strokeWidth = 4f.dp(context)
     private val onClick: (View) -> Unit = {
         it as ColorView2
         choose(it.id)

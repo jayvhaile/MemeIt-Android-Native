@@ -35,6 +35,8 @@ class MemeStickerView : MemeItemView {
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        destRect = Rect(0, 0, w, h)
+        val xx=itemX.toInt()
+        val yy=itemY.toInt()
+        destRect = Rect(xx, yy, xx+memeItemWidth, yy+memeItemHeight)
     }
 }

@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import com.innov8.memegenerator.utils.fromDPToPX
+import com.innov8.memegenerator.utils.dp
 
 class ColorView2 : View {
 
@@ -30,8 +30,8 @@ class ColorView2 : View {
 
     constructor(context: Context, color: Int,
                 choosedColor: Int = Color.WHITE,
-                radius: Float = 10f.fromDPToPX(context),
-                strokeWidth: Float = 2f.fromDPToPX(context)) : super(context) {
+                radius: Float = 10f.dp(context),
+                strokeWidth: Float = 2f.dp(context)) : super(context) {
         init(color, choosedColor, radius, strokeWidth)
     }
 
@@ -45,8 +45,8 @@ class ColorView2 : View {
 
     private fun init(color: Int = Color.BLACK,
                      choosedColor: Int = Color.WHITE,
-                     radius: Float = 10f.fromDPToPX(context),
-                     strokeWidth: Float = 2f.fromDPToPX(context)) {
+                     radius: Float = 10f.dp(context),
+                     strokeWidth: Float = 2f.dp(context)) {
         strokePaint.color = choosedColor
         strokePaint.strokeWidth = strokeWidth
         innerPaint.color = color

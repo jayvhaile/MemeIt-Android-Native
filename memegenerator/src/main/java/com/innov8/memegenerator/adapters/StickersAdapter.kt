@@ -7,10 +7,11 @@ import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.innov8.memegenerator.R
+import com.innov8.memegenerator.utils.dp
 
-class StickersAdapter(context: Context, val span: Int) : ListAdapter<String>(context, R.layout.list_item_sticker) {
-    val size = context.resources.displayMetrics.widthPixels / span
+class StickersAdapter(context: Context) : ListAdapter<String>(context, R.layout.list_item_sticker) {
     var onItemClick: ((String) -> Unit)? = null
+    private val size=(80-2*18).dp(context)
     override fun createViewHolder(view: View): MyViewHolder<String> {
         return StickerViewHolder(view)
     }

@@ -17,7 +17,7 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.innov8.memegenerator.utils.fromDPToPX
+import com.innov8.memegenerator.utils.dp
 import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Adapters.TagSuggestionAdapter
@@ -73,7 +73,7 @@ class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
 
         val v: View = inflater.inflate(R.layout.tag_suggestion, null)
         val list: RecyclerView = v.findViewById(R.id.sug_list)
-        popupWindow = PopupWindow(v, 280.fromDPToPX(context), 180.fromDPToPX(context))
+        popupWindow = PopupWindow(v, 280.dp(context), 180.dp(context))
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             popupWindow.elevation = 2f.DP
@@ -85,7 +85,7 @@ class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
             if (it.isEmpty() && popupWindow.isShowing)
                 popupWindow.dismiss()
             else if (it.isNotEmpty()) {
-                popupWindow.showAsDropDown(editText, (-32).fromDPToPX(context), 0)
+                popupWindow.showAsDropDown(editText, (-32).dp(context), 0)
             }
 
         }
@@ -109,8 +109,8 @@ class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
         }
         gravity = Gravity.CENTER_VERTICAL
 
-        val lp = LayoutParams(200.fromDPToPX(context), LayoutParams.MATCH_PARENT)
-        val lp2 = LayoutParams(56.fromDPToPX(context), LayoutParams.MATCH_PARENT)
+        val lp = LayoutParams(200.dp(context), LayoutParams.MATCH_PARENT)
+        val lp2 = LayoutParams(56.dp(context), LayoutParams.MATCH_PARENT)
         // layoutParams.width= ViewGroup.LayoutParams.MATCH_PARENT
 
         addView(editText, lp)

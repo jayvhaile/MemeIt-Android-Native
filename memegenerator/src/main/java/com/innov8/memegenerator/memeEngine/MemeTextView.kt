@@ -14,8 +14,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memegenerator.models.MyTypeFace
 import com.innov8.memegenerator.models.TextProperty
 import com.innov8.memegenerator.models.TextStyleProperty
-import com.innov8.memegenerator.utils.fromDPToPX
-import com.innov8.memegenerator.utils.fromSP
+import com.innov8.memegenerator.utils.dp
+import com.innov8.memegenerator.utils.sp
 import com.innov8.memegenerator.utils.toSP
 
 class MemeTextView : MemeItemView {
@@ -43,11 +43,11 @@ class MemeTextView : MemeItemView {
     fun setTypeface(value: MyTypeFace) {
         myTypeface=value
         dl.paint.typeface = value.getTypeFace(context)
-        resizeToWrapText()
+        resizeToWrapText(true)
     }
 
     fun setTextSize(value: Float) {
-        dl.paint.textSize = value.fromSP(context)
+        dl.paint.textSize = value.sp(context)
         resizeToWrapText(true)
     }
 
@@ -70,7 +70,7 @@ class MemeTextView : MemeItemView {
     private var allCaps: Boolean = false
     fun setAllCaps(value: Boolean) {
         allCaps = value
-        resetDL()
+        resizeToWrapText(true)
         invalidate()
     }
 
@@ -104,59 +104,89 @@ class MemeTextView : MemeItemView {
         with(textPaint) {
             typeface = Typeface.DEFAULT
             color = Color.WHITE
-            textSize = 20f.fromSP(context)
+            textSize = 20f.sp(context)
             style = Paint.Style.FILL
 
         }
-        dl = DynamicLayout(text, textPaint, memeItemWidth, Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
+        minimumWidth=10.dp(context)
+        minimumHeight=10.dp(context)
+        dl = DynamicLayout(text, textPaint,mW(textPaint), Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
         if (isInMemeEditor)
             onClickListener = {
                 MaterialDialog.Builder(context)
                         .title("Insert Text")
                         .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                        .input("Write the text here", text,
-                                { _, input ->
-                                    text = input.toString()
-                                })
+                        .input("Write the text here", text
+                        ) { _, input ->
+                            text = input.toString()
+                        }
                         .show()
             }
         onResize = { w, h ->
             resetDL()
         }
+        memeItemWidth
     }
+    val off=10.dp(context)
 
-    fun resetDL() {
+    private fun resetDL() {
         val tx = if (allCaps) text.toUpperCase() else text
-        dl = DynamicLayout(tx, dl.paint, memeItemWidth, Layout.Alignment.ALIGN_CENTER, 0.8f, 0f, false)
+        dl = DynamicLayout(tx, dl.paint,mW(), Layout.Alignment.ALIGN_CENTER, 0.8f, 0f, false)
+
+        sx=memeItemWidth/dl.width.toFloat()
+        sy=memeItemHeight/dl.height.toFloat()
+    }
+    private fun mW(textPaint: TextPaint=dl.paint):Int{
+              val w=text.split("\n").map {
+            textPaint.measureText(if(allCaps)it.toUpperCase()else it).toInt()
+        }.max()?:minimumWidth
+        return  if(w>maxWidth) maxWidth else w
+    }
+    private fun mH():Int{
+        if(stroke){
+            dl.paint.style=Paint.Style.STROKE
+        }
+        val h=dl.height
+        dl.paint.style=Paint.Style.FILL
+        return h
     }
 
     private fun resizeToWrapText(reset: Boolean = false) {
         if (reset) resetDL()
-        if (isInMemeEditor && memeItemHeight < dl.height)
-            memeItemHeight = dl.height
-        invalidate()
+        if (isInMemeEditor){
+            memeItemWidth= (dl.width*sx).toInt()
+            memeItemHeight = (mH()*sy).toInt()
+
+        }
         requestLayout()
+        invalidate()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         if (!isInMemeEditor) resetDL()
     }
+    var sx=1f
+    var sy=1f
 
     override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
         canvas?.save()
-        var ty = memeItemHeight / 2f - dl.height / 2f
-        canvas?.translate(0f, ty)
+        val ty = itemY+(memeItemHeight / 2f) - dl.height / 2f
+        canvas?.translate(itemX, ty/sy)
+
+        canvas?.scale(sx,sy)
         if (stroke) {
             dl.paint.style = Paint.Style.STROKE
             dl.paint.color = strokeColor
             dl.draw(canvas)
+
             dl.paint.style = Paint.Style.FILL
         }
         dl.paint.color = color
         dl.draw(canvas)
         canvas?.restore()
+        super.onDraw(canvas)
+
     }
     fun generateTextProperty(totalW:Float,totalH:Float):TextProperty{
         return TextProperty(x/totalW,
@@ -180,7 +210,7 @@ class MemeTextView : MemeItemView {
     }
     fun applyTextStyleProperty(tp: TextStyleProperty, applySize:Boolean=true, text: String = "") {
         color = tp.textColor
-        if(applySize) dl.paint.textSize = tp.textSize.fromSP(context)
+        if(applySize) dl.paint.textSize = tp.textSize.sp(context)
         myTypeface=tp.myTypeFace
         dl.paint.typeface = tp.myTypeFace.getTypeFace(context)
         bold = tp.bold
@@ -195,8 +225,8 @@ class MemeTextView : MemeItemView {
         val tp=generateTextProperty(maxWidth.toFloat(), maxHeight.toFloat())
         val nt=MemeTextView(context,width,height)
         nt.applyTextProperty(tp,maxWidth.toFloat(),maxHeight.toFloat())
-        nt.x+=10.fromDPToPX(context)
-        nt.y+=10.fromDPToPX(context)
+        nt.x+=10.dp(context)
+        nt.y+=10.dp(context)
         nt.text=text
         return nt
     }
