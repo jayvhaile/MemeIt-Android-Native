@@ -7,6 +7,5 @@ class MySeekBar {
     fun x()
     {
         val x=SeekBar(null)
-        x.
     }
 }
