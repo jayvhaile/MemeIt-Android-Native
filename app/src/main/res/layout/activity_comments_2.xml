@@ -10,21 +10,264 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="256dp"
+        android:layout_height="wrap_content"
         app:elevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:background="#fff"
+            app:layout_scrollFlags="scroll"
+            android:layout_height="wrap_content">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/meme_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="256dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:placeholderImage="@drawable/got1"
                 fresco:actualImageScaleType="fitCenter"
-                app:layout_scrollFlags="scroll"
-                app:placeholderImage="@drawable/got1" />
+                tools:background="@drawable/got" />
+
+            <com.varunest.sparkbutton.SparkButton
+                android:id="@+id/react_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/meme_tags"
+                app:layout_constraintVertical_bias="0.1"
+                app:sparkbutton_activeImage="@drawable/laughing"
+                app:sparkbutton_iconSize="28dp"
+                app:sparkbutton_inActiveImage="@drawable/laughing_inactive_light"
+                app:sparkbutton_primaryColor="@color/spark_primary_emoji"
+                app:sparkbutton_secondaryColor="@color/spark_secondary" />
+
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:id="@+id/meme_tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:textColor="#1394fd"
+                app:layout_constraintStart_toStartOf="@+id/react_button"
+                app:layout_constraintTop_toBottomOf="@+id/description"
+                tools:text="#programming #java" />
+
+            <com.innov8.memegenerator.customViews.FontTextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="#313131"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:layout_constraintStart_toStartOf="@+id/meme_tags"
+                app:layout_constraintTop_toBottomOf="@+id/meme_image_view"
+                tools:text="This meme goes out to all those people that have been struggling with the verbosity of java " />
+
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:id="@+id/meme_reactions"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:paddingLeft="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/react_button"
+                app:layout_constraintStart_toEndOf="@+id/react_button"
+                app:layout_constraintTop_toTopOf="@+id/react_button"
+                tools:text="30 reactions" />
+
+            <com.varunest.sparkbutton.SparkButton
+                android:id="@+id/fav_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="@id/react_button"
+                app:layout_constraintEnd_toStartOf="@+id/meme_comment"
+                app:layout_constraintTop_toTopOf="@+id/react_button"
+                app:sparkbutton_activeImage="@drawable/ic_favorite_red"
+                app:sparkbutton_iconSize="24dp"
+                app:sparkbutton_inActiveImage="@drawable/ic_favourite"
+                app:sparkbutton_primaryColor="@color/spark_primary"
+                app:sparkbutton_secondaryColor="@color/spark_secondary" />
+
+            <ImageButton
+                android:id="@+id/meme_comment"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="8dp"
+                android:background="#0000"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="@+id/react_button"
+                app:layout_constraintRight_toLeftOf="@+id/meme_comment_count"
+                app:layout_constraintTop_toTopOf="@+id/react_button"
+                app:srcCompat="@drawable/ic_comment" />
+
+            <TextView
+                android:id="@+id/meme_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:text="0"
+                app:layout_constraintBottom_toBottomOf="@+id/meme_comment"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/meme_comment" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="8dp"
+                android:background="#27000000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/react_button" />
+            <!---   react layout     -->
+            <com.innov8.memeit.CustomViews.MemeDraweeView
+                android:id="@+id/meme_image"
+                tools:background="#000"
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                app:actualImageScaleType="fitCenter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline12"/>
+
+            <View
+                android:id="@+id/tint"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="#c000"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/meme_image"
+                app:layout_constraintEnd_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/meme_image" />
+            <!--react buttons-->
+            <ImageView
+                android:id="@+id/react_funny"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toBottomOf="@+id/meme_image"
+                app:layout_constraintEnd_toStartOf="@+id/react_veryfunny"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toEndOf="@+id/meme_image"
+                app:srcCompat="@drawable/laughing" />
+
+            <ImageView
+                android:id="@+id/react_veryfunny"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toBottomOf="@+id/meme_image"
+                app:layout_constraintEnd_toStartOf="@+id/react_stupid"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintLeft_toRightOf="@id/react_funny"
+                app:layout_constraintRight_toLeftOf="@+id/react_stupid"
+                app:layout_constraintStart_toEndOf="@+id/react_funny"
+                app:srcCompat="@drawable/rofl" />
+
+            <ImageView
+                android:id="@+id/react_stupid"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toBottomOf="@+id/meme_image"
+                app:layout_constraintEnd_toStartOf="@+id/react_angry"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toEndOf="@+id/react_veryfunny"
+                app:srcCompat="@drawable/neutral" />
+
+            <ImageView
+                android:id="@+id/react_angry"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toBottomOf="@+id/meme_image"
+                app:layout_constraintEnd_toStartOf="@+id/meme_image"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toEndOf="@+id/react_stupid"
+                app:srcCompat="@drawable/angry" />
+            <!--react counts-->
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:id="@+id/reacation_count_funny"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="24"
+                android:textColor="#fff"
+                app:layout_constraintEnd_toEndOf="@+id/react_funny"
+                app:layout_constraintStart_toStartOf="@+id/react_funny"
+                app:layout_constraintTop_toBottomOf="@+id/react_funny" />
+
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:id="@+id/reacation_count_veryfunny"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="35"
+                android:textColor="#fff"
+                app:layout_constraintEnd_toEndOf="@+id/react_veryfunny"
+                app:layout_constraintStart_toStartOf="@+id/react_veryfunny"
+                app:layout_constraintTop_toBottomOf="@+id/react_veryfunny" />
+
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:id="@+id/reacation_count_stupid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="35"
+                android:textColor="#fff"
+                app:layout_constraintEnd_toEndOf="@+id/react_stupid"
+                app:layout_constraintHorizontal_bias="0.48"
+                app:layout_constraintStart_toStartOf="@+id/react_stupid"
+                app:layout_constraintTop_toBottomOf="@+id/react_stupid" />
+
+            <com.innov8.memeit.CustomClasses.FontTextView
+                android:id="@+id/reacation_count_angry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="42"
+                android:textColor="#fff"
+                app:layout_constraintEnd_toEndOf="@+id/react_angry"
+                app:layout_constraintStart_toStartOf="@+id/react_angry"
+                app:layout_constraintTop_toBottomOf="@+id/react_angry" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"/>
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/react_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="react_stupid,react_veryfunny,tint,react_funny,react_angry,reacation_count_angry,reacation_count_funny,reacation_count_stupid,reacation_count_veryfunny"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -33,7 +276,8 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/comment_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -45,13 +289,22 @@
             android:id="@+id/comment_pp"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            tools:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:background="@drawable/circle" />
 
         <com.innov8.memeit.CustomClasses.FontEditText
             android:id="@+id/comment_field"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:hint="Comment"
@@ -59,14 +312,53 @@
             android:minHeight="50dp"
             android:paddingLeft="16dp"
             android:paddingTop="3dp"
-            android:paddingBottom="3dp" />
+            android:paddingBottom="3dp"
+            tools:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/comment_button"
+            app:layout_constraintStart_toEndOf="@+id/comment_pp"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/comment_button"
             android:layout_width="55dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:padding="6dp"
-            android:src="@drawable/send" />
-    </LinearLayout>
+            tools:visibility="invisible"
+            android:src="@drawable/send"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.innov8.memegenerator.customViews.FontTextView
+            android:layout_width="280dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button"
+            android:gravity="center"
+            android:text="Sign up or login to react or comment"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:id="@+id/signup"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/comment_group"
+            android:layout_width="wrap_content"
+            tools:visibility="gone"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="comment_button,comment_field,comment_pp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

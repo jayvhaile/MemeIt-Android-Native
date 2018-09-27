@@ -51,11 +51,11 @@ dependencies {
     implementation 'com.github.varunest:sparkbutton:1.0.5'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-/*
+//Firebase stuff
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.firebase:firebase-messaging:17.3.0'
-    implementation 'com.google.firebase:firebase-dynamic-links:16.1.1'
-*/
+    implementation 'com.google.firebase:firebase-dynamic-links:16.0.1'
+
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0"

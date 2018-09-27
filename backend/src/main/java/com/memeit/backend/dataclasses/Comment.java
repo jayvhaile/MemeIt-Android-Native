@@ -210,11 +210,20 @@ public class Comment implements Parcelable{
     }
 
     public void setLikedByMe(boolean likedByMe) {
-        isLikedByMe = likedByMe;
+        if(likedByMe) {
+            isLikedByMe = true;
+            isDislikedByMe = false;
+        }
+        else isLikedByMe = false;
+
     }
 
     public void setDislikedByMe(boolean dislikedByMe) {
-        isDislikedByMe = dislikedByMe;
+        if(dislikedByMe) {
+            isDislikedByMe = true;
+            isLikedByMe = false;
+        }
+        else isDislikedByMe = false;
     }
 
     public void setPoster(Poster poster) {
