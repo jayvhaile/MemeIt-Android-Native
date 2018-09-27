@@ -154,7 +154,7 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
     inner class MyS : SwipeController() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
             val v = viewHolder as MemeViewHolder
-            return if (items[v.itemPosition] is Meme) {
+            return if (items.size>0&&items[v.itemPosition] is Meme) {
                 makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
             } else {
                 makeMovementFlags(0, 0)

@@ -3,6 +3,7 @@ package com.innov8.memeit
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.util.Log
+import androidx.annotation.IdRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
@@ -69,7 +70,7 @@ fun formatDate(date: Long): String {
 fun Long.formateAsDate(): String = formatDate(this)
 
 fun String?.prefix(): String {
-    return if (this === null) "..." else this[0].toString()
+    return if (this.isNullOrEmpty()) "..." else this!![0].toString()
 }
 
 val screenWidth: Int
@@ -140,10 +141,10 @@ private fun SimpleDraweeView.loadGifMeme(id: String, ratio: Float, resizeWidth: 
             .generate(id)
     val t = Transformation<Transformation<*>>()
             .effect("loop")
-            .quality(quality)
+            /*.quality(quality)
             .crop("fit")
             .width(w)
-            .height(h)
+            .height(h)*/
 
     val url = MediaManager.get().url().resourcType("video")
             .format("gif")
@@ -206,7 +207,7 @@ fun Reaction.getDrawable(active: Boolean = true): Drawable {
     val inactiveRID = intArrayOf(R.drawable.laughing_inactive_light, R.drawable.rofl_inactive, R.drawable.neutral_inactive, R.drawable.angry_inactive)
     return VectorDrawableCompat.create(it.resources, if (active) activeRID[type.ordinal] else inactiveRID[type.ordinal], null)!!
 }
-
+@IdRes
 fun Reaction.getDrawableID(active: Boolean = true): Int {
     //todo include the inactive ones too
     val activeRID = intArrayOf(R.drawable.laughing, R.drawable.rofl, R.drawable.neutral, R.drawable.angry)

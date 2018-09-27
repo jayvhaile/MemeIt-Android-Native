@@ -23,7 +23,13 @@ public class Meme implements HomeElement, Parcelable {
     }
 
     public enum MemeType {
-        IMAGE, GIF
+        IMAGE, GIF;
+
+        public static MemeType of(String s){
+            return valueOf(s.toUpperCase());
+        }
+
+
     }
 
     @SerializedName("mid")
@@ -84,6 +90,11 @@ public class Meme implements HomeElement, Parcelable {
     public Meme(String memeId, String img) {
         this.memeId = memeId;
         this.memeImageUrl = img;
+    }
+    public Meme(String memeId, String img,MemeType type) {
+        this.memeId = memeId;
+        this.memeImageUrl = img;
+        this.type=type.toString().toLowerCase();
     }
 
     private Meme(String memeImageUrl, double memeImageRatio, MemeType type,String desc, List<String> texts, List<String> tags) {

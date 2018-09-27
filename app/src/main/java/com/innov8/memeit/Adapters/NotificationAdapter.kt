@@ -5,6 +5,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.text.SpannableString
+import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,21 +14,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.facebook.drawee.view.SimpleDraweeView
-import com.innov8.memegenerator.utils.log
+import com.innov8.memeit.*
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
-import com.innov8.memeit.CustomClasses.ImageUtils
 import com.innov8.memeit.CustomViews.ProfileDraweeView
-import com.innov8.memeit.R
-import com.innov8.memeit.formateAsDate
-import com.innov8.memeit.loadImage
-import com.innov8.memeit.prefix
 import com.memeit.backend.dataclasses.*
 
 class NotificationAdapter(val context: Context) : RecyclerView.Adapter<NotificationViewHolder>() {
 
     val colors = listOf(R.color.blue, R.color.purple, R.color.orange, R.color.greeny)
             .map { idToColor(it) }
+
     fun idToColor(id: Int): Int =
             context.resources.getColor(id)
 
@@ -98,7 +96,7 @@ class NotificationAdapter(val context: Context) : RecyclerView.Adapter<Notificat
     }
 
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
-        holder.itemPosition=position
+        holder.itemPosition = position
         holder.bind(items[position])
     }
 
@@ -117,9 +115,9 @@ open class NotificationViewHolder(val notifAdapter: NotificationAdapter, itemVie
     val date: TextView = itemView.findViewById(R.id.notif_date)
     val title: TextView = itemView.findViewById(R.id.notif_title)
     val message: TextView? = itemView.findViewById(R.id.notif_message)
-    val context=notifAdapter.context
+    val context = notifAdapter.context
     val d: Drawable = VectorDrawableCompat.create(context.resources, R.drawable.circle, null)!!
-    var itemPosition:Int=0
+    var itemPosition: Int = 0
     open fun bind(notif: Notification) {
         back.setBackgroundColor(if (notif.seen) Color.WHITE else Color.rgb(248, 248, 250))
         d.setColorFilter(notifAdapter.colors[notif.type], PorterDuff.Mode.SRC)
@@ -135,21 +133,20 @@ class FollowingNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : 
     init {
         itemView.setOnClickListener {
             val i = Intent(notifAdapter.context, ProfileActivity::class.java)
-            val n=getCurrentItem()
-            i.putExtra("user",User(n.followerId,n.followerName,n.followerPic))
+            val n = getCurrentItem()
+            i.putExtra("user", User(n.followerId, n.followerName, n.followerPic))
             notifAdapter.context.startActivity(i)
         }
     }
-    private fun getCurrentItem():FollowingNotification
-        =notifAdapter.items[itemPosition] as FollowingNotification
+
+    private fun getCurrentItem(): FollowingNotification = notifAdapter.items[itemPosition] as FollowingNotification
 
     override fun bind(notif: Notification) {
         super.bind(notif)
         notif as FollowingNotification
         icon as ProfileDraweeView
-        icon.text=notif.title.prefix()
+        icon.text = notif.title.prefix()
         icon.loadImage(notif.followerPic)
-        ImageUtils.loadImageFromCloudinaryTo(icon, notif.followerPic)
     }
 
 }
@@ -159,27 +156,32 @@ class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : N
 
     init {
         itemView.setOnClickListener {
-            val n=getCurrentItem()
-            val meme = Meme(n.memeId,n.memePic)
+            val n = getCurrentItem()
+            val meme = Meme(n.memeId, n.memePic)
             val intent = Intent(notifAdapter.context, CommentsActivity::class.java)
             intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme)
             notifAdapter.context.startActivity(intent)
         }
         icon.setOnClickListener {
             val i = Intent(notifAdapter.context, ProfileActivity::class.java)
-            val n=getCurrentItem()
-            i.putExtra("user",User(n.reactorId,n.reactorName,n.reactorPic))
+            val n = getCurrentItem()
+            i.putExtra("user", User(n.reactorId, n.reactorName, n.reactorPic))
             notifAdapter.context.startActivity(i)
         }
     }
-    private fun getCurrentItem():ReactionNotification
-            =notifAdapter.items[itemPosition] as ReactionNotification
+
+    private fun getCurrentItem(): ReactionNotification = notifAdapter.items[itemPosition] as ReactionNotification
     override fun bind(notif: Notification) {
         super.bind(notif)
         notif as ReactionNotification
-        (icon as ProfileDraweeView).text=notif.title.prefix()
-        ImageUtils.loadImageFromCloudinaryTo(icon, notif.reactorPic)
-        ImageUtils.loadImageFromCloudinaryTo(memeImage, notif.memePic)
+        icon as ProfileDraweeView
+        icon.text = notif.reactorName.prefix()
+        icon.loadImage(notif.reactorPic)
+        memeImage.loadMeme(notif.getMeme())
+        val span=ImageSpan(notif.getReaction().getDrawable())
+        val s=SpannableString(" ")
+        s.setSpan(span,0,1,0)
+        message?.text = s
 
     }
 
@@ -187,28 +189,31 @@ class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : N
 
 class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
     val memeImage: SimpleDraweeView = itemView.findViewById(R.id.meme_image)
+
     init {
         itemView.setOnClickListener {
-            val n=getCurrentItem()
-            val meme = Meme(n.memeId,n.memePic)
+            val n = getCurrentItem()
+            val meme = Meme(n.memeId, n.memePic)
             val intent = Intent(notifAdapter.context, CommentsActivity::class.java)
             intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme)
             notifAdapter.context.startActivity(intent)
         }
         icon.setOnClickListener {
             val i = Intent(notifAdapter.context, ProfileActivity::class.java)
-            val n=getCurrentItem()
-            i.putExtra("user",User(n.commentorId,n.commenterName,n.commenterPic))
+            val n = getCurrentItem()
+            i.putExtra("user", User(n.commentorId, n.commenterName, n.commenterPic))
             notifAdapter.context.startActivity(i)
         }
     }
-    private fun getCurrentItem():CommentNotification
-            =notifAdapter.items[itemPosition] as CommentNotification
+
+    private fun getCurrentItem(): CommentNotification = notifAdapter.items[itemPosition] as CommentNotification
     override fun bind(notif: Notification) {
         super.bind(notif)
         notif as CommentNotification
-        ImageUtils.loadImageFromCloudinaryTo(icon, notif.commenterPic)
-        ImageUtils.loadImageFromCloudinaryTo(memeImage, notif.memePic)
+        icon as ProfileDraweeView
+        icon.text = notif.commenterName.prefix()
+        icon.loadImage(notif.commenterPic)
+        memeImage.loadMeme(notif.getMeme())
     }
 
 }

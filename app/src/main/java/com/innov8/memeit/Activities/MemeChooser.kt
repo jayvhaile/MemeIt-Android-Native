@@ -18,7 +18,7 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import com.google.gson.Gson
-import com.innov8.memegenerator.MemeEditorActivity
+import com.innov8.memegenerator.MemeEditorTest
 import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.utils.initWithGrid
 import com.innov8.memeit.Adapters.MemeTemplatesListAdapter
@@ -68,7 +68,7 @@ class TemplateFragment : Fragment() {
 
         memeTemplatesListAdapter.OnItemClicked = {
             val json = gson.toJson(it)
-            val intent = Intent(context, MemeEditorActivity::class.java)
+            val intent = Intent(context, MemeEditorTest::class.java)
             intent.putExtra("string", json)
             startActivity(intent)
         }

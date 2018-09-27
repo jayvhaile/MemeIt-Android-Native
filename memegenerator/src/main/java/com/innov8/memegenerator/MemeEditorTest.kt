@@ -3,7 +3,9 @@ package com.innov8.memegenerator
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionManager
 import androidx.viewpager.widget.PagerAdapter
+import com.google.gson.Gson
 import com.innov8.memegenerator.adapters.StickersAdapter
 import com.innov8.memegenerator.adapters.TextPresetsAdapter
 import com.innov8.memegenerator.customViews.ColorChooser
@@ -34,7 +37,6 @@ import com.innov8.memegenerator.utils.onTabSelected
 import com.warkiz.widget.IndicatorSeekBar
 import kotlinx.android.synthetic.main.bottom_tab.*
 import kotlinx.android.synthetic.main.meme_editor.*
-import kotlinx.android.synthetic.main.meme_editor_layout2.*
 import kotlinx.android.synthetic.main.sticker_frag.*
 import kotlinx.android.synthetic.main.text_pager.*
 
@@ -82,9 +84,21 @@ class MemeEditorTest : AppCompatActivity() {
             startActivity(intent)
         }
 
-        MemeTemplate.loadLocalTemplates(this) {
-            memeEditorView2.loadMemeTemplate(it[3])
-            memeEditorView2.clearMemeItems()
+        val json: String? = intent.getStringExtra("string")
+        val uri: String? = intent.getStringExtra("uri")
+
+        if (json != null) {
+            val gson = Gson()
+            val memeTemplate = gson.fromJson(json, MemeTemplate::class.java)
+            memeEditorView2.loadMemeTemplate(memeTemplate)
+        } else if (uri != null) {
+            AsyncLoader<Bitmap> {
+                val stream = contentResolver.openInputStream(Uri.parse(uri))
+                BitmapFactory.decodeStream(stream)
+            }.load {
+                memeEditorView2.loadBitmab(it)
+            }
+
         }
 
 
