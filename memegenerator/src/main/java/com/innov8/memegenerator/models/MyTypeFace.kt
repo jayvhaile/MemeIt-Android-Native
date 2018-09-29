@@ -37,10 +37,10 @@ open class MyTypeFace(val name: String, private val fileName: String = "", loadN
     }
 
     private fun loadTypeFace(context: Context) {
-        if (name == "Default")
-            typeface = Typeface.DEFAULT
+        typeface = if (name == "Default")
+            Typeface.DEFAULT
         else
-            typeface = Typeface.createFromAsset(context.assets, fileName)
+            Typeface.createFromAsset(context.assets, fileName)
     }
 
     @Transient

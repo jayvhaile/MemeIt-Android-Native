@@ -8,7 +8,7 @@ import com.afollestad.materialdialogs.color.ColorChooserDialog
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.customViews.MyToolbarmenu
 import com.innov8.memegenerator.memeEngine.LayoutEditInterface
-import com.innov8.memegenerator.utils.fromDPToPX
+import com.innov8.memegenerator.utils.dp
 import com.innov8.memegenerator.utils.onProgressChanged
 import com.innov8.memegenerator.utils.onTabSelected
 import com.innov8.memegenerator.utils.replace
@@ -75,23 +75,23 @@ class LayoutCustomizeFragment : Fragment() , ColorChooserDialog.ColorCallback{
         super.onViewCreated(view, savedInstanceState)
         margin_left.onProgressChanged { progress, u ->
             if (u)
-                layoutEditInterface?.onLeftMargin(progress.fromDPToPX(context!!))
+                layoutEditInterface?.onLeftMargin(progress.dp(context!!))
         }
         margin_right.onProgressChanged { progress, u ->
             if (u)
-                layoutEditInterface?.onRightMargin(progress.fromDPToPX(context!!))
+                layoutEditInterface?.onRightMargin(progress.dp(context!!))
         }
         margin_bottom.onProgressChanged { progress, u ->
             if (u)
-                layoutEditInterface?.onBottomMargin(progress.fromDPToPX(context!!))
+                layoutEditInterface?.onBottomMargin(progress.dp(context!!))
         }
         margin_top.onProgressChanged { progress, u ->
             if (u)
-                layoutEditInterface?.onTopMargin(progress.fromDPToPX(context!!))
+                layoutEditInterface?.onTopMargin(progress.dp(context!!))
         }
         margin_all.onProgressChanged { progress, u ->
             if (u)
-                layoutEditInterface?.onAllMarginSet(progress.fromDPToPX(context!!))
+                layoutEditInterface?.onAllMarginSet(progress.dp(context!!))
         }
         margin_all.isEnabled = all_margin_check.isChecked
 
@@ -104,12 +104,12 @@ class LayoutCustomizeFragment : Fragment() , ColorChooserDialog.ColorCallback{
             margin_top.isEnabled = !isChecked
 
             if (isChecked) {
-                layoutEditInterface?.onAllMarginSet(margin_all.progress.fromDPToPX(context!!))
+                layoutEditInterface?.onAllMarginSet(margin_all.progress.dp(context!!))
             } else {
-                layoutEditInterface?.onAllMarginSet(margin_left.progress.fromDPToPX(context!!),
-                        margin_top.progress.fromDPToPX(context!!),
-                        margin_right.progress.fromDPToPX(context!!),
-                        margin_bottom.progress.fromDPToPX(context!!))
+                layoutEditInterface?.onAllMarginSet(margin_left.progress.dp(context!!),
+                        margin_top.progress.dp(context!!),
+                        margin_right.progress.dp(context!!),
+                        margin_bottom.progress.dp(context!!))
             }
         }
         colorChooserDialog = ColorChooserDialog.Builder(context!!, R.string.color_chooser_dialog_title)

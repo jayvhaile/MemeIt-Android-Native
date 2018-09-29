@@ -9,6 +9,7 @@ import com.innov8.memeit.R
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.CommentNotification
 import com.memeit.backend.dataclasses.FollowingNotification
+import com.memeit.backend.dataclasses.Meme.MemeType.of
 import com.memeit.backend.dataclasses.Notification
 import com.memeit.backend.dataclasses.ReactionNotification
 import com.memeit.backend.utilis.OnCompleteListener
@@ -28,7 +29,7 @@ class NotificationActivity : AppCompatActivity() {
         }
 
         setSupportActionBar(notf_toolbar)
-        supportActionBar?.title="Notifications"
+        supportActionBar?.title = "Notifications"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         load()
     }
@@ -44,7 +45,7 @@ class NotificationActivity : AppCompatActivity() {
 
                 }*/
 
-                val notifs=t.map {
+                val notifs = t.map {
                     val type: Int = (it["type"] as Double).toInt()
                     when (type) {
                         Notification.FOLLOWING_TYPE -> {
@@ -64,6 +65,7 @@ class NotificationActivity : AppCompatActivity() {
                                     it["uid"] as String,
                                     it["mid"] as String,
                                     it["img_url"] as String,
+                                    of((it["mtype"] as String?) ?: "image"),
                                     (it["reaction"] as Double).toInt(),
                                     (it["date"] as Double).toLong(),
                                     it["seen"] as Boolean
@@ -77,13 +79,14 @@ class NotificationActivity : AppCompatActivity() {
                                     it["uid"] as String,
                                     it["mid"] as String,
                                     it["img_url"] as String,
+                                    of((it["mtype"] as String?) ?: "image"),
                                     it["comment"] as String,
                                     (it["date"] as Double).toLong(),
                                     it["seen"] as Boolean
                             )
                         }
 
-                        else-> {
+                        else -> {
                             Notification(0,
                                     it["nid"] as String? ?: "",
                                     it["title"] as String? ?: "",

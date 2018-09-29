@@ -165,7 +165,7 @@ public class CommentsAdapter extends ListAdapter<Comment> {
                                         public void onSuccess(ResponseBody o) {
                                             Toast.makeText(getMContext(), "Edited.", Toast.LENGTH_SHORT).show();
                                             comment.setComment(input.toString());
-                                            commentV.setText(input.toString());
+                                            notifyItemChanged(getItem_position());
                                         }
 
                                         @Override

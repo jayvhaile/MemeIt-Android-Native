@@ -48,7 +48,7 @@ class MemeStickerEditorFragment : MemeEditorFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = StickersAdapter(context!!,spanCount)
+        adapter = StickersAdapter(context!!)
         adapter.onItemClick=this.onItemClick
         path.forEachIndexed { i, s ->
             AsyncLoader {

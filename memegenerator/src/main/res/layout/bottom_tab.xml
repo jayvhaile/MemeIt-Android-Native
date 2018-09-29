@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.tabs.TabLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pager_tab"
+    android:layout_width="wrap_content"
+    android:layout_height="56dp"
+    app:tabTextColor="#fff"
+    app:tabSelectedTextColor="#f06"
+    app:tabIndicatorColor="#f06"
+    app:tabMode="scrollable"
+    app:tabGravity="center"
+    tools:showIn="@layout/text_pager" />

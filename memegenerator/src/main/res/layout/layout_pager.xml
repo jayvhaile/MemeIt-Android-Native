@@ -7,21 +7,14 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     tool:background="#000">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="Add Text"
-        android:padding="8dp"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textColor="#f09"/>
     <com.innov8.memegenerator.customViews.NonSwipeableViewPager
         android:id="@+id/text_pager"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="116dp"
         android:layout_gravity="center_vertical"
         />
 
-    <include layout="@layout/bottom_tab" />
+    <include layout="@layout/bottom_tab"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"/>
 </LinearLayout>

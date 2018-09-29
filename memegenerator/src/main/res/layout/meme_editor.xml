@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/back"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
@@ -30,7 +30,7 @@
         app:srcCompat="@drawable/ic_arrow_back" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/done"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginEnd="16dp"
@@ -47,9 +47,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="12dp"
+        android:padding="4dp"
         app:layout_constraintEnd_toStartOf="@+id/text"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintStart_toEndOf="@+id/back"
         app:layout_constraintTop_toTopOf="@+id/guideline_bottom"
         app:srcCompat="@drawable/ic_bottom_layout" />
 
@@ -60,6 +61,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="12dp"
+        android:padding="4dp"
+
         app:layout_constraintEnd_toStartOf="@+id/sticker"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/layout"
@@ -73,6 +76,8 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:padding="4dp"
+
         app:layout_constraintEnd_toStartOf="@+id/paint"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/text"
@@ -86,7 +91,9 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/imageView3"
+        android:padding="4dp"
+
+        app:layout_constraintEnd_toStartOf="@+id/done"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/sticker"
         app:layout_constraintTop_toTopOf="@+id/guideline_bottom"
@@ -96,7 +103,7 @@
         android:id="@+id/bottom_overlay"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#c000"
+        android:background="#d000"
         app:layout_constraintTop_toTopOf="@+id/guideline_bottom"
         app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
         app:layout_constraintEnd_toEndOf="parent"
@@ -109,7 +116,7 @@
         android:id="@+id/top_overlay"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#c000"
+        android:background="#d000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/guideline_top"

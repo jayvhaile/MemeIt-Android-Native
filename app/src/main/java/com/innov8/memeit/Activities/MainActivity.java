@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigation bottom_nav;
     Toolbar mToolbar;
     SlidingRootNav rootNav;
-    ArrayList<String> tags = new ArrayList<>();
     MyPagerAdapter pagerAdapter;
     private String titles[] = {"Home", "Trending", "Favorites"};
 
@@ -61,18 +60,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Boolean saved) {
                 if (saved) {
-                    Log.d("fukina", "isUserDataSaved: true");
 
                     initUI(savedInstanceState);
                 } else {
-                    Log.d("fukina", "isUserDataSaved: false");
                     goToSignUpDetails();
                 }
             }
 
             @Override
             public void onFailure(Error error) {
-                Log.d("fukina", "isUserDataSaved: error "+error.getMessage());
 
                 Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
 //                Snackbar.make(mToolbar.getRootView(),"Something went wrong",Snackbar.LENGTH_SHORT).show();

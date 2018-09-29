@@ -157,6 +157,8 @@ public interface MemeInterface {
 
     //================================Memes Related=============================================
 
+    @GET("meme/{id}")
+    public Call<Meme> getMemeById(@Path("id") String id);
     @GET("meme/{id}/refresh")
     public Call<Meme> getRefreshedMeme(@Path("id") String id);
 

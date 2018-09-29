@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudinary.android.MediaManager
+import com.facebook.ads.*
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
@@ -154,7 +155,7 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
     inner class MyS : SwipeController() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
             val v = viewHolder as MemeViewHolder
-            return if (items[v.itemPosition] is Meme) {
+            return if (items.size > 0 && items[v.itemPosition] is Meme) {
                 makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
             } else {
                 makeMovementFlags(0, 0)
@@ -163,7 +164,7 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val pos = (viewHolder as MemeViewHolder).itemPosition
-            val meme = items[pos] as Meme
+            //val meme = items[pos] as Meme
             when (direction) {
                 ItemTouchHelper.LEFT -> {
                     context.toast("left")
@@ -236,7 +237,7 @@ class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
             }
             AD_TYPE -> {
                 val inflater = LayoutInflater.from(context)
-                val v = inflater.inflate(R.layout.list_item_ad, parent, false)
+                val v = inflater.inflate(R.layout.list_item_ad2, parent, false)
                 return AdHolder(v, this)
             }
             else -> {
@@ -362,7 +363,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
     }
 
     private fun toggleReactVisibility() {
-        reactGroup.visibility=if (reactGroup.visibility == VISIBLE) GONE else VISIBLE
+        reactGroup.visibility = if (reactGroup.visibility == VISIBLE) GONE else VISIBLE
     }
 
     private fun showFollowDialog() {
@@ -426,7 +427,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         }
         favButton.isChecked = meme.isMyFavourite
         memeImageV.layoutParams.width = screenWidth
-        memeImageV.layoutParams.height = (screenWidth / meme.memeImageRatio).toInt().trim(200.dp, screenHeight-200.dp)
+        memeImageV.layoutParams.height = (screenWidth / meme.memeImageRatio).toInt().trim(200.dp, screenHeight - 200.dp)
         memeImageV.requestLayout()
         memeImageV.loadMeme(meme)
     }
@@ -456,7 +457,6 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
                     return@OnMenuItemClickListener true
                 }
                 R.id.menu_report_meme -> {
-                    var reportCondidions: Array<String> = arrayOf("Pornography", "Abuse", "Violence", "Not appropriate", "Other")
                     MaterialDialog.Builder(memeAdapter.context)
                             .title("Report")
                             .items("Pornography", "Abuse", "Violence", "Not appropriate", "Other")
@@ -565,7 +565,67 @@ class MemeTemplateSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : M
 }
 
 class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
+    private val nativeAdIcon: AdIconView = itemView.findViewById(R.id.native_ad_icon)
+    private val nativeAdTitle: TextView = itemView.findViewById(R.id.native_ad_title)
+    private val nativeAdMedia: MediaView = itemView.findViewById(R.id.native_ad_media)
+    private val nativeAdSocialContext: TextView = itemView.findViewById(R.id.native_ad_social_context)
+    private val nativeAdBody: TextView = itemView.findViewById(R.id.native_ad_body)
+    private val sponsoredLabel: TextView = itemView.findViewById(R.id.native_ad_sponsored_label)
+    private val nativeAdCallToAction: Button = itemView.findViewById(R.id.native_ad_call_to_action)
+    private val adChoicesContainer: LinearLayout = itemView.findViewById(R.id.ad_choices_container)
+
+    private val nativeAd: NativeAd = NativeAd(memeAdapter.context, "YOUR_PLACEMENT_ID")
+
+
+    private fun bindAd(nativeAd: NativeAd) {
+        nativeAd.unregisterView()
+        adChoicesContainer.removeAllViews()
+        val adChoicesView = AdChoicesView(memeAdapter.context, nativeAd, true)
+        adChoicesContainer.addView(adChoicesView, 0)
+        nativeAdTitle.text = nativeAd.advertiserName
+        nativeAdBody.text = nativeAd.adBodyText
+        nativeAdSocialContext.text = nativeAd.adSocialContext
+        nativeAdCallToAction.visibility = if (nativeAd.hasCallToAction()) View.VISIBLE else View.INVISIBLE
+        nativeAdCallToAction.text = nativeAd.adCallToAction
+        sponsoredLabel.text = nativeAd.sponsoredTranslation
+        val clickableViews = listOf(nativeAdTitle, nativeAdCallToAction)
+        nativeAd.registerViewForInteraction(
+                itemView,
+                nativeAdMedia,
+                nativeAdIcon,
+                clickableViews)
+    }
+
+
     override fun bind(homeElement: HomeElement) {
-//        val ad = homeElement as AdElement
+        nativeAd.setAdListener(object : NativeAdListener{
+            override fun onAdClicked(p0: Ad) {
+                log("qqq facebook add","ad clicked")
+
+            }
+
+            override fun onMediaDownloaded(p0: Ad) {
+                log("qqq facebook add","media downloaded")
+
+            }
+
+            override fun onError(p0: Ad, p1: AdError) {
+                log("qqq facebook add","ad failed",p1.errorMessage)
+            }
+
+            override fun onLoggingImpression(p0: Ad) {
+                log("qqq facebook add","logging impression")
+            }
+
+            override fun onAdLoaded(ad: Ad) {
+                log("qqq facebook add","ad loaded")
+
+                if (nativeAd != ad) {
+                    return
+                }
+                bindAd(nativeAd)
+            }
+        })
+        nativeAd.loadAd()
     }
 }

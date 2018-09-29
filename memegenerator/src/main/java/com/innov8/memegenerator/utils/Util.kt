@@ -6,8 +6,12 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat.PNG
 import android.graphics.BitmapFactory
+import android.graphics.RectF
 import android.os.AsyncTask
+import android.os.Build
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -125,22 +129,35 @@ fun Context.loadBitmap(id:Int,quality:Float):Bitmap{
     opt.inJustDecodeBounds=false
     return BitmapFactory.decodeResource(resources,id,opt)
 }
+fun Context.loadBitmap(id:Int,reqWidth:Int,reqHeight: Int=reqWidth):Bitmap{
+    val opt=BitmapFactory.Options()
+    opt.inJustDecodeBounds=true
+    BitmapFactory.decodeResource(resources,id,opt)
+    opt.inSampleSize= calcSampleSize(opt,reqWidth.dp(this),reqHeight.dp(this))
+    opt.inJustDecodeBounds=false
+    return BitmapFactory.decodeResource(resources,id,opt)
+}
+
 fun Context.getDrawableIdByName(name:String):Int{
     return resources.getIdentifier(name,"drawable",packageName)
+}
+
+fun RectF.enlarge(x:Float, y:Float=x): RectF {
+    return RectF(this.left-x,this.top-y,this.right+x,this.bottom+y)
 }
 fun Float.toSP(context:Context):Float{
         return this/context.resources.displayMetrics.scaledDensity
 }
-fun Float.fromSP(context:Context):Float{
+fun Float.sp(context:Context):Float{
     return this*context.resources.displayMetrics.scaledDensity
 }
 fun Float.toDP(context:Context):Float{
     return this/context.resources.displayMetrics.density
 }
-fun Float.fromDPToPX(context:Context):Float{
+fun Float.dp(context:Context):Float{
     return this*context.resources.displayMetrics.density
 }
-fun Int.fromDPToPX(context:Context):Int{
+fun Int.dp(context:Context):Int{
     return (this*context.resources.displayMetrics.density).toInt()
 }
 fun Context.goTo(clazz: Class<out Activity>){
@@ -162,4 +179,18 @@ fun Bitmap.toByteArray(format:Bitmap.CompressFormat=PNG, quality:Int=100):ByteAr
     val stream= ByteArrayOutputStream()
     compress(format, quality, stream)
     return stream.toByteArray()
+}
+fun MotionEvent.inRect(rectF: RectF):Boolean=rectF.contains(this.x,this.y)
+fun Activity.makeFullScreen() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    } else {
+        window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    }
 }
