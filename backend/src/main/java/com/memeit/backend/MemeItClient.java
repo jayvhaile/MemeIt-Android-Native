@@ -175,7 +175,4 @@ public class MemeItClient{
     public MemeInterface getInterface() {
         return memeInterface;
     }
-
-
-
 }

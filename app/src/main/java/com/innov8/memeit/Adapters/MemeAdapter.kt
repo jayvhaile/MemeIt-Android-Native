@@ -22,6 +22,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.*
+import com.innov8.memeit.R
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.Activities.ReactorListActivity
