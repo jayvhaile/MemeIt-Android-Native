@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/native_ad_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:background = "#fff"
+    android:layout_height="wrap_content">
 
     <com.facebook.ads.AdIconView
         android:id="@+id/native_ad_icon"
@@ -17,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:background="#000" />
 
-    <TextView
+    <com.innov8.memegenerator.customViews.FontTextView
         android:id="@+id/native_ad_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Test Ad" />
 
-    <TextView
+    <com.innov8.memegenerator.customViews.FontTextView
         android:id="@+id/native_ad_sponsored_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,10 +71,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/native_ad_sponsored_label" />
 
-    <TextView
+    <com.innov8.memegenerator.customViews.FontTextView
         android:id="@+id/native_ad_social_context"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="11dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -89,12 +90,14 @@
         app:layout_constraintTop_toBottomOf="@+id/native_ad_media"
         tools:text="Get it on Google Play" />
 
-    <TextView
+    <com.innov8.memegenerator.customViews.FontTextView
         android:id="@+id/native_ad_body"
-        android:layout_width="wrap_content"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop = "8dp"
+        android:paddingBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:ellipsize="end"

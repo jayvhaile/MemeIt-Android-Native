@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -146,6 +147,7 @@ public class CircularProgressButton extends AppCompatButton implements AnimatedB
 
             typedArray.recycle();
             typedArrayBG.recycle();
+            this.setTypeface(Typeface.createFromAsset(context.getAssets(),"fonts/avenir.ttf"));
         }
 
         mState = State.IDLE;

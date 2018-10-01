@@ -37,11 +37,11 @@ public class LoginFragment extends AuthFragment implements View.OnClickListener 
         view.findViewById(R.id.login_facebook).setOnClickListener(this);
         view.findViewById(R.id.rel).setOnClickListener(this);
         /* This sets the bottom padding that makes the views not go underneath the navigation bar */
-        view.findViewById(R.id.rel).setPadding(
-                0,
-                (int) (16 * getResources().getDisplayMetrics().density + 0.5f),
-                0,
-                (int) (10 * getResources().getDisplayMetrics().density + 0.5f) + AuthActivity.getSoftButtonsBarHeight(getActivity()));
+//        view.findViewById(R.id.rel).setPadding(
+//                0,
+//                (int) (16 * getResources().getDisplayMetrics().density + 0.5f),
+//                0,
+//                (int) (10 * getResources().getDisplayMetrics().density + 0.5f) + AuthActivity.getSoftButtonsBarHeight(getActivity()));
 
 
         signInCompletedListener = new OnCompleteListener<Void>() {

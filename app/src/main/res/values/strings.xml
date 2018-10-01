@@ -17,17 +17,17 @@
         <item>High</item>
         <item>Very High</item>
     </string-array>
-    <string name="intro_slide2_title">MemeIt</string>
-    <string name="intro_slide3_title">MemeIt</string>
-    <string name="intro_slide4_title">MemeIt</string>
-    <string name="intro_slide5_title">MemeIt</string>
+    <string name="intro_slide2_title">Create memes</string>
+    <string name="intro_slide3_title">Grow an audience</string>
+    <string name="intro_slide4_title">Share your memes</string>
+    <string name="intro_slide5_title">Explore memes</string>
 
     <string name="pref_image_quality_def">Medium</string>
     <string name="intro_slide1_description">Your window to the wonderful world of memes.</string>
-    <string name="intro_slide2_description">Your window to the wonderful world of memes.</string>
-    <string name="intro_slide3_description">Your window to the wonderful world of memes.</string>
-    <string name="intro_slide4_description">Your window to the wonderful world of memes.</string>
-    <string name="intro_slide5_description">Your window to the wonderful world of memes.</string>
+    <string name="intro_slide2_description">Use our powerful meme creator to make hilarious memes!</string>
+    <string name="intro_slide3_description">Grow your meme channel by gaining more followers</string>
+    <string name="intro_slide4_description">Your memes are your creations. Go ahead, show them off!</string>
+    <string name="intro_slide5_description">Browse through the large collection of memes available from hundreds of memers.</string>
 
     <string-array name="intro_slide_title">
         <item>MemeIt</item>
