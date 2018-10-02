@@ -575,10 +575,10 @@ class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemVi
     private val nativeAdCallToAction: Button = itemView.findViewById(R.id.native_ad_call_to_action)
     private val adChoicesContainer: LinearLayout = itemView.findViewById(R.id.ad_choices_container)
 
-    private val nativeAd: NativeAd = NativeAd(memeAdapter.context, "YOUR_PLACEMENT_ID")
 
 
     private fun bindAd(nativeAd: NativeAd) {
+
         nativeAd.unregisterView()
         adChoicesContainer.removeAllViews()
         val adChoicesView = AdChoicesView(memeAdapter.context, nativeAd, true)
@@ -599,6 +599,7 @@ class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemVi
 
 
     override fun bind(homeElement: HomeElement) {
+        val nativeAd: NativeAd = NativeAd(memeAdapter.context, "YOUR_PLACEMENT_ID")
         nativeAd.setAdListener(object : NativeAdListener{
             override fun onAdClicked(p0: Ad) {
                 log("qqq facebook add","ad clicked")

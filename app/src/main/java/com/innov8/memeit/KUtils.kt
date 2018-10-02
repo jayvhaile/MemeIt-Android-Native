@@ -29,11 +29,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.innov8.memeit.MemeItApp.Companion.instanxe as it
 
-fun launchTask(block: suspend CoroutineScope.() -> Unit): Job {
-    return launch { block() }
-}
-
-suspend fun <T> runAsync(block: suspend CoroutineScope.() -> T): T = async(CommonPool) { block() }.await()
+//fun launchTask(block: suspend CoroutineScope.() -> Unit): Job {
+//    return launch { block() }
+//}
+//
+//suspend fun <T> runAsync(block: suspend CoroutineScope.() -> T): T = async(CommonPool) { block() }.await()
 
 val SECOND_MILLIS = 1000L
 val MINUTE_MILLIS = SECOND_MILLIS * 60
