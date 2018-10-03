@@ -16,8 +16,9 @@ public class AuthFragment extends Fragment {
     protected AuthActivity getAuthActivity(){
         return (AuthActivity) getActivity();
     }
-
+    protected boolean mLoading;
     protected void setLoading(boolean loading){
+        mLoading=loading;
         if (loading){
             actionButton.startAnimation();
         }

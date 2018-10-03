@@ -2,10 +2,13 @@ package com.innov8.memeit.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.innov8.memeit.Activities.AuthActivity;
 import com.innov8.memeit.CustomClasses.CustomMethods;
@@ -14,6 +17,8 @@ import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.dataclasses.User;
 import com.memeit.backend.utilis.OnCompleteListener;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 public class SignUpFragment extends AuthFragment implements View.OnClickListener {
     public SignUpFragment() {
     }
@@ -21,9 +26,11 @@ public class SignUpFragment extends AuthFragment implements View.OnClickListener
     EditText userNameV;
     EditText emailV;
     EditText passwordV;
+    EditText passwordConfrimV;
 
 
     OnCompleteListener<Void> onCompleteListener;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -32,9 +39,19 @@ public class SignUpFragment extends AuthFragment implements View.OnClickListener
         userNameV = view.findViewById(R.id.signup_username);
         emailV = view.findViewById(R.id.signup_email);
         passwordV = view.findViewById(R.id.signup_password);
+        passwordConfrimV = view.findViewById(R.id.signup_confirm);
         actionButton = view.findViewById(R.id.signup_btn);
 
-        CustomMethods.makeEditTextsAvenir(getActivity(), view, R.id.signup_password, R.id.signup_username, R.id.signup_confirm);
+        passwordConfrimV.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                InputMethodManager
+                        mgr = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+                mgr.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                signupWithUsername();
+                return true;
+            }
+        });
 
         /* This sets the bottom padding that makes the views not go underneath the navigation bar */
         view.findViewById(R.id.rel).setPadding(
@@ -74,15 +91,16 @@ public class SignUpFragment extends AuthFragment implements View.OnClickListener
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MemeItAuth.GOOGLE_SIGNIN_REQUEST_CODE) {
-            MemeItAuth.getInstance().handleGoogleSignUpResult(getContext(),data, new OnCompleteListener<User>() {
+            MemeItAuth.getInstance().handleGoogleSignUpResult(getContext(), data, new OnCompleteListener<User>() {
                 @Override
                 public void onSuccess(User user) {
-                   getAuthActivity().setupFragment.fromGoogle(user.getName(), user.getImageUrl());
-                   getAuthActivity().setCurrentFragment(AuthActivity.FRAGMENT_SETUP);
+                    getAuthActivity().setupFragment.fromGoogle(user.getName(), user.getImageUrl());
+                    getAuthActivity().setCurrentFragment(AuthActivity.FRAGMENT_SETUP);
                 }
+
                 @Override
                 public void onFailure(Error error) {
-                   getAuthActivity().showError(error.getMessage());
+                    getAuthActivity().showError(error.getMessage());
                 }
             });
         }
@@ -107,18 +125,22 @@ public class SignUpFragment extends AuthFragment implements View.OnClickListener
     }
 
     private void signupWithUsername() {
+        if (mLoading) return;
         String username = userNameV.getText().toString();
         String email = emailV.getText().toString();
         String password = passwordV.getText().toString();
-        if (!CustomMethods.isUsernameValid(username)){
+        String passwordConfrim = passwordConfrimV.getText().toString();
+        if (!CustomMethods.isUsernameValid(username)) {
             getAuthActivity().showError("Username should at least be 5 in length!");
-        }else if(!CustomMethods.isEmailValid(email)){//todo change back to 8
+        } else if (!CustomMethods.isEmailValid(email)) {//todo change back to 8
             getAuthActivity().showError("Invalid Email!");
-        }else if(password.length() <= 1){//todo change back to 8
+        } else if (!password.equals(passwordConfrim)) {
+            getAuthActivity().showError("Password does not match!");
+        } else if (password.length() <= 1) {//todo change back to 8
             getAuthActivity().showError("Password should at least be 8 in length!");
-        }else{
+        } else {
             setLoading(true);
-            MemeItAuth.getInstance().signUpWithUsername(getContext(),username,email, password, onCompleteListener);
+            MemeItAuth.getInstance().signUpWithUsername(getContext(), username, email, password, onCompleteListener);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.innov8.memeit.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.innov8.memeit.Adapters.IntroTransformer;
 import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.R;
 
@@ -54,6 +56,7 @@ public class IntroActivity extends AppCompatActivity{
 
             }
         });
+        viewPager.setPageTransformer(false,new IntroTransformer());
         viewPager.setAdapter(adapter);
         CustomMethods.makeBackgroundScrollAnimate(this, R.id.background_login_1, R.id.background_login_2);
         selectDot(0);
@@ -99,7 +102,7 @@ public class IntroActivity extends AppCompatActivity{
         }
         String []titles;
         String []descriptions;
-        int[] drawables;
+        TypedArray drawables;
 
         int pos;
         @Override
@@ -108,7 +111,7 @@ public class IntroActivity extends AppCompatActivity{
             pos=getArguments().getInt(NUMBER);
             titles = getContext().getResources().getStringArray(R.array.intro_slide_title);
             descriptions = getContext().getResources().getStringArray(R.array.intro_slide_description);
-            drawables = getContext().getResources().getIntArray(R.array.intro_drawables);
+            drawables = getResources().obtainTypedArray(R.array.intro_drawables);
         }
 
         @Override
@@ -126,6 +129,8 @@ public class IntroActivity extends AppCompatActivity{
 
             titleV.setText(titles[pos]);
             descV.setText(descriptions[pos]);
+            iv.setImageResource(drawables.getResourceId(pos, -1));
+
         }
     }
 

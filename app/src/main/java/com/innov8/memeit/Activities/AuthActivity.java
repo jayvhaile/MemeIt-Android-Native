@@ -46,6 +46,7 @@ public class AuthActivity extends AppCompatActivity {
         } else {
             setCurrentFragment(FRAGMENT_LOGIN);
         }
+
     }
 
     private Fragment getFragmentForInt(int i) {

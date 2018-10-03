@@ -2,10 +2,13 @@ package com.innov8.memeit.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.innov8.memeit.Activities.AuthActivity;
 import com.innov8.memeit.Activities.MainActivity;
@@ -13,6 +16,8 @@ import com.innov8.memeit.CustomClasses.CustomMethods;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.utilis.OnCompleteListener;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class LoginFragment extends AuthFragment implements View.OnClickListener {
     public LoginFragment() {
@@ -27,7 +32,6 @@ public class LoginFragment extends AuthFragment implements View.OnClickListener 
         View view = inflater.inflate(R.layout.fragment_login2, container, false);
 
 
-        CustomMethods.makeEditTextsAvenir(getActivity(), view, R.id.login_password, R.id.login_username);
 
         usernameV = view.findViewById(R.id.login_username);
         passwordV = view.findViewById(R.id.login_password);
@@ -36,12 +40,22 @@ public class LoginFragment extends AuthFragment implements View.OnClickListener 
         view.findViewById(R.id.login_google).setOnClickListener(this);
         view.findViewById(R.id.login_facebook).setOnClickListener(this);
         view.findViewById(R.id.rel).setOnClickListener(this);
+        passwordV.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                InputMethodManager
+                        mgr=(InputMethodManager)getContext().getSystemService(INPUT_METHOD_SERVICE);
+                mgr.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                loginWithUserName();
+                return true;
+            }
+        });
         /* This sets the bottom padding that makes the views not go underneath the navigation bar */
-        view.findViewById(R.id.rel).setPadding(
-                0,
-                (int) (16 * getResources().getDisplayMetrics().density + 0.5f),
-                0,
-                (int) (10 * getResources().getDisplayMetrics().density + 0.5f) + AuthActivity.getSoftButtonsBarHeight(getActivity()));
+//        view.findViewById(R.id.rel).setPadding(
+//                0,
+//                (int) (16 * getResources().getDisplayMetrics().density + 0.5f),
+//                0,
+//                (int) (10 * getResources().getDisplayMetrics().density + 0.5f) + AuthActivity.getSoftButtonsBarHeight(getActivity()));
 
 
         signInCompletedListener = new OnCompleteListener<Void>() {
@@ -89,6 +103,7 @@ public class LoginFragment extends AuthFragment implements View.OnClickListener 
     }
 
     private void loginWithUserName() {
+        if (mLoading) return;
         final String username = usernameV.getText().toString();
         final String password = passwordV.getText().toString();
         if (!CustomMethods.isUsernameValid(username)) {

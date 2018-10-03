@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:background="@drawable/many_pics_optimized">
 
-    <EditText
+    <com.innov8.memeit.CustomClasses.FontEditText
         android:id="@+id/signup_username"
         android:layout_width="0dp"
         android:layout_height="@dimen/auth_item_height"
@@ -14,17 +14,19 @@
         android:background="@drawable/edittextlogin"
         android:hint="Username"
         android:inputType="textPersonName"
+        android:imeOptions="actionNext"
         android:paddingLeft="16dp"
         app:layout_constraintBottom_toTopOf="@+id/signup_email"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline7" />
-    <EditText
+    <com.innov8.memeit.CustomClasses.FontEditText
         android:id="@+id/signup_email"
         android:layout_width="0dp"
         android:layout_height="@dimen/auth_item_height"
         android:layout_marginBottom="16dp"
         android:background="@drawable/edittextlogin"
+        android:imeOptions="actionNext"
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:paddingLeft="16dp"
@@ -33,13 +35,14 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline7" />
 
-    <EditText
+    <com.innov8.memeit.CustomClasses.FontEditText
         android:id="@+id/signup_password"
         android:layout_width="0dp"
         android:layout_height="@dimen/auth_item_height"
         android:layout_marginBottom="16dp"
         android:background="@drawable/edittextlogin"
         android:hint="Password"
+        android:imeOptions="actionNext"
         android:inputType="textPassword"
         android:paddingLeft="16dp"
         app:layout_constraintBottom_toTopOf="@+id/signup_confirm"
@@ -47,7 +50,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline7" />
 
-    <EditText
+    <com.innov8.memeit.CustomClasses.FontEditText
         android:id="@+id/signup_confirm"
         android:layout_width="0dp"
         android:layout_height="@dimen/auth_item_height"
@@ -56,6 +59,7 @@
         android:hint="Confirm password"
         android:inputType="textPassword"
         android:paddingLeft="16dp"
+        android:imeOptions="actionDone"
         app:layout_constraintBottom_toTopOf="@+id/hold"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintHorizontal_bias="0.0"
@@ -107,11 +111,12 @@
         android:id="@+id/signup_google"
         android:layout_width="@dimen/auth_icon_size"
         android:layout_height="@dimen/auth_icon_size"
+
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:src="@drawable/google"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toBottomOf="@+id/done" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <ImageView
         android:id="@+id/signup_facebook"
@@ -119,21 +124,20 @@
         android:layout_height="@dimen/auth_icon_size"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+
         android:src="@drawable/fb"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
-        app:layout_constraintTop_toBottomOf="@+id/done" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <com.innov8.memeit.CustomClasses.FontTextView
         android:id="@+id/rel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginTop="0dp"
         android:gravity="center"
         android:text="Already signed up? Login"
         android:textColor="#fff"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
@@ -172,6 +176,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/auth_bottom_guide" />
+        app:layout_constraintGuide_end="144dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

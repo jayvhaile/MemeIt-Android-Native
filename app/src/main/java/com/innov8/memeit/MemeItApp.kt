@@ -15,7 +15,7 @@ class MemeItApp : Application() {
         lateinit var instanxe:Application
         private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/"
         private const val SERVER_URL = "https://safe-beyond-33046.herokuapp.com/api/"
-        private const val DEVELOPER_MODE=true
+        private const val DEVELOPER_MODE=false
     }
 
     override fun onCreate() {

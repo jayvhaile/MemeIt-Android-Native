@@ -41,12 +41,13 @@
         app:roundingBorderWidth="2dp"
         app:roundingBorderColor="@color/white"/>
 
-    <EditText
+    <com.innov8.memeit.CustomClasses.FontEditText
         android:id="@+id/name_setup"
         android:layout_width="0dp"
         android:layout_height="@dimen/auth_item_height"
         android:layout_marginBottom="16dp"
         android:background="@drawable/edittextlogin"
+        android:imeOptions="actionDone"
         android:hint="Name"
         android:inputType="textEmailAddress"
         android:paddingLeft="16dp"

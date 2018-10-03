@@ -2,13 +2,17 @@ package com.innov8.memeit.Fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.hardware.input.InputManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cloudinary.android.MediaManager;
@@ -26,6 +30,8 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class SetupFragment extends AuthFragment implements View.OnClickListener {
     public SetupFragment() {
@@ -61,6 +67,17 @@ public class SetupFragment extends AuthFragment implements View.OnClickListener 
         });
         actionButton=view.findViewById(R.id.finish);
         actionButton.setOnClickListener(this);
+
+        nameV.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                InputMethodManager
+                        mgr=(InputMethodManager)getContext().getSystemService(INPUT_METHOD_SERVICE);
+                mgr.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                finish();
+                return true;
+            }
+        });
         nameV.setText(name);
         profileV.setImageURI(image_url);
 
@@ -77,6 +94,7 @@ public class SetupFragment extends AuthFragment implements View.OnClickListener 
     }
 
     private void finish() {
+        if (mLoading) return;
         String name = nameV.getText().toString();
         if(TextUtils.isEmpty(name)){
             getAuthActivity().showError("Name cannot be empty!");
