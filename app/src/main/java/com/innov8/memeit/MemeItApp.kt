@@ -16,6 +16,8 @@ class MemeItApp : Application() {
         private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/"
         private const val SERVER_URL = "https://safe-beyond-33046.herokuapp.com/api/"
         private const val DEVELOPER_MODE=false
+        private const val USE_LOCAL_SERVER=true
+
     }
 
     override fun onCreate() {
@@ -38,7 +40,7 @@ class MemeItApp : Application() {
 
         super.onCreate()
         instanxe=this
-        MemeItClient.init(applicationContext, SERVER_URL)
+        MemeItClient.init(applicationContext,if(USE_LOCAL_SERVER) LOCAL_SERVER_URL else SERVER_URL)
         val config = mapOf(
                 "cloud_name" to "innov8",
                 "api_key" to "591249199742556",

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.cloudinary.android.MediaManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.innov8.memeit.Adapters.MemeAdapter;
@@ -21,6 +22,7 @@ import com.innov8.memeit.Fragments.ProfileFragment;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItAuth;
 import com.memeit.backend.MemeItUsers;
+import com.memeit.backend.kotlin.MemeItClient;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.minibugdev.drawablebadge.DrawableBadge;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
@@ -38,7 +40,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
+import okhttp3.ResponseBody;
 
 public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
@@ -60,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Boolean saved) {
                 if (saved) {
-
                     initUI(savedInstanceState);
                 } else {
                     goToSignUpDetails();

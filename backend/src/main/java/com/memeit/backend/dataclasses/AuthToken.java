@@ -2,10 +2,10 @@ package com.memeit.backend.dataclasses;
 
 public class AuthToken {
     private String token;
-    private String uid;
+    private MyUser user;
 
-    public String getUid() {
-        return uid;
+    public MyUser getMyUser() {
+        return user;
     }
 
     public String getToken() {

@@ -29,6 +29,8 @@ allprojects {
         maven {
             url 'https://maven.google.com/'
         }
+        maven{ url "http://dl.bintray.com/waynejo/maven"}
+
     }
 }
 task clean(type: Delete) {

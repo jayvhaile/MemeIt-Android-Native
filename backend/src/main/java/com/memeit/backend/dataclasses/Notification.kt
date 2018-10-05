@@ -38,9 +38,10 @@ class ReactionNotification(id: String,
 (2, id, "$reactorName reacted to your meme", "", date, seen) {
 
     fun getMeme(): Meme =
-            Meme(memeId, memePic, memeType)
-    fun getReaction():Reaction=
-            Reaction.create(Reaction.ReactionType.values()[reactionType],memeId)
+            Meme(id = memeId, imageId = memePic, type = memeType.name)
+
+    fun getReaction(): Reaction =
+            Reaction.create(Reaction.ReactionType.values()[reactionType], memeId)
 
 }
 
@@ -57,7 +58,7 @@ class CommentNotification(id: String,
 (3, id, "$commenterName commented on your meme", comment, date, seen) {
 
     fun getMeme(): Meme =
-            Meme(memeId, memePic, memeType)
+            Meme(id=memeId,imageId =  memePic,type= memeType.name)
 
 }
 

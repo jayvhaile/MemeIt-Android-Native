@@ -35,19 +35,7 @@ public class MemeItMemes {
     }
 
 
-    public void getRefreshedMeme(final Meme meme, final OnCompleteListener<Meme> listener) {
-        MemeItClient.getInstance().getInterface()
-                .getRefreshedMeme(meme.getMemeId())
-                .enqueue(new MyCallBack<Meme>(listener) {
-                    @Override
-                    public void onResponse(Call<Meme> call, Response<Meme> response) {
-                        if (response.isSuccessful()) {
-                            checkAndFireSuccess(this.listener,meme.refresh(response.body()));
-                        } else
-                            super.onResponse(call, response);
-                    }
-                });
-    }
+
     public void getMemeById(String mid, final OnCompleteListener<Meme> listener) {
         MemeItClient.getInstance().getInterface()
                 .getMemeById(mid)

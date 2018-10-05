@@ -7,11 +7,10 @@ android {
         applicationId "com.innov8.memeit"
         minSdkVersion 16
         targetSdkVersion 28
-        buildToolsVersion = '28.0.3'
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled=true
+        multiDexEnabled = true
     }
     buildTypes {
         release {
@@ -19,13 +18,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildToolsVersion '28.0.3'
 }
 
-repositories {
-    mavenCentral()
-    maven{ url "http://dl.bintray.com/waynejo/maven"}
-}
-apply plugin: 'com.google.gms.google-services'
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':memegenerator')
@@ -42,52 +37,48 @@ dependencies {
     implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
     implementation 'com.facebook.fresco:fresco:1.9.0'
     implementation 'com.facebook.fresco:animated-gif:1.9.0'
-//    implementation 'com.facebook.fresco:animated-webp:1.9.0'
-//    implementation 'com.facebook.fresco:webpsupport:1.9.0'
+    //    implementation 'com.facebook.fresco:animated-webp:1.9.0'
+    //    implementation 'com.facebook.fresco:webpsupport:1.9.0'
     implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.squareup.okio:okio:1.15.0'
     implementation 'com.github.varunest:sparkbutton:1.0.5'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
-//Firebase stuff
+    //Firebase stuff
     implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.google.firebase:firebase-messaging:17.3.2'
     implementation 'com.google.firebase:firebase-dynamic-links:16.1.1'
-
-
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
     implementation 'com.github.minibugdev:drawablebadge:1.0.3'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-
     implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.1'
     implementation 'com.google.firebase:firebase-config:16.0.0'
     implementation 'com.facebook.android:audience-network-sdk:5.0.0'
-
     // Add dependency
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
-    implementation 'com.waynejo:androidndkgif:0.3.3'
-//
-//    implementation 'com.github.pchmn:MaterialChipsInput:1.0.8'
-//    implementation 'com.github.apl-devs:appintro:v4.2.3'
-//    implementation 'com.daimajia.easing:library:2.0@aar'
-//    implementation 'com.daimajia.androidanimations:library:2.3@aar'
-//    implementation 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
-//    implementation 'com.github.BrotherV:Floating-ArcMenu:1.1.0.2'
-//    implementation 'com.zhihu.android:matisse:0.5.1'
-//    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
-
-
+    //implementation 'com.waynejo:androidndkgif:0.3.3'
+    //
+    //    implementation 'com.github.pchmn:MaterialChipsInput:1.0.8'
+    //    implementation 'com.github.apl-devs:appintro:v4.2.3'
+    //    implementation 'com.daimajia.easing:library:2.0@aar'
+    //    implementation 'com.daimajia.androidanimations:library:2.3@aar'
+    //    implementation 'com.github.Andy671:Dachshund-Tab-Layout:v0.3.3'
+    //    implementation 'com.github.BrotherV:Floating-ArcMenu:1.1.0.2'
+    //    implementation 'com.zhihu.android:matisse:0.5.1'
+    //    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
 }
+repositories {
+    mavenCentral()
+}
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android-extensions'
 kotlin {
     experimental {
         coroutines "enable"
     }
 }
-apply plugin: 'com.google.gms.google-services'

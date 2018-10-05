@@ -6,20 +6,18 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        buildToolsVersion='28.0.3'
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.support.test.runner.AndroidJUnitRunner"
 
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    buildToolsVersion '28.0.3'
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -33,7 +31,6 @@ dependencies {
     implementation 'com.squareup.okio:okio:1.15.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.facebook.android:facebook-login:4.37.0'
-
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.19.0'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'

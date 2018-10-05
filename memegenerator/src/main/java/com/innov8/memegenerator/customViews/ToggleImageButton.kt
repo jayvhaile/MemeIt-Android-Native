@@ -4,19 +4,16 @@ import android.content.Context
 import android.graphics.Color
 import androidx.appcompat.widget.AppCompatImageButton
 import android.util.AttributeSet
-import android.widget.SeekBar
 import com.innov8.memegenerator.R
 
 class ToggleImageButton : AppCompatImageButton {
     var isChecked: Boolean = false
         private set
-    private var checkedbackground: Int = 0
-    private var uncheckedbackground: Int = 0
+    private var checkedColor: Int = Color.RED
+    private var uncheckedColor: Int = Color.WHITE
 
     var onCheckChanged:(checked:Boolean,fromUser:Boolean)->Unit={checked, fromUser ->  }
     constructor(context: Context) : super(context) {
-        checkedbackground = Color.LTGRAY
-        uncheckedbackground = Color.TRANSPARENT
         setChecked(false,false)
     }
 
@@ -35,8 +32,8 @@ class ToggleImageButton : AppCompatImageButton {
                 0, 0)
         try {
             isChecked = a.getBoolean(R.styleable.ToggleImageButton_checked, false)
-            checkedbackground = a.getColor(R.styleable.ToggleImageButton_checked_background, Color.LTGRAY)
-            uncheckedbackground = a.getColor(R.styleable.ToggleImageButton_checked_background, Color.TRANSPARENT)
+            checkedColor = a.getColor(R.styleable.ToggleImageButton_checked_background, Color.RED)
+            uncheckedColor = a.getColor(R.styleable.ToggleImageButton_checked_background, Color.WHITE)
         } finally {
             a.recycle()
         }
@@ -44,16 +41,15 @@ class ToggleImageButton : AppCompatImageButton {
         setOnClickListener { e ->
             toggleCheck(true)
         }
+        setBackgroundColor(Color.TRANSPARENT)
     }
-    fun setChecked(checked: Boolean, fromUser: Boolean) {
+    fun setChecked(checked: Boolean, fromUser: Boolean=false) {
         this.isChecked = checked
         onCheckChanged(checked,fromUser)
         if (checked) {
-            setBackgroundColor(checkedbackground)
+            setColorFilter(checkedColor)
         } else {
-            setBackgroundColor(uncheckedbackground)
-            val textSizeV: SeekBar
-
+            setColorFilter(uncheckedColor)
         }
     }
     fun toggleCheck(fromUser: Boolean) {

@@ -124,12 +124,12 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
                         .setFormatter {
                             MediaManager.get()
                                     .url()
-                                    .source(it.memeImageUrl)
+                                    .source(it.imageId)
                                     .generate()
                         }
                         .setCustomDraweeHierarchyBuilder(hierarchy)
                         .setBackgroundColor(Color.WHITE)
-                        .setStartPosition(list.map { it.memeId }.indexOf(memeID))
+                        .setStartPosition(list.map { it.id }.indexOf(memeID))
                         .show()
             }
             memeViewHolder
@@ -184,7 +184,7 @@ class ListMemeAdapter(context: Context) : MemeAdapter(context) {
     }
 
     override fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
-        if (viewType != MEME_TYPE)
+        if (viewType != HomeElement.MEME_TYPE)
             throw IllegalStateException("View Type must only be MEME_TYPE in ListMemeAdapter")
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.list_item_meme, parent, false)
@@ -198,7 +198,7 @@ class GridMemeAdapter(context: Context) : MemeAdapter(context) {
     }
 
     override fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
-        if (viewType != MEME_TYPE)
+        if (viewType != HomeElement.MEME_TYPE)
             throw IllegalStateException("View Type must only be MEME_TYPE in GridMemeAdapter")
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.list_item_meme_grid, parent, false)
@@ -216,27 +216,27 @@ class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
     val temlplatesPool = RecyclerView.RecycledViewPool()
     override fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
         when (viewType) {
-            MEME_TYPE -> {
+            HomeElement.MEME_TYPE -> {
                 val inflater = LayoutInflater.from(context)
                 val view = inflater.inflate(R.layout.list_item_meme, parent, false)
                 return MemeListViewHolder(view, this)
             }
-            USER_SUGGESTION_TYPE -> {
+            HomeElement.USER_SUGGESTION_TYPE -> {
                 val inflater = LayoutInflater.from(context)
                 val v = inflater.inflate(R.layout.list_item_list, parent, false)
                 return UserSuggestionHolder(v, this)
             }
-            TAG_SUGGESTION_TYPE -> {
+            HomeElement.TAG_SUGGESTION_TYPE -> {
                 val inflater = LayoutInflater.from(context)
                 val v = inflater.inflate(R.layout.list_item_list, parent, false)
                 return TagSuggestionHolder(v, this)
             }
-            MEME_TEMPLATE_SUGGESTION_TYPE -> {
+            HomeElement.MEME_TEMPLATE_SUGGESTION_TYPE -> {
                 val inflater = LayoutInflater.from(context)
                 val v = inflater.inflate(R.layout.list_item_list, parent, false)
                 return MemeTemplateSuggestionHolder(v, this)
             }
-            AD_TYPE -> {
+            HomeElement.AD_TYPE -> {
                 val inflater = LayoutInflater.from(context)
                 val v = inflater.inflate(R.layout.list_item_ad2, parent, false)
                 return AdHolder(v, this)
@@ -272,7 +272,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 
 
     init {
-//        memeImageV.setOnClickListener { memeClickedListener?.invoke(getCurrentMeme().memeId) }
+//        memeImageV.setOnClickListener { memeClickedListener?.invoke(getCurrentMeme().id) }
         commentBtnV.setOnClickListener {
             val meme = getCurrentMeme()
             val intent = Intent(memeAdapter.context, CommentsActivity::class.java)
@@ -281,12 +281,12 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         }
         posterPicV.setOnClickListener {
             val i = Intent(memeAdapter.context, ProfileActivity::class.java)
-            i.putExtra("user", getCurrentMeme().poster.toUser())
+            i.putExtra("user", getCurrentMeme().poster?.toUser())
             memeAdapter.context.startActivity(i)
         }
         reactionCountV.setOnClickListener {
             val i = Intent(memeAdapter.context, ReactorListActivity::class.java)
-            i.putExtra("mid", getCurrentMeme().memeId)
+            i.putExtra("mid", getCurrentMeme().id)
             memeAdapter.context.startActivity(i)
         }
 
@@ -334,7 +334,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         favButton.setOnClickListener {
             val meme = getCurrentMeme()
             if (meme.isMyFavourite)
-                MemeItMemes.getInstance().removeFromFavourites(meme.memeId, object : OnCompleteListener<ResponseBody> {
+                MemeItMemes.getInstance().removeFromFavourites(meme.id, object : OnCompleteListener<ResponseBody> {
                     override fun onSuccess(responseBody: ResponseBody) {
                         meme.isMyFavourite = false
                         favButton.isChecked = false
@@ -345,7 +345,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
                     }
                 })
             else
-                MemeItMemes.getInstance().addToFavourites(meme.memeId, object : OnCompleteListener<ResponseBody> {
+                MemeItMemes.getInstance().addToFavourites(meme.id, object : OnCompleteListener<ResponseBody> {
                     override fun onSuccess(responseBody: ResponseBody) {
                         meme.isMyFavourite = true
                         favButton.playAnimation()
@@ -389,7 +389,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
     }
 
     private fun react(reactionType: Reaction.ReactionType?, finalReactRes: Int) {
-        MemeItMemes.getInstance().reactToMeme(Reaction.create(reactionType, getCurrentMeme().memeId), object : OnCompleteListener<ResponseBody> {
+        MemeItMemes.getInstance().reactToMeme(Reaction.create(reactionType, getCurrentMeme().id), object : OnCompleteListener<ResponseBody> {
             override fun onSuccess(responseBody: ResponseBody) {
                 getCurrentMeme().myReaction = Reaction.create(reactionType, null)
                 reactButton.setActiveImage(finalReactRes)
@@ -408,12 +408,13 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         val meme = homeElement as Meme
 
         reactGroup.visibility = GONE
-        posterNameV.text = meme.poster.name
-        posterPicV.text = meme.poster.name.prefix()
+
+        posterNameV.text = meme.poster?.name
+        posterPicV.text = meme.poster?.name.prefix()
         reactionCountV.text = String.format("%d people reacted", meme.reactionCount)
         commentCountV.text = meme.commentCount.toString()
-        posterPicV.loadImage(meme.poster.profileUrl)
-        memeDateV.text = meme.date.formateAsDate()
+        posterPicV.loadImage(meme.poster?.profileUrl)
+        memeDateV.text = meme.date?.formateAsDate()
         if (meme.tags.isEmpty()) {
             memeTags.visibility = GONE
         } else {
@@ -421,21 +422,21 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
             memeTags.text = meme.tags.joinToString(", ") { "#$it" }
         }
         if (meme.myReaction !== null) {
-            reactButton.setActiveImage(activeRID[meme.myReaction.type.ordinal])
+            reactButton.setActiveImage(activeRID[meme.myReaction!!.type.ordinal])
             reactButton.isChecked = true
         } else {
             reactButton.isChecked = false
         }
         favButton.isChecked = meme.isMyFavourite
         memeImageV.layoutParams.width = screenWidth
-        memeImageV.layoutParams.height = (screenWidth / meme.memeImageRatio).toInt().trim(200.dp, screenHeight - 200.dp)
+        memeImageV.layoutParams.height = (screenWidth / meme.imageRatio).toInt().trim(200.dp, screenHeight - 200.dp)
         memeImageV.requestLayout()
         memeImageV.loadMeme(meme)
     }
 
     private fun showMemeMenu() {
         val menu = PopupMenu(memeAdapter.context, memeMenu)
-        if (MemeItUsers.getInstance().getMyUser(memeAdapter.context).userID.equals(getCurrentMeme().poster.id))
+        if (MemeItUsers.getInstance().getMyUser(memeAdapter.context).userID.equals(getCurrentMeme().poster?.id))
             menu.menuInflater.inflate(R.menu.meme_menu, menu.menu)
         else
             menu.menuInflater.inflate(R.menu.meme_menu_not_own, menu.menu)
@@ -443,9 +444,9 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         menu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_delete_meme -> {
-                    MemeItMemes.getInstance().deleteMeme(getCurrentMeme().memeId, object : OnCompleteListener<ResponseBody> {
+                    MemeItMemes.getInstance().deleteMeme(getCurrentMeme().id, object : OnCompleteListener<ResponseBody> {
                         override fun onSuccess(t: ResponseBody?) {
-                            memeAdapter.remove(Meme.forID(getCurrentMeme().memeId))
+                            memeAdapter.remove(Meme(getCurrentMeme().id))
                             //todo show snackbar instead of toast
                             memeAdapter.context.toast("Meme Deleted")
                         }
@@ -490,7 +491,7 @@ class MemeGridViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
     init {
         val lp = FrameLayout.LayoutParams(width, width)
         memeImageV.layoutParams = lp
-        memeImageV.setOnClickListener { memeClickedListener?.invoke(getCurrentMeme().memeId) }
+        memeImageV.setOnClickListener { memeClickedListener?.invoke(getCurrentMeme().id!!) }
         memeImageV.hierarchy.setProgressBarImage(LoadingDrawable(memeAdapter.context))
     }
 

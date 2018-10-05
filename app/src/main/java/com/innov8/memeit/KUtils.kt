@@ -24,7 +24,6 @@ import com.memeit.backend.dataclasses.Meme
 import com.memeit.backend.dataclasses.Meme.MemeType.GIF
 import com.memeit.backend.dataclasses.Meme.MemeType.IMAGE
 import com.memeit.backend.dataclasses.Reaction
-import kotlinx.coroutines.experimental.*
 import java.text.SimpleDateFormat
 import java.util.*
 import com.innov8.memeit.MemeItApp.Companion.instanxe as it
@@ -174,8 +173,8 @@ private fun SimpleDraweeView.loadGifMeme(id: String, ratio: Float, resizeWidth: 
 }
 
 fun SimpleDraweeView.loadMeme(meme: Meme, resizeWidth: Int = 0, resizeHeight: Int = width) {
-    if (meme.type == IMAGE) loadImageMeme(meme.memeImageUrl, meme.memeImageRatio.toFloat(), resizeWidth, resizeHeight)
-    else if (meme.type == GIF) loadGifMeme(meme.memeImageUrl,meme.memeImageRatio.toFloat(),resizeWidth, resizeHeight)
+    if (meme.getType() == IMAGE) loadImageMeme(meme.imageId!!, meme.imageRatio.toFloat(), resizeWidth, resizeHeight)
+    else if (meme.getType() == GIF) loadGifMeme(meme.imageId!!,meme.imageRatio.toFloat(),resizeWidth, resizeHeight)
 }
 
 

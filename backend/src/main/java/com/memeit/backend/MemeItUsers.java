@@ -58,7 +58,6 @@ public class MemeItUsers {
 
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-
                 if (response.isSuccessful()) {
                     MyUser mu = response.body().toMyUser();
                     mu.save(context);

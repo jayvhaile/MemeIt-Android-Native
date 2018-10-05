@@ -38,8 +38,8 @@ class MemePosterActivity : AppCompatActivity() {
         when {
             gif != null -> {
                 memeType = Meme.MemeType.GIF
-                val file=File(gif)
-                log("fiki",file.exists())
+                val file = File(gif)
+                log("fiki", file.exists())
                 val controller = Fresco.newDraweeControllerBuilder()
                         .setImageRequest(ImageRequest.fromFile(file))
                         .setAutoPlayAnimations(true)
@@ -75,7 +75,7 @@ class MemePosterActivity : AppCompatActivity() {
             Meme.MemeType.GIF -> {
                 MediaManager.get()
                         .upload(gif)
-                        .option("resource_type","video")
+                        .option("resource_type", "video")
                         .callback(MyUploadCallback()).dispatch(this)
 
             }
@@ -89,7 +89,7 @@ class MemePosterActivity : AppCompatActivity() {
         }
 
         override fun onProgress(s: String, l: Long, l1: Long) {
-            val p=(l * 100 / l1)
+            val p = (l * 100 / l1)
             post_btn.setProgress(p.toInt())
             post_status.text = "Uploading $p%"
         }
@@ -131,9 +131,13 @@ class MemePosterActivity : AppCompatActivity() {
     }
 
     private fun prepareRequest(uri: String, ratio: Float): Meme {
-        val tags: List<String>? = getTags()
+        val tags: List<String> = getTags()
         //todo retrive description
-        return Meme.createMeme(uri, ratio.toDouble(), memeType,"", texts?.toList(), tags)
+        return Meme(imageId = uri,
+                imageRatio = ratio.toDouble(),
+                type = memeType.name,
+                texts = texts?.toList() ?: listOf(),
+                tags = tags.toMutableList())
 
     }
 
@@ -143,11 +147,12 @@ class MemePosterActivity : AppCompatActivity() {
                     .map { it.substring(1) }
                     .toList()
 }
+
 class MyControllerListener : BaseControllerListener<ImageInfo>() {
 
     override fun onFailure(id: String?, throwable: Throwable?) {
         super.onFailure(id, throwable)
-        log("fiki failure",throwable?.message?:"   xx")
+        log("fiki failure", throwable?.message ?: "   xx")
     }
 
     override fun onRelease(id: String?) {
@@ -167,13 +172,13 @@ class MyControllerListener : BaseControllerListener<ImageInfo>() {
 
     override fun onIntermediateImageFailed(id: String?, throwable: Throwable?) {
         super.onIntermediateImageFailed(id, throwable)
-        log("fiki ifail",throwable?.message?:" xx")
+        log("fiki ifail", throwable?.message ?: " xx")
 
     }
 
     override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
         super.onFinalImageSet(id, imageInfo, animatable)
-        log("fiki final ",animatable!=null)
+        log("fiki final ", animatable != null)
         animatable?.start()
 
     }

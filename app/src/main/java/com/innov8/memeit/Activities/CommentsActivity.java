@@ -114,7 +114,7 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void load(Meme meme) {
-        MemeItMemes.getInstance().getCommentsForMeme(meme.getMemeId(), skip, LIMIT, new OnCompleteListener<List<Comment>>() {
+        MemeItMemes.getInstance().getCommentsForMeme(meme.getId(), skip, LIMIT, new OnCompleteListener<List<Comment>>() {
             @Override
             public void onSuccess(List<Comment> comments) {
                 commentsAdapter.addAll(comments);
@@ -147,7 +147,7 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
 
     private void refresh() {
         resetSkip();
-        MemeItMemes.getInstance().getCommentsForMeme(meme.getMemeId(), skip, LIMIT, new OnCompleteListener<List<Comment>>() {
+        MemeItMemes.getInstance().getCommentsForMeme(meme.getId(), skip, LIMIT, new OnCompleteListener<List<Comment>>() {
             @Override
             public void onSuccess(List<Comment> comments) {
                 commentsAdapter.setAll(comments);
@@ -202,14 +202,14 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
             case R.id.comment_button:
                 String txt = commentField.getText().toString();
                 if (isPostingComment() || TextUtils.isEmpty(txt)) return;
-                Comment comment = Comment.createComment(meme.getMemeId(), txt);
+                Comment comment = Comment.createComment(meme.getId(), txt);
                 setPostingComment(true);
                 MemeItMemes.getInstance().comment(comment, onCommentCompletedListener);
                 break;
             case R.id.signup:
                 startActivity(new Intent(this, AuthActivity.class));
             case R.id.fav_button:
-                MemeItMemes.getInstance().addToFavourites(meme.getMemeId(), new OnCompleteListener<ResponseBody>() {
+                MemeItMemes.getInstance().addToFavourites(meme.getId(), new OnCompleteListener<ResponseBody>() {
                     @Override
                     public void onSuccess(ResponseBody responseBody) {
                         Snackbar.make(findViewById(R.id.coordinators), "Added to favorites!", Snackbar.LENGTH_SHORT).show();
@@ -226,7 +226,7 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
 
     public void react(final Reaction.ReactionType reactionType) {
         if (myUser != null) {
-            final Reaction r = Reaction.create(reactionType, meme.getMemeId());
+            final Reaction r = Reaction.create(reactionType, meme.getId());
             MemeItMemes.getInstance().reactToMeme(r, new OnCompleteListener<ResponseBody>() {
                 @Override
                 public void onSuccess(ResponseBody responseBody) {

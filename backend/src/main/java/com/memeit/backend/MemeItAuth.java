@@ -252,7 +252,7 @@ public class MemeItAuth {
                 .putString(PREFERENCE_TOKEN, token.getToken())
                 .putString(PREFERENCE_SIGNIN_METHOD, signInMethod.toString())
                 .apply();
-        new MyUser(token.getUid()).save(preferences);
+        new MyUser(token.getMyUser().getUserID()).save(preferences);
     }
     public String getToken(Context context){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);

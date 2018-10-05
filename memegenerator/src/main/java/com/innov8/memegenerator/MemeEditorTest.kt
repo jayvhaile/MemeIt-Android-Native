@@ -21,9 +21,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.google.gson.Gson
 import com.innov8.memegenerator.adapters.StickersAdapter
 import com.innov8.memegenerator.adapters.TextPresetsAdapter
-import com.innov8.memegenerator.customViews.ColorChooser
-import com.innov8.memegenerator.customViews.FontChooser
-import com.innov8.memegenerator.customViews.MarginControl
+import com.innov8.memegenerator.customViews.*
 import com.innov8.memegenerator.memeEngine.LayoutEditInterface
 import com.innov8.memegenerator.memeEngine.MemeStickerView
 import com.innov8.memegenerator.memeEngine.StickerEditInterface
@@ -39,6 +37,7 @@ import kotlinx.android.synthetic.main.bottom_tab.*
 import kotlinx.android.synthetic.main.meme_editor.*
 import kotlinx.android.synthetic.main.sticker_frag.*
 import kotlinx.android.synthetic.main.text_pager.*
+import kotlinx.android.synthetic.main.text_style_option.view.*
 
 class MemeEditorTest : AppCompatActivity() {
     val contraintSet1 = ConstraintSet()
@@ -234,6 +233,8 @@ class TextEditor : Fragment() {
             ColorChooser(context) as View
         }
 
+        val textStyleView = TextStyleView(context)
+
         init {
             views[1] = IndicatorSeekBar.with(context!!)
                     .min(5f)
@@ -241,6 +242,7 @@ class TextEditor : Fragment() {
                     .tickCount(20)
                     .build()
             views[2] = FontChooser(context)
+            views[3] = textStyleView.styleView
         }
 
         override fun getItem(position: Int): View = views[position]

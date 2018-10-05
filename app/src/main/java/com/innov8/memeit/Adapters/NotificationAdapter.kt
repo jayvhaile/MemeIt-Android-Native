@@ -157,7 +157,7 @@ class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : N
     init {
         itemView.setOnClickListener {
             val n = getCurrentItem()
-            val meme = Meme(n.memeId, n.memePic)
+            val meme = Meme(n.memeId, imageId = n.memePic)
             val intent = Intent(notifAdapter.context, CommentsActivity::class.java)
             intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme)
             notifAdapter.context.startActivity(intent)
@@ -193,7 +193,7 @@ class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : No
     init {
         itemView.setOnClickListener {
             val n = getCurrentItem()
-            val meme = Meme(n.memeId, n.memePic)
+            val meme = Meme(n.memeId, imageId = n.memePic)
             val intent = Intent(notifAdapter.context, CommentsActivity::class.java)
             intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme)
             notifAdapter.context.startActivity(intent)
