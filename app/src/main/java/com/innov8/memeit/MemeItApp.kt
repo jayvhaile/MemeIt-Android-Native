@@ -6,8 +6,7 @@ import android.preference.PreferenceManager
 import com.cloudinary.android.MediaManager
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
-import com.memeit.backend.MemeItClient
-
+import com.memeit.backend.kotlin.MemeItClient
 
 
 class MemeItApp : Application() {

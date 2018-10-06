@@ -6,20 +6,13 @@ import android.content.*
 import android.net.ConnectivityManager
 import android.os.Build
 import android.preference.PreferenceManager
-import android.util.Log
-import androidx.fragment.app.Fragment
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.memeit.backend.MemeItMemes
-import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.*
-import com.memeit.backend.utilis.*
-import com.memeit.backend.utilis.Utils.checkAndFireError
-import com.memeit.backend.utilis.Utils.checkAndFireSuccess
 import okhttp3.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,7 +20,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 @SuppressLint("StaticFieldLeak")
@@ -37,12 +29,12 @@ object MemeItClient {
     private const val HEADER_PRAGMA = "Pragma"
     private const val HEADER_CACHE_CONTROL = "Cache-Control"
 
-    private lateinit var context: Context
+    internal lateinit var context: Context
     private lateinit var cache: Cache
-    private lateinit var memeItService: MemeItService
+    internal lateinit var memeItService: MemeItService
     private var isConnected: Boolean = false
     private var isInitialized: Boolean = false
-    private lateinit var sharedPref: SharedPreferences
+    internal lateinit var sharedPref: SharedPreferences
 
     private val cacheFile: File by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -119,8 +111,6 @@ object MemeItClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         memeItService = retrofit.create(com.memeit.backend.kotlin.MemeItService::class.java)
-        MemeItUsers.init()
-        MemeItMemes.init()
         isInitialized = true
     }
 
@@ -163,7 +153,7 @@ object MemeItClient {
         }
 
         fun isUserDataSaved(): Boolean {
-            val name = Users.getMyUser()?.name
+            val name = MemeItUsers.getMyUser()?.name
             return !name.isNullOrEmpty()
         }
 
@@ -215,6 +205,11 @@ object MemeItClient {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             val account = task.getResult(ApiException::class.java)
             return GoogleAuthSignUpRequest(username, account.email!!, account.id!!)
+        }
+        fun extractGoogleInfo(data: Intent): Pair<String,String?> {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            val account = task.getResult(ApiException::class.java)
+            return account.displayName!! to account.photoUrl?.toString()
         }
 
         fun signUpWithGoogle(googleAuthRequest: GoogleAuthSignUpRequest,
@@ -290,74 +285,80 @@ object MemeItClient {
         }
     }
 
-    object Users : MemeItUser by memeItService {
-        fun getMyUser(): MyUser? {
-            return MyUser.createFromCache(sharedPref)
-        }
-
-        fun getMyUser(onSuccess: ((User) -> Unit)? = null, onError: (String) -> Unit = {}) {
-            memeItService.getMyUser().call({
-                it.toMyUser().save(context)
-                onSuccess?.invoke(it)
-            }, onError)
-        }
-
-        //todo update server
-        fun setupMyUser(myUser: MyUser, onSuccess: (() -> Unit)? = null, onError: (String) -> Unit = {}) {
-            memeItService
-                    .uploadUserData(myUser)
-                    .call({
-                        MyUser().save(context)
-                        onSuccess?.invoke()
-                    }, onError)
-        }
-
-        fun updateUsername(username: String,
-                           onSuccess: (() -> Unit)? = null,
-                           onError: ((String) -> Unit) = {}) {
-            memeItService.updateUsername(User.username(username))
-                    .call({
-                        getMyUser()?.setUsername(username)?.save(context)
-                        onSuccess?.invoke()
-                    }, onError)
-        }
-
-        fun updateName(name: String,
-                       onSuccess: (() -> Unit)? = null,
-                       onError: ((String) -> Unit) = {}) {
-            memeItService.updateUsername(User.name(name))
-                    .call({
-                        getMyUser()?.setName(name)?.save(context)
-                        onSuccess?.invoke()
-                    }, onError)
-        }
-
-        fun updateProfilePic(pic: String,
-                             onSuccess: (() -> Unit)? = null,
-                             onError: ((String) -> Unit) = {}) {
-            memeItService.updateUsername(User.pic(pic))
-                    .call({
-                        getMyUser()?.setPic(pic)?.save(context)
-                        onSuccess?.invoke()
-                    }, onError)
-        }
-
-        fun updateCoverPic(cpic: String,
-                           onSuccess: (() -> Unit)? = null,
-                           onError: ((String) -> Unit) = {}) {
-            memeItService.updateUsername(User.cpic(cpic))
-                    .call({
-                        getMyUser()?.setCpic(cpic)?.save(context)
-                        onSuccess?.invoke()
-                    }, onError)
-        }
-
-
+}
+object MemeItUsers : MemeItUser by MemeItClient.memeItService {
+    fun getMyUser(): MyUser? {
+        return MyUser.createFromCache(MemeItClient.sharedPref)
     }
 
-    object Memes : MemeItMeme by memeItService
+    fun getMyUser(onSuccess: ((User) -> Unit)? = null, onError: (String) -> Unit = {}) {
+        MemeItClient.memeItService.getMyUser().call({
+            it.toMyUser().save(MemeItClient.context)
+            onSuccess?.invoke(it)
+        }, onError)
+    }
+
+    //todo update server
+    fun setupMyUser(myUser: MyUser, onSuccess: (() -> Unit)? = null, onError: (String) -> Unit = {}) {
+        MemeItClient.memeItService
+                .uploadUserData(myUser)
+                .call({
+                    MyUser().save(MemeItClient.context)
+                    onSuccess?.invoke()
+                }, onError)
+    }
+
+    fun updateUsername(username: String,
+                       onSuccess: (() -> Unit)? = null,
+                       onError: ((String) -> Unit) = {}) {
+        MemeItClient.memeItService.updateUsername(User.username(username))
+                .call({
+                    getMyUser()?.apply {
+                        this.username=username
+                    }?.save(MemeItClient.context)
+                    onSuccess?.invoke()
+                }, onError)
+    }
+
+    fun updateName(name: String,
+                   onSuccess: (() -> Unit)? = null,
+                   onError: ((String) -> Unit) = {}) {
+        MemeItClient.memeItService.updateUsername(User.name(name))
+                .call({
+                    getMyUser()?.apply {
+                        this.name=name
+                    }?.save(MemeItClient.context)
+                    onSuccess?.invoke()
+                }, onError)
+    }
+
+    fun updateProfilePic(pic: String,
+                         onSuccess: (() -> Unit)? = null,
+                         onError: ((String) -> Unit) = {}) {
+        MemeItClient.memeItService.updateUsername(User.pic(pic))
+                .call({
+                    getMyUser()?.apply {
+                        this.imageUrl=pic
+                    }?.save(MemeItClient.context)
+                    onSuccess?.invoke()
+                }, onError)
+    }
+
+    fun updateCoverPic(cpic: String,
+                       onSuccess: (() -> Unit)? = null,
+                       onError: ((String) -> Unit) = {}) {
+        MemeItClient.memeItService.updateUsername(User.cpic(cpic))
+                .call({
+                    getMyUser()?.apply {
+                        this.coverImageUrl=cpic
+                    }?.save(MemeItClient.context)
+                    onSuccess?.invoke()
+                }, onError)
+    }
+
 
 }
+object MemeItMemes : MemeItMeme by MemeItClient.memeItService
 
 //todo remove this class when all classes r in kotlin
 abstract class OnCompleted<T : Any> : Callback<T> {
@@ -378,6 +379,7 @@ abstract class OnCompleted<T : Any> : Callback<T> {
 }
 
 fun <T : Any> Call<T>.call(onSuccess: ((T) -> Unit)): Call<T> = call(onSuccess, {})
+
 inline fun <T : Any> Call<T>.call(crossinline onSuccess: ((T) -> Unit), crossinline onError: ((String) -> Unit)): Call<T> {
     MemeItClient.calls += this
     this.enqueue(object : Callback<T> {
@@ -397,3 +399,4 @@ inline fun <T : Any> Call<T>.call(crossinline onSuccess: ((T) -> Unit), crossinl
     })
     return this
 }
+

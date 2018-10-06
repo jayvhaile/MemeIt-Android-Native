@@ -1,4 +1,4 @@
-package com.innov8.memeit.Fragments.ProfileFragments;
+package com.innov8.memeit.Fragments;
 
 
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import com.innov8.memeit.CustomClasses.MemeLoader;
 import com.innov8.memeit.CustomClasses.UserListLoader;
 import com.innov8.memeit.R;
 import com.memeit.backend.dataclasses.User;
-import com.memeit.backend.utilis.OnCompleteListener;
 
 import java.util.List;
 

@@ -9,10 +9,10 @@ import com.innov8.memegenerator.adapters.MyViewHolder
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.CustomClasses.CustomMethods
 import com.innov8.memeit.R
-import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.Tag
+import com.memeit.backend.kotlin.MemeItUsers
+import com.memeit.backend.kotlin.call
 import com.memeit.backend.utilis.Listener
-import okhttp3.ResponseBody
 
 class TagsAdapter(context: Context) : ListAdapter<Tag>(context, R.layout.list_item_tags_new) {
     override fun createViewHolder(view: View): MyViewHolder<Tag> {
@@ -41,14 +41,21 @@ class TagsAdapter(context: Context) : ListAdapter<Tag>(context, R.layout.list_it
             tagFollowV.setOnClickListener { _ ->
                 val t = getItemAt(item_position)
                 if (tagFollowV.text == "Unfollow")
-                    MemeItUsers.getInstance().unFollowTags(t.tag, Listener<ResponseBody>(mContext, "unfollow fail") {
-                        mContext.toast("unfollowed")
-                                tagFollowV.text = "Follow"
+                    MemeItUsers.unfollowTag(t.tag).call({
+
+                        mContext.toast("Unfollowed")
+                        tagFollowV.text = "Follow"
+                    },{
+                        mContext.toast("Failed to Unfollow:- $it")
+
                     })
                 else
-                    MemeItUsers.getInstance().followTags(arrayOf(t.tag), Listener<ResponseBody>(mContext, "follow fail") {
-                        mContext.toast("followed")
+                    MemeItUsers.followTags(arrayOf(t.tag)).call({
+                        mContext.toast("Followed")
                         tagFollowV.text = "Unfollow"
+                    },{
+                        mContext.toast("Failed to Follow:- $it")
+
                     })
             }
         }

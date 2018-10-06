@@ -69,6 +69,8 @@
                 <data android:host="example.com" android:scheme="https"/>
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.UserTagActivity" />
+        <activity android:name=".Activities.TagsChooserActivity" />
     </application>
 
 

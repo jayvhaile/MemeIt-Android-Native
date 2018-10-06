@@ -64,6 +64,13 @@ public class CustomMethods {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
+    public static boolean isEmailValidOptional(String email) {
+        if(TextUtils.isEmpty(email))return true;
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
 
     public static boolean isUsernameValid(String username) {
         //todo check if user name is valid (it should exclude such characters)
@@ -229,25 +236,7 @@ public class CustomMethods {
         return sA;
     }
 
-    public static String convertDate(long time){
-        String string = "";
-        long minute = 60000;
-        long hour = 3600000;
-        long day = 86400000;
-        long currentTime = System.currentTimeMillis();
-        long difference = currentTime - time;
-        long month;
 
-        if(difference < minute) string = "Less than a minute ago";
-        else if(difference >= minute && difference < hour)
-            string = ((int) difference / minute) + " mins ago";
-        else if(difference >= hour && difference < day)
-            string = ((int) difference / hour)  + " mins ago";
-        else if(difference >= day && difference < day * 30)
-            string = ((int) difference / day)  + " days ago";
-        else string = ((int) difference / (day*30))  + " months ago";
-        return string;
-    }
     public static void changeImageBackgroundWithAnim(Context c, final ImageView v, final Bitmap new_image) {
         final Animation anim_out = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
         final Animation anim_in  = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);

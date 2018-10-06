@@ -6,9 +6,8 @@ import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Adapters.ReactorAdapter
 import com.innov8.memeit.R
 import com.innov8.memeit.makeLinear
-import com.memeit.backend.MemeItMemes
-import com.memeit.backend.dataclasses.Reaction
-import com.memeit.backend.utilis.Listener
+import com.memeit.backend.kotlin.MemeItMemes
+import com.memeit.backend.kotlin.call
 import kotlinx.android.synthetic.main.activity_reactor_list.*
 import java.lang.IllegalStateException
 
@@ -34,15 +33,15 @@ class ReactorListActivity : AppCompatActivity() {
     }
     private fun load(){
         //todo implement skip limit , show the total count not the limited one
-       MemeItMemes.getInstance().getReactorsForMeme(mid,0,100000,Listener<List<Reaction>>({
+       MemeItMemes.getReactorsForMeme(mid,0,100000).call({
            reactorAdapter.setAll(it)
            val rc=it.size
            reactor_count.text=if(rc==0)"No Reaction" else "$rc People reacted"
            reactor_swipe_refresh.isRefreshing=false
 
        },{
-           toast("Reaction list failed ${it.message}")
+           toast("Reaction list failed $it")
            reactor_swipe_refresh.isRefreshing=false
-       }))
+       })
     }
 }

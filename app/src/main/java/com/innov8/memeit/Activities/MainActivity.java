@@ -60,23 +60,11 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-        MemeItAuth.getInstance().isUserDataSaved(this,new OnCompleteListener<Boolean>() {
-            @Override
-            public void onSuccess(Boolean saved) {
-                if (saved) {
-                    initUI(savedInstanceState);
-                } else {
-                    goToSignUpDetails();
-                }
-            }
-
-            @Override
-            public void onFailure(Error error) {
-
-                Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-//                Snackbar.make(mToolbar.getRootView(),"Something went wrong",Snackbar.LENGTH_SHORT).show();
-            }
-        });
+        if(MemeItClient.Auth.INSTANCE.isUserDataSaved()){
+            initUI(savedInstanceState);
+        }else{
+            goToSignUpDetails();
+        }
     }
 
     private void goToSignUpDetails() {
@@ -288,10 +276,10 @@ public class MainActivity extends AppCompatActivity {
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
             fragments = Arrays.asList(
-                    MemeListFragment.newInstance(MemeAdapter.HOME_ADAPTER, MemeLoader.HOME_LOADER),
-                    MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.TRENDING_LOADER),
-                    MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.FAVOURITE_LOADER),
-                    ProfileFragment.newInstance()
+                    MemeListFragment.Companion.newInstance(MemeAdapter.HOME_ADAPTER, MemeLoader.HOME_LOADER),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.TRENDING_LOADER),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.FAVOURITE_LOADER),
+                    ProfileFragment.Companion.newInstance()
             );
         }
 

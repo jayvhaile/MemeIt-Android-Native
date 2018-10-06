@@ -1,6 +1,7 @@
 package com.innov8.memeit.CustomClasses
 
 import android.content.Context
+import android.os.Parcelable
 import com.facebook.common.util.UriUtil
 import com.innov8.memegenerator.models.MemeTemplate
 import com.innov8.memegenerator.utils.AsyncLoader
@@ -11,9 +12,11 @@ import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.*
 import com.memeit.backend.utilis.Listener
 import com.memeit.backend.utilis.OnCompleteListener
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import java.util.*
 
-interface MemeLoader<T> {
+interface MemeLoader<T>:Parcelable {
     companion object {
         const val HOME_LOADER: Byte = 1
         const val TRENDING_LOADER: Byte = 2
@@ -64,7 +67,11 @@ class HomeLoader(val context: Context, override var listener: OnCompleteListener
         tempError = it
         bake()
     })
+    fun loada(skip: Int, limit: Int) {
+        launch(UI){
 
+        }
+    }
     override fun load(skip: Int, limit: Int) {
         if (!usersLoaded && usersFailed) {
             usersFailed = false
@@ -224,8 +231,15 @@ class SearchLoader(override var listener: OnCompleteListener<List<Meme>>? = null
     }
 
     override fun load(skip: Int, limit: Int) {
-        search(null, null, skip, limit)
+}
+
+class EmptyLoader(override var listener: OnCompleteListener<List<Meme>>? = null) : MemeLoader<Meme> {
+    override fun load(skip: Int, limit: Int) {
+        listener?.onSuccess(ArrayList())
     }
+}
+search(null, null, skip, limit)
+}
 
 }
 
@@ -248,10 +262,3 @@ class MyMemesLoader(override var listener: OnCompleteListener<List<Meme>>? = nul
         else
             MemeItMemes.getInstance().getMemesOf(userID, skip, limit, listener)
     }
-}
-
-class EmptyLoader(override var listener: OnCompleteListener<List<Meme>>? = null) : MemeLoader<Meme> {
-    override fun load(skip: Int, limit: Int) {
-        listener?.onSuccess(ArrayList())
-    }
-}

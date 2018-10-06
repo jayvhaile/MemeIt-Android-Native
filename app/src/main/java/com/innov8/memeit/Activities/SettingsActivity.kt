@@ -17,13 +17,12 @@ import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.CustomClasses.ImageUtils
 import com.innov8.memeit.R
 import com.innov8.memeit.prefix
-import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.MyUser
+import com.memeit.backend.kotlin.MemeItUsers
 import com.memeit.backend.utilis.Listener
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_settings.*
-import okhttp3.ResponseBody
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -35,31 +34,34 @@ class SettingsActivity : AppCompatActivity() {
         load()
         initListenrs()
     }
+
     fun load() {
-        user = MemeItUsers.getInstance().getMyUser(this)
-        namesettings.text=user.name
-        usernamesettings.text="@${user.username}"
-        settings_pp.text=user.name.prefix()
+        user = MemeItUsers.getMyUser()!!
+        namesettings.text = user.name
+        usernamesettings.text = "@${user.username}"
+        settings_pp.text = user.name.prefix()
         ImageUtils.loadImageFromCloudinaryTo(settings_pp, user.imageUrl)
     }
-    fun initListenrs(){
+
+    fun onError(message:String,action:(()->Unit)?=null):(String)->Unit={
+        toast("$message: $it")
+        action?.invoke()
+    }
+
+
+
+    fun initListenrs() {
         namesettings.setOnClickListener { it ->
             MaterialDialog.Builder(this)
-                    .input("Name",user.name,false){ dialog, input ->
-                        MemeItUsers.getInstance().updateName(this, input.toString(), Listener<ResponseBody>(onsuccess = {
-                            load()
-                        },onfailure = {
-                            this.toast("error name ${it.message}")
-                        }))
+                    .input("Name", user.name, false) { _, input ->
+                        MemeItUsers.updateName(input.toString(), {load()},onError("Error Updating Name"))
                     }.show()
         }
         usernamesettings.setOnClickListener { it ->
             MaterialDialog.Builder(this)
-                    .input("Username",user.username,false){ dialog, input ->
+                    .input("Username", user.username, false) { dialog, input ->
                         //todo validate
-                        MemeItUsers.getInstance().updateUsername(this, input.toString(), Listener<ResponseBody>(onSuccess = {
-                            load()
-                        }))
+                        MemeItUsers.updateUsername(input.toString(),  {load()},onError("Error Updating Username"))
                     }.show()
         }
         change_pp.setOnClickListener {
@@ -77,10 +79,10 @@ class SettingsActivity : AppCompatActivity() {
             val result = CropImage.getActivityResult(data)
             if (resultCode == Activity.RESULT_OK) {
                 val image_url = result.uri
-                if (result.uri==null)return
-                val dialog=MaterialDialog.Builder(this)
+                if (result.uri == null) return
+                val dialog = MaterialDialog.Builder(this)
                         .title("Uploading Image")
-                        .progress(true,100)
+                        .progress(true, 100)
                         .build()
                 dialog.show()
                 MediaManager.get().upload(image_url).callback(object : UploadCallback {
@@ -92,18 +94,15 @@ class SettingsActivity : AppCompatActivity() {
 
                     override fun onSuccess(s: String, map: Map<*, *>) {
                         val public_id = map["public_id"].toString()
-                        MemeItUsers.getInstance().updateProfilePic(this@SettingsActivity,public_id,Listener<ResponseBody>({
-                            this@SettingsActivity.toast("Uploaded")
+                        MemeItUsers.updateProfilePic(public_id, {
+                            this@SettingsActivity.toast("Profile Picture Updated")
                             dialog.dismiss()
-                        },{
-                            this@SettingsActivity.toast("failed ${it.message}")
-                            dialog.dismiss()
-                        }))
+                        }, onError("Error updating Profile pic") {dialog.dismiss()})
                     }
 
                     override fun onError(s: String, errorInfo: ErrorInfo) {
                         this@SettingsActivity.toast("failed image ${errorInfo.description}")
-                       dialog.dismiss()
+                        dialog.dismiss()
                     }
 
                     override fun onReschedule(s: String, errorInfo: ErrorInfo) {
@@ -120,14 +119,14 @@ class SettingsActivity : AppCompatActivity() {
 
 
     companion object {
-        const val PREF_KEY_IMAGE_QUALITY="pref_image_quality"
-        val quality= listOf(10,25,50,75,100)
-        val factor= listOf(.4f,.6f,.8f,.9f,1f)
+        const val PREF_KEY_IMAGE_QUALITY = "pref_image_quality"
+        val quality = listOf(10, 25, 50, 75, 100)
+        val factor = listOf(.4f, .6f, .8f, .9f, 1f)
 
-        fun getImageQualityLevel(context:Context):Int{
-            val pref=PreferenceManager.getDefaultSharedPreferences(context)
-            val values=context.resources.getStringArray(R.array.pref_image_quality)
-            val value=pref.getString(PREF_KEY_IMAGE_QUALITY,"")
+        fun getImageQualityLevel(context: Context): Int {
+            val pref = PreferenceManager.getDefaultSharedPreferences(context)
+            val values = context.resources.getStringArray(R.array.pref_image_quality)
+            val value = pref.getString(PREF_KEY_IMAGE_QUALITY, "")
             return values.indexOf(value)
         }
 
@@ -139,11 +138,11 @@ class PrefFragment : PreferenceFragment() {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
 
-        for (i in 0 until preferenceScreen.preferenceCount){
-            val p=preferenceScreen.getPreference(i)
+        for (i in 0 until preferenceScreen.preferenceCount) {
+            val p = preferenceScreen.getPreference(i)
             when (p) {
-                is ListPreference -> p.summary=p.value
-                is EditTextPreference -> p.summary=p.text
+                is ListPreference -> p.summary = p.value
+                is EditTextPreference -> p.summary = p.text
             }
         }
 

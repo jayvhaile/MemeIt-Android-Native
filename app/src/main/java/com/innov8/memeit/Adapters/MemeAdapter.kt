@@ -22,20 +22,18 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.*
-import com.innov8.memeit.R
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.Activities.ReactorListActivity
 import com.innov8.memeit.Adapters.ListMemeAdapter.Companion.activeRID
 import com.innov8.memeit.CustomClasses.LoadingDrawable
 import com.innov8.memeit.CustomViews.ProfileDraweeView
-import com.memeit.backend.MemeItMemes
-import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.*
-import com.memeit.backend.utilis.OnCompleteListener
+import com.memeit.backend.kotlin.MemeItMemes
+import com.memeit.backend.kotlin.MemeItUsers
+import com.memeit.backend.kotlin.call
 import com.stfalcon.frescoimageviewer.ImageViewer
 import com.varunest.sparkbutton.SparkButton
-import okhttp3.ResponseBody
 
 abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeViewHolder>() {
     companion object {
@@ -51,7 +49,6 @@ abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeView
         }
 
         const val LOADING_TYPE = 5864
-
     }
 
     var loading: Boolean = false
@@ -274,19 +271,19 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
     init {
 //        memeImageV.setOnClickListener { memeClickedListener?.invoke(getCurrentMeme().id) }
         commentBtnV.setOnClickListener {
-            val meme = getCurrentMeme()
+            val meme = currentMeme
             val intent = Intent(memeAdapter.context, CommentsActivity::class.java)
             intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme)
             memeAdapter.context.startActivity(intent)
         }
         posterPicV.setOnClickListener {
             val i = Intent(memeAdapter.context, ProfileActivity::class.java)
-            i.putExtra("user", getCurrentMeme().poster?.toUser())
+            i.putExtra("user", currentMeme.poster?.toUser())
             memeAdapter.context.startActivity(i)
         }
         reactionCountV.setOnClickListener {
             val i = Intent(memeAdapter.context, ReactorListActivity::class.java)
-            i.putExtra("mid", getCurrentMeme().id)
+            i.putExtra("mid", currentMeme.id)
             memeAdapter.context.startActivity(i)
         }
 
@@ -331,32 +328,19 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 
         }
         favButton.isChecked = false
-        favButton.setOnClickListener {
-            val meme = getCurrentMeme()
+        favButton.setOnClickListener { view ->
+            val meme = currentMeme
             if (meme.isMyFavourite)
-                MemeItMemes.getInstance().removeFromFavourites(meme.id, object : OnCompleteListener<ResponseBody> {
-                    override fun onSuccess(responseBody: ResponseBody) {
-                        meme.isMyFavourite = false
-                        favButton.isChecked = false
-                    }
-
-                    override fun onFailure(error: OnCompleteListener.Error) {
-                        Toast.makeText(this@MemeListViewHolder.memeAdapter.context, "favourite failed\n" + error.message, Toast.LENGTH_SHORT).show()
-                    }
-                })
+                MemeItMemes.removeMemeFromFavourite(meme.id!!).call({
+                    meme.isMyFavourite = false
+                    favButton.isChecked = false
+                }, onError())
             else
-                MemeItMemes.getInstance().addToFavourites(meme.id, object : OnCompleteListener<ResponseBody> {
-                    override fun onSuccess(responseBody: ResponseBody) {
-                        meme.isMyFavourite = true
-                        favButton.playAnimation()
-                        favButton.isChecked = true
-                    }
-
-                    override fun onFailure(error: OnCompleteListener.Error) {
-                        Toast.makeText(this@MemeListViewHolder.memeAdapter.context, "favourite failed\n" + error.message, Toast.LENGTH_SHORT).show()
-                    }
-                })
-
+                MemeItMemes.addMemeToFavourite(meme.id!!).call({
+                    meme.isMyFavourite = true
+                    favButton.playAnimation()
+                    favButton.isChecked = true
+                }, onError())
         }
         memeMenu.setOnClickListener { showMemeMenu() }
         memeTags.setOnClickListener { showFollowDialog() }
@@ -368,7 +352,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
     }
 
     private fun showFollowDialog() {
-        val meme = getCurrentMeme()
+        val meme = currentMeme
         MaterialDialog.Builder(memeAdapter.context)
                 .title("Choose Tags to follow")
                 .items(meme.tags.map { "#$it" })
@@ -383,24 +367,24 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
                         si?.contains(index) ?: false
                     }.toTypedArray()
                     log(selectedTags)
-                    MemeItUsers.getInstance().followTags(selectedTags, null)
+                    MemeItUsers.followTags(selectedTags).call({}, onError("Failed folloeing tags")
                 }
                 .show()
     }
 
-    private fun react(reactionType: Reaction.ReactionType?, finalReactRes: Int) {
-        MemeItMemes.getInstance().reactToMeme(Reaction.create(reactionType, getCurrentMeme().id), object : OnCompleteListener<ResponseBody> {
-            override fun onSuccess(responseBody: ResponseBody) {
-                getCurrentMeme().myReaction = Reaction.create(reactionType, null)
-                reactButton.setActiveImage(finalReactRes)
-                reactButton.playAnimation()
-                reactButton.isChecked = true
-            }
+    fun onError(message: String = "", action: (() -> Unit)? = null): (String) -> Unit = {
+        memeAdapter.context.toast("$message: $it")
+        action?.invoke()
+    }
 
-            override fun onFailure(error: OnCompleteListener.Error) {
-                Toast.makeText(this@MemeListViewHolder.memeAdapter.context, "reaction failed\n" + error.message, Toast.LENGTH_SHORT).show()
-            }
-        })
+    private fun react(reactionType: Reaction.ReactionType?, finalReactRes: Int) {
+        MemeItMemes.reactToMeme(Reaction.create(reactionType, currentMeme.id)).call({
+            if (currentMeme.myReaction == null) currentMeme.reactionCount++
+            currentMeme.myReaction = Reaction.create(reactionType, null)
+            reactButton.setActiveImage(finalReactRes)
+            reactButton.playAnimation()
+            reactButton.isChecked = true
+        }, onError("Reaction Failed"))
     }
 
 
@@ -436,7 +420,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 
     private fun showMemeMenu() {
         val menu = PopupMenu(memeAdapter.context, memeMenu)
-        if (MemeItUsers.getInstance().getMyUser(memeAdapter.context).userID.equals(getCurrentMeme().poster?.id))
+        if (MemeItUsers.getMyUser()!!.userID.equals(currentMeme.poster?.id))
             menu.menuInflater.inflate(R.menu.meme_menu, menu.menu)
         else
             menu.menuInflater.inflate(R.menu.meme_menu_not_own, menu.menu)
@@ -444,18 +428,11 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         menu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_delete_meme -> {
-                    MemeItMemes.getInstance().deleteMeme(getCurrentMeme().id, object : OnCompleteListener<ResponseBody> {
-                        override fun onSuccess(t: ResponseBody?) {
-                            memeAdapter.remove(Meme(getCurrentMeme().id))
-                            //todo show snackbar instead of toast
-                            memeAdapter.context.toast("Meme Deleted")
-                        }
-
-                        override fun onFailure(error: OnCompleteListener.Error?) {
-                            //todo show snackbar instead of toast
-                            memeAdapter.context.toast("Cannot Delete Meme ${error?.message}")
-                        }
-                    })
+                    MemeItMemes.deleteMeme(currentMeme.id!!).call(
+                            {
+                                memeAdapter.remove(Meme(currentMeme.id))
+                            }, onError("Error deleting Meme")
+                    )
                     return@OnMenuItemClickListener true
                 }
                 R.id.menu_report_meme -> {
@@ -467,7 +444,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
                             }
                             .positiveText("Report")
                             .negativeText("Cancel")
-                            .onPositive { dialog, _ ->
+                            .onPositive { _, _ ->
                                 //todo jv finish this up this shit giving me a hard time
                             }
                             .show()
@@ -479,9 +456,10 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         menu.show()
     }
 
-    private fun getCurrentMeme(): Meme {
-        return memeAdapter.items[itemPosition] as Meme
-    }
+    private val currentMeme: Meme
+        get() {
+            return memeAdapter.items[itemPosition] as Meme
+        }
 }
 
 class MemeGridViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
@@ -577,7 +555,6 @@ class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemVi
     private val adChoicesContainer: LinearLayout = itemView.findViewById(R.id.ad_choices_container)
 
 
-
     private fun bindAd(nativeAd: NativeAd) {
 
         nativeAd.unregisterView()
@@ -601,27 +578,27 @@ class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemVi
 
     override fun bind(homeElement: HomeElement) {
         val nativeAd: NativeAd = NativeAd(memeAdapter.context, "YOUR_PLACEMENT_ID")
-        nativeAd.setAdListener(object : NativeAdListener{
+        nativeAd.setAdListener(object : NativeAdListener {
             override fun onAdClicked(p0: Ad) {
-                log("qqq facebook add","ad clicked")
+                log("qqq facebook add", "ad clicked")
 
             }
 
             override fun onMediaDownloaded(p0: Ad) {
-                log("qqq facebook add","media downloaded")
+                log("qqq facebook add", "media downloaded")
 
             }
 
             override fun onError(p0: Ad, p1: AdError) {
-                log("qqq facebook add","ad failed",p1.errorMessage)
+                log("qqq facebook add", "ad failed", p1.errorMessage)
             }
 
             override fun onLoggingImpression(p0: Ad) {
-                log("qqq facebook add","logging impression")
+                log("qqq facebook add", "logging impression")
             }
 
             override fun onAdLoaded(ad: Ad) {
-                log("qqq facebook add","ad loaded")
+                log("qqq facebook add", "ad loaded")
 
                 if (nativeAd != ad) {
                     return

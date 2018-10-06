@@ -16,9 +16,9 @@ import com.facebook.imagepipeline.request.ImageRequest
 import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.toByteArray
 import com.innov8.memegenerator.utils.toast
-import com.memeit.backend.MemeItMemes
 import com.memeit.backend.dataclasses.Meme
-import com.memeit.backend.utilis.OnCompleteListener
+import com.memeit.backend.kotlin.MemeItClient
+import com.memeit.backend.kotlin.call
 import kotlinx.android.synthetic.main.activity_meme_poster.*
 import java.io.File
 
@@ -101,21 +101,17 @@ class MemePosterActivity : AppCompatActivity() {
             val ratio = width / height
             post_btn.resetProgress()
             post_status.text = "Image Uploaded! Posting Meme"
-            MemeItMemes.getInstance().postMeme(prepareRequest(public_id, ratio), object : OnCompleteListener<Meme> {
-                override fun onSuccess(memeResponse: Meme) {
-                    post_btn.revertAnimation()
-                    toast("Meme Posted to MemeIt!")
-                    post_status.text = "Meme Posted"
-                    //todo goto the post
-                }
 
-                override fun onFailure(error: OnCompleteListener.Error) {
-                    post_btn.revertAnimation()
-                    toast("Meme Posting failed: " + error.message)
-                    post_status.text = "Meme Posting Failed"
-                }
-            })
-        }
+            MemeItClient.Memes.postMeme(prepareRequest(public_id, ratio)).call({
+                post_btn.revertAnimation()
+                toast("Meme Posted to MemeIt!")
+                post_status.text = "Meme Posted"
+                //todo goto the post
+            },{
+                post_btn.revertAnimation()
+                toast("Meme Posting failed: $it")
+                post_status.text = "Meme Posting Failed"
+            })        }
 
         override fun onError(s: String, errorInfo: ErrorInfo) {
             post_btn.revertAnimation()

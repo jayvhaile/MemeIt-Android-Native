@@ -3,12 +3,10 @@ package com.innov8.memeit.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -19,15 +17,17 @@ import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.innov8.memeit.Adapters.CommentsAdapter;
 import com.innov8.memeit.CustomViews.ProfileDraweeView;
 import com.innov8.memeit.KUtilsKt;
-import com.innov8.memeit.R;
-import com.memeit.backend.MemeItMemes;
-import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.dataclasses.Meme;
 import com.memeit.backend.dataclasses.MyUser;
 import com.memeit.backend.dataclasses.Reaction;
+import com.memeit.backend.kotlin.MemeItMemes;
+import com.memeit.backend.kotlin.OnCompleted;
+import com.memeit.backend.kotlin.MemeItUsers;
 import com.memeit.backend.utilis.OnCompleteListener;
 import com.varunest.sparkbutton.SparkButton;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -66,7 +66,6 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
     TextView veryFunnyCount;
     MyUser myUser;
 
-    OnCompleteListener<Comment> onCommentCompletedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,17 +113,16 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void load(Meme meme) {
-        MemeItMemes.getInstance().getCommentsForMeme(meme.getId(), skip, LIMIT, new OnCompleteListener<List<Comment>>() {
+        MemeItMemes.INSTANCE.getCommentForMeme(meme.getId(),skip,LIMIT).enqueue(new OnCompleted<List<Comment>>() {
             @Override
-            public void onSuccess(List<Comment> comments) {
+            public void onSuccess(@NotNull List<Comment> comments) {
                 commentsAdapter.addAll(comments);
                 incSkip();
             }
 
             @Override
-            public void onFailure(Error error) {
+            public void onError(@NotNull String message) {
                 Snackbar.make(findViewById(R.id.coordinators), "Something went wrong", Snackbar.LENGTH_SHORT).show();
-                Log.w("getCommentsFormeme", error.getMessage());
             }
         });
         if (meme.getDescription() != null) {
@@ -147,18 +145,17 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
 
     private void refresh() {
         resetSkip();
-        MemeItMemes.getInstance().getCommentsForMeme(meme.getId(), skip, LIMIT, new OnCompleteListener<List<Comment>>() {
+        MemeItMemes.INSTANCE.getCommentForMeme(meme.getId(),skip,LIMIT).enqueue(new OnComplete<List<Comment>>() {
             @Override
-            public void onSuccess(List<Comment> comments) {
+            public void onSuccess(@NotNull List<Comment> comments) {
                 commentsAdapter.setAll(comments);
                 incSkip();
             }
-
-            @Override
-            public void onFailure(Error error) {
-                Snackbar.make(findViewById(R.id.coordinators), "Something went wrong", Snackbar.LENGTH_SHORT).show();
-            }
         });
+    }
+    private void showError(String message){
+        Snackbar.make(findViewById(R.id.coordinators), message, Snackbar.LENGTH_SHORT).show();
+
     }
 
 
@@ -204,45 +201,46 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
                 if (isPostingComment() || TextUtils.isEmpty(txt)) return;
                 Comment comment = Comment.createComment(meme.getId(), txt);
                 setPostingComment(true);
-                MemeItMemes.getInstance().comment(comment, onCommentCompletedListener);
+                MemeItMemes.INSTANCE.postComment(comment).enqueue(new OnComplete<Comment>(){
+                    @Override
+                    public void onSuccess(Comment comment) {
+                        commentField.setText("");
+                        refresh();
+                        setPostingComment(false);
+                    }
+                });
                 break;
             case R.id.signup:
                 startActivity(new Intent(this, AuthActivity.class));
             case R.id.fav_button:
-                MemeItMemes.getInstance().addToFavourites(meme.getId(), new OnCompleteListener<ResponseBody>() {
+                MemeItMemes.INSTANCE.addMemeToFavourite(meme.getId()).enqueue(new OnComplete<ResponseBody>() {
                     @Override
                     public void onSuccess(ResponseBody responseBody) {
                         Snackbar.make(findViewById(R.id.coordinators), "Added to favorites!", Snackbar.LENGTH_SHORT).show();
                     }
-
-                    @Override
-                    public void onFailure(Error error) {
-                        Snackbar.make(findViewById(R.id.coordinators), "Couldn't add to favorites", Snackbar.LENGTH_SHORT).show();
-                        Log.w("fav", error.getMessage());
-                    }
                 });
+        }
+    }
+    private abstract class OnComplete<T> extends OnCompleted<T>{
+        @Override
+        public void onError(@NotNull String message) {
+            showError(message);
         }
     }
 
     public void react(final Reaction.ReactionType reactionType) {
         if (myUser != null) {
             final Reaction r = Reaction.create(reactionType, meme.getId());
-            MemeItMemes.getInstance().reactToMeme(r, new OnCompleteListener<ResponseBody>() {
+            MemeItMemes.INSTANCE.reactToMeme(r).enqueue(new OnComplete<ResponseBody>() {
                 @Override
                 public void onSuccess(ResponseBody responseBody) {
                     reactGroup.setVisibility(View.GONE);
                     reactButton.setActiveImage(KUtilsKt.getDrawableID(r,true));
                     reactButton.setChecked(true);
                 }
-
-                @Override
-                public void onFailure(Error error) {
-                    reactGroup.setVisibility(View.GONE);
-                    Snackbar.make(findViewById(R.id.coordinators), "Something went wrong.", Snackbar.LENGTH_SHORT).show();
-                }
             });
         } else
-            Snackbar.make(findViewById(R.id.coordinators), "You need to login first.", Snackbar.LENGTH_SHORT).show();
+            showError("You need to login first.");
 
     }
 
@@ -252,24 +250,11 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
         commentsList.setLayoutManager(llm);
         commentsList.setItemAnimator(new DefaultItemAnimator());
         commentsList.setAdapter(commentsAdapter);
-        onCommentCompletedListener = new OnCompleteListener<Comment>() {
-            @Override
-            public void onSuccess(Comment comment) {
-                commentField.setText("");
-                refresh();
-                setPostingComment(false);
-            }
 
-            @Override
-            public void onFailure(Error error) {
-                Toast.makeText(CommentsActivity.this, "Comment failed " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                setPostingComment(false);
-            }
-        };
         commentButton.setOnClickListener(this);
         KUtilsKt.loadMeme(memeImage, meme, 0, 0);
         ProfileDraweeView pdv = findViewById(R.id.comment_pp);
-        myUser = MemeItUsers.getInstance().getMyUser(this);
+        myUser = MemeItUsers.INSTANCE.getMyUser();
         pdv.setText(KUtilsKt.prefix(myUser.getName()));
         float size = dimen(R.dimen.profile_mini_size);
         loadImage(pdv, myUser.getImageUrl(), size, size);

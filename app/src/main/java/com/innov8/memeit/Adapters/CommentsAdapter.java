@@ -3,7 +3,6 @@ package com.innov8.memeit.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,9 +16,10 @@ import com.innov8.memeit.Activities.ProfileActivity;
 import com.innov8.memeit.CustomViews.ProfileDraweeView;
 import com.innov8.memeit.KUtilsKt;
 import com.innov8.memeit.R;
-import com.memeit.backend.MemeItMemes;
-import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.dataclasses.Comment;
+import com.memeit.backend.kotlin.MemeItMemes;
+import com.memeit.backend.kotlin.OnCompleted;
+import com.memeit.backend.kotlin.MemeItUsers;
 import com.memeit.backend.utilis.OnCompleteListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,10 +39,10 @@ public class CommentsAdapter extends ListAdapter<Comment> {
     boolean isPostingComment;
 
     float size;
-    public static final int LIKE = 0;
-    public static final int DISLIKE = 1;
-    public static final int ADD = 0;
-    public static final int REMOVE = 1;
+    private static final int LIKE = 0;
+    private static final int DISLIKE = 1;
+    private static final int ADD = 0;
+    private static final int REMOVE = 1;
 
     public CommentsAdapter(@NotNull Context mContext) {
         super(mContext, R.layout.list_item_comment_new);
@@ -95,14 +95,14 @@ public class CommentsAdapter extends ListAdapter<Comment> {
 
 
         public void bind(final Comment mComment) {
-            KUtilsKt.loadImage(posterPicV,mComment.getPoster().getProfileUrl(),size,size);
+            KUtilsKt.loadImage(posterPicV, mComment.getPoster().getProfileUrl(), size, size);
             commentV.setText(mComment.getComment());
             posterPicV.setText(KUtilsKt.prefix(mComment.getPoster().getName()));
             posterNameV.setText(mComment.getPoster().getName());
             dateV.setText(KUtilsKt.formatDate(mComment.getDate()));
             like.setText(String.valueOf(mComment.getLikeCount()));
             dislike.setText(String.valueOf(mComment.getDislikeCount()));
-            boolean isOwnComment = MemeItUsers.getInstance().getMyUser(getMContext()).getUserID().equals(mComment.getPosterID());
+            boolean isOwnComment = MemeItUsers.INSTANCE.getMyUser().getUserID().equals(mComment.getPosterID());
             if (isOwnComment)
                 ownCommentViews.setVisibility(View.GONE);
             else
@@ -115,16 +115,16 @@ public class CommentsAdapter extends ListAdapter<Comment> {
             switch (v.getId()) {
                 case R.id.like_comment:
                     if (comment.isLikedByMe()) {
-                        MemeItMemes.getInstance().removeLikeComment(comment.getCommentID(), generateOnComplete(LIKE,REMOVE,getItem_position()));
+                        MemeItMemes.INSTANCE.removeLikeComment(comment.getCommentID()).enqueue(generateOnComplete(LIKE, REMOVE, getItem_position()));
                     } else {
-                        MemeItMemes.getInstance().likeComment(comment.getCommentID(), generateOnComplete(LIKE,ADD,getItem_position()));
+                        MemeItMemes.INSTANCE.likeComment(comment.getCommentID()).enqueue(generateOnComplete(LIKE, ADD, getItem_position()));
                     }
                     break;
                 case R.id.dislike_comment:
                     if (comment.isDislikedByMe()) {
-                        MemeItMemes.getInstance().removeDislikeComment(comment.getCommentID(), generateOnComplete(DISLIKE,REMOVE,getItem_position()));
+                        MemeItMemes.INSTANCE.removeDislikeComment(comment.getCommentID()).enqueue(generateOnComplete(DISLIKE, REMOVE, getItem_position()));
                     } else {
-                        MemeItMemes.getInstance().dislikeComment(comment.getCommentID(), generateOnComplete(DISLIKE,ADD,getItem_position()));
+                        MemeItMemes.INSTANCE.dislikeComment(comment.getCommentID()).enqueue(generateOnComplete(DISLIKE, ADD, getItem_position()));
                     }
                     break;
                 case R.id.delete:
@@ -135,24 +135,23 @@ public class CommentsAdapter extends ListAdapter<Comment> {
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    MemeItMemes.getInstance().deleteComment(comment.getMemeID(), comment.getCommentID(), new OnCompleteListener<ResponseBody>() {
-                                        @Override
-                                        public void onSuccess(ResponseBody responseBody) {
-                                            Toast.makeText(getMContext(), "Deleted.", Toast.LENGTH_SHORT).show();
-                                            remove(comment);
-                                        }
+                                    MemeItMemes.INSTANCE.deleteComment(comment.getMemeID(), comment.getCommentID())
+                                            .enqueue(new OnCompleted<ResponseBody>() {
+                                                @Override
+                                                public void onSuccess(ResponseBody responseBody) {
+                                                    Toast.makeText(getMContext(), "Deleted.", Toast.LENGTH_SHORT).show();
+                                                    remove(comment);
+                                                }
 
-                                        @Override
-                                        public void onFailure(Error error) {
-                                            Toast.makeText(getMContext(), "An error has occured. Please try again.", Toast.LENGTH_SHORT).show();
-                                            Log.w("Deleting  comment", error.getMessage());
-                                        }
-                                    });
+                                                @Override
+                                                public void onError(String error) {
+                                                    Toast.makeText(getMContext(), "An error has occured. Please try again.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                 }
                             }).show();
                     break;
                 case R.id.edit:
-
                     new MaterialDialog.Builder(getMContext())
                             .title("Edit comment")
                             .input("Comment", comment.getComment(), false, new MaterialDialog.InputCallback() {
@@ -160,19 +159,21 @@ public class CommentsAdapter extends ListAdapter<Comment> {
                                 public void onInput(@NonNull MaterialDialog dialog, final CharSequence input) {
                                     if (TextUtils.isEmpty(input))
                                         return;
-                                    MemeItMemes.getInstance().editComment(comment.getCommentID(), input.toString(), new OnCompleteListener<ResponseBody>() {
-                                        @Override
-                                        public void onSuccess(ResponseBody o) {
-                                            Toast.makeText(getMContext(), "Edited.", Toast.LENGTH_SHORT).show();
-                                            comment.setComment(input.toString());
-                                            notifyItemChanged(getItem_position());
-                                        }
+                                    Comment c = Comment.createCommentForUpdate(comment.getCommentID(), input.toString())
+                                    MemeItMemes.INSTANCE.updateComment(c)
+                                            .enqueue(new OnCompleted<ResponseBody>() {
+                                                @Override
+                                                public void onSuccess(ResponseBody o) {
+                                                    Toast.makeText(getMContext(), "Edited.", Toast.LENGTH_SHORT).show();
+                                                    comment.setComment(input.toString());
+                                                    notifyItemChanged(getItem_position());
+                                                }
 
-                                        @Override
-                                        public void onFailure(Error error) {
-                                            Toast.makeText(getMContext(), "Editing has failed because of a problem. Please try again.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                                @Override
+                                                public void onError(String error) {
+                                                    Toast.makeText(getMContext(), "Editing has failed because of a problem. Please try again.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                 }
                             }).show();
                     break;
@@ -180,12 +181,13 @@ public class CommentsAdapter extends ListAdapter<Comment> {
             }
         }
     }
-    public OnCompleteListener generateOnComplete(final int type, final int addOrRemove, final int position){
-        return new OnCompleteListener() {
+
+    private OnCompleted<ResponseBody> generateOnComplete(final int type, final int addOrRemove, final int position) {
+        return new OnCompleted<ResponseBody>() {
             @Override
-            public void onSuccess(Object o) {
+            public void onSuccess(ResponseBody o) {
                 Comment comment = getItemAt(position);
-                if(type == LIKE){
+                if (type == LIKE) {
                     comment.setLikedByMe(addOrRemove == ADD);
                     comment.setLikeCount(addOrRemove == ADD
                             ? comment.getLikeCount() + 1
@@ -193,8 +195,7 @@ public class CommentsAdapter extends ListAdapter<Comment> {
                     comment.setDislikeCount(addOrRemove == ADD
                             ? comment.getDislikeCount() - 1
                             : comment.getDislikeCount());
-                }
-                else if(type == DISLIKE){
+                } else if (type == DISLIKE) {
                     comment.setDislikedByMe(addOrRemove == ADD);
                     comment.setDislikeCount(addOrRemove == ADD
                             ? comment.getDislikeCount() + 1
@@ -202,14 +203,14 @@ public class CommentsAdapter extends ListAdapter<Comment> {
                     comment.setLikeCount(addOrRemove == ADD
                             ? comment.getLikeCount() - 1
                             : comment.getLikeCount());
-                }
-                else throw new InvalidParameterException("Parameter \"Type\" must be either LIKE or DISLIKE");
+                } else
+                    throw new InvalidParameterException("Parameter \"Type\" must be either LIKE or DISLIKE");
                 notifyItemChanged(position);
             }
 
             @Override
-            public void onFailure(Error error) {
-                Toast.makeText(getMContext(),"An error has occured",Toast.LENGTH_SHORT).show();
+            public void onError(String error) {
+                Toast.makeText(getMContext(), error, Toast.LENGTH_SHORT).show();
             }
         };
     }

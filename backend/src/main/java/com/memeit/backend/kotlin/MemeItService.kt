@@ -209,7 +209,7 @@ interface MemeItMeme {
 
 
     @GET("meme/tags/popular")
-    fun getPopularTags(@Query("search") text: String,
+    fun getPopularTags(@Query("search") text: String?,
                        @Query("skip") skip: Int,
                        @Query("limit") limit: Int): Call<List<Tag>>
 
