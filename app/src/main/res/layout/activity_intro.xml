@@ -2,40 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/intro_back"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.IntroActivity">
 
-    <FrameLayout
-        android:id="@+id/holder"
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/background_login_1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/many_pics_optimized" />
-
-        <ImageView
-            android:id="@+id/background_login_2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/many_pics_optimized" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/loginbg" />
-
-    </FrameLayout>
+        android:scaleType="centerCrop"
+        android:src="@drawable/loginbg" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/intro_pager"

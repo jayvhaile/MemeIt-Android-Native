@@ -22,16 +22,18 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.*
+import com.innov8.memeit.R
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.Activities.ReactorListActivity
 import com.innov8.memeit.Adapters.ListMemeAdapter.Companion.activeRID
 import com.innov8.memeit.CustomClasses.LoadingDrawable
 import com.innov8.memeit.CustomViews.ProfileDraweeView
+import com.memeit.backend.MemeItClient
 import com.memeit.backend.dataclasses.*
-import com.memeit.backend.kotlin.MemeItMemes
-import com.memeit.backend.kotlin.MemeItUsers
-import com.memeit.backend.kotlin.call
+import com.memeit.backend.MemeItMemes
+import com.memeit.backend.MemeItUsers
+import com.memeit.backend.call
 import com.stfalcon.frescoimageviewer.ImageViewer
 import com.varunest.sparkbutton.SparkButton
 
@@ -367,7 +369,8 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
                         si?.contains(index) ?: false
                     }.toTypedArray()
                     log(selectedTags)
-                    MemeItUsers.followTags(selectedTags).call({}, onError("Failed folloeing tags")
+                    MemeItUsers.followTags(selectedTags).call({memeAdapter.context.toast("Tags Followed.")},
+                            onError("Failed folloeing tags"))
                 }
                 .show()
     }
@@ -420,7 +423,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 
     private fun showMemeMenu() {
         val menu = PopupMenu(memeAdapter.context, memeMenu)
-        if (MemeItUsers.getMyUser()!!.userID.equals(currentMeme.poster?.id))
+        if (MemeItClient.myUser?.id == currentMeme.poster!!.id)
             menu.menuInflater.inflate(R.menu.meme_menu, menu.menu)
         else
             menu.menuInflater.inflate(R.menu.meme_menu_not_own, menu.menu)

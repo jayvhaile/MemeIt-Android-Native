@@ -7,9 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memeit.Adapters.NotificationAdapter
 import com.innov8.memeit.R
 import com.memeit.backend.dataclasses.*
-import com.memeit.backend.kotlin.MemeItUsers
-import com.memeit.backend.kotlin.call
-import com.memeit.backend.utilis.OnCompleteListener
+import com.memeit.backend.MemeItUsers
+import com.memeit.backend.call
 import kotlinx.android.synthetic.main.activity_notification.*
 
 class NotificationActivity : AppCompatActivity() {

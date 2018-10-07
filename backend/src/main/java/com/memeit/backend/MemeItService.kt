@@ -1,12 +1,55 @@
-package com.memeit.backend.kotlin
+package com.memeit.backend
 
 import com.memeit.backend.dataclasses.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
-interface MemeItUser {
 
+interface MemeItService {
+
+    @POST("auth/signin")
+    fun signInWithEmail(@Body user: UsernameAuthRequest): Call<AuthResponse>
+
+    @POST("auth/signin/google")
+    fun signInWithGoogle(@Body user: GoogleAuthSignInRequest): Call<AuthResponse>
+
+    @POST("auth/signup")
+    fun signUpWithEmail(@Body user: UsernameAuthRequest): Call<AuthResponse>
+
+
+    @POST("auth/signup/google")
+    fun signUpWithGoogle(@Body user: GoogleAuthSignUpRequest): Call<AuthResponse>
+
+
+    @GET("user/me")
+    fun loadMyUser(): Call<User>
+
+    @PUT("user/me/setup")
+    fun uploadUserData(@Body user:User): Call<ResponseBody>
+
+    //todo fix this
+    @DELETE("user/me")
+    fun deleteMe(@Body user: MUser): Call<ResponseBody>
+
+    @GET("auth/username")
+    fun isUsernameAvailable(@Query("username") username: String): Call<Username>
+
+    @PUT("auth/username")
+    fun updateUsername(@Body username: User): Call<ResponseBody>
+
+    @PUT("auth/password")
+    fun updatePassword(@Body password: ChangePasswordRequest): Call<ResponseBody>
+
+    @POST("auth/{username}/forgotpassword")
+    fun forgotPassword(@Path("username") username: String)
+
+
+
+
+
+
+    //==============================================================================================
     @GET("user/{id}/")
     fun getUserById(@Path("id") uid: String): Call<User>
 
@@ -102,9 +145,8 @@ interface MemeItUser {
     @DELETE("user/me")
     fun deleteMe(): Call<ResponseBody>
 
-}
 
-interface MemeItMeme {
+    //==============================================================================================
     @GET("meme/{id}")
     fun getMemeById(@Path("id") id: String): Call<Meme>
 
@@ -220,44 +262,6 @@ interface MemeItMeme {
     @GET("meme/tags/suggested")
     fun getSuggestedTags(@Query("skip") skip: Int,
                          @Query("limit") limit: Int): Call<List<Tag>>
-}
 
-interface MemeItService : MemeItUser, MemeItMeme {
-
-    @POST("auth/signin")
-    fun signInWithEmail(@Body user: UsernameAuthRequest): Call<AuthResponse>
-
-    @POST("auth/signin/google")
-    fun signInWithGoogle(@Body user: GoogleAuthSignInRequest): Call<AuthResponse>
-
-    @POST("auth/signup")
-    fun signUpWithEmail(@Body user: UsernameAuthRequest): Call<AuthResponse>
-
-
-    @POST("auth/signup/google")
-    fun signUpWithGoogle(@Body user: GoogleAuthSignUpRequest): Call<AuthResponse>
-
-
-    @GET("user/me")
-    fun getMyUser(): Call<User>
-
-    @PUT("user/me/setup")
-    fun uploadUserData(@Body myUser: MyUser): Call<ResponseBody>
-
-    //todo fix this
-    @DELETE("user/me")
-    fun deleteMe(@Body user: AuthInfo): Call<AuthToken>
-
-    @GET("auth/username")
-    fun isUsernameAvailable(@Query("username") username: String): Call<Username>
-
-    @PUT("auth/username")
-    fun updateUsername(@Body username: User): Call<ResponseBody>
-
-    @PUT("auth/password")
-    fun updatePassword(@Body password: ChangePasswordRequest): Call<ResponseBody>
-
-    @POST("auth/{username}/forgotpassword")
-    fun forgotPassword(@Path("username") username: String)
 
 }

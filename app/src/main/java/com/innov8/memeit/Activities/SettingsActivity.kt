@@ -14,12 +14,12 @@ import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.innov8.memegenerator.utils.toast
-import com.innov8.memeit.CustomClasses.ImageUtils
 import com.innov8.memeit.R
+import com.innov8.memeit.loadImage
 import com.innov8.memeit.prefix
-import com.memeit.backend.dataclasses.MyUser
-import com.memeit.backend.kotlin.MemeItUsers
-import com.memeit.backend.utilis.Listener
+import com.memeit.backend.MemeItClient
+import com.memeit.backend.MemeItUsers
+import com.memeit.backend.dataclasses.MUser
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.activity_settings.*
 class SettingsActivity : AppCompatActivity() {
 
 
-    lateinit var user: MyUser
+    lateinit var user: MUser
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -36,11 +36,11 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     fun load() {
-        user = MemeItUsers.getMyUser()!!
+        user = MemeItClient.myUser!!
         namesettings.text = user.name
         usernamesettings.text = "@${user.username}"
         settings_pp.text = user.name.prefix()
-        ImageUtils.loadImageFromCloudinaryTo(settings_pp, user.imageUrl)
+        settings_pp.loadImage(user.profilePic)
     }
 
     fun onError(message:String,action:(()->Unit)?=null):(String)->Unit={

@@ -8,11 +8,13 @@ import android.util.DisplayMetrics;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.innov8.memeit.CustomClasses.CustomMethods;
+import com.innov8.memeit.CustomClasses.ScrollingImageDrawable;
 import com.innov8.memeit.Fragments.LoginFragment;
 import com.innov8.memeit.Fragments.SetupFragment;
 import com.innov8.memeit.Fragments.SignUpFragment;
+import com.innov8.memeit.KUtilsKt;
 import com.innov8.memeit.R;
-import com.memeit.backend.MemeItAuth;
+import com.memeit.backend.MemeItClient;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,7 +40,10 @@ public class AuthActivity extends AppCompatActivity {
         CustomMethods.makeWindowSeamless(this);
         setContentView(R.layout.activity_auth);
         authCoordinate=findViewById(R.id.auth_coordinate);
-        CustomMethods.makeBackgroundScrollAnimate(this, R.id.background_login_1, R.id.background_login_2);
+
+        authCoordinate.setBackground(new ScrollingImageDrawable(this,R.drawable.many_pics_optimized,
+                KUtilsKt.getScreenWidth(),
+                KUtilsKt.getScreenHeight()));
         initFragments();
         if (getIntent() != null) {
             int i = getIntent().getIntExtra(STARTING_FRAGMENT_PARAM, FRAGMENT_LOGIN);
@@ -93,7 +98,7 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MemeItAuth.GOOGLE_SIGNIN_REQUEST_CODE) {
+        if (requestCode == MemeItClient.Auth.GOOGLE_SIGN_IN_REQUEST_CODE) {
             getFragmentForInt(currentFrag).onActivityResult(requestCode, resultCode, data);
         }
         else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {

@@ -16,10 +16,11 @@ import com.innov8.memeit.CustomClasses.FontTextView;
 import com.innov8.memeit.CustomViews.ProfileDraweeView;
 import com.innov8.memeit.KUtilsKt;
 import com.innov8.memeit.R;
-import com.memeit.backend.MemeItUsers;
-import com.memeit.backend.dataclasses.MyUser;
+import com.memeit.backend.MemeItClient;
+import com.memeit.backend.dataclasses.MUser;
 import com.memeit.backend.dataclasses.User;
-import com.memeit.backend.utilis.OnCompleteListener;
+import com.memeit.backend.MemeItUsers;
+import com.memeit.backend.OnCompleted;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,13 +28,13 @@ import androidx.annotation.NonNull;
 import okhttp3.ResponseBody;
 
 public class UserListAdapter extends ListAdapter<User> {
-    Typeface tf;
-    MyUser myUser;
+    private Typeface tf;
+    private MUser myUser;
     float size;
     public UserListAdapter(@NotNull Context mContext) {
         super(mContext, R.layout.list_item_follower);
         tf = Typeface.createFromAsset(getMContext().getAssets(), FontTextView.asset);
-        myUser= MemeItUsers.getInstance().getMyUser(mContext);
+        myUser= MemeItClient.INSTANCE.getMyUser();
         size=mContext.getResources().getDimension(R.dimen.profile_mini_size);
     }
 
@@ -43,7 +44,7 @@ public class UserListAdapter extends ListAdapter<User> {
         return new UserListViewHolder(view);
     }
     private boolean isMe(String id){
-        return myUser.getUserID().equals(id);
+        return myUser.getId().equals(id);
     }
 
     public class UserListViewHolder extends MyViewHolder<User> {
@@ -65,7 +66,7 @@ public class UserListAdapter extends ListAdapter<User> {
                     followButton.startAnimation();
                     User user = getItemAt(getItem_position());
                     if (t.equalsIgnoreCase("unfollow")) {
-                        MemeItUsers.getInstance().unFollowUser(user.getUserID(), new OnCompleteListener<ResponseBody>() {
+                        MemeItUsers.INSTANCE.unfollowUser(user.getUid()).enqueue(new OnCompleted<ResponseBody>() {
                             @Override
                             public void onSuccess(ResponseBody responseBody) {
                                 followButton.revertAnimation(new OnAnimationEndListener() {
@@ -77,13 +78,13 @@ public class UserListAdapter extends ListAdapter<User> {
                             }
 
                             @Override
-                            public void onFailure(Error error) {
+                            public void onError(String error) {
                                 followButton.revertAnimation();
-                                Toast.makeText(getMContext(), "Error " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getMContext(), "Error " + error, Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else {
-                        MemeItUsers.getInstance().followUser(user.getUserID(), new OnCompleteListener<ResponseBody>() {
+                        MemeItUsers.INSTANCE.followUser(user.getUid()).enqueue(new OnCompleted<ResponseBody>() {
                             @Override
                             public void onSuccess(ResponseBody responseBody) {
                                 followButton.revertAnimation(new OnAnimationEndListener() {
@@ -95,9 +96,9 @@ public class UserListAdapter extends ListAdapter<User> {
                             }
 
                             @Override
-                            public void onFailure(Error error) {
+                            public void onError(String error) {
                                 followButton.revertAnimation();
-                                Toast.makeText(getMContext(), "Error " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getMContext(), "Error " + error, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -119,7 +120,7 @@ public class UserListAdapter extends ListAdapter<User> {
             followerDetail.setText(user.getPostCount() + " posts");
             followerImage.setText(KUtilsKt.prefix(user.getName()));
             KUtilsKt.loadImage(followerImage,user.getImageUrl(),size,size);
-            if(isMe(user.getUserID())){
+            if(isMe(user.getUid())){
                 followButton.setVisibility(View.GONE);
             }else{
                 followButton.setVisibility(View.VISIBLE);

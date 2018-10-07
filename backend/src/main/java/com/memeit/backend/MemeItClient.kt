@@ -1,4 +1,4 @@
-package com.memeit.backend.kotlin
+package com.memeit.backend
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -12,6 +12,7 @@ import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.CommonStatusCodes
 import com.memeit.backend.dataclasses.*
 import okhttp3.*
 import retrofit2.Call
@@ -29,12 +30,18 @@ object MemeItClient {
     private const val HEADER_PRAGMA = "Pragma"
     private const val HEADER_CACHE_CONTROL = "Cache-Control"
 
-    internal lateinit var context: Context
+    lateinit var context: Context
     private lateinit var cache: Cache
     internal lateinit var memeItService: MemeItService
     private var isConnected: Boolean = false
     private var isInitialized: Boolean = false
     internal lateinit var sharedPref: SharedPreferences
+
+
+    var myUser: MUser? = null
+        get() = MUser.get(sharedPref)
+        private set
+
 
     private val cacheFile: File by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -48,22 +55,14 @@ object MemeItClient {
         if (isInitialized) {
             throw RuntimeException("Already Initialized")
         }
-        this.context = context
+        MemeItClient.context = context
         sharedPref = PreferenceManager.getDefaultSharedPreferences(MemeItClient.context)
 
-        val cm = MemeItClient.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val connectionReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                val ni = cm.activeNetworkInfo
-                isConnected = ni != null && ni.isConnectedOrConnecting
-            }
-        }
-        MemeItClient.context.registerReceiver(connectionReceiver,
-                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        initConnectivityListener()
 
         cache = Cache(cacheFile, (10 * 1024 * 1024).toLong())
         val authInterceptor = Interceptor {
-            val token = Auth.getToken()
+            val token = myUser?.token
             if (token.isNullOrEmpty())
                 return@Interceptor it.proceed(it.request())
             val req = it.request().newBuilder().header("authorization", token!!)
@@ -110,8 +109,20 @@ object MemeItClient {
                 .client(builder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-        memeItService = retrofit.create(com.memeit.backend.kotlin.MemeItService::class.java)
+        memeItService = retrofit.create(MemeItService::class.java)
         isInitialized = true
+    }
+
+    private fun initConnectivityListener() {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectionReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val ni = cm.activeNetworkInfo
+                isConnected = ni != null && ni.isConnectedOrConnecting
+            }
+        }
+        context.registerReceiver(connectionReceiver,
+                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
     }
 
 
@@ -128,60 +139,42 @@ object MemeItClient {
     }
 
     object Auth {
-        enum class SignInMethod {
-            USERNAME, GOOGLE, FACEBOOK
-        }
 
-        private const val GOOGLE_SIGN_IN_REQUEST_CODE = 6598
-        private const val PREFERENCE_TOKEN = "__token__"
-        private const val PREFERENCE_UID = "__uid__"
-        private const val PREFERENCE_SIGNIN_METHOD = "__signin_method__"
-        private const val PREFERENCE_USER_DATA_SAVED = "__user_data_saved__"
+        const val GOOGLE_SIGN_IN_REQUEST_CODE = 6598
+
 
         fun isSignedIn(): Boolean {
-            val tokenExists = sharedPref.getString(PREFERENCE_TOKEN, null) != null
-            if (!tokenExists) return false
-            val method = getSignedInMethod() ?: return false
-            if (method == SignInMethod.GOOGLE)
-                return GoogleSignIn.getLastSignedInAccount(context) != null
-            return if (method == SignInMethod.FACEBOOK) {
-                //todo:jv -check if facebook sign-in status
-                FacebookSdk.isInitialized()
-                false
-            } else
-                true
-        }
-
-        fun isUserDataSaved(): Boolean {
-            val name = MemeItUsers.getMyUser()?.name
-            return !name.isNullOrEmpty()
-        }
-
-        fun getSignedInMethod(): SignInMethod? {
-            val m = sharedPref.getString(PREFERENCE_SIGNIN_METHOD, null) ?: return null
-            return try {
-                SignInMethod.valueOf(m)
-            } catch (e: IllegalArgumentException) {
-                null
+            val mu = myUser ?: return false
+            return when (mu.signInMethod) {
+                SignInMethod.GOOGLE -> GoogleSignIn.getLastSignedInAccount(context) != null
+                SignInMethod.FACEBOOK -> {
+                    val token = AccessToken.getCurrentAccessToken()
+                    token != null && !token.isExpired
+                }
+                else -> true
             }
         }
 
+        fun isUserDataSaved(): Boolean {
+            return myUser?.name?.isNotEmpty() ?: false
+        }
+
         fun signUpWithUsername(usernameAuthRequest: UsernameAuthRequest,
-                               onSignedUp: ((MyUser) -> Unit)? = null,
+                               onSignedUp: ((User) -> Unit)? = null,
                                onError: ((String) -> Unit) = {}) {
             memeItService.signUpWithEmail(usernameAuthRequest).call({
                 setSignedIn(SignInMethod.USERNAME, it)
-                onSignedUp?.invoke(it.myUser)
+                onSignedUp?.invoke(it.user)
             }, onError)
         }
 
 
         fun signInWithUsername(usernameAuthRequest: UsernameAuthRequest,
-                               onSignedIn: ((MyUser) -> Unit)? = null,
+                               onSignedIn: ((User) -> Unit)? = null,
                                onError: ((String) -> Unit) = {}) {
             memeItService.signInWithEmail(usernameAuthRequest).call({
                 setSignedIn(SignInMethod.USERNAME, it)
-                onSignedIn?.invoke(it.myUser)
+                onSignedIn?.invoke(it.user)
             }, onError)
         }
 
@@ -195,39 +188,34 @@ object MemeItClient {
             activity.startActivityForResult(gc, GOOGLE_SIGN_IN_REQUEST_CODE)
         }
 
-        fun extractGoogleAuthRequest(data: Intent): GoogleAuthSignInRequest {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            val account = task.getResult(ApiException::class.java)
-            return GoogleAuthSignInRequest(account.email!!, account.id!!)
-        }
-
-        fun extractGoogleAuthRequest(data: Intent, username: String): GoogleAuthSignUpRequest {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            val account = task.getResult(ApiException::class.java)
-            return GoogleAuthSignUpRequest(username, account.email!!, account.id!!)
-        }
-        fun extractGoogleInfo(data: Intent): Pair<String,String?> {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            val account = task.getResult(ApiException::class.java)
-            return account.displayName!! to account.photoUrl?.toString()
+        fun extractGoogleInfo(data: Intent, onSuccess: ((GoogleInfo) -> Unit),
+                              onError: ((String) -> Unit) = {}) {
+            try {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                val account = task.getResult(ApiException::class.java)
+                val info = GoogleInfo(account.displayName!!, account.photoUrl?.toString(), account.email!!, account.id!!)
+                onSuccess(info)
+            } catch (ex: ApiException) {
+                onError(CommonStatusCodes.getStatusCodeString(ex.statusCode))
+            }
         }
 
         fun signUpWithGoogle(googleAuthRequest: GoogleAuthSignUpRequest,
-                             onSignedUp: ((MyUser) -> Unit)?,
+                             onSignedUp: ((User) -> Unit)?,
                              onError: ((String) -> Unit) = {}) {
 
             memeItService.signUpWithGoogle(googleAuthRequest).call({
                 setSignedIn(SignInMethod.GOOGLE, it)
-                onSignedUp?.invoke(it.myUser)
+                onSignedUp?.invoke(it.user)
             }, onError)
         }
 
         fun signInWithGoogle(googleAuthRequest: GoogleAuthSignInRequest,
-                             onSignedUp: ((MyUser) -> Unit)?,
+                             onSignedUp: ((User) -> Unit)?,
                              onError: ((String) -> Unit) = {}) {
             memeItService.signInWithGoogle(googleAuthRequest).call({
                 setSignedIn(SignInMethod.GOOGLE, it)
-                onSignedUp?.invoke(it.myUser)
+                onSignedUp?.invoke(it.user)
             }, onError)
         }
 
@@ -237,6 +225,11 @@ object MemeItClient {
             memeItService.updatePassword(changePasswordRequest).call({
                 onSuccess?.invoke()
             }, onError)
+        }
+
+        fun requestFacebookInfo(activity: Activity) {
+            val perms = listOf("email")
+            LoginManager.getInstance().logInWithReadPermissions(activity, perms)
         }
 
         fun signInWithFacebook() {
@@ -260,50 +253,40 @@ object MemeItClient {
         }
 
         private fun setSignedIn(signInMethod: SignInMethod, authResponse: AuthResponse) {
-            sharedPref.edit()
-                    .putString(PREFERENCE_TOKEN, authResponse.token)
-                    .putString(PREFERENCE_SIGNIN_METHOD, signInMethod.toString())
-                    .apply()
-            authResponse.myUser.save(sharedPref)
-        }
-
-        fun getToken(): String? {
-            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            return preferences.getString(PREFERENCE_TOKEN, null)
+            MUser.save(sharedPref, authResponse.token,
+                    signInMethod,
+                    authResponse.user.uid,
+                    authResponse.user.username,
+                    authResponse.user.name,
+                    authResponse.user.imageUrl,
+                    authResponse.user.coverImageUrl)
         }
 
 
         fun signOut() {
-            sharedPref.edit()
-                    .remove(PREFERENCE_TOKEN)
-                    .remove(PREFERENCE_UID)
-                    .remove(PREFERENCE_SIGNIN_METHOD)
-                    .remove(PREFERENCE_USER_DATA_SAVED)
-                    .apply()
-            MyUser.delete(context)
+            MUser.delete(context)
             clearCache()
         }
     }
 
 }
-object MemeItUsers : MemeItUser by MemeItClient.memeItService {
-    fun getMyUser(): MyUser? {
-        return MyUser.createFromCache(MemeItClient.sharedPref)
-    }
+
+object MemeItUsers : MemeItService by MemeItClient.memeItService {
+
 
     fun getMyUser(onSuccess: ((User) -> Unit)? = null, onError: (String) -> Unit = {}) {
-        MemeItClient.memeItService.getMyUser().call({
-            it.toMyUser().save(MemeItClient.context)
+        MemeItClient.memeItService.loadMyUser().call({
+            MUser.save(MemeItClient.sharedPref, it)
             onSuccess?.invoke(it)
         }, onError)
     }
 
     //todo update server
-    fun setupMyUser(myUser: MyUser, onSuccess: (() -> Unit)? = null, onError: (String) -> Unit = {}) {
+    fun setupMyUser(user: User, onSuccess: (() -> Unit)? = null, onError: (String) -> Unit = {}) {
         MemeItClient.memeItService
-                .uploadUserData(myUser)
+                .uploadUserData(user)
                 .call({
-                    MyUser().save(MemeItClient.context)
+                    MUser.save(MemeItClient.sharedPref, user)
                     onSuccess?.invoke()
                 }, onError)
     }
@@ -311,11 +294,9 @@ object MemeItUsers : MemeItUser by MemeItClient.memeItService {
     fun updateUsername(username: String,
                        onSuccess: (() -> Unit)? = null,
                        onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateUsername(User.username(username))
+        MemeItClient.memeItService.updateUsername(User(username=username))
                 .call({
-                    getMyUser()?.apply {
-                        this.username=username
-                    }?.save(MemeItClient.context)
+                    MUser.save(MemeItClient.sharedPref, username = username)
                     onSuccess?.invoke()
                 }, onError)
     }
@@ -323,11 +304,9 @@ object MemeItUsers : MemeItUser by MemeItClient.memeItService {
     fun updateName(name: String,
                    onSuccess: (() -> Unit)? = null,
                    onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateUsername(User.name(name))
+        MemeItClient.memeItService.updateUsername(User(name=name))
                 .call({
-                    getMyUser()?.apply {
-                        this.name=name
-                    }?.save(MemeItClient.context)
+                    MUser.save(MemeItClient.sharedPref, name = name)
                     onSuccess?.invoke()
                 }, onError)
     }
@@ -335,11 +314,9 @@ object MemeItUsers : MemeItUser by MemeItClient.memeItService {
     fun updateProfilePic(pic: String,
                          onSuccess: (() -> Unit)? = null,
                          onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateUsername(User.pic(pic))
+        MemeItClient.memeItService.updateUsername(User(imageUrl= pic))
                 .call({
-                    getMyUser()?.apply {
-                        this.imageUrl=pic
-                    }?.save(MemeItClient.context)
+                    MUser.save(MemeItClient.sharedPref, profilePic = pic)
                     onSuccess?.invoke()
                 }, onError)
     }
@@ -347,18 +324,17 @@ object MemeItUsers : MemeItUser by MemeItClient.memeItService {
     fun updateCoverPic(cpic: String,
                        onSuccess: (() -> Unit)? = null,
                        onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateUsername(User.cpic(cpic))
+        MemeItClient.memeItService.updateUsername(User(coverImageUrl= cpic))
                 .call({
-                    getMyUser()?.apply {
-                        this.coverImageUrl=cpic
-                    }?.save(MemeItClient.context)
+                    MUser.save(MemeItClient.sharedPref, coverPic = cpic)
                     onSuccess?.invoke()
                 }, onError)
     }
 
 
 }
-object MemeItMemes : MemeItMeme by MemeItClient.memeItService
+
+object MemeItMemes : MemeItService by MemeItClient.memeItService
 
 //todo remove this class when all classes r in kotlin
 abstract class OnCompleted<T : Any> : Callback<T> {

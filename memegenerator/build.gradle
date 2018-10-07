@@ -48,6 +48,10 @@ dependencies {
     //    implementation 'com.fxn769:pix:1.2.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     //    implementation 'com.google.firebase:firebase-dynamic-links:16.1.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.squareup.okio:okio:1.15.0'
+
 }
 repositories {
     mavenCentral()

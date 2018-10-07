@@ -1,5 +1,6 @@
 package com.memeit.backend.dataclasses
 
+import com.google.gson.annotations.SerializedName
 import com.memeit.backend.utilis.Utils
 
 interface AuthRequest {
@@ -19,7 +20,7 @@ data class UsernameAuthRequest(var username: String,
         if (username.trim().length < 4) {
             errors.add("Username should at least be 4 in length!")
         }
-        if (Utils.isEmailValidOptional(email)) {
+        if (!Utils.isEmailValidOptional(email)) {
             errors.add("Invalid Email!")
 
         }
@@ -35,6 +36,12 @@ data class GoogleAuthSignUpRequest(val username: String, val email: String, val 
         return listOf()
     }
 }
+data class GoogleInfo(val name:String,val imageUrl:String?,val email:String,val gid:String){
+
+    fun toSignInReq()=GoogleAuthSignInRequest(email,gid)
+    fun toSignUpReq(username: String)=GoogleAuthSignUpRequest(username,email,gid)
+}
+
 
 data class GoogleAuthSignInRequest(val email: String, val googleID: String) : AuthRequest {
     override fun validate(): List<String> {
@@ -44,4 +51,4 @@ data class GoogleAuthSignInRequest(val email: String, val googleID: String) : Au
 
 data class ChangePasswordRequest(val oldPassword: String, val newPassword: String)
 
-data class AuthResponse(val token: String, val myUser: MyUser)
+data class AuthResponse(val token: String,val user:User)

@@ -17,8 +17,8 @@ import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.toByteArray
 import com.innov8.memegenerator.utils.toast
 import com.memeit.backend.dataclasses.Meme
-import com.memeit.backend.kotlin.MemeItClient
-import com.memeit.backend.kotlin.call
+import com.memeit.backend.MemeItMemes
+import com.memeit.backend.call
 import kotlinx.android.synthetic.main.activity_meme_poster.*
 import java.io.File
 
@@ -102,7 +102,7 @@ class MemePosterActivity : AppCompatActivity() {
             post_btn.resetProgress()
             post_status.text = "Image Uploaded! Posting Meme"
 
-            MemeItClient.Memes.postMeme(prepareRequest(public_id, ratio)).call({
+            MemeItMemes.postMeme(prepareRequest(public_id, ratio)).call({
                 post_btn.revertAnimation()
                 toast("Meme Posted to MemeIt!")
                 post_status.text = "Meme Posted"

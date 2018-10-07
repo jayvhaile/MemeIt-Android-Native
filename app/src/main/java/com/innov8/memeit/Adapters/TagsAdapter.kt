@@ -10,9 +10,8 @@ import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.CustomClasses.CustomMethods
 import com.innov8.memeit.R
 import com.memeit.backend.dataclasses.Tag
-import com.memeit.backend.kotlin.MemeItUsers
-import com.memeit.backend.kotlin.call
-import com.memeit.backend.utilis.Listener
+import com.memeit.backend.MemeItUsers
+import com.memeit.backend.call
 
 class TagsAdapter(context: Context) : ListAdapter<Tag>(context, R.layout.list_item_tags_new) {
     override fun createViewHolder(view: View): MyViewHolder<Tag> {

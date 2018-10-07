@@ -4,31 +4,28 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import com.cloudinary.android.MediaManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.innov8.memeit.Adapters.MemeAdapter;
-import com.innov8.memeit.CustomClasses.MemeLoader;
+import com.innov8.memeit.CustomClasses.FavoritesLoader;
+import com.innov8.memeit.CustomClasses.HomeLoader;
+import com.innov8.memeit.CustomClasses.TrendingLoader;
 import com.innov8.memeit.CustomViews.BottomNavigation;
 import com.innov8.memeit.CustomViews.SearchToolbar;
 import com.innov8.memeit.Fragments.MemeListFragment;
 import com.innov8.memeit.Fragments.ProfileFragment;
 import com.innov8.memeit.R;
-import com.memeit.backend.MemeItAuth;
+import com.memeit.backend.MemeItClient;
 import com.memeit.backend.MemeItUsers;
-import com.memeit.backend.kotlin.MemeItClient;
-import com.memeit.backend.utilis.OnCompleteListener;
+import com.memeit.backend.OnCompleted;
 import com.minibugdev.drawablebadge.DrawableBadge;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,9 +37,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
-import okhttp3.ResponseBody;
 
 public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
@@ -55,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!MemeItAuth.getInstance().isSignedIn(this)) {
+        if (!MemeItClient.Auth.INSTANCE.isSignedIn()) {
             startActivity(new Intent(this, IntroActivity.class));
             finish();
             return;
@@ -105,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MemeItAuth.getInstance().signOut(MainActivity.this);
+                MemeItClient.Auth.INSTANCE.signOut();
                 recreate();
             }
         });
@@ -231,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadNotifCount() {
         if(notifItem==null)return;
-        MemeItUsers.getInstance().getNotificationCount(new OnCompleteListener<Integer>() {
+        MemeItUsers.INSTANCE.getNotifCount().enqueue(new OnCompleted<Integer>() {
             @Override
             public void onSuccess(Integer integer) {
                 Drawable d=new DrawableBadge.Builder(MainActivity.this)
@@ -243,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Error error) {
+            public void onError(String error) {
             }
         });
     }
@@ -273,12 +268,12 @@ public class MainActivity extends AppCompatActivity {
     private static class MyPagerAdapter extends FragmentPagerAdapter {
         List<? extends Fragment> fragments;
 
-        public MyPagerAdapter(FragmentManager fm) {
+        MyPagerAdapter(FragmentManager fm) {
             super(fm);
             fragments = Arrays.asList(
-                    MemeListFragment.Companion.newInstance(MemeAdapter.HOME_ADAPTER, MemeLoader.HOME_LOADER),
-                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.TRENDING_LOADER),
-                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER, MemeLoader.FAVOURITE_LOADER),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.HOME_ADAPTER,new HomeLoader()),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER,new TrendingLoader()),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER,new FavoritesLoader()),
                     ProfileFragment.Companion.newInstance()
             );
         }

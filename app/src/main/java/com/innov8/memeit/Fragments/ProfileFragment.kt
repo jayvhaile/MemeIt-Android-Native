@@ -17,12 +17,15 @@ import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Activities.TagsActivity
 import com.innov8.memeit.Activities.UserTagActivity
 import com.innov8.memeit.CustomClasses.CustomMethods
-import com.innov8.memeit.CustomClasses.UserListLoader
+import com.innov8.memeit.CustomClasses.FollowerLoader
+import com.innov8.memeit.CustomClasses.FollowingLoader
 import com.innov8.memeit.loadImage
 import com.innov8.memeit.prefix
+import com.innov8.memeit.R
+import com.memeit.backend.MemeItClient
 import com.memeit.backend.dataclasses.User
-import com.memeit.backend.kotlin.MemeItUsers
-import com.memeit.backend.kotlin.call
+import com.memeit.backend.MemeItUsers
+import com.memeit.backend.call
 import kotlinx.android.synthetic.main.profile_page.*
 
 
@@ -33,13 +36,13 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     private var userData: User? = null
 
     private val isMe: Boolean
-        get() = userID == MemeItUsers.getMyUser()?.userID
+        get() = userID == MemeItClient.myUser?.id
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val myID = MemeItUsers.getMyUser()!!.userID!!
-        userID = arguments?.getString("uid", myID) ?: myID
+        val myID = MemeItClient.myUser?.id
+        userID = arguments?.getString("uid", myID!!) ?: myID!!
         userData = arguments?.getParcelable("user")
     }
 
@@ -52,9 +55,9 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         val adapter = ViewPagerAdapter(childFragmentManager)
         profile_viewpager.adapter = adapter
         tabs_profile.setupWithViewPager(profile_viewpager)
-        val t = view.findViewById(R.id.toolbar)
-        t.inflateMenu(R.menu.profile_page_menu)
-        t.setOnMenuItemClickListener(this)
+
+        toolbar.inflateMenu(R.menu.profile_page_menu)
+        toolbar.setOnMenuItemClickListener(this)
 
         profile_follow_btn.visibility = if (isMe) GONE else VISIBLE
 
@@ -84,10 +87,10 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     }
 
     private fun loadFast() {
-        val myUser = MemeItUsers.getMyUser()
+        val myUser = MemeItClient.myUser
         profile_name.text = myUser!!.name
         profile_image.text = myUser.name.prefix()
-        profile_image.loadImage(myUser.imageUrl, size, size)
+        profile_image.loadImage(myUser.profilePic, size, size)
 
     }
 
@@ -120,7 +123,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                     startActivity(Intent(context, TagsActivity::class.java))
                 else {
                     val intent = Intent(context, UserTagActivity::class.java)
-                    intent.putExtra("uid", userData!!.userID)
+                    intent.putExtra("uid", userData!!.uid)
                     startActivity(intent)
                 }
                 return true
@@ -133,20 +136,16 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     internal inner class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
         var titles = arrayOf("MemeItMemes", "Following", "Followers")
         var fragments: Array<Fragment> = arrayOf(MemeListFragment.newInstanceForUserPosts(userID),
-                UserListFragment.newInstance(UserListLoader.FOLLOWING_LOADER, userID),
-                UserListFragment.newInstance(UserListLoader.FOLLOWER_LOADER, userID))
+                UserListFragment.newInstance(FollowingLoader(userID)),
+                UserListFragment.newInstance(FollowerLoader(userID)))
 
-        override fun getItem(position: Int): Fragment {
-            return fragments[position]
-        }
+        override fun getItem(position: Int): Fragment = fragments[position]
 
-        override fun getCount(): Int {
-            return fragments.size
-        }
 
-        override fun getPageTitle(position: Int): CharSequence? {
-            return titles[position]
-        }
+        override fun getCount(): Int=fragments.size
+
+
+        override fun getPageTitle(position: Int): CharSequence?=titles[position]
     }
 
     companion object {
@@ -163,7 +162,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             val pf = ProfileFragment()
             val bundle = Bundle()
             bundle.putParcelable("user", user)
-            bundle.putString("uid", user.userID)
+            bundle.putString("uid", user.uid)
             pf.arguments = bundle
             return pf
         }

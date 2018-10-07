@@ -25,8 +25,7 @@ import com.innov8.memeit.DP
 import com.innov8.memeit.R
 import com.innov8.memeit.dp
 import com.memeit.backend.MemeItMemes
-import com.memeit.backend.dataclasses.Tag
-import com.memeit.backend.utilis.OnCompleteListener
+import com.memeit.backend.call
 
 class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
     override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
@@ -170,23 +169,10 @@ class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
 
     }
 
-    private val listener = object : OnCompleteListener<List<Tag>> {
-        override fun onSuccess(t: List<Tag>) {
-            log("SUCCESS")
-            t.forEach { log(it) }
-            adapter.addAll(t)
-        }
-
-        override fun onFailure(error: OnCompleteListener.Error?) {
-            log("tag errored", error?.message ?: "")
-        }
-
-    }
-
     fun x(s: String) {
         log(s)
         adapter.updateFilter(s)
-        MemeItMemes.getInstance().getPopularTags(s, 0, 5, listener)
+        MemeItMemes.getPopularTags(s, 0, 5).call {adapter.addAll(it)}
     }
 
     fun hashTagDone() {

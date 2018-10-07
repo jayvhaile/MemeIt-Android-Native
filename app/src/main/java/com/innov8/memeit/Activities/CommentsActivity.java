@@ -17,15 +17,16 @@ import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.innov8.memeit.Adapters.CommentsAdapter;
 import com.innov8.memeit.CustomViews.ProfileDraweeView;
 import com.innov8.memeit.KUtilsKt;
+import com.memeit.backend.MemeItClient;
 import com.memeit.backend.dataclasses.Comment;
+import com.memeit.backend.dataclasses.MUser;
 import com.memeit.backend.dataclasses.Meme;
-import com.memeit.backend.dataclasses.MyUser;
 import com.memeit.backend.dataclasses.Reaction;
-import com.memeit.backend.kotlin.MemeItMemes;
-import com.memeit.backend.kotlin.OnCompleted;
-import com.memeit.backend.kotlin.MemeItUsers;
-import com.memeit.backend.utilis.OnCompleteListener;
+import com.memeit.backend.MemeItMemes;
+import com.memeit.backend.OnCompleted;
+import com.memeit.backend.MemeItUsers;
 import com.varunest.sparkbutton.SparkButton;
+import com.innov8.memeit.R;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -64,7 +65,7 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
     TextView stupidCount;
     TextView angryCount;
     TextView veryFunnyCount;
-    MyUser myUser;
+    MUser myUser;
 
 
     @Override
@@ -254,10 +255,10 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
         commentButton.setOnClickListener(this);
         KUtilsKt.loadMeme(memeImage, meme, 0, 0);
         ProfileDraweeView pdv = findViewById(R.id.comment_pp);
-        myUser = MemeItUsers.INSTANCE.getMyUser();
+        myUser = MemeItClient.INSTANCE.getMyUser();
         pdv.setText(KUtilsKt.prefix(myUser.getName()));
         float size = dimen(R.dimen.profile_mini_size);
-        loadImage(pdv, myUser.getImageUrl(), size, size);
+        loadImage(pdv, myUser.getProfilePic(), size, size);
         if (myUser == null) {
             findViewById(R.id.comment_group).setVisibility(View.GONE);
             findViewById(R.id.signup).setVisibility(View.VISIBLE);

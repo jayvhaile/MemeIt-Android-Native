@@ -13,20 +13,6 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/background_login_1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/many_pics_optimized" />
-
-        <ImageView
-            android:id="@+id/background_login_2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/many_pics_optimized" />
-
-        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"

@@ -6,56 +6,61 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-
-import com.innov8.memegenerator.utils.*
-import com.innov8.memeit.Adapters.MemeAdapter
-import com.innov8.memeit.CustomClasses.EmptyLoader
-import com.innov8.memeit.CustomClasses.MemeLoader
-import com.innov8.memeit.CustomClasses.SearchLoader
-import com.innov8.memeit.R
-import com.memeit.backend.dataclasses.HomeElement
-import com.memeit.backend.dataclasses.Meme
-import com.memeit.backend.utilis.OnCompleteListener
-
-import java.util.ArrayList
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.innov8.memegenerator.utils.log
+import com.innov8.memegenerator.utils.toast
+import com.innov8.memeit.Adapters.MemeAdapter
+import com.innov8.memeit.CustomClasses.EmptyLoader
+import com.innov8.memeit.CustomClasses.MemeLoader
 import com.innov8.memeit.CustomClasses.MyMemesLoader
+import com.innov8.memeit.CustomClasses.SearchLoader
+import com.memeit.backend.dataclasses.HomeElement
+import kotlinx.android.synthetic.main.fragment_meme_list.*
+import java.util.*
+import com.innov8.memeit.R
+
 
 class MemeListFragment : Fragment() {
 
-    private var memeList: RecyclerView? = null
-    private var swipeRefreshLayout: SwipeRefreshLayout? = null
 
-    private var memeAdapter: MemeAdapter? = null
-
-    private val emptyLoader = EmptyLoader()
-    private var memeLoader: MemeLoader<*>? = null
-
-
+    private lateinit var memeAdapter: MemeAdapter
+    private lateinit var memeLoader: MemeLoader<out HomeElement>
     private var skip: Int = 0
-
     private var memeAdapterType: Byte = 0
-    private var memeLoaderType: Byte = 0
-
-
     private var refresh: Boolean = false
-
-
-    internal var searchLoader: SearchLoader? = null
-    internal var tempList: List<HomeElement>? = null
-    internal var tempSkip: Int = 0
-
-    internal var searchMode: Boolean = false
-
-    internal var searchText: String? = null
-    internal var searchTags: Array<String>? = null
+    private var searchLoader: SearchLoader? = null
+    private var tempList: List<HomeElement>? = null
+    private var tempSkip: Int = 0
+    private var searchMode: Boolean = false
     internal var disableScrollListener: Boolean = false
+    private val onLoaded by lazy {
+        {it:List<HomeElement>->
+            memeAdapter.loading = false
+            swipe_to_refresh!!.isRefreshing = false
+            memeAdapter.addAll(it)
+            incSkip()
+        }
+    }
+    private val onRefreshed by lazy {
+        {it:List<HomeElement>->
+            memeAdapter.loading = false
+            swipe_to_refresh!!.isRefreshing = false
+            memeAdapter.setAll(it)
+            incSkip()
+        }
+    }
+    private val onError by lazy {
+        {it:String->
+            context?.toast(it)
+            memeAdapter.loading=false
+            swipe_to_refresh.isRefreshing = false
+
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,54 +68,19 @@ class MemeListFragment : Fragment() {
         if (arguments == null)
             throw NullPointerException("Argument should not be null")
         memeAdapterType = arguments!!.getByte("adapter_type", MemeAdapter.LIST_ADAPTER)!!
-        memeLoaderType = arguments!!.getByte("loader_type", MemeLoader.EMPTY_LOADER)!!
-        val onLoaded:(List<Meme>)->Unit={
-            memeAdapter!!.loading = false
-            swipeRefreshLayout!!.isRefreshing = false
-            memeAdapter!!.addAll(it)
-            incSkip()
-        }
-        val onRefreshed:(List<Meme>)->Unit={
-            memeAdapter!!.loading = false
-            swipeRefreshLayout!!.isRefreshing = false
-            memeAdapter!!.setAll(it)
-            incSkip()
-        }
-        val onError:(String)->Unit={
-            context?.toast(it)
-            memeAdapter?.loading=false
-            swipeRefreshLayout!!.isRefreshing = false
-
-        }
+        memeLoader = arguments!!.getParcelable("loader")!!
         memeAdapter = MemeAdapter.create(memeAdapterType, context!!)
-        initLoader()
-    }
-
-    private fun initLoader() {
-        if (searchMode && searchLoader == null) {
-            searchLoader = SearchLoader()
-        }
-        if (memeLoader == null)
-            if (memeLoaderType == MemeLoader.USER_POST_MEME_LOADER) {
-                val uid = arguments!!.getString("uid")
-                memeLoader = MemeLoader.create(memeLoaderType, context!!, uid)
-            } else {
-                memeLoader = MemeLoader.create(memeLoaderType, context!!, null)
-            }
     }
 
 
-    private fun initAdapter() {
-        if (memeAdapter == null)
-            memeAdapter = MemeAdapter.create(memeAdapterType, context!!)
-    }
+
+
 
     fun swapAdapter(adapterType: Byte) {
         memeAdapterType = adapterType
         val elem = ArrayList(memeAdapter!!.items)
-        memeAdapter = null
-        initAdapter()
-        memeAdapter!!.addAll(elem)
+        memeAdapter = MemeAdapter.create(memeAdapterType, context!!)
+        memeAdapter.addAll(elem)
     }
 
 
@@ -120,24 +90,19 @@ class MemeListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh)
-        memeList = view.findViewById(R.id.meme_recycler_view)
-        swipeRefreshLayout!!.setOnRefreshListener { refresh(false) }
-        memeList!!.layoutManager = memeAdapter!!.createLayoutManager()
-        val animator = DefaultItemAnimator()
-        memeList!!.itemAnimator = animator
-        memeList!!.adapter = memeAdapter
+        swipe_to_refresh.setOnRefreshListener { refresh(false) }
+        meme_recycler_view.layoutManager = memeAdapter!!.createLayoutManager()
+        meme_recycler_view.itemAnimator = DefaultItemAnimator()
+        meme_recycler_view.adapter = memeAdapter
         if (memeAdapterType == MemeAdapter.LIST_ADAPTER || memeAdapterType == MemeAdapter.HOME_ADAPTER) {
             val itemTouchhelper = ItemTouchHelper(memeAdapter!!.make())
-            itemTouchhelper.attachToRecyclerView(memeList)
+            itemTouchhelper.attachToRecyclerView(meme_recycler_view)
         }
-
-        memeList!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        meme_recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (disableScrollListener) return
                 super.onScrolled(recyclerView, dx, dy)
-                val llm = memeList!!.layoutManager
+                val llm = meme_recycler_view.layoutManager
                 val visibleItemCount = llm!!.childCount
                 val totalItemCount = llm.itemCount
                 val fp = (llm as LinearLayoutManager).findFirstVisibleItemPosition()
@@ -165,18 +130,13 @@ class MemeListFragment : Fragment() {
     fun setSearchMode(searchMode: Boolean) {
         disableScrollListener = true
         if (!this.searchMode && searchMode) {
-            searchLoader = SearchLoader()
-            tempList = ArrayList(memeAdapter!!.items)
-            memeAdapter!!.clear()
-            log("searchmode true")
+            tempList = ArrayList(memeAdapter.items)
+            memeAdapter.clear()
             tempSkip = skip
             skip = 0
         } else if (this.searchMode && !searchMode) {
             searchLoader = null
-            searchText = null
-            searchTags = null
-            log("searchmode false")
-            memeAdapter!!.setAll(ArrayList(tempList!!))
+            memeAdapter.setAll(ArrayList(tempList!!))
             skip = tempSkip
             tempSkip = 0
             tempList = null
@@ -191,15 +151,14 @@ class MemeListFragment : Fragment() {
 
     private fun load() {
         disableScrollListener = true
-        memeAdapter!!.loading = true
+        memeAdapter.loading = true
         refresh = false
         if (searchMode) {
-            searchLoader!!.search(searchText, searchTags, skip, LIMIT)
+            searchLoader!!.load(skip, LIMIT,onLoaded,onError)
         } else {
-            memeLoader!!.load(skip, LIMIT)
+            memeLoader.load(skip, LIMIT,onLoaded,onError)
         }
         enableScrollListenerLater()
-
 
     }
 
@@ -209,21 +168,18 @@ class MemeListFragment : Fragment() {
         memeAdapter!!.loading = setLoading
         refresh = true
         if (searchMode) {
-            searchLoader!!.reset()
-            searchLoader!!.listener = refreshListener
-            searchLoader!!.search(searchText, searchTags, skip, LIMIT)
+            searchLoader?.reset()
+            searchLoader?.load(skip, LIMIT,onRefreshed,onError)
         } else {
-            memeLoader!!.reset()
-            memeLoader!!.listener = refreshListener
-            memeLoader!!.load(skip, LIMIT)
+            memeLoader.reset()
+            memeLoader!!.load(skip, LIMIT,onRefreshed,onError)
         }
         enableScrollListenerLater()
     }
 
     fun search(s: String, tags: Array<String>) {
         if (searchMode) {
-            searchText = s
-            searchTags = tags
+            searchLoader= SearchLoader(s,tags)
             refresh(true)
         }
     }
@@ -233,11 +189,11 @@ class MemeListFragment : Fragment() {
         private val TAG = "MemeListFragment"
         private val LIMIT = 20
 
-        fun newInstance(memeAdapterType: Byte, memeLoaderType: Byte): MemeListFragment {
+        fun newInstance(memeAdapterType: Byte, memeLoader:MemeLoader<out HomeElement>): MemeListFragment {
             val fragment = MemeListFragment()
             val arg = Bundle()
             arg.putByte("adapter_type", memeAdapterType)
-            arg.putByte("loader_type", memeLoaderType)
+            arg.putParcelable("loader",memeLoader)
             fragment.arguments = arg
             return fragment
         }
@@ -246,10 +202,10 @@ class MemeListFragment : Fragment() {
             val fragment = MemeListFragment()
             val arg = Bundle()
             arg.putByte("adapter_type", MemeAdapter.GRID_ADAPTER)
-            arg.putParcelable("loader_type", MyMemesLoader(userID))
+            arg.putParcelable("loader", MyMemesLoader(userID))
             arg.putString("uid", userID)
             fragment.arguments = arg
             return fragment
         }
     }
-}// Required empty public constructor
+}

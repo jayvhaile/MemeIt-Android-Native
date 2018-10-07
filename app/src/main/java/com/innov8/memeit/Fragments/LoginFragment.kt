@@ -9,17 +9,20 @@ import android.view.inputmethod.InputMethodManager
 import com.innov8.memeit.Activities.AuthActivity
 import com.innov8.memeit.Activities.MainActivity
 import com.innov8.memeit.R
-import com.memeit.backend.MemeItAuth
 import android.content.Context.INPUT_METHOD_SERVICE
-import com.memeit.backend.dataclasses.MyUser
 import com.memeit.backend.dataclasses.UsernameAuthRequest
-import com.memeit.backend.kotlin.MemeItClient
+import com.memeit.backend.MemeItClient
+import com.memeit.backend.dataclasses.User
 import kotlinx.android.synthetic.main.fragment_login2.*
 
 class LoginFragment : AuthFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_login2, container, false)
+        return inflater.inflate(R.layout.fragment_login2, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         actionButton = login_btn
         actionButton.setOnClickListener { loginWithUserName() }
         login_google.setOnClickListener { MemeItClient.Auth.requestGoogleInfo(authActivity) }
@@ -31,18 +34,18 @@ class LoginFragment : AuthFragment() {
             loginWithUserName()
             true
         }
-        return view
     }
 
-    private val onSignedIn = { _: MyUser ->
+    private val onSignedIn = { _: User ->
         startActivity(Intent(context, MainActivity::class.java))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MemeItAuth.GOOGLE_SIGNIN_REQUEST_CODE) {
-            val req = MemeItClient.Auth.extractGoogleAuthRequest(data!!)
-            MemeItClient.Auth.signInWithGoogle(req, onSignedIn, onError)
+        if (requestCode == MemeItClient.Auth.GOOGLE_SIGN_IN_REQUEST_CODE) {
+            MemeItClient.Auth.extractGoogleInfo(data!!,{
+                MemeItClient.Auth.signInWithGoogle(it.toSignInReq(), onSignedIn, onError)
+            },onError)
         }
     }
 

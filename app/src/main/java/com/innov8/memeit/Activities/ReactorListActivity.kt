@@ -6,8 +6,8 @@ import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Adapters.ReactorAdapter
 import com.innov8.memeit.R
 import com.innov8.memeit.makeLinear
-import com.memeit.backend.kotlin.MemeItMemes
-import com.memeit.backend.kotlin.call
+import com.memeit.backend.MemeItMemes
+import com.memeit.backend.call
 import kotlinx.android.synthetic.main.activity_reactor_list.*
 import java.lang.IllegalStateException
 

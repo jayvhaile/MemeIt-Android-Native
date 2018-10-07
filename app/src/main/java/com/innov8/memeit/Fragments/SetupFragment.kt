@@ -15,15 +15,13 @@ import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.innov8.memeit.R
-import com.memeit.backend.MemeItUsers
-import com.memeit.backend.utilis.OnCompleteListener
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import com.innov8.memeit.Activities.TagsChooserActivity
-import com.memeit.backend.dataclasses.MyUser
-import com.memeit.backend.kotlin.MemeItUsers
+import com.memeit.backend.MemeItUsers
+import com.memeit.backend.dataclasses.User
 import kotlinx.android.synthetic.main.fragment_setup_profile2.*
 
 class SetupFragment : AuthFragment() {
@@ -33,14 +31,18 @@ class SetupFragment : AuthFragment() {
     internal var isFromGoogle: Boolean = false
 
 
-    fun fromGoogle(name: String, pp: String) {
+    fun fromGoogle(name: String, pp: String?) {
         if (!TextUtils.isEmpty(pp)) isFromGoogle = true
         image_url = Uri.parse(pp)
         this.name = name
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_setup_profile2, container, false)
+        return inflater.inflate(R.layout.fragment_setup_profile2, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         profile_pic.setOnClickListener {
             CropImage.activity()
                     .setGuidelines(CropImageView.Guidelines.ON)
@@ -51,7 +53,7 @@ class SetupFragment : AuthFragment() {
         actionButton = finish
         actionButton.setOnClickListener{finish()}
 
-        name_setup.setOnEditorActionListener { v, actionId, event ->
+        name_setup.setOnEditorActionListener{ v, actionId, event ->
             val mgr = context!!.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             mgr.hideSoftInputFromWindow(v.windowToken, 0)
             finish()
@@ -59,8 +61,6 @@ class SetupFragment : AuthFragment() {
         }
         name_setup.setText(name)
         profile_pic.setImageURI(image_url)
-
-        return view
     }
 
     private fun finish() {
@@ -83,7 +83,7 @@ class SetupFragment : AuthFragment() {
     }
 
     private fun uploadData(name: String, image_url: String?) {
-        val user = MyUser(name, image_url)
+        val user = User(name=name, imageUrl= image_url)
         MemeItUsers.setupMyUser(user, {
             val i = Intent(context, TagsChooserActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)

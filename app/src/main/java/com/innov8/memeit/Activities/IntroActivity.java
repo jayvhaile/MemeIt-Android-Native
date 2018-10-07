@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.innov8.memeit.Adapters.IntroTransformer;
 import com.innov8.memeit.CustomClasses.CustomMethods;
+import com.innov8.memeit.CustomClasses.ScrollingImageDrawable;
+import com.innov8.memeit.KUtilsKt;
 import com.innov8.memeit.R;
 
 import java.util.Arrays;
@@ -25,14 +27,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-public class IntroActivity extends AppCompatActivity{
+public class IntroActivity extends AppCompatActivity {
     public static final String NUMBER = "number";
 
     ViewPager viewPager;
     ViewPagerAdapter adapter;
     View[] dots;
     Context c;
-
 
 
     @Override
@@ -47,18 +48,24 @@ public class IntroActivity extends AppCompatActivity{
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
+
             @Override
             public void onPageSelected(int position) {
                 selectDot(position);
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
 
             }
         });
-        viewPager.setPageTransformer(false,new IntroTransformer());
+        viewPager.setPageTransformer(false, new IntroTransformer());
         viewPager.setAdapter(adapter);
-        CustomMethods.makeBackgroundScrollAnimate(this, R.id.background_login_1, R.id.background_login_2);
+        findViewById(R.id.intro_back).setBackground(
+                new ScrollingImageDrawable(this, R.drawable.many_pics_optimized,
+                        KUtilsKt.getScreenWidth(),
+                        KUtilsKt.getScreenHeight()));
+
         selectDot(0);
     }
 
@@ -89,26 +96,29 @@ public class IntroActivity extends AppCompatActivity{
         };
     }
 
-    public static class IntroFragment extends Fragment{
+    public static class IntroFragment extends Fragment {
 
-        public IntroFragment(){}
+        public IntroFragment() {
+        }
 
-        public static IntroFragment getInstance(int number){
+        public static IntroFragment getInstance(int number) {
             IntroFragment fragment = new IntroFragment();
             Bundle bundle = new Bundle();
-            bundle.putInt(NUMBER,number);
+            bundle.putInt(NUMBER, number);
             fragment.setArguments(bundle);
             return fragment;
         }
-        String []titles;
-        String []descriptions;
+
+        String[] titles;
+        String[] descriptions;
         TypedArray drawables;
 
         int pos;
+
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            pos=getArguments().getInt(NUMBER);
+            pos = getArguments().getInt(NUMBER);
             titles = getContext().getResources().getStringArray(R.array.intro_slide_title);
             descriptions = getContext().getResources().getStringArray(R.array.intro_slide_description);
             drawables = getResources().obtainTypedArray(R.array.intro_drawables);
@@ -122,9 +132,9 @@ public class IntroActivity extends AppCompatActivity{
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            ImageView iv=view.findViewById(R.id.intro_image);
-            TextView titleV=view.findViewById(R.id.intro_login);
-            TextView descV=view.findViewById(R.id.intro_description);
+            ImageView iv = view.findViewById(R.id.intro_image);
+            TextView titleV = view.findViewById(R.id.intro_login);
+            TextView descV = view.findViewById(R.id.intro_description);
 
 
             titleV.setText(titles[pos]);
@@ -159,8 +169,9 @@ public class IntroActivity extends AppCompatActivity{
             return fragments.size();
         }
     }
-    private void selectDot(int position){
-        for(int i = 0;i<dots.length;i++)
-            dots[i].setAlpha(i==position ? 1f : 0.5f);
+
+    private void selectDot(int position) {
+        for (int i = 0; i < dots.length; i++)
+            dots[i].setAlpha(i == position ? 1f : 0.5f);
     }
 }

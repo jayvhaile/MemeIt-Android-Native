@@ -16,11 +16,11 @@ import com.innov8.memeit.Activities.ProfileActivity;
 import com.innov8.memeit.CustomViews.ProfileDraweeView;
 import com.innov8.memeit.KUtilsKt;
 import com.innov8.memeit.R;
+import com.memeit.backend.MemeItClient;
 import com.memeit.backend.dataclasses.Comment;
-import com.memeit.backend.kotlin.MemeItMemes;
-import com.memeit.backend.kotlin.OnCompleted;
-import com.memeit.backend.kotlin.MemeItUsers;
-import com.memeit.backend.utilis.OnCompleteListener;
+import com.memeit.backend.MemeItMemes;
+import com.memeit.backend.OnCompleted;
+import com.memeit.backend.MemeItUsers;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -102,7 +102,7 @@ public class CommentsAdapter extends ListAdapter<Comment> {
             dateV.setText(KUtilsKt.formatDate(mComment.getDate()));
             like.setText(String.valueOf(mComment.getLikeCount()));
             dislike.setText(String.valueOf(mComment.getDislikeCount()));
-            boolean isOwnComment = MemeItUsers.INSTANCE.getMyUser().getUserID().equals(mComment.getPosterID());
+            boolean isOwnComment = MemeItClient.INSTANCE.getMyUser().getId().equals(mComment.getPosterID());
             if (isOwnComment)
                 ownCommentViews.setVisibility(View.GONE);
             else
@@ -159,7 +159,7 @@ public class CommentsAdapter extends ListAdapter<Comment> {
                                 public void onInput(@NonNull MaterialDialog dialog, final CharSequence input) {
                                     if (TextUtils.isEmpty(input))
                                         return;
-                                    Comment c = Comment.createCommentForUpdate(comment.getCommentID(), input.toString())
+                                    Comment c = Comment.createCommentForUpdate(comment.getCommentID(), input.toString());
                                     MemeItMemes.INSTANCE.updateComment(c)
                                             .enqueue(new OnCompleted<ResponseBody>() {
                                                 @Override

@@ -41,7 +41,6 @@ class LoadingDrawable (val context:Context): ProgressBarDrawable() {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val paint2:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val anim=ValueAnimator.ofFloat(0f,0.1f)
-    val anim2=ValueAnimator.ofFloat(0f,0.1f)
     init {
         paint.color=Color.WHITE
         paint.style=Paint.Style.STROKE

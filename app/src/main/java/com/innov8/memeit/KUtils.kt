@@ -26,7 +26,7 @@ import com.memeit.backend.dataclasses.Meme.MemeType.IMAGE
 import com.memeit.backend.dataclasses.Reaction
 import java.text.SimpleDateFormat
 import java.util.*
-import com.innov8.memeit.MemeItApp.Companion.instanxe as it
+import com.innov8.memeit.MemeItApp.Companion.instance as it
 
 //fun launchTask(block: suspend CoroutineScope.() -> Unit): Job {
 //    return launch { block() }

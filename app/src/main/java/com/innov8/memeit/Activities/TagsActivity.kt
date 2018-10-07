@@ -15,9 +15,9 @@ import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Adapters.TagsAdapter
 import com.innov8.memeit.R
 import com.memeit.backend.dataclasses.Tag
-import com.memeit.backend.kotlin.MemeItMemes
-import com.memeit.backend.kotlin.MemeItUsers
-import com.memeit.backend.kotlin.call
+import com.memeit.backend.MemeItMemes
+import com.memeit.backend.MemeItUsers
+import com.memeit.backend.call
 import kotlinx.android.synthetic.main.activity_tags.*
 import kotlinx.android.synthetic.main.fragment_meme_list.*
 import retrofit2.Call
@@ -31,9 +31,9 @@ class TagsActivity : AppCompatActivity() {
         tags_tab.setupWithViewPager(tags_pager)
     }
     class Pager(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
-        private val frags = listOf("Followed Tags" to TagFragment.newInstance(0),
-                "Popular Tags" to TagFragment.newInstance(1),
-                "Trending Tags" to TagFragment.newInstance(2))
+        private val frags = listOf("Followed Tags" to TagFragment.newInstance(MyTagLoader()),
+                "Popular Tags" to TagFragment.newInstance(PopularTagLoader()),
+                "Trending Tags" to TagFragment.newInstance(TrendingTagLoader()))
 
         override fun getItem(position: Int): Fragment = frags[position].second
         override fun getCount(): Int = frags.size
