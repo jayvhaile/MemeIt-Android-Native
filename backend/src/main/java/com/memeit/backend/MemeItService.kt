@@ -13,6 +13,8 @@ interface MemeItService {
 
     @POST("auth/signin/google")
     fun signInWithGoogle(@Body user: GoogleAuthSignInRequest): Call<AuthResponse>
+    @POST("auth/signin/facebook")
+    fun signInWithFacebook(@Body user: FacebookAuthSignInRequest): Call<AuthResponse>
 
     @POST("auth/signup")
     fun signUpWithEmail(@Body user: UsernameAuthRequest): Call<AuthResponse>
@@ -20,6 +22,8 @@ interface MemeItService {
 
     @POST("auth/signup/google")
     fun signUpWithGoogle(@Body user: GoogleAuthSignUpRequest): Call<AuthResponse>
+    @POST("auth/signup/facebook")
+    fun signUpWithFacebook(@Body user: FacebookAuthSignUpRequest): Call<AuthResponse>
 
 
     @GET("user/me")

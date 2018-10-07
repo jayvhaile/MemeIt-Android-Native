@@ -10,13 +10,19 @@ import com.innov8.memeit.Activities.AuthActivity
 import com.innov8.memeit.Activities.MainActivity
 import com.innov8.memeit.R
 import android.content.Context.INPUT_METHOD_SERVICE
+import com.facebook.CallbackManager
 import com.memeit.backend.dataclasses.UsernameAuthRequest
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.dataclasses.User
 import kotlinx.android.synthetic.main.fragment_login2.*
 
 class LoginFragment : AuthFragment() {
+    lateinit var callbackManager: CallbackManager
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        callbackManager= CallbackManager.Factory.create()
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_login2, container, false)
     }
@@ -26,7 +32,11 @@ class LoginFragment : AuthFragment() {
         actionButton = login_btn
         actionButton.setOnClickListener { loginWithUserName() }
         login_google.setOnClickListener { MemeItClient.Auth.requestGoogleInfo(authActivity) }
-        login_facebook.setOnClickListener {}
+        login_facebook.setOnClickListener {
+            MemeItClient.Auth.requestFacebookInfo(authActivity,callbackManager,{
+                MemeItClient.Auth.signInWithFacebook(it.toSignInReq(),onSignedIn,onError)
+            },onError)
+        }
         rel.setOnClickListener { authActivity.setCurrentFragment(AuthActivity.FRAGMENT_SIGNUP) }
         login_password.setOnEditorActionListener { v, _, _ ->
             val mgr = context!!.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -42,6 +52,7 @@ class LoginFragment : AuthFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        callbackManager.onActivityResult(requestCode, resultCode, data)
         if (requestCode == MemeItClient.Auth.GOOGLE_SIGN_IN_REQUEST_CODE) {
             MemeItClient.Auth.extractGoogleInfo(data!!,{
                 MemeItClient.Auth.signInWithGoogle(it.toSignInReq(), onSignedIn, onError)

@@ -14,9 +14,6 @@ import com.innov8.memeit.Fragments.SetupFragment;
 import com.innov8.memeit.Fragments.SignUpFragment;
 import com.innov8.memeit.KUtilsKt;
 import com.innov8.memeit.R;
-import com.memeit.backend.MemeItClient;
-import com.theartofdev.edmodo.cropper.CropImage;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -39,9 +36,9 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         CustomMethods.makeWindowSeamless(this);
         setContentView(R.layout.activity_auth);
-        authCoordinate=findViewById(R.id.auth_coordinate);
+        authCoordinate = findViewById(R.id.auth_coordinate);
 
-        authCoordinate.setBackground(new ScrollingImageDrawable(this,R.drawable.many_pics_optimized,
+        authCoordinate.setBackground(new ScrollingImageDrawable(this, R.drawable.many_pics_optimized,
                 KUtilsKt.getScreenWidth(),
                 KUtilsKt.getScreenHeight()));
         initFragments();
@@ -98,16 +95,13 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MemeItClient.Auth.GOOGLE_SIGN_IN_REQUEST_CODE) {
-            getFragmentForInt(currentFrag).onActivityResult(requestCode, resultCode, data);
-        }
-        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            getFragmentForInt(currentFrag).onActivityResult(requestCode, resultCode, data);
-        }
+
+        getFragmentForInt(currentFrag).onActivityResult(requestCode, resultCode, data);
+
     }
 
-    public void showError(String error){
-        Snackbar sb=Snackbar.make(authCoordinate,error,Snackbar.LENGTH_LONG);
+    public void showError(String error) {
+        Snackbar sb = Snackbar.make(authCoordinate, error, Snackbar.LENGTH_LONG);
         sb.show();
     }
 

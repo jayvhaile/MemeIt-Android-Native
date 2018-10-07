@@ -13,8 +13,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.gson.Gson
 import com.memeit.backend.dataclasses.*
 import okhttp3.*
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -227,29 +229,49 @@ object MemeItClient {
             }, onError)
         }
 
-        fun requestFacebookInfo(activity: Activity) {
-            val perms = listOf("email")
+        fun requestFacebookInfo(activity: Activity, callbackManager: CallbackManager,
+                                onSuccess: ((FacebookInfo) -> Unit),
+                                onError: ((String) -> Unit) = {}) {
+            val perms = listOf("email", "public_profile")
             LoginManager.getInstance().logInWithReadPermissions(activity, perms)
-        }
-
-        fun signInWithFacebook() {
-            //todo handle this
-            val cb = CallbackManager.Factory.create()
-            LoginManager.getInstance().registerCallback(cb, object : FacebookCallback<LoginResult?> {
+            LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
                 override fun onSuccess(result: LoginResult?) {
                     if (result != null) {
-
-                    }
+                        val req = GraphRequest.newMeRequest(result.accessToken) { json, _ ->
+                            val facebookInfo = FacebookInfo(json.getString("id"),
+                                    json.getString("first_name"),
+                                    json.getString("last_name"),
+                                    json.getString("email"))
+                            onSuccess(facebookInfo)
+                        }
+                    } else onError("Unknown Error, Please Try Again")
                 }
 
                 override fun onCancel() {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    onError("Canceled by User")
                 }
 
-                override fun onError(error: FacebookException?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                override fun onError(error: FacebookException) {
+                    onError(error.message?:"Unknown Error")
                 }
             })
+        }
+
+        fun signUpWithFacebook(facebookAuthRequest:FacebookAuthSignUpRequest,
+                               onSignedUp: ((User) -> Unit)?,
+                               onError: ((String) -> Unit) = {}) {
+            memeItService.signUpWithFacebook(facebookAuthRequest).call({
+                setSignedIn(SignInMethod.FACEBOOK, it)
+                onSignedUp?.invoke(it.user)
+            }, onError)
+        }
+        fun signInWithFacebook(facebookAuthRequest:FacebookAuthSignInRequest,
+                               onSignedUp: ((User) -> Unit)?,
+                               onError: ((String) -> Unit) = {}) {
+            memeItService.signInWithFacebook(facebookAuthRequest).call({
+                setSignedIn(SignInMethod.FACEBOOK, it)
+                onSignedUp?.invoke(it.user)
+            }, onError)
         }
 
         private fun setSignedIn(signInMethod: SignInMethod, authResponse: AuthResponse) {
@@ -294,7 +316,7 @@ object MemeItUsers : MemeItService by MemeItClient.memeItService {
     fun updateUsername(username: String,
                        onSuccess: (() -> Unit)? = null,
                        onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateUsername(User(username=username))
+        MemeItClient.memeItService.updateUsername(User(username = username))
                 .call({
                     MUser.save(MemeItClient.sharedPref, username = username)
                     onSuccess?.invoke()
@@ -304,7 +326,7 @@ object MemeItUsers : MemeItService by MemeItClient.memeItService {
     fun updateName(name: String,
                    onSuccess: (() -> Unit)? = null,
                    onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateUsername(User(name=name))
+        MemeItClient.memeItService.updateUsername(User(name = name))
                 .call({
                     MUser.save(MemeItClient.sharedPref, name = name)
                     onSuccess?.invoke()
@@ -314,7 +336,7 @@ object MemeItUsers : MemeItService by MemeItClient.memeItService {
     fun updateProfilePic(pic: String,
                          onSuccess: (() -> Unit)? = null,
                          onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateUsername(User(imageUrl= pic))
+        MemeItClient.memeItService.updateUsername(User(imageUrl = pic))
                 .call({
                     MUser.save(MemeItClient.sharedPref, profilePic = pic)
                     onSuccess?.invoke()
@@ -324,7 +346,7 @@ object MemeItUsers : MemeItService by MemeItClient.memeItService {
     fun updateCoverPic(cpic: String,
                        onSuccess: (() -> Unit)? = null,
                        onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateUsername(User(coverImageUrl= cpic))
+        MemeItClient.memeItService.updateUsername(User(coverImageUrl = cpic))
                 .call({
                     MUser.save(MemeItClient.sharedPref, coverPic = cpic)
                     onSuccess?.invoke()
