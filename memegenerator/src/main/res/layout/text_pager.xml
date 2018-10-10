@@ -9,14 +9,15 @@
     tool:background="#000">
 
     <TextView
+        android:id="@+id/pager_add_text"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:text="Add Text"
-        android:padding="8dp"
         android:gravity="center"
-        android:textSize="16sp"
-        android:textColor="#f09"/>
-    <com.innov8.memegenerator.customViews.NonSwipeableViewPager
+        android:padding="8dp"
+        android:text="Add Text"
+        android:textColor="#f09"
+        android:textSize="16sp" />
+    <com.innov8.memegenerator.CustomViews.NonSwipeableViewPager
         android:id="@+id/text_pager"
         android:layout_width="match_parent"
         android:layout_height="56dp"

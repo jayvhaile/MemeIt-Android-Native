@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.innov8.memegenerator.adapters.ListAdapter;
-import com.innov8.memegenerator.adapters.MyViewHolder;
+import com.innov8.memegenerator.Adapters.ListAdapter;
+import com.innov8.memegenerator.Adapters.MyViewHolder;
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton;
 import com.innov8.memegenerator.loading_button_lib.interfaces.OnAnimationEndListener;
 import com.innov8.memeit.Activities.ProfileActivity;

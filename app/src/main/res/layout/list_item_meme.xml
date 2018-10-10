@@ -193,7 +193,7 @@
         app:layout_constraintTop_toBottomOf="@+id/description"
         tools:text="#programming #java" />
 
-    <com.innov8.memegenerator.customViews.FontTextView
+    <com.innov8.memegenerator.CustomViews.FontTextView
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -55,7 +55,7 @@
         app:layout_constraintTop_toTopOf="@+id/overlay_name" />
 
 
-    <com.innov8.memegenerator.customViews.FontTextView
+    <com.innov8.memegenerator.CustomViews.FontTextView
         android:id="@+id/overlay_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Biruk" />
 
-    <com.innov8.memegenerator.customViews.FontTextView
+    <com.innov8.memegenerator.CustomViews.FontTextView
         android:id="@+id/overlay_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="That moment you realize that your friends are idiots" />
-    <com.innov8.memegenerator.customViews.FontTextView
+    <com.innov8.memegenerator.CustomViews.FontTextView
         android:id="@+id/overlay_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

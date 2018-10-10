@@ -10,8 +10,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.innov8.memegenerator.adapters.ListAdapter;
-import com.innov8.memegenerator.adapters.MyViewHolder;
+import com.innov8.memegenerator.Adapters.ListAdapter;
+import com.innov8.memegenerator.Adapters.MyViewHolder;
 import com.innov8.memeit.Activities.ProfileActivity;
 import com.innov8.memeit.CustomViews.ProfileDraweeView;
 import com.innov8.memeit.KUtilsKt;
@@ -20,7 +20,6 @@ import com.memeit.backend.MemeItClient;
 import com.memeit.backend.dataclasses.Comment;
 import com.memeit.backend.MemeItMemes;
 import com.memeit.backend.OnCompleted;
-import com.memeit.backend.MemeItUsers;
 
 import org.jetbrains.annotations.NotNull;
 

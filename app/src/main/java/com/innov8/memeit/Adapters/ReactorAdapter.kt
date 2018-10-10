@@ -5,8 +5,8 @@ import android.content.Intent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.innov8.memegenerator.adapters.ListAdapter
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memegenerator.Adapters.ListAdapter
+import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.CustomViews.ProfileDraweeView
 import com.innov8.memeit.R

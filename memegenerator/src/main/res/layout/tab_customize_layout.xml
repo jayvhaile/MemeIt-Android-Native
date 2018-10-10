@@ -136,7 +136,7 @@
             app:layout_gravity="center_vertical"
             app:layout_row="4" />
 
-        <com.innov8.memegenerator.customViews.ColorView
+        <com.innov8.memegenerator.CustomViews.ColorView
             android:id="@+id/margin_color"
             android:layout_width="0dp"
             android:layout_height="40dp"

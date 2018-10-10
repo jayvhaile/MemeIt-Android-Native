@@ -6,11 +6,11 @@
     android:background="#000"
     android:orientation="vertical">
 
-    <com.innov8.memegenerator.customViews.MyToolBar
+    <com.innov8.memegenerator.CustomViews.MyToolBar
         android:layout_width="match_parent"
         android:layout_height="56dp" />
 
-    <com.innov8.memegenerator.customViews.ColorChooser
+    <com.innov8.memegenerator.CustomViews.ColorChooser
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

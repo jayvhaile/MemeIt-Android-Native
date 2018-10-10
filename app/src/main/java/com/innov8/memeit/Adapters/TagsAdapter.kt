@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Color
 import android.view.View
 import android.widget.TextView
-import com.innov8.memegenerator.adapters.ListAdapter
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memegenerator.Adapters.ListAdapter
+import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.CustomClasses.CustomMethods
 import com.innov8.memeit.R

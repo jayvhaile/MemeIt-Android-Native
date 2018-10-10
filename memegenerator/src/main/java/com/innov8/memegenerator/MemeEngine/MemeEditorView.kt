@@ -1,0 +1,253 @@
+package com.innov8.memegenerator.MemeEngine
+
+
+import android.content.Context
+import android.graphics.*
+import android.os.Handler
+import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup
+import com.innov8.memegenerator.CustomViews.CheckerBoardDrawable
+import com.innov8.memegenerator.Models.MemeTemplate
+import com.innov8.memegenerator.Models.TextProperty
+import com.innov8.memegenerator.utils.dp
+import com.innov8.memegenerator.utils.getDrawableIdByName
+import com.innov8.memegenerator.utils.loadBitmap
+import com.waynejo.androidndkgif.GifDecoder
+import com.waynejo.androidndkgif.GifEncoder
+
+/**
+ * Created by Haile on 5/19/2018.
+ */
+
+class MemeEditorView : ViewGroup {
+    constructor(context: Context) : super(context) {
+        init()
+
+    }
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        init()
+
+    }
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        init()
+    }
+
+    var itemSelectedInterface: ItemSelectedInterface? = null
+    var focusedItem: MemeItemView? = null
+        get() = focusedChild as? MemeItemView
+
+    private fun init() {
+        isFocusable = true
+        isFocusableInTouchMode = true
+        setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                when (v) {
+                    is MemeTextView -> itemSelectedInterface?.onTextItemSelected(v.generateTextStyleProperty())
+                }
+            }
+        }
+        background = CheckerBoardDrawable(12f.dp(context), Color.LTGRAY, Color.GRAY)
+        setOnClickListener { requestFocus() }
+    }
+
+    internal var memeLayout: MemeLayout? = null
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    fun addMemeItemView(child: MemeItemView) {
+        super.addView(child)
+        child.onFocusChangeListener = onFocusChangeListener
+        child.requestFocus()
+        child.onRemoveListener = { removeMemeItemView(it) }
+        child.onCopyListener = { it.copy()?.let { it1 -> addMemeItemView(it1) } }
+
+    }
+
+    fun x(a: Int, b: Int = if (a > 0) a else 0) {
+
+    }
+
+    fun removeMemeItemView(child: MemeItemView) {
+        super.removeView(child)
+    }
+
+
+    fun setLayout(memeLayout: MemeLayout) {
+        this.memeLayout = memeLayout
+        this.memeLayout?.invalidate = {
+            paint.color = this.memeLayout?.backgroudColor ?: Color.BLACK
+            invalidate()
+        }
+        this.memeLayout?.invalidate?.invoke()
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        background.draw(canvas)
+        if (memeLayout != null) {
+            val ml = memeLayout!!
+            canvas.drawRect(ml.drawingRect, paint)
+            for (i in 0 until ml.getCount()) {
+                canvas.drawBitmap(ml.images[i],
+                        null,
+                        ml.getDrawingRectAt(i),
+                        null)
+            }
+            super.onDraw(canvas)
+        }
+
+
+    }
+
+    override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
+        val eleft: Int = this.paddingLeft
+        val etop: Int = this.paddingTop
+        val eright: Int = this.measuredWidth - this.paddingRight
+        val ebottom: Int = this.measuredHeight - this.paddingBottom
+
+        val childWidth = eright - eleft
+        val childHeight = ebottom - etop
+
+        var curRight: Int
+        var curBottom: Int
+        var curLeft: Int
+        var curTop: Int
+        var maxHeight: Int
+        for (i in 0 until childCount) {
+            val child = getChildAt(i)
+            child.measure(View.MeasureSpec.makeMeasureSpec(childWidth, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.AT_MOST))
+            curLeft = if (child.left < eleft) eleft else child.left
+            curTop = if (child.left < etop) etop else child.top
+            curRight = if (curLeft + child.measuredWidth > eright) eright else curLeft + child.measuredWidth
+            curBottom = if (curTop + child.measuredHeight > ebottom) ebottom else curTop + child.measuredHeight
+            child.layout(curLeft, curTop, curRight, curBottom)
+        }
+    }
+
+
+    fun removeSelectedItem(clazz: (Class<out MemeItemView>) = MemeItemView::class.java) {
+        if (focusedItem != null && focusedItem!!.javaClass == clazz) {
+            removeMemeItemView(focusedItem!!)
+        }
+    }
+
+    inline fun <reified T : MemeItemView> getSelectedview(): T? {
+        return if (this.focusedItem != null && focusedItem!!.javaClass == T::class.java) {
+            focusedItem as T
+        } else null
+    }
+
+    fun clearMemeItems() =removeAllViews()
+
+
+
+    fun generateAllTextProperty(): List<TextProperty> {
+        val list = mutableListOf<TextProperty>()
+        for (index in 0 until childCount) {
+            val v = super.getChildAt(index)
+            if (v is MemeTextView) {
+                list.add(v.generateTextProperty(width.toFloat(), height.toFloat()))
+            }
+        }
+        return list
+    }
+
+
+    fun loadMemeTemplate(memeTemplate: MemeTemplate) {
+        Handler().postDelayed({
+            clearMemeItems()
+            val image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
+            val memeLayout = SingleImageLayout(width, height, image)
+            setLayout(memeLayout)
+
+            val rect = memeLayout.drawingRect
+            memeTemplate.textProperties.forEach {
+                val memeTextView = MemeTextView(context)
+                memeTextView.applyTextProperty(it, rect.width(), rect.height(), rect.left, rect.top)
+                addMemeItemView(memeTextView)
+            }
+        }, 300)
+    }
+
+    fun loadBitmab(bitmap: Bitmap) {
+        clearMemeItems()
+        val memeLayout = SingleImageLayout(width, height, bitmap)
+        setLayout(memeLayout)
+    }
+
+    fun captureMeme(): Bitmap {
+        val tempFocus=focusedItem
+        focusedItem?.clearFocus()
+        val rect = memeLayout?.drawingRect?.toRect()
+        val b= capture(rect)
+        tempFocus?.requestFocus()
+        return b
+    }
+
+    fun captureItems():Bitmap{
+        val tempFocus=focusedItem
+        val tempBack=background
+        val tempLayout=memeLayout
+
+        val rect = memeLayout?.drawingRect?.toRect()
+        focusedItem?.clearFocus()
+        setBackgroundColor(Color.TRANSPARENT)
+        memeLayout=null
+
+        invalidate()
+        val b=capture(rect)
+
+        memeLayout=tempLayout
+        background=tempBack
+        tempFocus?.requestFocus()
+
+        invalidate()
+
+        return b
+
+
+    }
+
+
+
+    fun RectF.toRect(): Rect {
+        return Rect(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+    }
+
+    fun Rect.toRectF(): RectF {
+        return RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
+    }
+
+    fun getRatio(): Float {
+        val rect = memeLayout!!.drawingRect.toRect()
+        val w = rect.right - rect.left
+        val h = rect.bottom - rect.top
+
+        return w.toFloat() / h
+    }
+
+    fun getTexts(): List<String> {
+        val texts = mutableListOf<String>()
+        for (i in 0 until childCount) {
+            val v = getChildAt(i)
+            if (v is MemeTextView) {
+                texts.add(v.text)
+            }
+        }
+        return texts
+    }
+}
+fun View.capture(rect: Rect? = null): Bitmap {
+    this.isDrawingCacheEnabled = true
+    val rb: Bitmap = if (rect != null)
+        Bitmap.createBitmap(this.getDrawingCache(true), rect.left, rect.top,
+                rect.right - rect.left, rect.bottom - rect.top)
+    else
+        Bitmap.createBitmap(this.getDrawingCache(true))
+    this.destroyDrawingCache()
+    this.isDrawingCacheEnabled = false
+    return rb
+}
+
+

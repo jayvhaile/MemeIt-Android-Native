@@ -10,11 +10,10 @@ import androidx.core.app.ActivityCompat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
-import com.innov8.memegenerator.fragments.MemeTextEditorFragment
-import com.innov8.memegenerator.memeEngine.MemeEditorView
-import com.innov8.memegenerator.memeEngine.MemeTextView
-import com.innov8.memegenerator.models.MemeTemplate
-import com.innov8.memegenerator.models.MemeTemplate.Companion.LOCAL_DATA_SOURCE
+import com.innov8.memegenerator.MemeEngine.MemeEditorView
+import com.innov8.memegenerator.MemeEngine.MemeTextView
+import com.innov8.memegenerator.Models.MemeTemplate
+import com.innov8.memegenerator.Models.MemeTemplate.Companion.LOCAL_DATA_SOURCE
 import com.innov8.memegenerator.utils.*
 import java.io.File
 import java.io.FileInputStream
@@ -27,7 +26,7 @@ class MemeTemplateMaker : AppCompatActivity() {
     var gson = Gson()
     var memeTemplates = mutableListOf<MemeTemplate>()
     lateinit var memeEditorView: MemeEditorView
-    lateinit var memeTextEditorFragment: MemeTextEditorFragment
+//    lateinit var memeTextEditorFragment: MemeTextEditorFragment
     val view: View? = null
     lateinit var file: File
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +38,9 @@ class MemeTemplateMaker : AppCompatActivity() {
             return
         }
         memeEditorView = findViewById(R.id.memeEditorView)
-        memeTextEditorFragment = MemeTextEditorFragment()
-        memeTextEditorFragment.textEditListener = memeEditorView.textEditListener
-        supportFragmentManager.replace(R.id.holder, memeTextEditorFragment)
+//        memeTextEditorFragment = MemeTextEditorFragment()
+//        memeTextEditorFragment.textEditListener = memeEditorView.textEditListener
+//        supportFragmentManager.replace(R.id.holder, memeTextEditorFragment)
 
         findViewById<Button>(R.id.addtext).setOnClickListener {
             val memeTextView = MemeTextView(this, 400, 100)

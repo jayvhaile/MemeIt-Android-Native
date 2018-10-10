@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.R
 import com.memeit.backend.dataclasses.Tag
 import java.util.*

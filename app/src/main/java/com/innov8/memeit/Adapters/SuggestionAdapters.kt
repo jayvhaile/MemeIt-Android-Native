@@ -4,8 +4,8 @@ import android.content.Context
 import android.view.View
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
-import com.innov8.memegenerator.adapters.ListAdapter
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memegenerator.Adapters.ListAdapter
+import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.CustomViews.ProfileDraweeView

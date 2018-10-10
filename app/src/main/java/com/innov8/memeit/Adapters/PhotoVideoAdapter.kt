@@ -10,11 +10,12 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
-import com.innov8.memegenerator.MemeEditorTest
+import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memegenerator.MemePosterActivity
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.Adapters.VideoAdapter.Video
 import com.innov8.memeit.R
+import com.memeit.backend.dataclasses.Meme
 
 
 class PhotosAdapter(context: Context) : CursorAdapter<String>(context, R.layout.list_item_thumbnail) {
@@ -32,7 +33,7 @@ class PhotosAdapter(context: Context) : CursorAdapter<String>(context, R.layout.
 
         init {
             thumbnailV.setOnClickListener {
-                val intent = Intent(context, MemeEditorTest::class.java)
+                val intent = Intent(context, MemeEditorActivity::class.java)
                 intent.putExtra("uri", getItem(item_position))
                 context.startActivity(intent)
             }
@@ -67,8 +68,9 @@ class VideoAdapter(context: Context) : CursorAdapter<Video>(context, R.layout.li
 
         init {
             thumbnailV.setOnClickListener {
-                val intent = Intent(context, MemePosterActivity::class.java)
-                intent.putExtra("gif", getItem(item_position).data)
+                val intent = Intent(context, MemeEditorActivity::class.java)
+                intent.putExtra("uri", getItem(item_position).uri)
+                intent.putExtra("type",Meme.MemeType.GIF.toString())
                 context.startActivity(intent)
             }
         }

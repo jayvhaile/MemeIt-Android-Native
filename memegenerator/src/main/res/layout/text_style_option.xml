@@ -6,7 +6,7 @@
     android:gravity="center_horizontal"
     android:orientation="horizontal">
 
-    <com.innov8.memegenerator.customViews.ToggleImageButton
+    <com.innov8.memegenerator.CustomViews.ToggleImageButton
         android:id="@+id/opt_text_bold"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -14,7 +14,7 @@
         app:checked_background="#ff0056"
         app:srcCompat="@drawable/ic_format_bold" />
 
-    <com.innov8.memegenerator.customViews.ToggleImageButton
+    <com.innov8.memegenerator.CustomViews.ToggleImageButton
         android:id="@+id/opt_text_italic"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -23,7 +23,7 @@
         app:checked_background="#ff0056"
         app:srcCompat="@drawable/ic_format_italic" />
 
-    <com.innov8.memegenerator.customViews.ToggleImageButton
+    <com.innov8.memegenerator.CustomViews.ToggleImageButton
         android:id="@+id/opt_text_allcap"
         android:layout_width="40dp"
         android:layout_height="40dp"
