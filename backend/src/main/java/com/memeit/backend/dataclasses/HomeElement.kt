@@ -22,8 +22,6 @@ class TagSuggestion(val tags:List<Tag>): HomeElement {
 class MemeTemplateSuggestion(val templates:List<String>): HomeElement {
     override val itemType: Int= HomeElement.MEME_TEMPLATE_SUGGESTION_TYPE
 }
-class AdElement : HomeElement {
-    override val itemType: Int= HomeElement.AD_TYPE
-}
+
 
 

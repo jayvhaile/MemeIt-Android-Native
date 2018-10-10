@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.*
 import android.net.ConnectivityManager
 import android.os.Build
+import android.os.Bundle
 import android.preference.PreferenceManager
 import com.facebook.*
 import com.facebook.login.LoginManager
@@ -244,6 +245,10 @@ object MemeItClient {
                                     json.getString("email"))
                             onSuccess(facebookInfo)
                         }
+                        val params= Bundle()
+                        params.putString("fields","id,email,first_name,last_name")
+                        req.parameters=params
+                        req.executeAsync()
                     } else onError("Unknown Error, Please Try Again")
                 }
 

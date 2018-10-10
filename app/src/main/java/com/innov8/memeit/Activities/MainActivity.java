@@ -11,9 +11,9 @@ import android.view.View;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.innov8.memeit.Adapters.MemeAdapter;
-import com.innov8.memeit.CustomClasses.FavoritesLoader;
-import com.innov8.memeit.CustomClasses.HomeLoader;
-import com.innov8.memeit.CustomClasses.TrendingLoader;
+import com.innov8.memeit.Loaders.FavoriteMemeLoader;
+import com.innov8.memeit.Loaders.HomeMemeLoader;
+import com.innov8.memeit.Loaders.TrendingMemeLoader;
 import com.innov8.memeit.CustomViews.BottomNavigation;
 import com.innov8.memeit.CustomViews.SearchToolbar;
 import com.innov8.memeit.Fragments.MemeListFragment;
@@ -271,9 +271,9 @@ public class MainActivity extends AppCompatActivity {
         MyPagerAdapter(FragmentManager fm) {
             super(fm);
             fragments = Arrays.asList(
-                    MemeListFragment.Companion.newInstance(MemeAdapter.HOME_ADAPTER,new HomeLoader()),
-                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER,new TrendingLoader()),
-                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER,new FavoritesLoader()),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.HOME_ADAPTER,new HomeMemeLoader()),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER,new TrendingMemeLoader()),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER,new FavoriteMemeLoader()),
                     ProfileFragment.Companion.newInstance()
             );
         }

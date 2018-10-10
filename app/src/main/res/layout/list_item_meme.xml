@@ -84,23 +84,17 @@
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="@+id/meme_image"
         app:layout_constraintEnd_toStartOf="@+id/react_veryfunny"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toEndOf="@+id/meme_image"
+        app:layout_constraintStart_toStartOf="@+id/meme_image"
         app:srcCompat="@drawable/laughing" />
 
     <ImageView
         android:id="@+id/react_veryfunny"
         android:layout_width="42dp"
         android:layout_height="42dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="@+id/meme_image"
         app:layout_constraintEnd_toStartOf="@+id/react_stupid"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintLeft_toRightOf="@id/react_funny"
         app:layout_constraintRight_toLeftOf="@+id/react_stupid"
@@ -111,14 +105,9 @@
         android:id="@+id/react_stupid"
         android:layout_width="42dp"
         android:layout_height="42dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="@+id/meme_image"
         app:layout_constraintEnd_toStartOf="@+id/react_angry"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toEndOf="@+id/react_veryfunny"
         app:srcCompat="@drawable/neutral" />
@@ -129,10 +118,9 @@
         android:layout_height="42dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="@+id/meme_image"
-        app:layout_constraintEnd_toStartOf="@+id/meme_image"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toEndOf="@+id/react_stupid"
+        app:layout_constraintEnd_toEndOf="@id/meme_image"
         app:srcCompat="@drawable/angry" />
     <!--react counts-->
     <com.innov8.memeit.CustomClasses.FontTextView
@@ -287,18 +275,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/reaction_loading"
-        style="@style/SpinKitView.Large.RotatingCircle"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center"
-        android:layout_marginEnd="-2dp"
-        android:layout_marginRight="-2dp"
-        android:visibility="visible"
-        app:SpinKit_Color="@color/colorAccent"
-        app:layout_constraintEnd_toStartOf="@+id/fav_button"
-        app:layout_constraintTop_toTopOf="@+id/react_button"
-        tools:visibility="visible" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

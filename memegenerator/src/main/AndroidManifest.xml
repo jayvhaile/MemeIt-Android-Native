@@ -7,16 +7,19 @@
     <application
         android:label="@string/app_name"
         android:supportsRtl="true">
-        <activity android:name=".MemeEditorActivity"/>
+        <activity android:name=".MemeEditorActivity" />
         <activity android:name=".MemeTemplateMaker" />
         <activity android:name=".MemePosterActivity" />
-        <activity android:name=".MemeEditorTest" android:exported="true">
-
+        <activity
+            android:name=".MemeEditorTest"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MemePosterActivity2"></activity>
     </application>
 
 </manifest>

@@ -17,8 +17,8 @@ import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Activities.TagsActivity
 import com.innov8.memeit.Activities.UserTagActivity
 import com.innov8.memeit.CustomClasses.CustomMethods
-import com.innov8.memeit.CustomClasses.FollowerLoader
-import com.innov8.memeit.CustomClasses.FollowingLoader
+import com.innov8.memeit.Loaders.FollowerLoader
+import com.innov8.memeit.Loaders.FollowingLoader
 import com.innov8.memeit.loadImage
 import com.innov8.memeit.prefix
 import com.innov8.memeit.R

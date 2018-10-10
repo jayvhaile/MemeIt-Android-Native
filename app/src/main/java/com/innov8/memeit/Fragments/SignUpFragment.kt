@@ -3,6 +3,7 @@ package com.innov8.memeit.Fragments
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -89,7 +90,7 @@ class SignUpFragment : AuthFragment() {
     private fun setFacebookMode(info:FacebookInfo){
         signInMethod=SignInMethod.FACEBOOK
         this.fbinfo =info
-        signup_username.text="${info.firstName} ${info.lastName}"
+        signup_username.text?.append("${info.firstName}${info.lastName}")
         setAcceptUsernameMode()
     }
 
@@ -110,7 +111,8 @@ class SignUpFragment : AuthFragment() {
                 fbinfo ?: return
                 val freq = fbinfo!!.toSignUpReq(username)
                 MemeItClient.Auth.signUpWithFacebook(freq, {
-                    authActivity.setupFragment.fromGoogle(ginfo!!.name, ginfo!!.imageUrl)
+                    val name="${fbinfo!!.firstName} ${fbinfo!!.lastName}"
+                    authActivity.setupFragment.fromGoogle(name, fbinfo!!.imageUrl)
                     authActivity.setCurrentFragment(AuthActivity.FRAGMENT_SETUP)
                 }, onError)
             }

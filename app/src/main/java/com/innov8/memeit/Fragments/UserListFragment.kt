@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Adapters.UserListAdapter
-import com.innov8.memeit.CustomClasses.UserListLoader
+import com.innov8.memeit.Loaders.UserListLoader
 import com.memeit.backend.dataclasses.User
 import com.innov8.memeit.R
 

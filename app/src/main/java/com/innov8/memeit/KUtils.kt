@@ -24,15 +24,17 @@ import com.memeit.backend.dataclasses.Meme
 import com.memeit.backend.dataclasses.Meme.MemeType.GIF
 import com.memeit.backend.dataclasses.Meme.MemeType.IMAGE
 import com.memeit.backend.dataclasses.Reaction
+import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.android.UI
 import java.text.SimpleDateFormat
 import java.util.*
 import com.innov8.memeit.MemeItApp.Companion.instance as it
 
-//fun launchTask(block: suspend CoroutineScope.() -> Unit): Job {
-//    return launch { block() }
-//}
-//
-//suspend fun <T> runAsync(block: suspend CoroutineScope.() -> T): T = async(CommonPool) { block() }.await()
+fun launchTask(block: suspend CoroutineScope.() -> Unit): Job {
+    return launch(UI) { block() }
+}
+
+suspend fun <T> runAsync(block: suspend CoroutineScope.() -> T): T = async(CommonPool) { block() }.await()
 
 val SECOND_MILLIS = 1000L
 val MINUTE_MILLIS = SECOND_MILLIS * 60
@@ -72,10 +74,8 @@ fun String?.prefix(): String {
     return if (this.isNullOrEmpty()) "..." else this!![0].toString()
 }
 
-val screenWidth: Int
-    get() = it.resources.displayMetrics.widthPixels
-val screenHeight: Int
-    get() = it.resources.displayMetrics.heightPixels
+val screenWidth: Int = it.resources.displayMetrics.widthPixels
+val screenHeight: Int = it.resources.displayMetrics.heightPixels
 
 private fun SimpleDraweeView.loadImageMeme(id: String, ratio: Float = 1f, resizeWidth: Int, resizeHeight: Int) {
     val tlow = Transformation<Transformation<*>>().quality("5")
@@ -140,10 +140,10 @@ private fun SimpleDraweeView.loadGifMeme(id: String, ratio: Float, resizeWidth: 
             .generate(id)
     val t = Transformation<Transformation<*>>()
             .effect("loop")
-            /*.quality(quality)
-            .crop("fit")
-            .width(w)
-            .height(h)*/
+    /*.quality(quality)
+    .crop("fit")
+    .width(w)
+    .height(h)*/
 
     val url = MediaManager.get().url().resourcType("video")
             .format("gif")
@@ -158,6 +158,7 @@ private fun SimpleDraweeView.loadGifMeme(id: String, ratio: Float, resizeWidth: 
             }
         }
     }
+
     var req = ImageRequest.fromUri(url)
     if (resizeWidth > 0 && resizeHeight > 0)
         req = ImageRequestBuilder.fromRequest(req)
@@ -174,12 +175,12 @@ private fun SimpleDraweeView.loadGifMeme(id: String, ratio: Float, resizeWidth: 
 
 fun SimpleDraweeView.loadMeme(meme: Meme, resizeWidth: Int = 0, resizeHeight: Int = width) {
     if (meme.getType() == IMAGE) loadImageMeme(meme.imageId!!, meme.imageRatio.toFloat(), resizeWidth, resizeHeight)
-    else if (meme.getType() == GIF) loadGifMeme(meme.imageId!!,meme.imageRatio.toFloat(),resizeWidth, resizeHeight)
+    else if (meme.getType() == GIF) loadGifMeme(meme.imageId!!, meme.imageRatio.toFloat(), resizeWidth, resizeHeight)
 }
 
 
 fun ProfileDraweeView.loadImage(url: String?, width: Float = R.dimen.profile_mini_size.dimen(), height: Float = width) {
-    if(url==null){
+    if (url == null) {
         setImageURI(url as String?)
         return
     }
@@ -206,6 +207,7 @@ fun Reaction.getDrawable(active: Boolean = true): Drawable {
     val inactiveRID = intArrayOf(R.drawable.laughing_inactive_light, R.drawable.rofl_inactive, R.drawable.neutral_inactive, R.drawable.angry_inactive)
     return VectorDrawableCompat.create(it.resources, if (active) activeRID[type.ordinal] else inactiveRID[type.ordinal], null)!!
 }
+
 @IdRes
 fun Reaction.getDrawableID(active: Boolean = true): Int {
     //todo include the inactive ones too

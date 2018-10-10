@@ -1,7 +1,7 @@
 package com.memeit.backend.dataclasses
 
 import com.google.gson.annotations.SerializedName
-import com.memeit.backend.utilis.Utils
+import com.memeit.backend.Utils
 
 interface AuthRequest {
     fun validate(): List<String>
@@ -31,12 +31,12 @@ data class UsernameAuthRequest(var username: String,
     }
 }
 
-data class GoogleAuthSignUpRequest(val username: String, val email: String, val googleID: String) : AuthRequest {
+data class GoogleAuthSignUpRequest(val username: String, val email: String,@SerializedName("gid") val googleID: String) : AuthRequest {
     override fun validate(): List<String> {
         return listOf()
     }
 }
-data class GoogleAuthSignInRequest(val email: String, val googleID: String) : AuthRequest {
+data class GoogleAuthSignInRequest(val email: String,@SerializedName("gid") val googleID: String) : AuthRequest {
     override fun validate(): List<String> {
         return listOf()
     }
@@ -54,12 +54,12 @@ data class FacebookInfo(val id:String,val firstName:String,val lastName:String,v
     fun toSignUpReq(username: String)=FacebookAuthSignUpRequest(username,id,email)
 
 }
-data class FacebookAuthSignUpRequest(val username: String,val facebookID: String, val email: String?=null) : AuthRequest {
+data class FacebookAuthSignUpRequest(val username: String,@SerializedName("fid")val facebookID: String, val email: String?=null) : AuthRequest {
     override fun validate(): List<String> {
         return listOf()
     }
 }
-data class FacebookAuthSignInRequest(val facebookID: String,val email: String?) : AuthRequest {
+data class FacebookAuthSignInRequest(val facebookID: String,@SerializedName("fid")val email: String?) : AuthRequest {
     override fun validate(): List<String> {
         return listOf()
     }

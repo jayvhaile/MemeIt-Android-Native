@@ -20,6 +20,7 @@ import com.facebook.ads.*
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
+import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.*
 import com.innov8.memeit.R
@@ -36,6 +37,7 @@ import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.stfalcon.frescoimageviewer.ImageViewer
 import com.varunest.sparkbutton.SparkButton
+import kotlinx.android.synthetic.main.list_item_ad2.view.*
 
 abstract class MemeAdapter(val context: Context) : RecyclerView.Adapter<MemeViewHolder>() {
     companion object {
@@ -217,7 +219,7 @@ class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
         when (viewType) {
             HomeElement.MEME_TYPE -> {
                 val inflater = LayoutInflater.from(context)
-                val view = inflater.inflate(R.layout.list_item_meme, parent, false)
+                val view = measure("inflate meme"){inflater.inflate(R.layout.list_item_meme, parent, false)}
                 return MemeListViewHolder(view, this)
             }
             HomeElement.USER_SUGGESTION_TYPE -> {
@@ -236,9 +238,11 @@ class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
                 return MemeTemplateSuggestionHolder(v, this)
             }
             HomeElement.AD_TYPE -> {
-                val inflater = LayoutInflater.from(context)
-                val v = inflater.inflate(R.layout.list_item_ad2, parent, false)
-                return AdHolder(v, this)
+                return measure("inflate") {
+                    val inflater = measure("create flator"){LayoutInflater.from(context)}
+                    val v = measure("flating") {inflater.inflate(R.layout.list_item_ad2, parent, false)}
+                    measure("create"){AdHolder(v, this)}
+                }
             }
             else -> {
                 throw IllegalArgumentException("ViewType must be one of the four")
@@ -369,7 +373,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
                         si?.contains(index) ?: false
                     }.toTypedArray()
                     log(selectedTags)
-                    MemeItUsers.followTags(selectedTags).call({memeAdapter.context.toast("Tags Followed.")},
+                    MemeItUsers.followTags(selectedTags).call({ memeAdapter.context.toast("Tags Followed.") },
                             onError("Failed folloeing tags"))
                 }
                 .show()
@@ -381,12 +385,21 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
     }
 
     private fun react(reactionType: Reaction.ReactionType?, finalReactRes: Int) {
+        val pos = itemPosition
         MemeItMemes.reactToMeme(Reaction.create(reactionType, currentMeme.id)).call({
-            if (currentMeme.myReaction == null) currentMeme.reactionCount++
-            currentMeme.myReaction = Reaction.create(reactionType, null)
+
             reactButton.setActiveImage(finalReactRes)
             reactButton.playAnimation()
             reactButton.isChecked = true
+
+            val m = memeAdapter.items[pos] as Meme
+            if (m.myReaction == null) {
+                m.reactionCount++
+                memeAdapter.notifyItemChanged(pos)
+//                reactionCountV.text = String.format("%d people reacted", currentMeme.reactionCount)
+            }
+            m.myReaction = Reaction.create(reactionType, null)
+
         }, onError("Reaction Failed"))
     }
 
@@ -556,10 +569,41 @@ class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemVi
     private val sponsoredLabel: TextView = itemView.findViewById(R.id.native_ad_sponsored_label)
     private val nativeAdCallToAction: Button = itemView.findViewById(R.id.native_ad_call_to_action)
     private val adChoicesContainer: LinearLayout = itemView.findViewById(R.id.ad_choices_container)
+    private val loading: ProgressBar = itemView.findViewById(R.id.ad_loading)
+    val listener: NativeAdListener
+
+    init {
 
 
-    private fun bindAd(nativeAd: NativeAd) {
+        listener = object : NativeAdListener {
+            override fun onAdClicked(p0: Ad) {
+                log("qqq facebook add", "ad clicked")
+            }
 
+            override fun onMediaDownloaded(p0: Ad) {
+                log("qqq facebook add", "media downloaded")
+
+            }
+
+            override fun onError(p0: Ad, p1: AdError) {
+                log("qqq facebook add", "ad failed", p1.errorMessage)
+            }
+
+            override fun onLoggingImpression(p0: Ad) {
+                log("qqq facebook add", "logging impression")
+            }
+
+            override fun onAdLoaded(ad: Ad) {
+                log("qqq facebook add", "ad loaded")
+                bindAd()
+            }
+        }
+    }
+
+    val nativeAd: NativeAd get() = (memeAdapter.items[itemPosition] as AdElement).nativeAd
+
+    private fun bindAd() {
+        loading.visibility = View.GONE
         nativeAd.unregisterView()
         adChoicesContainer.removeAllViews()
         val adChoicesView = AdChoicesView(memeAdapter.context, nativeAd, true)
@@ -580,35 +624,25 @@ class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemVi
 
 
     override fun bind(homeElement: HomeElement) {
-        val nativeAd: NativeAd = NativeAd(memeAdapter.context, "YOUR_PLACEMENT_ID")
-        nativeAd.setAdListener(object : NativeAdListener {
-            override fun onAdClicked(p0: Ad) {
-                log("qqq facebook add", "ad clicked")
-
-            }
-
-            override fun onMediaDownloaded(p0: Ad) {
-                log("qqq facebook add", "media downloaded")
-
-            }
-
-            override fun onError(p0: Ad, p1: AdError) {
-                log("qqq facebook add", "ad failed", p1.errorMessage)
-            }
-
-            override fun onLoggingImpression(p0: Ad) {
-                log("qqq facebook add", "logging impression")
-            }
-
-            override fun onAdLoaded(ad: Ad) {
-                log("qqq facebook add", "ad loaded")
-
-                if (nativeAd != ad) {
-                    return
-                }
-                bindAd(nativeAd)
-            }
-        })
-        nativeAd.loadAd()
+        val adElement = homeElement as AdElement
+        loading.visibility = View.VISIBLE
+        if (!nativeAd.isAdLoaded) {
+            nativeAd.setAdListener(listener)
+            nativeAd.loadAd()
+        } else bindAd()
     }
+}
+
+class AdElement(context: Context) : HomeElement {
+    override val itemType: Int = HomeElement.AD_TYPE
+    val nativeAd: NativeAd by lazy {
+        measure { NativeAd(context, "YOUR_PLACEMENT_ID") }
+    }
+}
+
+fun <T> measure(tag: String = "", block: () -> T): T {
+    val x = System.currentTimeMillis()
+    val t = block()
+    log("fucck", tag, System.currentTimeMillis() - x)
+    return t
 }

@@ -2,8 +2,6 @@ package com.innov8.memeit.Activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -13,14 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Adapters.TagsAdapter
+import com.innov8.memeit.Loaders.*
 import com.innov8.memeit.R
-import com.memeit.backend.dataclasses.Tag
-import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import kotlinx.android.synthetic.main.activity_tags.*
 import kotlinx.android.synthetic.main.fragment_meme_list.*
-import retrofit2.Call
 
 class TagsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,143 +133,3 @@ class TagFragment : Fragment() {
 
 }
 
-interface TagLoader : Parcelable {
-    companion object {
-        val loaders = listOf(MyTagLoader, PopularTagLoader, TrendingTagLoader)
-    }
-
-    fun loadTags(skip: Int, limit: Int): Call<List<Tag>>
-}
-
-class MyTagLoader() : TagLoader, Parcelable {
-    constructor(parcel: Parcel) : this()
-
-    override fun loadTags(skip: Int, limit: Int): Call<List<Tag>> {
-        return MemeItUsers.getMyTags(skip, limit)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<MyTagLoader> {
-        override fun createFromParcel(parcel: Parcel): MyTagLoader {
-            return MyTagLoader(parcel)
-        }
-
-        override fun newArray(size: Int): Array<MyTagLoader?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
-
-class UserTagLoader(private val uid: String) : TagLoader, Parcelable {
-    constructor(parcel: Parcel) : this(parcel.readString())
-
-    override fun loadTags(skip: Int, limit: Int): Call<List<Tag>> {
-        return MemeItUsers.getTagsFor(uid, skip, limit)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(uid)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<UserTagLoader> {
-        override fun createFromParcel(parcel: Parcel): UserTagLoader {
-            return UserTagLoader(parcel)
-        }
-
-        override fun newArray(size: Int): Array<UserTagLoader?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
-
-class PopularTagLoader() : TagLoader, Parcelable {
-    constructor(parcel: Parcel) : this() {
-    }
-
-    override fun loadTags(skip: Int, limit: Int): Call<List<Tag>> {
-        return MemeItMemes.getPopularTags(null, skip, limit)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<PopularTagLoader> {
-        override fun createFromParcel(parcel: Parcel): PopularTagLoader {
-            return PopularTagLoader(parcel)
-        }
-
-        override fun newArray(size: Int): Array<PopularTagLoader?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
-
-class TrendingTagLoader() : TagLoader, Parcelable {
-    constructor(parcel: Parcel) : this() {
-    }
-
-    override fun loadTags(skip: Int, limit: Int): Call<List<Tag>> {
-        return MemeItMemes.getTrendingTags(skip, limit)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<TrendingTagLoader> {
-        override fun createFromParcel(parcel: Parcel): TrendingTagLoader {
-            return TrendingTagLoader(parcel)
-        }
-
-        override fun newArray(size: Int): Array<TrendingTagLoader?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
-
-class SuggestedTagLoader() : TagLoader, Parcelable {
-    constructor(parcel: Parcel) : this() {
-    }
-
-    override fun loadTags(skip: Int, limit: Int): Call<List<Tag>> {
-        return MemeItMemes.getSuggestedTags(skip, limit)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<SuggestedTagLoader> {
-        override fun createFromParcel(parcel: Parcel): SuggestedTagLoader {
-            return SuggestedTagLoader(parcel)
-        }
-
-        override fun newArray(size: Int): Array<SuggestedTagLoader?> {
-            return arrayOfNulls(size)
-        }
-    }
-}

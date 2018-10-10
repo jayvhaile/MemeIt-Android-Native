@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/native_ad_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#fff">
 
     <com.facebook.ads.AdIconView
         android:id="@+id/native_ad_icon"
@@ -14,34 +15,39 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:background="#000" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/native_ad_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:ellipsize="end"
         android:lines="1"
         android:textColor="@android:color/black"
         android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/ad_choices_container"
         app:layout_constraintStart_toEndOf="@+id/native_ad_icon"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Test Ad" />
+         />
 
     <TextView
         android:id="@+id/native_ad_sponsored_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:ellipsize="end"
         android:lines="1"
         android:textColor="@android:color/darker_gray"
         android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/ad_choices_container"
         app:layout_constraintStart_toEndOf="@+id/native_ad_icon"
         app:layout_constraintTop_toBottomOf="@+id/native_ad_title"
         tools:text="sponsored" />
@@ -68,11 +74,11 @@
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/native_ad_sponsored_label" />
-
+        app:layout_constraintTop_toBottomOf="@+id/native_ad_sponsored_label"
+        tools:showIn="@layout/list_item_ad2" />
     <TextView
         android:id="@+id/native_ad_social_context"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -80,7 +86,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:ellipsize="end"
-        android:lines="1"
         android:textColor="@android:color/darker_gray"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/native_ad_call_to_action"
@@ -91,17 +96,19 @@
 
     <TextView
         android:id="@+id/native_ad_body"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:lines="2"
         android:textColor="@android:color/black"
         android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/native_ad_call_to_action"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -115,6 +122,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_weight="1"
         android:background="#4286F4"
         android:paddingLeft="3dp"
@@ -122,7 +130,24 @@
         android:textColor="@android:color/white"
         android:textSize="12sp"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/native_ad_body"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/native_ad_media" />
+        app:layout_constraintTop_toTopOf="@+id/native_ad_social_context" />
+
+    <ProgressBar
+        android:id="@+id/ad_loading"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

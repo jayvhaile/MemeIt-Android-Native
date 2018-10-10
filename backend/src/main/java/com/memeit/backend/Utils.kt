@@ -1,12 +1,7 @@
-package com.memeit.backend.utilis
+package com.memeit.backend
 
-import android.net.Uri
 import android.text.TextUtils
 
-import com.cloudinary.android.MediaManager
-import com.cloudinary.android.callback.UploadCallback
-
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 object Utils {
