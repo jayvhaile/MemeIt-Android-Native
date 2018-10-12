@@ -134,6 +134,7 @@ class MemeTextView : MemeItemView {
         val tx = if (allCaps) text.toUpperCase() else text
         dl = DynamicLayout(tx, dl.paint,mW(), Layout.Alignment.ALIGN_CENTER, 0.8f, 0f, false)
 
+
         sx=memeItemWidth/dl.width.toFloat()
         sy=memeItemHeight/dl.height.toFloat()
     }
@@ -149,6 +150,7 @@ class MemeTextView : MemeItemView {
         }
         val h=dl.height
         dl.paint.style=Paint.Style.FILL
+
         return h
     }
 

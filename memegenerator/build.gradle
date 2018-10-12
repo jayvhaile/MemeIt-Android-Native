@@ -54,7 +54,18 @@ dependencies {
     implementation 'com.waynejo:androidndkgif:0.3.3'
 
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0'
+
+
+
 }
 repositories {
     mavenCentral()
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
 }

@@ -5,41 +5,24 @@ import android.content.Context
 import android.graphics.*
 import android.os.Handler
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.innov8.memegenerator.CustomViews.CheckerBoardDrawable
 import com.innov8.memegenerator.Models.MemeTemplate
 import com.innov8.memegenerator.Models.TextProperty
-import com.innov8.memegenerator.utils.dp
-import com.innov8.memegenerator.utils.getDrawableIdByName
-import com.innov8.memegenerator.utils.loadBitmap
-import com.waynejo.androidndkgif.GifDecoder
-import com.waynejo.androidndkgif.GifEncoder
+import com.innov8.memegenerator.utils.*
 
 /**
  * Created by Haile on 5/19/2018.
  */
 
 class MemeEditorView : ViewGroup {
-    constructor(context: Context) : super(context) {
-        init()
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    }
-
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init()
-
-    }
-
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init()
-    }
-
-    var itemSelectedInterface: ItemSelectedInterface? = null
-    var focusedItem: MemeItemView? = null
-        get() = focusedChild as? MemeItemView
-
-    private fun init() {
+    init {
         isFocusable = true
         isFocusableInTouchMode = true
         setOnFocusChangeListener { v, hasFocus ->
@@ -53,19 +36,19 @@ class MemeEditorView : ViewGroup {
         setOnClickListener { requestFocus() }
     }
 
+    var itemSelectedInterface: ItemSelectedInterface? = null
+    var focusedItem: MemeItemView? = null
+        get() = focusedChild as? MemeItemView
+
     internal var memeLayout: MemeLayout? = null
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-
+    val paintHandler = PaintHandler(this)
     fun addMemeItemView(child: MemeItemView) {
         super.addView(child)
         child.onFocusChangeListener = onFocusChangeListener
         child.requestFocus()
         child.onRemoveListener = { removeMemeItemView(it) }
         child.onCopyListener = { it.copy()?.let { it1 -> addMemeItemView(it1) } }
-
-    }
-
-    fun x(a: Int, b: Int = if (a > 0) a else 0) {
 
     }
 
@@ -94,11 +77,11 @@ class MemeEditorView : ViewGroup {
                         ml.getDrawingRectAt(i),
                         null)
             }
+            paintHandler.draw(canvas)
             super.onDraw(canvas)
         }
-
-
     }
+
 
     override fun onLayout(p0: Boolean, p1: Int, p2: Int, p3: Int, p4: Int) {
         val eleft: Int = this.paddingLeft
@@ -125,6 +108,11 @@ class MemeEditorView : ViewGroup {
         }
     }
 
+    val enablePaint = true
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (enablePaint) paintHandler.onTouchEvent(event)
+        return super.onTouchEvent(event)
+    }
 
     fun removeSelectedItem(clazz: (Class<out MemeItemView>) = MemeItemView::class.java) {
         if (focusedItem != null && focusedItem!!.javaClass == clazz) {
@@ -132,16 +120,7 @@ class MemeEditorView : ViewGroup {
         }
     }
 
-    inline fun <reified T : MemeItemView> getSelectedview(): T? {
-        return if (this.focusedItem != null && focusedItem!!.javaClass == T::class.java) {
-            focusedItem as T
-        } else null
-    }
-
-    fun clearMemeItems() =removeAllViews()
-
-
-
+    fun clearMemeItems() = removeAllViews()
     fun generateAllTextProperty(): List<TextProperty> {
         val list = mutableListOf<TextProperty>()
         for (index in 0 until childCount) {
@@ -153,14 +132,12 @@ class MemeEditorView : ViewGroup {
         return list
     }
 
-
     fun loadMemeTemplate(memeTemplate: MemeTemplate) {
         Handler().postDelayed({
             clearMemeItems()
             val image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
             val memeLayout = SingleImageLayout(width, height, image)
             setLayout(memeLayout)
-
             val rect = memeLayout.drawingRect
             memeTemplate.textProperties.forEach {
                 val memeTextView = MemeTextView(context)
@@ -170,36 +147,42 @@ class MemeEditorView : ViewGroup {
         }, 300)
     }
 
+
     fun loadBitmab(bitmap: Bitmap) {
         clearMemeItems()
         val memeLayout = SingleImageLayout(width, height, bitmap)
         setLayout(memeLayout)
     }
 
+    fun loadImageByLayout(memeLayout: MemeLayout) {
+        clearMemeItems()
+        setLayout(memeLayout)
+    }
+
     fun captureMeme(): Bitmap {
-        val tempFocus=focusedItem
+        val tempFocus = focusedItem
         focusedItem?.clearFocus()
         val rect = memeLayout?.drawingRect?.toRect()
-        val b= capture(rect)
+        val b = capture(rect)
         tempFocus?.requestFocus()
         return b
     }
 
-    fun captureItems():Bitmap{
-        val tempFocus=focusedItem
-        val tempBack=background
-        val tempLayout=memeLayout
+    fun captureItems(): Bitmap {
+        val tempFocus = focusedItem
+        val tempBack = background
+        val tempLayout = memeLayout
 
         val rect = memeLayout?.drawingRect?.toRect()
         focusedItem?.clearFocus()
         setBackgroundColor(Color.TRANSPARENT)
-        memeLayout=null
+        memeLayout = null
 
         invalidate()
-        val b=capture(rect)
+        val b = capture(rect)
 
-        memeLayout=tempLayout
-        background=tempBack
+        memeLayout = tempLayout
+        background = tempBack
         tempFocus?.requestFocus()
 
         invalidate()
@@ -209,23 +192,6 @@ class MemeEditorView : ViewGroup {
 
     }
 
-
-
-    fun RectF.toRect(): Rect {
-        return Rect(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
-    }
-
-    fun Rect.toRectF(): RectF {
-        return RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
-    }
-
-    fun getRatio(): Float {
-        val rect = memeLayout!!.drawingRect.toRect()
-        val w = rect.right - rect.left
-        val h = rect.bottom - rect.top
-
-        return w.toFloat() / h
-    }
 
     fun getTexts(): List<String> {
         val texts = mutableListOf<String>()
@@ -237,17 +203,6 @@ class MemeEditorView : ViewGroup {
         }
         return texts
     }
-}
-fun View.capture(rect: Rect? = null): Bitmap {
-    this.isDrawingCacheEnabled = true
-    val rb: Bitmap = if (rect != null)
-        Bitmap.createBitmap(this.getDrawingCache(true), rect.left, rect.top,
-                rect.right - rect.left, rect.bottom - rect.top)
-    else
-        Bitmap.createBitmap(this.getDrawingCache(true))
-    this.destroyDrawingCache()
-    this.isDrawingCacheEnabled = false
-    return rb
 }
 
 

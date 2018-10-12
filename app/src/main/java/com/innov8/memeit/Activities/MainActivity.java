@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         initToolbar();
         initBottomNav();
 
-
         // Setting viewpager pagerAdapter
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 .withContentClickableWhenMenuOpened(false)
                 .withRootViewElevationPx(5)
                 .withRootViewScale(0.5f)
-                .withMenuLayout(R.layout.menu_drawer2);
+                .withMenuLayout(R.layout.menu_drawer2); //todo fix the menu_drawer crashes due to the drawables on api level < 21
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             sbd.withToolbarMenuToggle(mToolbar);

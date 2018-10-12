@@ -57,9 +57,9 @@ class VideoAdapter(context: Context) : CursorAdapter<Video>(context, R.layout.li
     override fun createViewHolder(view: View): MyViewHolder<Video> = VideoViewHolder(view)
 
     override fun getItem(cursor: Cursor): Video {
-        val id = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media._ID))
-        val uri= withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id).toString()
-        val data = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA))
+        val id = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID))
+        val uri= withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id).toString()
+        val data = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
         return Video(uri, data)
     }
 
@@ -69,7 +69,7 @@ class VideoAdapter(context: Context) : CursorAdapter<Video>(context, R.layout.li
         init {
             thumbnailV.setOnClickListener {
                 val intent = Intent(context, MemeEditorActivity::class.java)
-                intent.putExtra("uri", getItem(item_position).uri)
+                intent.putExtra("uri", getItem(item_position).data)
                 intent.putExtra("type",Meme.MemeType.GIF.toString())
                 context.startActivity(intent)
             }

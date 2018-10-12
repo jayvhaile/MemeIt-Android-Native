@@ -47,7 +47,7 @@ class MemeChooserPagerAdapter(mgr: FragmentManager) : FragmentPagerAdapter(mgr) 
             when (position) {
                 0 -> TemplateFragment()
                 1 -> PhotosChooserFragment()
-                2 -> VideoChooserFragment()
+                2 -> GifChooserFragment()
                 else -> TemplateFragment()
             }
     override fun getPageTitle(position: Int): String? = titles[position]
@@ -188,6 +188,40 @@ class VideoChooserFragment : Frag() {
                 null,
                 null,
                 null,
+                "${MediaStore.Video.Media.DATE_ADDED} DESC")
+    }
+
+    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor) {
+        videosAdapter.swapCursor(data)
+    }
+
+    override fun onLoaderReset(loader: Loader<Cursor>) {
+        videosAdapter.swapCursor(null)
+    }
+}
+class GifChooserFragment : Frag() {
+    private lateinit var videosAdapter: VideoAdapter
+    override fun onCreate(state: Bundle?) {
+        super.onCreate(state)
+        videosAdapter = VideoAdapter(context!!)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_meme_templates, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        meme_template_list.initWithGrid(3)
+        meme_template_list.adapter = videosAdapter
+    }
+
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+
+        return CursorLoader(context!!, MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null,
+                "${MediaStore.Images.Media.MIME_TYPE}=?",
+                arrayOf("image/gif"),
                 "${MediaStore.Video.Media.DATE_ADDED} DESC")
     }
 

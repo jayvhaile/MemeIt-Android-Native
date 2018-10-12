@@ -28,3 +28,8 @@ interface LayoutEditInterface {
 interface StickerEditInterface{
     fun onAddSticker(memeStickerView:MemeStickerView)
 }
+interface PaintEditInterface{
+    fun onBrushSizeChanged(size: Float)
+    fun onBrushColorChanged(color: Int)
+    fun onShapeChanged(paintMode: PaintHandler.PaintMode)
+}

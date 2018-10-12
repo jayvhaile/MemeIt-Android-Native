@@ -3,14 +3,17 @@ package com.innov8.memeit
 import android.app.Application
 import android.os.StrictMode
 import android.preference.PreferenceManager
+import androidx.multidex.MultiDexApplication
 import com.cloudinary.android.MediaManager
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.google.firebase.FirebaseApp
 import com.memeit.backend.MemeItClient
+import com.memeit.backend.dataclasses.MUser
+import com.memeit.backend.dataclasses.SignInMethod
 
 
-class MemeItApp : Application() {
+class MemeItApp :MultiDexApplication() {
     companion object {
         lateinit var instance:Application
         private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/"
@@ -53,5 +56,13 @@ class MemeItApp : Application() {
                 .build()
         Fresco.initialize(this, configf)
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+        MUser.save(PreferenceManager.getDefaultSharedPreferences(this),
+                "123",
+                SignInMethod.USERNAME,
+                "1234",
+                "jayv",
+                "Jv",
+                "aaa",
+                "aaa")
     }
 }

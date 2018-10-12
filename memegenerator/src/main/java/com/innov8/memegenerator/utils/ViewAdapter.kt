@@ -11,7 +11,7 @@ abstract class ViewAdapter(val context: Context) : PagerAdapter() {
     override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
     final override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = getItem(position)
-        if(view.parent==null)container.addView(view)
+        container.addView(view)
         return view
     }
 

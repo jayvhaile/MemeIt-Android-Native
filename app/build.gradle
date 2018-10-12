@@ -49,8 +49,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.google.firebase:firebase-messaging:17.3.2'
     implementation 'com.google.firebase:firebase-dynamic-links:16.1.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
@@ -63,7 +61,9 @@ dependencies {
     // Add dependency
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
-    implementation 'com.waynejo:androidndkgif:0.3.3'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
 }
 repositories {
     mavenCentral()

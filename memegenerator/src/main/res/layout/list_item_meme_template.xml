@@ -12,12 +12,10 @@
         android:id="@+id/meme_template_image"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:background="#000"
         app:actualImageScaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:placeholderImage="@drawable/meme_38" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/meme_template_label"

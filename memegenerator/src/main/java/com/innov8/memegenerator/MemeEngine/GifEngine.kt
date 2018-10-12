@@ -13,18 +13,19 @@ fun compileGifMeme(gifi:GifInfo,overlayBitmap: Bitmap,dr: RectF, paint: Paint, d
     val encoder = GifEncoder()
     val iterator = decoder.loadUsingIterator(gifi.path)
 
-    encoder.init(dr.width().toInt(), dr.height().toInt(), destPath, GifEncoder.EncodingType.ENCODING_TYPE_STABLE_HIGH_MEMORY)
-    var c=0
+    log(decoder.frameNum())
+    encoder.init(dr.width().toInt(), dr.height().toInt(), destPath, GifEncoder.EncodingType.ENCODING_TYPE_NORMAL_LOW_MEMORY)
+    val b = Bitmap.createBitmap(dr.width().toInt(), dr.height().toInt(), Bitmap.Config.ARGB_8888)
+
     while (iterator.hasNext()) {
-        log("fuuck","count",++c)
         val gifImage = iterator.next()
-        encoder.encodeFrame(draw(gifImage.bitmap,dr, paint,gifi.rect, overlayBitmap), gifImage.delayMs)
+        encoder.encodeFrame(draw(b,gifImage.bitmap,dr, paint,gifi.rect, overlayBitmap), gifImage.delayMs)
     }
     encoder.close()
 }
 
-private fun draw(imageBitmap:Bitmap,dr: RectF, paint: Paint, idr: RectF, overlayBitmap: Bitmap):Bitmap {
-    val b = Bitmap.createBitmap(dr.width().toInt(), dr.height().toInt(), Bitmap.Config.ARGB_8888)
+
+private fun draw(b:Bitmap,imageBitmap:Bitmap,dr: RectF, paint: Paint, idr: RectF, overlayBitmap: Bitmap):Bitmap {
     val canvas = Canvas(b)
     canvas.drawRect(dr, paint)
     canvas.drawBitmap(imageBitmap, null, idr, null)
