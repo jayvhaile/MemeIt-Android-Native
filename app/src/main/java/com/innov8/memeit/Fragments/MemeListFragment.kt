@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.innov8.memegenerator.utils.log
-import com.innov8.memeit.Adapters.MemeAdapter
+import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.Loaders.MemeLoader
 import com.innov8.memeit.Loaders.UserMemePostsLoader
 import com.innov8.memeit.Loaders.SearchMemeLoader

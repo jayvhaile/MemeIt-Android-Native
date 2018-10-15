@@ -74,7 +74,7 @@ public class IntroActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(IntroActivity.this, AuthActivity.class);
-                intent.putExtra(AuthActivity.STARTING_FRAGMENT_PARAM, AuthActivity.FRAGMENT_SIGNUP);
+                intent.putExtra(AuthActivity.Companion.getSTARTING_MODE_PARAM(), AuthActivity.Companion.getMODE_SIGNUP());
                 startActivity(intent);
             }
         });

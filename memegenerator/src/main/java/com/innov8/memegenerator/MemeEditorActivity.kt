@@ -1,5 +1,6 @@
 package com.innov8.memegenerator
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.BitmapFactory
@@ -11,7 +12,6 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.transition.TransitionManager
 import com.afollestad.materialdialogs.MaterialDialog
-import com.google.gson.Gson
 import com.innov8.memegenerator.Fragments.*
 import com.innov8.memegenerator.MemeEngine.*
 import com.innov8.memegenerator.Models.MemeTemplate
@@ -26,23 +26,11 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import java.io.File
+import java.lang.Exception
 import java.util.*
 
-class MemeEditorActivity : AppCompatActivity(), TextEditListener, LayoutEditInterface, StickerEditInterface, ItemSelectedInterface, PaintEditInterface {
-    override fun onBrushSizeChanged(size: Float) {
-      val ph= memeEditorView.paintHandler
-       ph.paintProperty=ph.paintProperty.copy(brushSize= size)
-    }
+class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
-    override fun onBrushColorChanged(color: Int) {
-        val ph= memeEditorView.paintHandler
-
-        ph.paintProperty=ph.paintProperty.copy(color=color)
-    }
-
-    override fun onShapeChanged(paintMode: PaintHandler.PaintMode) {
-        memeEditorView.paintHandler.paintMode=paintMode
-    }
 
     private val constraintSet1 = ConstraintSet()
     private val opened
@@ -54,23 +42,33 @@ class MemeEditorActivity : AppCompatActivity(), TextEditListener, LayoutEditInte
     var type: Meme.MemeType = Meme.MemeType.IMAGE
     var path: String? = null
 
+    private lateinit var interactionHandler: EditorHandler
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.meme_editor)
 
-        memeEditorView.itemSelectedInterface = this
-        constraintSet1.clone(contraint_layout)
+        interactionHandler = EditorHandler(memeEditorView)
 
+        constraintSet1.clone(contraint_layout)
         closeableFragments = mapOf(
-                "layout" to CloseableFragment(LayoutEditorFragment().apply { layoutEditListener = this@MemeEditorActivity }
-                        , 152.dp(this)),
-                "text" to CloseableFragment(TextEditorFragment().apply { textEditListener = this@MemeEditorActivity }, 130.dp(this), TextPresetFragment(), 80.dp(this)),
-                "sticker" to CloseableFragment(StickerChooserFragment().apply { stickerEditInterface = this@MemeEditorActivity }
-                        , (80 + 56).dp(this)),
-                "paint" to CloseableFragment(PaintOptionsFragment().apply {
-                    paintEditInterface = this@MemeEditorActivity
-                }, 152.dp(this))
+                LayoutEditorFragment().make("layout", 152) { layoutEditListener = interactionHandler },
+                StickerChooserFragment().make("sticker", 80 + 56) { stickerEditInterface = interactionHandler },
+                PaintOptionsFragment().make("paint", 132) { paintEditInterface = interactionHandler },
+                "text" to CloseableFragment(TextEditorFragment()
+                        .apply { textEditListener = interactionHandler }, 152.dp(this),
+                        TextPresetFragment(), 80.dp(this))
+
         )
+        initListeners()
+        handleIntent()
+    }
+
+    private inline fun <T : Fragment> T.make(title: String, size: Int, block: T.() -> Unit) =
+            title to CloseableFragment(this.apply(block), size.dp(this@MemeEditorActivity))
+
+    private fun initListeners() {
+        memeEditorView.itemSelectedInterface = this
         layout.setOnClickListener {
             open("layout")
         }
@@ -117,53 +115,88 @@ class MemeEditorActivity : AppCompatActivity(), TextEditListener, LayoutEditInte
             }
         }
 
-        val json: String? = intent.getStringExtra("string")
+    }
 
-        path = intent.getStringExtra("uri")
+    private fun handleIntent() {
+        val mode = intent.getIntExtra(MODE, -1)
+        val result = when (mode) {
+            MODE_TEMPLATE -> handleTemplateIntent()
+            MODE_SINGLE_IMAGE -> handleImageIntent()
+            MODE_MULTI_IMAGE -> handleImagesIntent()
+            MODE_GIF_IMAGE -> handleGifIntent()
+            else -> false
+        }
+        if (!result) {
+            setResult(-1, null)
+            finish()
+        }
+    }
 
-        if (json != null) {
-            val gson = Gson()
-            val memeTemplate = gson.fromJson(json, MemeTemplate::class.java)
-            memeEditorView.loadMemeTemplate(memeTemplate)
-        } else if (path != null) {
-            val t = intent.getStringExtra("type") ?: "IMAGE"
-            type = Meme.MemeType.of(t)
+    private fun handleTemplateIntent(): Boolean {
+        val template = intent.getParcelableExtra<MemeTemplate?>(TEMPLATE)
+        return if (template != null) {
+            memeEditorView.loadMemeTemplate(template)
+            true
+        } else false
+    }
 
-            if (type == Meme.MemeType.GIF)
-                launch(UI) {
-                    val b = withContext(CommonPool) {
-                        val x = GifDecoder()
-                        val i = x.loadUsingIterator(path)
-                        if (i.hasNext())
-                            i.next().bitmap
-                        else null
-                    }
-                    b?.let {
-                        memeEditorView.loadBitmab(it)
-                    }
-                }
-            else {
-                launch(UI) {
-                    withContext(CommonPool) {
-                        val stream = contentResolver.openInputStream(Uri.parse(path))
-                        BitmapFactory.decodeStream(stream)
-                    }?.let {
-                        memeEditorView.loadBitmab(it)
-                    }
+    private fun handleImageIntent(): Boolean {
+        val path = intent.getStringExtra(SINGLE_PATH) ?: null
+        return if (path != null) {
+            launch(UI) {
+                withContext(CommonPool) {
+                    val stream = contentResolver.openInputStream(Uri.parse(path))
+                    BitmapFactory.decodeStream(stream)
+                }?.let {
+                    memeEditorView.loadBitmab(it)
                 }
             }
-
-        }
-
+            true
+        } else false
     }
 
-    companion object {
-        private val actions = mutableListOf<Action>()
+    private fun handleImagesIntent(): Boolean {
+        val paths = intent.getStringArrayExtra(MULTI_PATH) ?: null
+        return if (paths != null) {
+            launch(UI) {
+                withContext(CommonPool) {
+                    try {
+                        paths.map {
+                            BitmapFactory.decodeStream(contentResolver.openInputStream(Uri.parse(it)))
+                        }
+                    } catch (e: Exception) {
+                        null
+                    }
+                }?.let {
+                    //todo load images
+                }
+            }
+            true
+        } else false
     }
 
+    private fun handleGifIntent(): Boolean {
+        val path = intent.getStringExtra(GIF_PATH) ?: null
+        return if (path != null) {
+            launch(UI) {
+                val b = withContext(CommonPool) {
+                    val x = GifDecoder()
+                    val i = x.loadUsingIterator(path)
+                    if (i.hasNext())
+                        i.next().bitmap
+                    else null
+                }
+                b?.let {
+                    memeEditorView.loadBitmab(it)
+                }
+            }
+            true
+        } else false
+    }
 
-    class CloseableFragment(val bottomFragment: Fragment? = null, val bottomSize: Int = 0,
-                            val topFragment: Fragment? = null, val topSize: Int = 0)
+    //==============================================================================================
+    private class CloseableFragment(val bottomFragment: Fragment? = null, val bottomSize: Int = 0,
+                                    val topFragment: Fragment? = null, val topSize: Int = 0)
 
     private fun open(tag: String) {
         val cf = closeableFragments[tag]
@@ -203,6 +236,7 @@ class MemeEditorActivity : AppCompatActivity(), TextEditListener, LayoutEditInte
         current = "none"
     }
 
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) makeFullScreen()
@@ -229,7 +263,62 @@ class MemeEditorActivity : AppCompatActivity(), TextEditListener, LayoutEditInte
         outState?.putString("current", current)
     }
 
+    override fun onTextItemSelected(textStyleProperty: TextStyleProperty) {
+        (closeableFragments["text"]?.bottomFragment as? TextEditorFragment)?.textStyleProperty = textStyleProperty
+    }
 
+    companion object {
+        private val actions = mutableListOf<Action>()
+
+        private const val MODE_TEMPLATE = 0
+        private const val MODE_SINGLE_IMAGE = 1
+        private const val MODE_MULTI_IMAGE = 2
+        private const val MODE_GIF_IMAGE = 3
+
+        private const val MODE = "mode"
+        private const val TEMPLATE = "template"
+        private const val SINGLE_PATH = "single path"
+        private const val MULTI_PATH = "multi path"
+        private const val GIF_PATH = "gif path"
+        fun startWithMemeTemplate(context: Context, template: MemeTemplate) {
+            startThis(context) {
+                putExtra(MODE, MODE_TEMPLATE)
+                putExtra(TEMPLATE, template)
+            }
+        }
+
+        fun startWithGif(context: Context, path: String) {
+            startThis(context) {
+                putExtra(MODE, MODE_GIF_IMAGE)
+                putExtra(GIF_PATH, path)
+            }
+        }
+
+        fun startWithImage(context: Context, path: String) {
+            startThis(context) {
+                putExtra(MODE, MODE_SINGLE_IMAGE)
+                putExtra(SINGLE_PATH, path)
+            }
+        }
+
+        fun startWithImages(context: Context, paths: List<String>) {
+            startThis(context) {
+                putExtra(MODE, MODE_MULTI_IMAGE)
+                putExtra(MULTI_PATH, paths.toTypedArray())
+            }
+        }
+
+        private inline fun startThis(context: Context, applyToIntent: Intent.() -> Unit) =
+                context.startActivity(Intent(context, MemeEditorActivity::class.java).apply(applyToIntent))
+
+    }
+}
+
+class EditorHandler(val memeEditorView: MemeEditorView) :
+        TextEditListener,
+        LayoutEditInterface,
+        StickerEditInterface,
+        PaintEditInterface {
     override fun onAddText(memeTextView: MemeTextView) {
         memeEditorView.addMemeItemView(memeTextView)
     }
@@ -237,7 +326,6 @@ class MemeEditorActivity : AppCompatActivity(), TextEditListener, LayoutEditInte
     override fun onApplyAll(textStyleProperty: TextStyleProperty, applySize: Boolean) {
         (memeEditorView.focusedItem as MemeTextView?)?.applyTextStyleProperty(textStyleProperty, applySize)
     }
-
 
     override fun onTextColorChanged(color: Int) {
         (memeEditorView.focusedItem as MemeTextView?)?.setTextColor(color)
@@ -275,7 +363,8 @@ class MemeEditorActivity : AppCompatActivity(), TextEditListener, LayoutEditInte
         (memeEditorView.focusedItem as? MemeTextView)?.setTextSize(size)
     }
 
-    //==========================================================================
+    //==============================================================================================
+
     override fun onAllMarginSet(left: Int, top: Int, right: Int, bottom: Int) {
         memeEditorView.memeLayout?.setMargin(left, top, right, bottom)
     }
@@ -300,15 +389,29 @@ class MemeEditorActivity : AppCompatActivity(), TextEditListener, LayoutEditInte
         memeEditorView.memeLayout?.backgroudColor = color
     }
 
-    //============================================================================
+    //==============================================================================================
+
     override fun onAddSticker(memeStickerView: MemeStickerView) {
         memeEditorView.addMemeItemView(memeStickerView)
     }
 
-    override fun onTextItemSelected(textStyleProperty: TextStyleProperty) {
-        log(textStyleProperty)
-        (closeableFragments["text"]?.bottomFragment as? TextEditorFragment)?.textStyleProperty = textStyleProperty
+    //==============================================================================================
+
+
+    //==============================================================================================
+
+    override fun onBrushSizeChanged(size: Float) {
+        val ph = memeEditorView.paintHandler
+        ph.paintProperty = ph.paintProperty.copy(brushSize = size)
     }
 
+    override fun onBrushColorChanged(color: Int) {
+        val ph = memeEditorView.paintHandler
+        ph.paintProperty = ph.paintProperty.copy(color = color)
+    }
+
+    override fun onShapeChanged(paintMode: PaintHandler.PaintMode) {
+        memeEditorView.paintHandler.paintMode = paintMode
+    }
 }
 

@@ -11,15 +11,24 @@ import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.innov8.memegenerator.MemeEditorActivity
-import com.innov8.memegenerator.MemePosterActivity
 import com.innov8.memegenerator.Adapters.MyViewHolder
-import com.innov8.memeit.Adapters.VideoAdapter.Video
+import com.innov8.memeit.Adapters.GifAdapter.Video
+import com.innov8.memeit.CustomViews.CountView
 import com.innov8.memeit.R
 import com.memeit.backend.dataclasses.Meme
 
 
-class PhotosAdapter(context: Context) : CursorAdapter<String>(context, R.layout.list_item_thumbnail) {
+class PhotosAdapter(context: Context) : CursorAdapter<String>(context, R.layout.list_item_thumbnail_selectable) {
     val screenWidth = context.resources.displayMetrics.widthPixels
+
+    val selectedItems = mutableListOf<String>()
+    var multiSelectMode = false
+        set(value) {
+            field = value
+            if (!field) selectedItems.clear()
+            notifyDataSetChanged()
+        }
+
 
     override fun createViewHolder(view: View): MyViewHolder<String> = PhotoViewHolder(view)
 
@@ -30,48 +39,71 @@ class PhotosAdapter(context: Context) : CursorAdapter<String>(context, R.layout.
 
     inner class PhotoViewHolder(itemView: View) : MyViewHolder<String>(itemView) {
         private val thumbnailV: SimpleDraweeView = itemView.findViewById(R.id.thumbnail)
+        private val countView: CountView = itemView.findViewById(R.id.count_view)
 
         init {
             thumbnailV.setOnClickListener {
-                val intent = Intent(context, MemeEditorActivity::class.java)
-                intent.putExtra("uri", getItem(item_position))
-                context.startActivity(intent)
+                MemeEditorActivity.startWithImage(context, getItem(item_position))
             }
+            countView.setOnClickListener {
+                if (countView.choosed) {
+                    val t = getItem(item_position)
+                    val index = selectedItems.indexOf(t)
+                    val last = index == selectedItems.size - 1
+                    selectedItems.remove(t)
+                    if (last) notifyItemChanged(item_position)
+                    else
+                        notifyDataSetChanged()
+                } else {
+                    selectedItems.add(getItem(item_position))
+                    notifyItemChanged(item_position)
 
+                }
+            }
         }
 
         override fun bind(t: String) {
-            val r = ResizeOptions(screenWidth /
-                    3, screenWidth / 3, 1024f)
-            val req = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(t))
-                    .setLocalThumbnailPreviewsEnabled(true)
-                    .setResizeOptions(r)
-                    .build()
-            thumbnailV.setImageRequest(req)
+            val tag = thumbnailV.tag as? String
+            if (tag == null || tag != t) {
+                thumbnailV.tag = t
+                val r = ResizeOptions(screenWidth /
+                        3, screenWidth / 3, 1024f)
+                val req = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(t))
+                        .setLocalThumbnailPreviewsEnabled(true)
+                        .setResizeOptions(r)
+                        .build()
+                thumbnailV.setImageRequest(req)
+            }
+            if (multiSelectMode) {
+                countView.visibility = View.VISIBLE
+                if (selectedItems.contains(t)) {
+                    countView.count = selectedItems.indexOf(t) + 1
+                    countView.choosed = true
+                } else countView.choosed = false
+            } else countView.visibility = View.GONE
         }
     }
 }
-class VideoAdapter(context: Context) : CursorAdapter<Video>(context, R.layout.list_item_thumbnail) {
+
+class GifAdapter(context: Context) : CursorAdapter<Video>(context, R.layout.list_item_thumbnail) {
     val screenWidth = context.resources.displayMetrics.widthPixels
-    data class Video(val uri:String,val data:String)
-    override fun createViewHolder(view: View): MyViewHolder<Video> = VideoViewHolder(view)
+
+    data class Video(val uri: String, val data: String)
+
+    override fun createViewHolder(view: View): MyViewHolder<Video> = GifHolder(view)
 
     override fun getItem(cursor: Cursor): Video {
         val id = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID))
-        val uri= withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id).toString()
+        val uri = withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id).toString()
         val data = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
         return Video(uri, data)
     }
 
-    inner class VideoViewHolder(itemView: View) : MyViewHolder<Video>(itemView) {
+    inner class GifHolder(itemView: View) : MyViewHolder<Video>(itemView) {
         private val thumbnailV: SimpleDraweeView = itemView.findViewById(R.id.thumbnail)
-
         init {
             thumbnailV.setOnClickListener {
-                val intent = Intent(context, MemeEditorActivity::class.java)
-                intent.putExtra("uri", getItem(item_position).data)
-                intent.putExtra("type",Meme.MemeType.GIF.toString())
-                context.startActivity(intent)
+                MemeEditorActivity.startWithGif(context,getItem(item_position).data)
             }
         }
         override fun bind(t: Video) {

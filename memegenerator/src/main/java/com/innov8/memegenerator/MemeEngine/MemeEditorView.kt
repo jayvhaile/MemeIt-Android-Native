@@ -71,7 +71,7 @@ class MemeEditorView : ViewGroup {
         if (memeLayout != null) {
             val ml = memeLayout!!
             canvas.drawRect(ml.drawingRect, paint)
-            for (i in 0 until ml.getCount()) {
+            for (i in 0 until ml.count) {
                 canvas.drawBitmap(ml.images[i],
                         null,
                         ml.getDrawingRectAt(i),
@@ -132,19 +132,26 @@ class MemeEditorView : ViewGroup {
         return list
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        memeLayout?.updateSize(w, h)
+    }
+
     fun loadMemeTemplate(memeTemplate: MemeTemplate) {
+        clearMemeItems()
+        val image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
+        val memeLayout = GridImageLayout(4, GridImageLayout.HORIZONTAL, 15.dp(context), width, height, List(16) { image })
+        setLayout(memeLayout)
         Handler().postDelayed({
-            clearMemeItems()
-            val image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
-            val memeLayout = SingleImageLayout(width, height, image)
-            setLayout(memeLayout)
             val rect = memeLayout.drawingRect
+
             memeTemplate.textProperties.forEach {
                 val memeTextView = MemeTextView(context)
                 memeTextView.applyTextProperty(it, rect.width(), rect.height(), rect.left, rect.top)
                 addMemeItemView(memeTextView)
             }
         }, 300)
+
     }
 
 

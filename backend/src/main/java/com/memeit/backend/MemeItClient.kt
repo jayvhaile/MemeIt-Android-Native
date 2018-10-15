@@ -239,15 +239,15 @@ object MemeItClient {
                 override fun onSuccess(result: LoginResult?) {
                     if (result != null) {
                         val req = GraphRequest.newMeRequest(result.accessToken) { json, _ ->
-                            val facebookInfo = FacebookInfo(json.getString("id"),
+                            val facebookInfo = FacebookInfo(result.accessToken.userId,
                                     json.getString("first_name"),
                                     json.getString("last_name"),
                                     json.getString("email"))
                             onSuccess(facebookInfo)
                         }
-                        val params= Bundle()
-                        params.putString("fields","id,email,first_name,last_name")
-                        req.parameters=params
+                        val params = Bundle()
+                        params.putString("fields", "id,email,first_name,last_name")
+                        req.parameters = params
                         req.executeAsync()
                     } else onError("Unknown Error, Please Try Again")
                 }
@@ -257,12 +257,45 @@ object MemeItClient {
                 }
 
                 override fun onError(error: FacebookException) {
-                    onError(error.message?:"Unknown Error")
+                    onError(error.message ?: "Unknown Error")
+                }
+            })
+        }
+        fun requestFacebookID(activity: Activity, callbackManager: CallbackManager,
+                                onSuccess: ((FacebookInfo) -> Unit),
+                                onError: ((String) -> Unit) = {}) {
+
+            //todo make sure the id comes from facebook and for this application only
+            val perms = listOf("email", "public_profile")
+            LoginManager.getInstance().logInWithReadPermissions(activity, perms)
+            LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
+                override fun onSuccess(result: LoginResult?) {
+                    if (result != null) {
+                        val req = GraphRequest.newMeRequest(result.accessToken) { json, _ ->
+                            val facebookInfo = FacebookInfo(result.accessToken.userId,
+                                    json.getString("first_name"),
+                                    json.getString("last_name"),
+                                    json.getString("email"))
+                            onSuccess(facebookInfo)
+                        }
+                        val params = Bundle()
+                        params.putString("fields", "id,email,first_name,last_name")
+                        req.parameters = params
+                        req.executeAsync()
+                    } else onError("Unknown Error, Please Try Again")
+                }
+
+                override fun onCancel() {
+                    onError("Canceled by User")
+                }
+
+                override fun onError(error: FacebookException) {
+                    onError(error.message ?: "Unknown Error")
                 }
             })
         }
 
-        fun signUpWithFacebook(facebookAuthRequest:FacebookAuthSignUpRequest,
+        fun signUpWithFacebook(facebookAuthRequest: FacebookAuthSignUpRequest,
                                onSignedUp: ((User) -> Unit)?,
                                onError: ((String) -> Unit) = {}) {
             memeItService.signUpWithFacebook(facebookAuthRequest).call({
@@ -270,7 +303,8 @@ object MemeItClient {
                 onSignedUp?.invoke(it.user)
             }, onError)
         }
-        fun signInWithFacebook(facebookAuthRequest:FacebookAuthSignInRequest,
+
+        fun signInWithFacebook(facebookAuthRequest: FacebookAuthSignInRequest,
                                onSignedUp: ((User) -> Unit)?,
                                onError: ((String) -> Unit) = {}) {
             memeItService.signInWithFacebook(facebookAuthRequest).call({

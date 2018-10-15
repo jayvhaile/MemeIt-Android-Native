@@ -2,6 +2,7 @@ package com.innov8.memeit
 
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
+import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.IdRes
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
+import com.innov8.memegenerator.utils.log
 import com.innov8.memeit.Activities.SettingsActivity
 import com.innov8.memeit.CustomViews.ProfileDraweeView
 import com.memeit.backend.dataclasses.Meme
@@ -28,6 +30,7 @@ import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 import com.innov8.memeit.MemeItApp.Companion.instance as it
 
 fun launchTask(block: suspend CoroutineScope.() -> Unit): Job {
@@ -77,6 +80,7 @@ fun String?.prefix(): String {
 val screenWidth: Int = it.resources.displayMetrics.widthPixels
 val screenHeight: Int = it.resources.displayMetrics.heightPixels
 
+fun getCloudinaryImageUrlforId(id: String) = MediaManager.get().url().source(id).generate()
 private fun SimpleDraweeView.loadImageMeme(id: String, ratio: Float = 1f, resizeWidth: Int, resizeHeight: Int) {
     val tlow = Transformation<Transformation<*>>().quality("5")
             .width(50)
@@ -276,3 +280,44 @@ val Int.sp: Int
     get() {
         return (this * it.resources.displayMetrics.scaledDensity).toInt()
     }
+
+fun <T> measure(tag: String = "", block: () -> T): T {
+    val x = System.currentTimeMillis()
+    val t = block()
+    log("fucck", tag, System.currentTimeMillis() - x)
+    return t
+}
+
+
+fun String.validateLength(min: Int, max: Int, tag: String): String? {
+    return when {
+        this.trim().length < min -> "$tag should at least be $min in length"
+        this.trim().length > max -> "$tag should be less than $max in length"
+        else -> null
+    }
+}
+
+
+fun String.validateMatch(s2: String, tag: String): String? {
+    return when {
+        this != s2 -> "$tag doesn't match"
+        else -> null
+    }
+}
+
+fun String.isEmail(): Boolean {
+    if (TextUtils.isEmpty(this)) return false
+    val expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
+    val pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
+    val matcher = pattern.matcher(this)
+    return matcher.matches()
+}
+
+fun String?.isEmailOrEmpty(): Boolean {
+    if (isNullOrEmpty()) return true
+    return this!!.isEmail()
+}
+
+fun String?.validateEmailOrEmpty(): String? = if (!isEmailOrEmpty()) "Invalid Email" else null
+
+

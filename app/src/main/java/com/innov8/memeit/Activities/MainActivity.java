@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.innov8.memeit.Adapters.MemeAdapter;
+import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter;
 import com.innov8.memeit.Loaders.FavoriteMemeLoader;
 import com.innov8.memeit.Loaders.HomeMemeLoader;
 import com.innov8.memeit.Loaders.TrendingMemeLoader;
@@ -50,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(false){
+            startActivity(new Intent(this, AuthActivity.class));
+            finish();
+
+            return;
+
+        }
         if (!MemeItClient.Auth.INSTANCE.isSignedIn()) {
             startActivity(new Intent(this, IntroActivity.class));
             finish();
@@ -64,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void goToSignUpDetails() {
         Intent intent = new Intent(this, AuthActivity.class);
-        intent.putExtra(AuthActivity.STARTING_FRAGMENT_PARAM, AuthActivity.FRAGMENT_SETUP);
+        intent.putExtra(AuthActivity.Companion.getSTARTING_MODE_PARAM(), AuthActivity.Companion.getMODE_PERSONALIZE());
         startActivity(intent);
         finish();
     }

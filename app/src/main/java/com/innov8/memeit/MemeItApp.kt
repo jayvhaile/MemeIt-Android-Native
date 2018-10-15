@@ -17,7 +17,7 @@ class MemeItApp :MultiDexApplication() {
     companion object {
         lateinit var instance:Application
         private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/"
-        private const val SERVER_URL = "https://safe-beyond-33046.herokuapp.com/api/"
+        public const val SERVER_URL = "https://safe-beyond-33046.herokuapp.com/api/"
         private const val STRICT_MODE=false
         private const val USE_LOCAL_SERVER=false
 
@@ -50,19 +50,18 @@ class MemeItApp :MultiDexApplication() {
                 "api_secret" to "yT2mxv0vQrEWjzsPrmyD6xu5a-Y"
         )
         MediaManager.init(this, config)
-        val configf = ImagePipelineConfig.newBuilder(this)
+        Fresco.initialize(this, ImagePipelineConfig.newBuilder(this)
                 .setResizeAndRotateEnabledForNetwork(true)
                 .setDownsampleEnabled(true)
-                .build()
-        Fresco.initialize(this, configf)
+                .build())
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-        MUser.save(PreferenceManager.getDefaultSharedPreferences(this),
+        /*MUser.save(PreferenceManager.getDefaultSharedPreferences(this),
                 "123",
                 SignInMethod.USERNAME,
                 "1234",
                 "jayv",
                 "Jv",
                 "aaa",
-                "aaa")
+                "aaa")*/
     }
 }

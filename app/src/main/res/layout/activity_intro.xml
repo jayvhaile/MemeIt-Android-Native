@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.innov8.memeit.CustomClasses.FontTextView
-        android:id="@+id/fontTextView2"
+        android:id="@+id/auth_question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -46,9 +46,9 @@
         android:text="  Login!"
         android:textColor="#fff"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/fontTextView2"
-        app:layout_constraintStart_toEndOf="@+id/fontTextView2"
-        app:layout_constraintTop_toTopOf="@+id/fontTextView2" />
+        app:layout_constraintBottom_toBottomOf="@+id/auth_question"
+        app:layout_constraintStart_toEndOf="@+id/auth_question"
+        app:layout_constraintTop_toTopOf="@+id/auth_question" />
 
     <ImageView
         android:id="@+id/create_account"
@@ -56,7 +56,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:src="@drawable/create_account"
-        app:layout_constraintBottom_toTopOf="@+id/fontTextView2"
+        app:layout_constraintBottom_toTopOf="@+id/auth_question"
         app:layout_constraintDimensionRatio="h,7:2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

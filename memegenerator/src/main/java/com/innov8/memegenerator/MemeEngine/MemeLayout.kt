@@ -4,10 +4,16 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.RectF
 
-abstract class MemeLayout(val maxWidth: Int, val maxHeight: Int, val images: List<Bitmap>) {
+abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: List<Bitmap>) {
 
     var invalidate: (() -> Unit)? = null
     lateinit var drawingRect: RectF
+
+    fun updateSize(w:Int,h:Int){
+        maxWidth=w
+        maxHeight=h
+        update()
+    }
 
     var leftMargin: Int = 0
         set(value) {
@@ -81,7 +87,9 @@ abstract class MemeLayout(val maxWidth: Int, val maxHeight: Int, val images: Lis
         get() = leftMargin + rightMargin
     open val verticalMargin: Int
         get() = topMargin + bottomMargin
-    fun getCount(): Int = images.size
+
+    val count: Int
+        get() = images.size
 
     protected abstract fun innerWidth(): Int
     protected abstract fun innerHeight(): Int
@@ -103,7 +111,7 @@ class SingleImageLayout(maxWidth: Int, maxHeight: Int, bitmap: Bitmap) : MemeLay
 
 
     override fun getDrawingRectAt(pos: Int): RectF {
-        if (pos >= getCount()) throw ArrayIndexOutOfBoundsException("pos must be 0")
+        if (pos >= count) throw ArrayIndexOutOfBoundsException("pos must be 0")
 
         val l = drawingRect.left + leftMargin
         val t = drawingRect.top + topMargin
@@ -113,7 +121,7 @@ class SingleImageLayout(maxWidth: Int, maxHeight: Int, bitmap: Bitmap) : MemeLay
     }
 
     fun getDrawingRectRelAt(pos: Int): RectF {
-        if (pos >= getCount()) throw ArrayIndexOutOfBoundsException("pos must be 0")
+        if (pos >= count) throw ArrayIndexOutOfBoundsException("pos must be 0")
 
         val l = leftMargin.toFloat()
         val t = topMargin.toFloat()
@@ -197,11 +205,9 @@ class LinearImageLayout(spc: Int, orien: Int, maxWidth: Int, maxHeight: Int, ima
     }
 
     override val horizontalMargin: Int
-        get() = super.horizontalMargin +if (orientation== HORIZONTAL)spacing else 0
+        get() = super.horizontalMargin + if (orientation == HORIZONTAL) spacing else 0
     override val verticalMargin: Int
-        get() = super.verticalMargin+if (orientation== VERTICAL)spacing else 0
-
-
+        get() = super.verticalMargin + if (orientation == VERTICAL) spacing else 0
 
 
     override fun getDrawingRectAt(pos: Int): RectF {
@@ -227,7 +233,7 @@ class LinearImageLayout(spc: Int, orien: Int, maxWidth: Int, maxHeight: Int, ima
                 var t = drawingRect.top + topMargin
                 val r = drawingRect.right - rightMargin
 
-                val availableTotalHeight = drawingRect.height() - verticalMargin - totalSpacing
+                val availableTotalHeight = drawingRect.height() - verticalMargin
                 val scaleY = availableTotalHeight / totalIH
 
                 for (i in 0 until pos) {
@@ -243,6 +249,157 @@ class LinearImageLayout(spc: Int, orien: Int, maxWidth: Int, maxHeight: Int, ima
     }
 }
 
+class GridImageLayout(spn: Int, orien: Int, spc: Int, maxWidth: Int, maxHeight: Int, images: List<Bitmap>) : MemeLayout(maxWidth, maxHeight, images) {
+    companion object {
+        const val HORIZONTAL = 0
+        const val VERTICAL = 1
+    }
+
+    var span = spn
+
+    var hSpacing = spc
+        set(value) {
+            field = value
+            calcImagesTotalWidth()
+            update()
+        }
+
+    var vSpacing = spc
+        set(value) {
+            field = value
+            calcImagesTotalHeight()
+            update()
+        }
+    var orientation = orien
+        set(value) {
+            field = value
+            calcImagesTotalWidth()
+            calcImagesTotalHeight()
+            update()
+        }
+
+    init {
+        calcImagesTotalHeight()
+        calcImagesTotalWidth()
+        update()
+    }
+
+
+    private val totalHSpacing
+        get() = (columnCount-1) * hSpacing
+
+    private val totalVSpacing
+        get() = (rowCount-1) * vSpacing
+
+    private var totalIW = 0
+    private var totalIH = 0
+
+    val rowCount: Int
+        get() = when (orientation) {
+            HORIZONTAL -> Math.ceil(count / span.toDouble()).toInt()
+            VERTICAL -> span
+            else -> 0
+        }
+
+    val columnCount: Int
+        get() = when (orientation) {
+            HORIZONTAL -> span
+            VERTICAL -> Math.ceil(count / span.toDouble()).toInt()
+            else -> 0
+        }
+
+    fun getImagesInRow(row: Int): List<Bitmap> {
+
+        return when (orientation) {
+            HORIZONTAL -> {
+                images.subList(row * columnCount, ((row + 1) * columnCount) max count)
+            }
+            VERTICAL -> {
+                val l = mutableListOf<Bitmap>()
+                for (i in row until count step span) {
+                    l.add(images[i])
+                }
+                return l
+            }
+            else -> throw IllegalStateException("Orientation should be 0 or 1")
+        }
+    }
+
+    fun getImagesInColumn(column: Int): List<Bitmap> {
+        return when (orientation) {
+            HORIZONTAL -> {
+                val l = mutableListOf<Bitmap>()
+                for (i in column until count step span) {
+                    l.add(images[i])
+                }
+                return l
+            }
+            VERTICAL -> {
+                images.subList(column * rowCount, ((column + 1) * rowCount) max count)
+            }
+            else -> throwError()
+        }
+    }
+
+    fun throwError(): Nothing = throw IllegalStateException("Orientation should be 0 or 1")
+    infix fun Int.max(max: Int) = if (this < max) this else max
+
+
+    fun calcImagesTotalWidth() {
+        totalIW = (0 until columnCount).map { getColumnWidth(it) }.reduce { a, b -> a + b }
+    }
+
+    private fun calcImagesTotalHeight() {
+        totalIH = (0 until rowCount).map {getRowHeight(it)}.reduce { a, b ->a + b}
+    }
+
+    override fun innerWidth(): Int = totalIW
+
+    override fun innerHeight(): Int = totalIH
+
+    override val horizontalMargin: Int
+        get() = super.horizontalMargin + totalHSpacing
+    override val verticalMargin: Int
+        get() = super.verticalMargin + totalVSpacing
+
+
+    fun getRowAndColumnFor(pos: Int) =
+            when (orientation) {
+                HORIZONTAL -> pos / span to pos % span
+                VERTICAL -> pos % span to pos / span
+                else -> throwError()
+            }
+
+    fun getRowHeight(row: Int) = getImagesInRow(row).maxBy { it.height }?.height ?: 0
+    fun getColumnWidth(column: Int) = getImagesInColumn(column).maxBy { it.width }?.width ?: 0
+
+
+    override fun getDrawingRectAt(pos: Int): RectF {
+
+        var l = drawingRect.left + leftMargin
+        var t = drawingRect.top + topMargin
+
+        val availableTotalWidth = drawingRect.width() - horizontalMargin
+        val availableTotalHeight = drawingRect.height() - verticalMargin
+        val scaleX = availableTotalWidth / totalIW
+        val scaleY = availableTotalHeight / totalIH
+
+        val (row, column) = getRowAndColumnFor(pos)
+
+        for (i in 0 until column) {
+            l += (getColumnWidth(i) * scaleX) + hSpacing
+        }
+        for (i in 0 until row) {
+            t += (getRowHeight(i) * scaleY) + vSpacing
+        }
+
+        val rectF = RectF(l, t, l + getColumnWidth(column) * scaleX, t + (getRowHeight(row) * scaleY))
+        val w = images[pos].width.toFloat()
+        val h = images[pos].height.toFloat()
+        return (w to h).fitCenter(rectF)
+
+    }
+}
 
 fun Pair<Float, Float>.fitCenter(rect: RectF): RectF {
     val w: Float

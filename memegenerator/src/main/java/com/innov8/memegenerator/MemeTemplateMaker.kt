@@ -13,7 +13,7 @@ import com.google.gson.stream.JsonReader
 import com.innov8.memegenerator.MemeEngine.MemeEditorView
 import com.innov8.memegenerator.MemeEngine.MemeTextView
 import com.innov8.memegenerator.Models.MemeTemplate
-import com.innov8.memegenerator.Models.MemeTemplate.Companion.LOCAL_DATA_SOURCE
+import com.innov8.memegenerator.Models.MemeTemplate.CREATOR.LOCAL_DATA_SOURCE
 import com.innov8.memegenerator.utils.*
 import java.io.File
 import java.io.FileInputStream

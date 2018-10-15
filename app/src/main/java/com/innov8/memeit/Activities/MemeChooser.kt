@@ -1,7 +1,6 @@
 package com.innov8.memeit.Activities
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.database.Cursor
 import android.os.Bundle
@@ -22,8 +21,8 @@ import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memegenerator.Models.MemeTemplate
 import com.innov8.memegenerator.utils.initWithGrid
 import com.innov8.memeit.Adapters.MemeTemplatesListAdapter
-import com.innov8.memeit.Adapters.PhotosAdapter
-import com.innov8.memeit.Adapters.VideoAdapter
+import com.innov8.memeit.Adapters.GifAdapter
+import com.innov8.memeit.Fragments.PhotosChooserFragment
 import com.innov8.memeit.R
 import kotlinx.android.synthetic.main.activity_meme_chooser.*
 import kotlinx.android.synthetic.main.fragment_meme_templates.*
@@ -50,14 +49,13 @@ class MemeChooserPagerAdapter(mgr: FragmentManager) : FragmentPagerAdapter(mgr) 
                 2 -> GifChooserFragment()
                 else -> TemplateFragment()
             }
+
     override fun getPageTitle(position: Int): String? = titles[position]
 }
 
 class TemplateFragment : Fragment() {
     private lateinit var memeTemplatesListAdapter: MemeTemplatesListAdapter
     private lateinit var gson: Gson
-
-
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
         memeTemplatesListAdapter = MemeTemplatesListAdapter(context!!)
@@ -65,12 +63,10 @@ class TemplateFragment : Fragment() {
         MemeTemplate.loadLocalTemplates(context!!) {
             memeTemplatesListAdapter.addAll(it)
         }
-
         memeTemplatesListAdapter.OnItemClicked = {
-            val json = gson.toJson(it)
-            val intent = Intent(context, MemeEditorActivity::class.java)
-            intent.putExtra("string", json)
-            startActivity(intent)
+            context?.let{ c ->
+                MemeEditorActivity.startWithMemeTemplate(c, it)
+            }
         }
     }
 
@@ -81,6 +77,7 @@ class TemplateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         meme_template_list.initWithGrid(3)
         meme_template_list.adapter = memeTemplatesListAdapter
+        meme_template_list.itemAnimator = null
     }
 
 
@@ -131,46 +128,11 @@ abstract class Frag : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
 }
 
-class PhotosChooserFragment : Frag() {
-    private lateinit var photosAdapter: PhotosAdapter
-
-    override fun onCreate(state: Bundle?) {
-        super.onCreate(state)
-        photosAdapter = PhotosAdapter(context!!)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_meme_templates, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        meme_template_list.initWithGrid(3)
-        meme_template_list.adapter = photosAdapter
-    }
-
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        return CursorLoader(context!!, MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                null,
-                null,
-                null,
-                "${MediaStore.Images.Media.DATE_ADDED} DESC")
-    }
-
-    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor) {
-        photosAdapter.swapCursor(data)
-    }
-
-    override fun onLoaderReset(loader: Loader<Cursor>) {
-        photosAdapter.swapCursor(null)
-    }
-}
-
 class VideoChooserFragment : Frag() {
-    private lateinit var videosAdapter: VideoAdapter
+    private lateinit var videosAdapter: GifAdapter
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
-        videosAdapter = VideoAdapter(context!!)
+        videosAdapter = GifAdapter(context!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -181,6 +143,8 @@ class VideoChooserFragment : Frag() {
         super.onViewCreated(view, savedInstanceState)
         meme_template_list.initWithGrid(3)
         meme_template_list.adapter = videosAdapter
+        meme_template_list.itemAnimator = null
+
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
@@ -199,11 +163,12 @@ class VideoChooserFragment : Frag() {
         videosAdapter.swapCursor(null)
     }
 }
+
 class GifChooserFragment : Frag() {
-    private lateinit var videosAdapter: VideoAdapter
+    private lateinit var videosAdapter: GifAdapter
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
-        videosAdapter = VideoAdapter(context!!)
+        videosAdapter = GifAdapter(context!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

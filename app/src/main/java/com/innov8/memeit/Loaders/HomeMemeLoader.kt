@@ -3,7 +3,7 @@ package com.innov8.memeit.Loaders
 import android.os.Parcel
 import android.os.Parcelable
 import com.innov8.memegenerator.Models.MemeTemplate
-import com.innov8.memeit.Adapters.AdElement
+import com.innov8.memeit.CustomClasses.AdElement
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.trim
 import com.memeit.backend.MemeItMemes
