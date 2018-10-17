@@ -80,7 +80,44 @@ fun String?.prefix(): String {
 val screenWidth: Int = it.resources.displayMetrics.widthPixels
 val screenHeight: Int = it.resources.displayMetrics.heightPixels
 
-fun getCloudinaryImageUrlforId(id: String) = MediaManager.get().url().source(id).generate()
+fun getCloudinaryImageUrlForId(id: String): String = MediaManager.get().url().source(id).generate()
+
+private fun getImageMemeUrl(id: String, ratio: Float = 1f): String {
+    val level = SettingsActivity.getImageQualityLevel(MemeItApp.instance)
+    val quality = SettingsActivity.quality[level]
+    val fac = SettingsActivity.factor[level]
+
+    val w = (screenWidth * fac) step 50
+    val h = ((screenWidth / ratio).toInt()
+            .trim(200.dp, screenHeight - 200.dp) * fac) step 50
+
+    val thigh = Transformation<Transformation<*>>()
+            .quality(quality)
+            .crop("fit")
+            .width(w)
+            .height(h)
+    return MediaManager.get().url().transformation(thigh).source(id).generate()
+}
+
+private fun getGifMemeUrl(id: String): String {
+    val t = Transformation<Transformation<*>>()
+            .effect("loop")
+    /*.quality(quality)
+    .crop("fit")
+    .width(w)
+    .height(h)*/
+
+    return MediaManager.get().url().resourcType("video")
+            .format("gif")
+            .transformation(t)
+            .generate(id)
+}
+
+fun Meme.generateUrl() = when (getType()) {
+    IMAGE -> getImageMemeUrl(imageId!!, imageRatio.toFloat())
+    GIF -> getGifMemeUrl(imageId!!)
+}
+
 private fun SimpleDraweeView.loadImageMeme(id: String, ratio: Float = 1f, resizeWidth: Int, resizeHeight: Int) {
     val tlow = Transformation<Transformation<*>>().quality("5")
             .width(50)
@@ -88,24 +125,8 @@ private fun SimpleDraweeView.loadImageMeme(id: String, ratio: Float = 1f, resize
             .crop("fit")
             .effect("blur", 60)
 
-    val level = SettingsActivity.getImageQualityLevel(context)
-    val quality = SettingsActivity.quality[level]
-    val fac = SettingsActivity.factor[level]
-
-
-    val w = (screenWidth * fac) step 50
-    val h = ((screenWidth / ratio).toInt()
-            .trim(200.dp, screenHeight - 200.dp) * fac) step 50
-    val thigh = Transformation<Transformation<*>>()
-            .quality(quality)
-            .crop("fit")
-            .width(w)
-            .height(h)
-
     val low = MediaManager.get().url().transformation(tlow).source(id).generate()
-    val high = MediaManager.get().url().transformation(thigh).source(id).generate()
-
-
+    val high = getImageMemeUrl(id, ratio)
     val lowReq = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(low))
             .setPostprocessor(IterativeBoxBlurPostProcessor(2))
             .build()
@@ -142,17 +163,9 @@ private fun SimpleDraweeView.loadGifMeme(id: String, ratio: Float, resizeWidth: 
             .format("jpg")
             .transformation(tb)
             .generate(id)
-    val t = Transformation<Transformation<*>>()
-            .effect("loop")
-    /*.quality(quality)
-    .crop("fit")
-    .width(w)
-    .height(h)*/
 
-    val url = MediaManager.get().url().resourcType("video")
-            .format("gif")
-            .transformation(t)
-            .generate(id)
+
+    val url = getGifMemeUrl(id)
 
     class m : BaseControllerListener<ImageInfo>() {
         override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
@@ -209,16 +222,13 @@ fun ProfileDraweeView.loadImage(url: String?, width: Float = R.dimen.profile_min
 fun Reaction.getDrawable(active: Boolean = true): Drawable {
     val activeRID = intArrayOf(R.drawable.laughing, R.drawable.rofl, R.drawable.neutral, R.drawable.angry)
     val inactiveRID = intArrayOf(R.drawable.laughing_inactive_light, R.drawable.rofl_inactive, R.drawable.neutral_inactive, R.drawable.angry_inactive)
-    return VectorDrawableCompat.create(it.resources, if (active) activeRID[type.ordinal] else inactiveRID[type.ordinal], null)!!
+    return VectorDrawableCompat.create(it.resources, if (active) activeRID[getType().ordinal] else inactiveRID[getType().ordinal], null)!!
 }
-
-@IdRes
 fun Reaction.getDrawableID(active: Boolean = true): Int {
-    //todo include the inactive ones too
     val activeRID = intArrayOf(R.drawable.laughing, R.drawable.rofl, R.drawable.neutral, R.drawable.angry)
     val inactiveRID = intArrayOf(R.drawable.laughing_inactive_light, R.drawable.rofl_inactive, R.drawable.neutral_inactive, R.drawable.angry_inactive)
 
-    return if (active) activeRID[type.ordinal] else inactiveRID[type.ordinal]
+    return if (active) activeRID[getType().ordinal] else inactiveRID[getType().ordinal]
 }
 
 fun RecyclerView.makeLinear(orientation: Int = RecyclerView.VERTICAL) {

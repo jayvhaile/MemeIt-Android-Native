@@ -9,13 +9,16 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.innov8.memegenerator.utils.toast
+import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.Adapters.TagsAdapter
 import com.innov8.memeit.Loaders.*
+import com.innov8.memeit.MLHandler
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
+import com.memeit.backend.dataclasses.Tag
 import kotlinx.android.synthetic.main.activity_tags.*
+import kotlinx.android.synthetic.main.activity_user_tag.*
 import kotlinx.android.synthetic.main.fragment_meme_list.*
 
 class TagsActivity : AppCompatActivity() {
@@ -51,10 +54,10 @@ class UserTagActivity : AppCompatActivity() {
         setContentView(R.layout.activity_user_tag)
         supportFragmentManager.beginTransaction().replace(R.id.holder, TagFragment.newInstance(UserTagLoader(uid)))
         setSupportActionBar(tags_toolbar)
-        supportActionBar?.setTitle("Tags Followed by $name")
+        supportActionBar?.title = "Tags Followed by $name"
         if (name == "...")
             MemeItUsers.getUserById(uid).call {
-                supportActionBar?.setTitle("Tags Followed by ${it.name}")
+                supportActionBar?.title = "Tags Followed by ${it.name}"
             }
     }
 }
@@ -64,7 +67,7 @@ class TagsChooserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_tag)
         setSupportActionBar(tags_toolbar)
-        supportActionBar?.setTitle("Choose Tags")
+        supportActionBar?.title = "Choose Tags"
         supportFragmentManager.beginTransaction().replace(R.id.holder, TagFragment.newInstance(PopularTagLoader()))
     }
 
@@ -88,7 +91,7 @@ class TagsChooserActivity : AppCompatActivity() {
 }
 
 class TagFragment : Fragment() {
-    lateinit var tagLoader: TagLoader
+    private lateinit var tagLoader: TagLoader
 
     companion object {
         fun newInstance(loader: TagLoader): TagFragment {
@@ -100,11 +103,19 @@ class TagFragment : Fragment() {
         }
     }
 
-    lateinit var tagsAdapter: TagsAdapter
+    private lateinit var tagsAdapter: TagsAdapter
+    private lateinit var ml:MLHandler<Tag>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         tagLoader = arguments?.getParcelable("loader") ?: return
         tagsAdapter = TagsAdapter(context!!)
+        ml= MLHandler(tagsAdapter,tagLoader)
+        ml.load()
+        ml.onLoaded = { swipe_to_refresh?.isRefreshing = false }
+        ml.onLoadFailed = { message ->
+            view?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show()}
+            swipe_to_refresh?.isRefreshing = false
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -116,19 +127,8 @@ class TagFragment : Fragment() {
         meme_recycler_view.adapter = tagsAdapter
         meme_recycler_view.layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
         swipe_to_refresh.setOnRefreshListener {
-            load()
+            ml.refresh()
         }
-        load()
-    }
-
-    private fun load() {
-        swipe_to_refresh.isRefreshing = true
-        tagLoader.loadTags(0, 300).call({
-            tagsAdapter.setAll(it)
-            swipe_to_refresh.isRefreshing = false
-        }, {
-            context?.toast("Error Loading Tags: $it")
-        })
     }
 
 }

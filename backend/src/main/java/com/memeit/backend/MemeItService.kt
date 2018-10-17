@@ -13,6 +13,7 @@ interface MemeItService {
 
     @POST("auth/signin/google")
     fun signInWithGoogle(@Body user: GoogleAuthSignInRequest): Call<AuthResponse>
+
     @POST("auth/signin/facebook")
     fun signInWithFacebook(@Body user: FacebookAuthSignInRequest): Call<AuthResponse>
 
@@ -22,6 +23,7 @@ interface MemeItService {
 
     @POST("auth/signup/google")
     fun signUpWithGoogle(@Body user: GoogleAuthSignUpRequest): Call<AuthResponse>
+
     @POST("auth/signup/facebook")
     fun signUpWithFacebook(@Body user: FacebookAuthSignUpRequest): Call<AuthResponse>
 
@@ -30,7 +32,7 @@ interface MemeItService {
     fun loadMyUser(): Call<User>
 
     @PUT("user/me/setup")
-    fun uploadUserData(@Body user:User): Call<ResponseBody>
+    fun uploadUserData(@Body user: User): Call<ResponseBody>
 
     //todo fix this
     @DELETE("user/me")
@@ -47,10 +49,6 @@ interface MemeItService {
 
     @POST("auth/{username}/forgotpassword")
     fun forgotPassword(@Path("username") username: String)
-
-
-
-
 
 
     //==============================================================================================
@@ -199,6 +197,9 @@ interface MemeItService {
     fun getReactorsForMeme(@Path("mid") mid: String,
                            @Query("skip") skip: Int,
                            @Query("limit") limit: Int): Call<List<Reaction>>
+
+    @GET("meme/{mid}/reactions/grouped")
+    fun getReactionCountByType(@Path("mid") mid: String): Call<List<ReactionGroup>>
 
     @GET("meme/comment")
     fun getCommentForMeme(@Query("mid") mid: String,

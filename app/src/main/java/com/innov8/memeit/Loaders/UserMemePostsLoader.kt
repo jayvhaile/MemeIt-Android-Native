@@ -3,14 +3,18 @@ package com.innov8.memeit.Loaders
 import android.os.Parcel
 import android.os.Parcelable
 import com.memeit.backend.MemeItMemes
+import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.memeit.backend.dataclasses.Meme
+import com.memeit.backend.dataclasses.Tag
 
 class UserMemePostsLoader(private val userID: String?) : MemeLoader<Meme> {
 
     constructor(parcel: Parcel) : this(parcel.readString())
 
-    override fun load(skip: Int, limit: Int, onSuccess: (List<Meme>) -> Unit, onError: (String) -> Unit) {
+    override var skip: Int = 0
+
+    override fun load(limit: Int, onSuccess: (List<Meme>) -> Unit, onError: (String) -> Unit) {
         if (userID == null)
             MemeItMemes.getMyMemes(skip, limit).call(onSuccess, onError)
         else

@@ -1,11 +1,14 @@
 package com.innov8.memeit.Activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -35,12 +38,12 @@ import kotlinx.android.synthetic.main.activity_auth2.*
 
 class AuthActivity : AppCompatActivity() {
     private var mLoading: Boolean = false
-    private fun setLoading(loading: Boolean) {
+    private fun setLoading(loading: Boolean, then: () -> Unit = {}) {
         mLoading = loading
         if (loading) {
             action_btn.startAnimation()
         } else {
-            action_btn.revertAnimation()
+            action_btn.revertAnimation(then)
         }
     }
 
@@ -72,13 +75,7 @@ class AuthActivity : AppCompatActivity() {
         loginMode.init()
         personalizeMode.init()
         action_btn.setOnClickListener {
-            if (mLoading) {
-                showError("Please wait a While")
-                return@setOnClickListener
-            }
-            if (currentMode.verifable()) {
-                if (currentMode.onVerify()) currentMode.onAction()
-            } else currentMode.onAction()
+            execOnAction()
         }
         auth_question_action.setOnClickListener {
             if (mLoading) {
@@ -87,6 +84,8 @@ class AuthActivity : AppCompatActivity() {
             }
             currentMode.onGoto()
         }
+
+
         signup_facebook.setOnClickListener {
             if (mLoading) {
                 showError("Please wait a While")
@@ -101,8 +100,30 @@ class AuthActivity : AppCompatActivity() {
             }
             currentMode.onGoogle()
         }
+        val function: (TextView?, Int?, KeyEvent?) -> Boolean = { v, _, _ ->
+            if (v == currentMode.getLastField()?.editText) {
+                val mgr = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                mgr.hideSoftInputFromWindow(v?.windowToken, 0)
+                execOnAction()
+                true
+            } else false
+        }
+        username_field.editText!!.setOnEditorActionListener(function)
+        email_field.editText!!.setOnEditorActionListener(function)
+        password_field.editText!!.setOnEditorActionListener(function)
+        confirm_password_field.editText!!.setOnEditorActionListener(function)
         val modeInt = intent?.getIntExtra(STARTING_MODE_PARAM, MODE_INTRO) ?: MODE_INTRO
         setMode(getModeForInt(modeInt), withAnimation = false)
+    }
+
+    private fun execOnAction() {
+        if (mLoading) {
+            showError("Please wait a While")
+            return
+        }
+        if (currentMode.verifable()) {
+            if (currentMode.onVerify()) currentMode.onAction()
+        } else currentMode.onAction()
     }
 
     private fun getModeForInt(modeInt: Int) = when (modeInt) {
@@ -269,8 +290,9 @@ class AuthActivity : AppCompatActivity() {
             setLoading(true)
             val req = UsernameAuthRequest(username_field.text, password_field.text, email_field.text)
             MemeItClient.Auth.signUpWithUsername(req, {
-                setLoading(false)
-                setMode(personalizeMode)
+                setLoading(false) {
+                    setMode(personalizeMode)
+                }
             }, onError)
         }
 
@@ -289,6 +311,8 @@ class AuthActivity : AppCompatActivity() {
         override fun onGoto() {
             setMode(loginMode)
         }
+
+        override fun getLastField(): TextInputLayout? = confirm_password_field
 
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
             super.onActivityResult(requestCode, resultCode, data)
@@ -343,10 +367,19 @@ class AuthActivity : AppCompatActivity() {
         override fun onAction() {
             setLoading(true)
             val req = UsernameAuthRequest(username_field.text, password_field.text)
-            MemeItClient.Auth.signInWithUsername(req, {
+            MemeItClient.Auth.signInWithUsername(req, onSignedIn, onError)
+        }
+
+        override fun getLastField(): TextInputLayout? = password_field
+
+
+        val onSignedIn by lazy {
+            { user: User ->
                 setLoading(false)
-                setMode(null!!) //todo go to main
-            }, onError)
+                val i = Intent(this@AuthActivity, MainActivity::class.java)
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(i)
+            }
         }
 
         override fun onVerify(): Boolean {
@@ -358,10 +391,8 @@ class AuthActivity : AppCompatActivity() {
 
         override fun onFacebook() {
             //todo only request the id and token
-            MemeItClient.Auth.requestFacebookInfo(this@AuthActivity, callbackManager, {
-                MemeItClient.Auth.signInWithFacebook(it.toSignInReq(), { user ->
-
-                }, onError)
+            MemeItClient.Auth.requestFacebookID(this@AuthActivity, callbackManager, {
+                MemeItClient.Auth.signInWithFacebook(it, onSignedIn, onError)
             }, onError)
         }
 
@@ -371,6 +402,16 @@ class AuthActivity : AppCompatActivity() {
 
         override fun onGoto() {
             setMode(signupMode)
+        }
+
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            super.onActivityResult(requestCode, resultCode, data)
+            callbackManager.onActivityResult(requestCode, resultCode, data)
+            if (requestCode == MemeItClient.Auth.GOOGLE_SIGN_IN_REQUEST_CODE && data != null) {
+                MemeItClient.Auth.extractGoogleInfo(data, {
+                    MemeItClient.Auth.signInWithGoogle(it.toSignInReq(), onSignedIn, onError)
+                }, onError)
+            }
         }
 
         override fun onBackPressed(): Boolean {
@@ -416,6 +457,9 @@ class AuthActivity : AppCompatActivity() {
             )
         }
 
+        override fun getLastField(): TextInputLayout? = username_field
+
+
         override fun verifable(): Boolean = true
         override fun updateElements() {
             username_field.editText!!.hint = "Name"
@@ -441,7 +485,7 @@ class AuthActivity : AppCompatActivity() {
                 uploadData(name, profileImageUrl!!.toString())
             } else {
                 profileImageUrl?.let {
-                    uploadImageThenData(name, it.toString())
+                    uploadImageThenData(name, it.encodedPath!!)
                 } ?: uploadData(name, null)
             }
         }
@@ -526,6 +570,7 @@ class AuthActivity : AppCompatActivity() {
         override fun updateElements() {
             action_btn.text = "Continue"
         }
+        override fun getLastField(): TextInputLayout? = username_field
 
         override fun verifable(): Boolean = true
 
@@ -616,8 +661,6 @@ interface AuthMode {
             constraintSet.connect(R.id.auth_question, ConstraintSet.TOP, R.id.action_holder, ConstraintSet.BOTTOM, 16.dp)
 
         }
-
-
 
 
     }

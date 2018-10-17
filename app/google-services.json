@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "126048745617",
-    "firebase_url": "https://memeit-97251.firebaseio.com",
-    "project_id": "memeit-97251",
-    "storage_bucket": "memeit-97251.appspot.com"
+    "project_number": "209237732768",
+    "firebase_url": "https://memeit-334d5.firebaseio.com",
+    "project_id": "memeit-334d5",
+    "storage_bucket": "memeit-334d5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:126048745617:android:5ba355e633c76e77",
+        "mobilesdk_app_id": "1:209237732768:android:5ba355e633c76e77",
         "android_client_info": {
           "package_name": "com.innov8.memeit"
         }
       },
       "oauth_client": [
         {
-          "client_id": "126048745617-9c12n6k17tejvg8h0v9hkn7h1vc1sot3.apps.googleusercontent.com",
+          "client_id": "209237732768-kc8a2t9be2a8vbg2786asf9rpfub849r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.innov8.memeit",
+            "certificate_hash": "8716532dd5c8c81ce998b27c9bea5b9d474fe7f7"
+          }
+        },
+        {
+          "client_id": "209237732768-p6hi3v570i53cl0sb64497g3mj5qav42.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAA1PoAkLVzrd8FRGjbfgAeb5Q0bDLtpLc"
+          "current_key": "AIzaSyBEfSsTdWWVfogXPZqHEFUCoAc7qxRyxsY"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209237732768-p6hi3v570i53cl0sb64497g3mj5qav42.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

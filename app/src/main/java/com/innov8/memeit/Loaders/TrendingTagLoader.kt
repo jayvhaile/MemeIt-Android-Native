@@ -3,15 +3,17 @@ package com.innov8.memeit.Loaders
 import android.os.Parcel
 import android.os.Parcelable
 import com.memeit.backend.MemeItMemes
+import com.memeit.backend.MemeItUsers
+import com.memeit.backend.call
 import com.memeit.backend.dataclasses.Tag
 import retrofit2.Call
 
 class TrendingTagLoader() : TagLoader, Parcelable {
-    constructor(parcel: Parcel) : this() {
-    }
+    constructor(parcel: Parcel) : this()
+    override var skip: Int = 0
 
-    override fun loadTags(skip: Int, limit: Int): Call<List<Tag>> {
-        return MemeItMemes.getTrendingTags(skip, limit)
+    override fun load(limit: Int, onSuccess: (List<Tag>) -> Unit, onError: (String) -> Unit) {
+        MemeItUsers.getTrendingTags(skip, limit).call(onSuccess,onError)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

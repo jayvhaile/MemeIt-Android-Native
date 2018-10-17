@@ -6,14 +6,17 @@ import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
 import com.memeit.backend.dataclasses.Meme
 
-class SearchMemeLoader(var search: String, var tags: Array<String>) : MemeLoader<Meme> {
+class SearchMemeLoader() : MemeLoader<Meme> {
+    override var skip: Int = 0
+    var search: String = ""
+    var tags: Array<String> = arrayOf()
 
+    constructor(parcel: Parcel) : this() {
+        search = parcel.readString()!!
+        tags = parcel.createStringArray() ?: arrayOf()
+    }
 
-    constructor(parcel: Parcel) : this(
-            parcel.readString()!!,
-            parcel.createStringArray() ?: arrayOf())
-
-    override fun load(skip: Int, limit: Int, onSuccess: (List<Meme>) -> Unit, onError: (String) -> Unit) {
+    override fun load(limit: Int, onSuccess: (List<Meme>) -> Unit, onError: (String) -> Unit) {
         MemeItMemes.getFilteredMemes(search, tags, skip, limit).call(onSuccess, onError)
     }
 

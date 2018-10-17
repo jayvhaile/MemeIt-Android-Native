@@ -2,6 +2,7 @@ package com.innov8.memeit.Adapters.MemeAdapters.ViewHolders
 
 import android.content.Intent
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
@@ -23,7 +24,9 @@ import com.memeit.backend.call
 import com.memeit.backend.dataclasses.HomeElement
 import com.memeit.backend.dataclasses.Meme
 import com.memeit.backend.dataclasses.Reaction
+import com.memeit.backend.dataclasses.Reaction.ReactionType.*
 import com.varunest.sparkbutton.SparkButton
+import kotlin.IllegalStateException
 
 class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
     private val posterPicV: ProfileDraweeView = itemView.findViewById(R.id.notif_icon)
@@ -38,10 +41,14 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
     private val favButton: SparkButton = itemView.findViewById(R.id.fav_button)
     private val reactGroup: Group = itemView.findViewById(R.id.react_group)
     private val memeTags: TextView = itemView.findViewById(R.id.meme_tags)
+    private val reactionCountFunny: TextView = itemView.findViewById(R.id.reacation_count_funny)
+    private val reactionCountVeryFunny: TextView = itemView.findViewById(R.id.reacation_count_veryfunny)
+    private val reactionCountAngry: TextView = itemView.findViewById(R.id.reacation_count_angry)
+    private val reactionCountStupid: TextView = itemView.findViewById(R.id.reacation_count_stupid)
 
 
     init {
-//        memeImageV.setOnClickListener { memeClickedListener?.invoke(getCurrentMeme().id) }
+        memeImageV.setOnClickListener { memeClickedListener?.invoke(currentMeme.id!!) }
         commentBtnV.setOnClickListener {
             val meme = currentMeme
             val intent = Intent(memeAdapter.context, CommentsActivity::class.java)
@@ -59,26 +66,13 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
             memeAdapter.context.startActivity(i)
         }
 
-        val reactListener = View.OnClickListener { view ->
-            var reactionType: Reaction.ReactionType? = null
-            var reactRes = 0
-            when (view.id) {
-                R.id.react_funny -> {
-                    reactionType = Reaction.ReactionType.FUNNY
-                    reactRes = MemeListAdapter.activeRID[0]
-                }
-                R.id.react_veryfunny -> {
-                    reactionType = Reaction.ReactionType.VERY_FUNNY
-                    reactRes = MemeListAdapter.activeRID[1]
-                }
-                R.id.react_stupid -> {
-                    reactionType = Reaction.ReactionType.STUPID
-                    reactRes = MemeListAdapter.activeRID[2]
-                }
-                R.id.react_angry -> {
-                    reactionType = Reaction.ReactionType.ANGERING
-                    reactRes = MemeListAdapter.activeRID[3]
-                }
+        val reactListener = OnClickListener { view ->
+            val (reactRes, reactionType) = when (view.id) {
+                R.id.react_funny -> MemeListAdapter.activeRID[0] to FUNNY
+                R.id.react_veryfunny -> MemeListAdapter.activeRID[1] to VERY_FUNNY
+                R.id.react_stupid -> MemeListAdapter.activeRID[2] to STUPID
+                R.id.react_angry -> MemeListAdapter.activeRID[3] to ANGERING
+                else -> throw IllegalStateException()
             }
             react(reactionType, reactRes)
             toggleReactVisibility()
@@ -100,7 +94,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 
         }
         favButton.isChecked = false
-        favButton.setOnClickListener { view ->
+        favButton.setOnClickListener { _ ->
             val meme = currentMeme
             if (meme.isMyFavourite)
                 MemeItMemes.removeMemeFromFavourite(meme.id!!).call({
@@ -121,6 +115,15 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
 
     private fun toggleReactVisibility() {
         reactGroup.visibility = if (reactGroup.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        if (reactGroup.visibility == View.VISIBLE) {
+            MemeItMemes.getReactionCountByType(currentMeme.id!!).call { reactions ->
+                val x = reactions.map { it.getType() to it.count }.toMap()
+                reactionCountFunny.text = (x[FUNNY] ?: 0).toString()
+                reactionCountVeryFunny.text = (x[VERY_FUNNY] ?: 0).toString()
+                reactionCountAngry.text = (x[ANGERING] ?: 0).toString()
+                reactionCountStupid.text = (x[STUPID] ?: 0).toString()
+            }
+        }
     }
 
     private fun showFollowDialog() {
@@ -150,9 +153,9 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         action?.invoke()
     }
 
-    private fun react(reactionType: Reaction.ReactionType?, finalReactRes: Int) {
+    private fun react(reactionType: Reaction.ReactionType, finalReactRes: Int) {
         val pos = itemPosition
-        MemeItMemes.reactToMeme(Reaction.create(reactionType, currentMeme.id)).call({
+        MemeItMemes.reactToMeme(reactionType.create(currentMeme.id!!)).call({
 
             reactButton.setActiveImage(finalReactRes)
             reactButton.playAnimation()
@@ -161,10 +164,9 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
             val m = memeAdapter.items[pos] as Meme
             if (m.myReaction == null) {
                 m.reactionCount++
-                memeAdapter.notifyItemChanged(pos)
-//                reactionCountV.text = String.format("%d people reacted", currentMeme.reactionCount)
+                reactionCountV.text = String.format("%d people reacted", currentMeme.reactionCount)
             }
-            m.myReaction = Reaction.create(reactionType, null)
+            m.myReaction = reactionType.create()
 
         }, onError("Reaction Failed"))
     }
@@ -188,7 +190,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
             memeTags.text = meme.tags.joinToString(", ") { "#$it" }
         }
         if (meme.myReaction !== null) {
-            reactButton.setActiveImage(MemeListAdapter.activeRID[meme.myReaction!!.type.ordinal])
+            reactButton.setActiveImage(MemeListAdapter.activeRID[meme.myReaction!!.getType().ordinal])
             reactButton.isChecked = true
         } else {
             reactButton.isChecked = false

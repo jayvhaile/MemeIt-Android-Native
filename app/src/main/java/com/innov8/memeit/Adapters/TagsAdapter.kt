@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.view.View
 import android.widget.TextView
+import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memegenerator.Adapters.ListAdapter
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memegenerator.utils.toast
@@ -13,7 +14,20 @@ import com.memeit.backend.dataclasses.Tag
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 
-class TagsAdapter(context: Context) : ListAdapter<Tag>(context, R.layout.list_item_tags_new) {
+class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layout.list_item_tags_new) {
+
+
+    override var emptyDrawableId: Int = R.drawable.ic_add
+    override var errorDrawableId: Int = R.drawable.ic_no_internet
+    override var emptyDescription: String = "No Tags"
+    override var errorDescription: String = "Couldn't load Tags"
+    override var emptyActionText: String? = ""
+    override var errorActionText: String? = "Try Again"
+    override val loadingDrawable = CubeGrid().apply {
+        color = Color.rgb(255, 100, 0)
+    }
+
+
     override fun createViewHolder(view: View): MyViewHolder<Tag> {
         return TagsViewHolder(view)
     }
@@ -42,19 +56,18 @@ class TagsAdapter(context: Context) : ListAdapter<Tag>(context, R.layout.list_it
                 if (tagFollowV.text == "Unfollow")
                     MemeItUsers.unfollowTag(t.tag).call({
 
-                        mContext.toast("Unfollowed")
+                        context.toast("Unfollowed")
                         tagFollowV.text = "Follow"
-                    },{
-                        mContext.toast("Failed to Unfollow:- $it")
+                    }, {
+                        context.toast("Failed to Unfollow:- $it")
 
                     })
                 else
                     MemeItUsers.followTags(arrayOf(t.tag)).call({
-                        mContext.toast("Followed")
+                        context.toast("Followed")
                         tagFollowV.text = "Unfollow"
-                    },{
-                        mContext.toast("Failed to Follow:- $it")
-
+                    }, {
+                        context.toast("Failed to Follow:- $it")
                     })
             }
         }

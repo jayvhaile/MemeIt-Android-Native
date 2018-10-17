@@ -14,13 +14,23 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.facebook.drawee.view.SimpleDraweeView
+import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memeit.*
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.CustomViews.ProfileDraweeView
 import com.memeit.backend.dataclasses.*
 
-class NotificationAdapter(val context: Context) : RecyclerView.Adapter<NotificationViewHolder>() {
+class NotificationAdapter(context: Context) : ELEListAdapter<Notification, NotificationViewHolder>(context) {
+    override var emptyDrawableId: Int = R.drawable.ic_add
+    override var errorDrawableId: Int = R.drawable.ic_no_internet
+    override var emptyDescription: String = "No Memes"
+    override var errorDescription: String = "Couldn't load Memes"
+    override var emptyActionText: String? = ""
+    override var errorActionText: String? = "Try Again"
+    override val loadingDrawable = CubeGrid().apply {
+        color = Color.rgb(255, 100, 0)
+    }
 
     val colors = listOf(R.color.blue, R.color.purple, R.color.orange, R.color.greeny)
             .map { idToColor(it) }
@@ -28,41 +38,8 @@ class NotificationAdapter(val context: Context) : RecyclerView.Adapter<Notificat
     fun idToColor(id: Int): Int =
             context.resources.getColor(id)
 
-    val items: MutableList<Notification> = mutableListOf()
 
-    fun addAll(notifications: List<Notification>) {
-        if (notifications.isEmpty()) return
-        val start = items.size
-        items.addAll(notifications)
-        notifyItemRangeInserted(start, notifications.size)
-    }
-
-    fun add(notification: Notification) {
-        items.add(notification)
-        notifyItemInserted(items.size - 1)
-    }
-
-    fun remove(notification: Notification) {
-        if (items.contains(notification)) {
-            val index = items.indexOf(notification)
-            items.remove(notification)
-            notifyItemRemoved(index)
-        }
-    }
-
-    fun clear() {
-        items.clear()
-        log("setSe", "cleared")
-        notifyDataSetChanged()
-    }
-
-    fun setAll(notifications: List<Notification>) {
-        items.clear()
-        items.addAll(notifications)
-        notifyDataSetChanged()
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
+    override fun onCreateHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
         return when (viewType) {
             Notification.GENERAL_TYPE -> {
                 val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif, parent, false)
@@ -95,14 +72,14 @@ class NotificationAdapter(val context: Context) : RecyclerView.Adapter<Notificat
         }
     }
 
-    override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
+    override fun onBindHolder(holder: NotificationViewHolder, position: Int) {
         holder.itemPosition = position
         holder.bind(items[position])
     }
 
 
-    override fun getItemCount(): Int = items.count()
-    override fun getItemViewType(position: Int): Int = items[position].type
+    override fun getCount(): Int = items.count()
+    override fun getItemType(position: Int): Int = items[position].type
 
 
 }
@@ -178,9 +155,9 @@ class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : N
         icon.text = notif.reactorName.prefix()
         icon.loadImage(notif.reactorPic)
         memeImage.loadMeme(notif.getMeme())
-        val span=ImageSpan(notif.getReaction().getDrawable())
-        val s=SpannableString(" ")
-        s.setSpan(span,0,1,0)
+        val span = ImageSpan(notif.getReaction().getDrawable())
+        val s = SpannableString(" ")
+        s.setSpan(span, 0, 1, 0)
         message?.text = s
 
     }

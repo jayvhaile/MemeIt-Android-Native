@@ -7,9 +7,11 @@ import com.memeit.backend.call
 import com.memeit.backend.dataclasses.Meme
 
 class TrendingMemeLoader() : MemeLoader<Meme> {
+    override var skip: Int = 0
+
     constructor(parcel: Parcel) : this()
 
-    override fun load(skip: Int, limit: Int, onSuccess: (List<Meme>) -> Unit, onError: (String) -> Unit) {
+    override fun load(limit: Int, onSuccess: (List<Meme>) -> Unit, onError: (String) -> Unit) {
         MemeItMemes.getTrendingMemes(skip, limit).call(onSuccess, onError)
     }
 

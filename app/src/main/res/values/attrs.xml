@@ -36,4 +36,13 @@
         <attr name="choosed" format="boolean" />
         <attr name="count" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="MyRecyclerView">
+        <attr name="emptyDrawable" format="reference" />
+        <attr name="errorDrawable" format="reference" />
+        <attr name="emptyDescription" format="string" />
+        <attr name="errorDescription" format="string" />
+        <attr name="emptyAction" format="string" />
+        <attr name="errorAction" format="string" />
+    </declare-styleable>
 </resources>

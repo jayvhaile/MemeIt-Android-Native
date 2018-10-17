@@ -50,15 +50,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(false){
-            startActivity(new Intent(this, AuthActivity.class));
-            finish();
-
-            return;
-
-        }
         if (!MemeItClient.Auth.INSTANCE.isSignedIn()) {
-            startActivity(new Intent(this, IntroActivity.class));
+            startActivity(new Intent(this, AuthActivity.class));
             finish();
             return;
         }
@@ -77,17 +70,13 @@ public class MainActivity extends AppCompatActivity {
     }
     AppBarLayout appbar;
     private void initUI(Bundle savedInstanceState) {
-
         setContentView(R.layout.activity_main);
         viewPager = findViewById(R.id.main_viewpager);
         bottom_nav = findViewById(R.id.bottom_nav);
         appbar=findViewById(R.id.appbar);
         mToolbar = findViewById(R.id.toolbar2);
-
         initToolbar();
         initBottomNav();
-
-        // Setting viewpager pagerAdapter
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(0);
@@ -97,12 +86,10 @@ public class MainActivity extends AppCompatActivity {
                 .withRootViewElevationPx(5)
                 .withRootViewScale(0.5f)
                 .withMenuLayout(R.layout.menu_drawer2); //todo fix the menu_drawer crashes due to the drawables on api level < 21
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             sbd.withToolbarMenuToggle(mToolbar);
         }
         rootNav = sbd.inject();
-
         findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,14 +104,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         int selected=savedInstanceState.getInt("selected");
         bottom_nav.select(selected,true);
     }
-
     private void initToolbar() {
         this.setSupportActionBar(this.mToolbar);
     }
@@ -184,12 +169,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void closeSearch() {
-
         MemeListFragment frag = (MemeListFragment) pagerAdapter.fragments.get(viewPager.getCurrentItem());
         frag.setSearchMode(false);
-
     }
-
 
     private SearchToolbar searchToolbar;
     MenuItem searchItem;

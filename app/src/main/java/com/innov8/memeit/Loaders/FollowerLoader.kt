@@ -7,9 +7,11 @@ import com.memeit.backend.call
 import com.memeit.backend.dataclasses.User
 
 class FollowerLoader(private val uid: String?) : UserListLoader {
+    override var skip: Int = 0
+
     constructor(parcel: Parcel) : this(parcel.readString())
 
-    override fun load(skip: Int, limit: Int, onSuccess: (List<User>) -> Unit, onError: (String) -> Unit) {
+    override fun load(limit: Int, onSuccess: (List<User>) -> Unit, onError: (String) -> Unit) {
         if (uid == null)
             MemeItUsers.getMyFollowersList(skip, limit).call(onSuccess, onError)
         else

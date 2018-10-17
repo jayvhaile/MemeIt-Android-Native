@@ -70,7 +70,6 @@
         app:layout_constraintBottom_toTopOf="@+id/username_field"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toStartOf="@+id/left_guideline"
-        app:placeholderImage="@drawable/ic_profile"
         app:roundAsCircle="true"
         app:roundingBorderColor="@color/white"
         app:roundingBorderWidth="2dp" />
@@ -117,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#0000"
-            android:hint="Email"
+            android:hint="Email (Optional)"
             android:inputType="textEmailAddress" />
 
     </com.google.android.material.textfield.TextInputLayout>

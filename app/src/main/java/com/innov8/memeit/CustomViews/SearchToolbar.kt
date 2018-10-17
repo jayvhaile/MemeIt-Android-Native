@@ -64,10 +64,8 @@ class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
         layoutParams=lpt
         val inflater = LayoutInflater.from(context);
         editText = inflater.inflate(R.layout.search_edit, null) as EditText
-
         //editText.inputType = InputType.TYPE_CLASS_TEXT
         editText.maxLines = 1
-        editText.hint = "Search MemeItMemes"
         adapter = TagSuggestionAdapter(context)
 
         val v: View = inflater.inflate(R.layout.tag_suggestion, null)

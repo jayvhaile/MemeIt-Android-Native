@@ -114,7 +114,7 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void load(Meme meme) {
-        MemeItMemes.INSTANCE.getCommentForMeme(meme.getId(),skip,LIMIT).enqueue(new OnCompleted<List<Comment>>() {
+        MemeItMemes.INSTANCE.getCommentForMeme(meme.getId(), skip, LIMIT).enqueue(new OnCompleted<List<Comment>>() {
             @Override
             public void onSuccess(@NotNull List<Comment> comments) {
                 commentsAdapter.addAll(comments);
@@ -146,7 +146,7 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
 
     private void refresh() {
         resetSkip();
-        MemeItMemes.INSTANCE.getCommentForMeme(meme.getId(),skip,LIMIT).enqueue(new OnComplete<List<Comment>>() {
+        MemeItMemes.INSTANCE.getCommentForMeme(meme.getId(), skip, LIMIT).enqueue(new OnComplete<List<Comment>>() {
             @Override
             public void onSuccess(@NotNull List<Comment> comments) {
                 commentsAdapter.setAll(comments);
@@ -154,7 +154,8 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
             }
         });
     }
-    private void showError(String message){
+
+    private void showError(String message) {
         Snackbar.make(findViewById(R.id.coordinators), message, Snackbar.LENGTH_SHORT).show();
 
     }
@@ -202,7 +203,7 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
                 if (isPostingComment() || TextUtils.isEmpty(txt)) return;
                 Comment comment = Comment.createComment(meme.getId(), txt);
                 setPostingComment(true);
-                MemeItMemes.INSTANCE.postComment(comment).enqueue(new OnComplete<Comment>(){
+                MemeItMemes.INSTANCE.postComment(comment).enqueue(new OnComplete<Comment>() {
                     @Override
                     public void onSuccess(Comment comment) {
                         commentField.setText("");
@@ -222,7 +223,8 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
                 });
         }
     }
-    private abstract class OnComplete<T> extends OnCompleted<T>{
+
+    private abstract class OnComplete<T> extends OnCompleted<T> {
         @Override
         public void onError(@NotNull String message) {
             showError(message);
@@ -231,12 +233,12 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
 
     public void react(final Reaction.ReactionType reactionType) {
         if (myUser != null) {
-            final Reaction r = Reaction.create(reactionType, meme.getId());
+            final Reaction r = reactionType.create(meme.getId(), null, null);
             MemeItMemes.INSTANCE.reactToMeme(r).enqueue(new OnComplete<ResponseBody>() {
                 @Override
                 public void onSuccess(ResponseBody responseBody) {
                     reactGroup.setVisibility(View.GONE);
-                    reactButton.setActiveImage(KUtilsKt.getDrawableID(r,true));
+                    reactButton.setActiveImage(KUtilsKt.getDrawableID(r, true));
                     reactButton.setChecked(true);
                 }
             });

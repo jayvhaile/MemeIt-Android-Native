@@ -99,7 +99,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             userData = user
             updateView()
         }
-        val onError:(String)->Unit = {context?.toast("Failed to load User Data:- $it") }
+        val onError: (String) -> Unit = { context?.toast("Failed to load User Data:- $it") }
         if (isMe)
             MemeItUsers.getMyUser(onLoaded, onError)
         else
@@ -108,12 +108,12 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     }
 
     private fun updateView() {
-        profile_name.text = userData!!.name
-        profile_image.text = userData!!.name.prefix()
-        profile_image.loadImage(userData!!.imageUrl, size, size)
-        profile_followers_count.text = CustomMethods.formatNumber(userData!!.followerCount)
-        profile_meme_count.text = CustomMethods.formatNumber(userData!!.postCount)
-        profile_follow_btn.text = if (userData?.isFollowedByMe == true) "Unfollow" else "Follow"
+        profile_name?.text = userData!!.name
+        profile_image?.text = userData!!.name.prefix()
+        profile_image?.loadImage(userData!!.imageUrl, size, size)
+        profile_followers_count?.text = CustomMethods.formatNumber(userData!!.followerCount)
+        profile_meme_count?.text = CustomMethods.formatNumber(userData!!.postCount)
+        profile_follow_btn?.text = if (userData?.isFollowedByMe == true) "Unfollow" else "Follow"
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -134,7 +134,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
 
     internal inner class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
-        var titles = arrayOf("MemeItMemes", "Following", "Followers")
+        var titles = arrayOf("Memes", "Following", "Followers")
         var fragments: Array<Fragment> = arrayOf(MemeListFragment.newInstanceForUserPosts(userID),
                 UserListFragment.newInstance(FollowingLoader(userID)),
                 UserListFragment.newInstance(FollowerLoader(userID)))
@@ -142,10 +142,10 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         override fun getItem(position: Int): Fragment = fragments[position]
 
 
-        override fun getCount(): Int=fragments.size
+        override fun getCount(): Int = fragments.size
 
 
-        override fun getPageTitle(position: Int): CharSequence?=titles[position]
+        override fun getPageTitle(position: Int): CharSequence? = titles[position]
     }
 
     companion object {

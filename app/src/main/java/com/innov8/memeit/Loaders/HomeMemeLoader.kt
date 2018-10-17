@@ -2,7 +2,9 @@ package com.innov8.memeit.Loaders
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.facebook.common.util.UriUtil
 import com.innov8.memegenerator.Models.MemeTemplate
+import com.innov8.memegenerator.utils.getDrawableIdByName
 import com.innov8.memeit.CustomClasses.AdElement
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.trim
@@ -18,6 +20,9 @@ import retrofit2.Call
 import retrofit2.Response
 
 class HomeMemeLoader() : MemeLoader<HomeElement> {
+    override var skip: Int = 0
+
+
     private var userSuggestions: List<User>? = null
     private var tagsSuggestions: List<Tag>? = null
     private var memeTemplates: List<MemeTemplate>? = null
@@ -51,7 +56,7 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
 
     fun <T> Response<T>.toResult() = Result(this)
 
-    override fun load(skip: Int, limit: Int, onSuccess: (List<HomeElement>) -> Unit, onError: (String) -> Unit) {
+    override fun load(limit: Int, onSuccess: (List<HomeElement>) -> Unit, onError: (String) -> Unit) {
         launch(UI) {
             val memes = withContext(CommonPool) { MemeItMemes.getHomeMemes(skip, limit).execSafe() }
             val users = async(CommonPool) { MemeItUsers.getUserSuggestions().execSafe() }
@@ -148,8 +153,7 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
     }
 
     private fun bakeTemplate(): MemeTemplateSuggestion? {
-        return null
-        /*val templates = memeTemplates ?: return null
+        val templates = memeTemplates ?: return null
         val rem = (templates.size - templateIndex) trim 10
         return if (rem > 2) {
             val m = MemeTemplateSuggestion(templates.subList(templateIndex, templateIndex + rem).map {
@@ -161,7 +165,7 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
             })
             templateIndex += rem
             m
-        } else null*/
+        } else null
     }
 
     private fun bakeAD(): AdElement? {
@@ -169,6 +173,7 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
     }
 
     override fun reset() {
+        super.reset()
         userSuggestions = null
         tagsSuggestions = null
         memeTemplates = null

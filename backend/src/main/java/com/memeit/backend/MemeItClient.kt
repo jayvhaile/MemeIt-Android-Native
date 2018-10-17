@@ -196,7 +196,8 @@ object MemeItClient {
             try {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 val account = task.getResult(ApiException::class.java)
-                val info = GoogleInfo(account.displayName!!, account.photoUrl?.toString(), account.email!!, account.id!!)
+                account.idToken
+                val info = GoogleInfo(account.displayName!!, account.photoUrl?.toString(), account.email!!, account.id!!,account.idToken!!)
                 onSuccess(info)
             } catch (ex: ApiException) {
                 onError(CommonStatusCodes.getStatusCodeString(ex.statusCode))
@@ -230,16 +231,21 @@ object MemeItClient {
             }, onError)
         }
 
+
         fun requestFacebookInfo(activity: Activity, callbackManager: CallbackManager,
                                 onSuccess: ((FacebookInfo) -> Unit),
                                 onError: ((String) -> Unit) = {}) {
             val perms = listOf("email", "public_profile")
-            LoginManager.getInstance().logInWithReadPermissions(activity, perms)
             LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
                 override fun onSuccess(result: LoginResult?) {
                     if (result != null) {
-                        val req = GraphRequest.newMeRequest(result.accessToken) { json, _ ->
+                        val req = GraphRequest.newMeRequest(result.accessToken) { json, a ->
+                            if (a.error != null) {
+                                onError(a.error.errorMessage)
+                                return@newMeRequest
+                            }
                             val facebookInfo = FacebookInfo(result.accessToken.userId,
+                                    result.accessToken.token,
                                     json.getString("first_name"),
                                     json.getString("last_name"),
                                     json.getString("email"))
@@ -260,28 +266,17 @@ object MemeItClient {
                     onError(error.message ?: "Unknown Error")
                 }
             })
-        }
-        fun requestFacebookID(activity: Activity, callbackManager: CallbackManager,
-                                onSuccess: ((FacebookInfo) -> Unit),
-                                onError: ((String) -> Unit) = {}) {
-
-            //todo make sure the id comes from facebook and for this application only
-            val perms = listOf("email", "public_profile")
             LoginManager.getInstance().logInWithReadPermissions(activity, perms)
+        }
+
+        fun requestFacebookID(activity: Activity, callbackManager: CallbackManager,
+                              onSuccess: ((FacebookAuthSignInRequest) -> Unit),
+                              onError: ((String) -> Unit) = {}) {
+            LoginManager.getInstance().logInWithReadPermissions(activity, null)
             LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
                 override fun onSuccess(result: LoginResult?) {
                     if (result != null) {
-                        val req = GraphRequest.newMeRequest(result.accessToken) { json, _ ->
-                            val facebookInfo = FacebookInfo(result.accessToken.userId,
-                                    json.getString("first_name"),
-                                    json.getString("last_name"),
-                                    json.getString("email"))
-                            onSuccess(facebookInfo)
-                        }
-                        val params = Bundle()
-                        params.putString("fields", "id,email,first_name,last_name")
-                        req.parameters = params
-                        req.executeAsync()
+                        onSuccess(FacebookAuthSignInRequest(result.accessToken.userId, result.accessToken.token))
                     } else onError("Unknown Error, Please Try Again")
                 }
 
@@ -415,7 +410,7 @@ abstract class OnCompleted<T : Any> : Callback<T> {
     abstract fun onError(message: String)
 }
 
-fun <T : Any> Call<T>.call(onSuccess: ((T) -> Unit)): Call<T> = call(onSuccess, {})
+inline fun <T : Any> Call<T>.call(crossinline onSuccess: ((T) -> Unit)): Call<T> = call(onSuccess, {})
 
 inline fun <T : Any> Call<T>.call(crossinline onSuccess: ((T) -> Unit), crossinline onError: ((String) -> Unit)): Call<T> {
     MemeItClient.calls += this

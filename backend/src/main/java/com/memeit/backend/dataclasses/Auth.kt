@@ -33,33 +33,36 @@ data class UsernameAuthRequest(var username: String,
     }
 }
 
-data class GoogleAuthSignUpRequest(val username: String, val email: String, @SerializedName("gid") val googleID: String) : AuthRequest {
+data class GoogleAuthSignUpRequest(val username: String, val email: String, @SerializedName("gid") val googleID: String, val token: String) : AuthRequest {
     override fun validate(): List<String> {
         return listOf()
     }
 }
 
-data class GoogleAuthSignInRequest(val email: String, @SerializedName("gid") val googleID: String) : AuthRequest {
+data class GoogleAuthSignInRequest(@SerializedName("gid") val googleID: String, val token: String) : AuthRequest {
     override fun validate(): List<String> {
         return listOf()
     }
 }
 
-data class GoogleInfo(val name: String, val imageUrl: String?, val email: String, val gid: String) : Parcelable {
+data class GoogleInfo(val name: String, val imageUrl: String?, val email: String, val gid: String, val token: String) : Parcelable {
+
 
     constructor(parcel: Parcel) : this(
             parcel.readString()!!,
             parcel.readString(),
             parcel.readString()!!,
+            parcel.readString()!!,
             parcel.readString()!!)
 
-    fun toSignInReq() = GoogleAuthSignInRequest(email, gid)
-    fun toSignUpReq(username: String) = GoogleAuthSignUpRequest(username, email, gid)
+    fun toSignInReq() = GoogleAuthSignInRequest(gid, token)
+    fun toSignUpReq(username: String) = GoogleAuthSignUpRequest(username, email, gid, token)
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
         parcel.writeString(imageUrl)
         parcel.writeString(email)
         parcel.writeString(gid)
+        parcel.writeString(token)
     }
 
     override fun describeContents(): Int {
@@ -75,9 +78,10 @@ data class GoogleInfo(val name: String, val imageUrl: String?, val email: String
             return arrayOfNulls(size)
         }
     }
+
 }
 
-data class FacebookInfo(val id: String, val firstName: String, val lastName: String, val email: String?) : Parcelable {
+data class FacebookInfo(val id: String, val token: String, val firstName: String, val lastName: String, val email: String?) : Parcelable {
 
     val imageUrl = "https://graph.facebook.com/$id/picture?type=large"
 
@@ -85,12 +89,14 @@ data class FacebookInfo(val id: String, val firstName: String, val lastName: Str
             parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!,
+            parcel.readString()!!,
             parcel.readString())
 
-    fun toSignInReq() = FacebookAuthSignInRequest(id, email)
-    fun toSignUpReq(username: String) = FacebookAuthSignUpRequest(username, id, email)
+    fun toSignInReq() = FacebookAuthSignInRequest(id, token)
+    fun toSignUpReq(username: String) = FacebookAuthSignUpRequest(username, id, token, email)
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
+        parcel.writeString(token)
         parcel.writeString(firstName)
         parcel.writeString(lastName)
         parcel.writeString(email)
@@ -110,15 +116,20 @@ data class FacebookInfo(val id: String, val firstName: String, val lastName: Str
         }
     }
 
+
 }
 
-data class FacebookAuthSignUpRequest(val username: String, @SerializedName("fid") val facebookID: String, val email: String? = null) : AuthRequest {
+data class FacebookAuthSignUpRequest(val username: String,
+                                     @SerializedName("fid") val facebookID: String,
+                                     val token: String,
+                                     val email: String?) : AuthRequest {
     override fun validate(): List<String> {
         return listOf()
     }
 }
 
-data class FacebookAuthSignInRequest(val facebookID: String, @SerializedName("fid") val email: String?) : AuthRequest {
+data class FacebookAuthSignInRequest(@SerializedName("fid") val facebookID: String,
+                                     val token: String) : AuthRequest {
     override fun validate(): List<String> {
         return listOf()
     }
