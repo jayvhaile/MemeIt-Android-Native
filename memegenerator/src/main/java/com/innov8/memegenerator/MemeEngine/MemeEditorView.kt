@@ -9,8 +9,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.innov8.memegenerator.CustomViews.CheckerBoardDrawable
-import com.innov8.memegenerator.Models.MemeTemplate
-import com.innov8.memegenerator.Models.TextProperty
+import com.innov8.memeit.commons.models.MemeTemplate
+import com.innov8.memeit.commons.models.TextProperty
 import com.innov8.memegenerator.utils.*
 
 /**
@@ -140,7 +140,7 @@ class MemeEditorView : ViewGroup {
     fun loadMemeTemplate(memeTemplate: MemeTemplate) {
         clearMemeItems()
         val image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), .3f)
-        val memeLayout = GridImageLayout(4, GridImageLayout.HORIZONTAL, 15.dp(context), width, height, List(16) { image })
+        val memeLayout = SingleImageLayout(width, height, image)
         setLayout(memeLayout)
         Handler().postDelayed({
             val rect = memeLayout.drawingRect

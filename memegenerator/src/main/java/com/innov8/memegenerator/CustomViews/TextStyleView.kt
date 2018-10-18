@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.MemeEngine.TextEditListener
-import com.innov8.memegenerator.Models.TextStyleProperty
+import com.innov8.memeit.commons.models.TextStyleProperty
 import com.innov8.memegenerator.utils.dp
 
 

@@ -1,5 +1,7 @@
 package com.memeit.backend.dataclasses
 
+import com.innov8.memeit.commons.models.MemeTemplate
+
 
 interface HomeElement{
     companion object {
@@ -19,7 +21,7 @@ class UserSuggestion(val users:List<User>): HomeElement {
 class TagSuggestion(val tags:List<Tag>): HomeElement {
     override val itemType: Int= HomeElement.TAG_SUGGESTION_TYPE
 }
-class MemeTemplateSuggestion(val templates:List<String>): HomeElement {
+class MemeTemplateSuggestion(val templates:List<MemeTemplate>): HomeElement {
     override val itemType: Int= HomeElement.MEME_TEMPLATE_SUGGESTION_TYPE
 }
 

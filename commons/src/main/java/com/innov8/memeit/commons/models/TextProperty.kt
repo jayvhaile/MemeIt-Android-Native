@@ -1,4 +1,4 @@
-package com.innov8.memegenerator.Models
+package com.innov8.memeit.commons.models
 
 import android.os.Parcel
 import android.os.Parcelable

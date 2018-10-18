@@ -13,7 +13,7 @@ import com.innov8.memegenerator.CustomViews.FontChooser
 import com.innov8.memegenerator.CustomViews.TextStyleView
 import com.innov8.memegenerator.MemeEngine.MemeTextView
 import com.innov8.memegenerator.MemeEngine.TextEditListener
-import com.innov8.memegenerator.Models.TextStyleProperty
+import com.innov8.memeit.commons.models.TextStyleProperty
 import com.warkiz.widget.IndicatorSeekBar
 import kotlinx.android.synthetic.main.bottom_tab.*
 import kotlinx.android.synthetic.main.text_pager.*

@@ -12,7 +12,7 @@ import com.innov8.memegenerator.R
 import com.innov8.memegenerator.Adapters.TextPresetsAdapter
 import com.innov8.memegenerator.MemeEngine.TextEditListener
 import com.innov8.memegenerator.Models.TextPreset
-import com.innov8.memegenerator.Models.TextStyleProperty
+import com.innov8.memeit.commons.models.TextStyleProperty
 
 class TextPresetFragment : Fragment() {
     var textEditListener: TextEditListener? = null

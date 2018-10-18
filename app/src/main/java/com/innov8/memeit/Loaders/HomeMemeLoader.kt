@@ -3,7 +3,7 @@ package com.innov8.memeit.Loaders
 import android.os.Parcel
 import android.os.Parcelable
 import com.facebook.common.util.UriUtil
-import com.innov8.memegenerator.Models.MemeTemplate
+import com.innov8.memeit.commons.models.MemeTemplate
 import com.innov8.memegenerator.utils.getDrawableIdByName
 import com.innov8.memeit.CustomClasses.AdElement
 import com.innov8.memeit.MemeItApp
@@ -156,13 +156,7 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
         val templates = memeTemplates ?: return null
         val rem = (templates.size - templateIndex) trim 10
         return if (rem > 2) {
-            val m = MemeTemplateSuggestion(templates.subList(templateIndex, templateIndex + rem).map {
-                if (it.dataSource == MemeTemplate.LOCAL_DATA_SOURCE) {
-                    UriUtil.getUriForResourceId(MemeItApp.instance.getDrawableIdByName(it.imageURL)).toString()
-                } else {
-                    ""      //todo handle
-                }
-            })
+            val m = MemeTemplateSuggestion(templates.subList(templateIndex, templateIndex + rem))
             templateIndex += rem
             m
         } else null

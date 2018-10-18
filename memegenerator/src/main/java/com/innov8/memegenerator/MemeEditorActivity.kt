@@ -14,9 +14,9 @@ import androidx.transition.TransitionManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memegenerator.Fragments.*
 import com.innov8.memegenerator.MemeEngine.*
-import com.innov8.memegenerator.Models.MemeTemplate
-import com.innov8.memegenerator.Models.MyTypeFace
-import com.innov8.memegenerator.Models.TextStyleProperty
+import com.innov8.memeit.commons.models.MemeTemplate
+import com.innov8.memeit.commons.models.MyTypeFace
+import com.innov8.memeit.commons.models.TextStyleProperty
 import com.innov8.memegenerator.utils.*
 import com.memeit.backend.dataclasses.Meme
 import com.waynejo.androidndkgif.GifDecoder

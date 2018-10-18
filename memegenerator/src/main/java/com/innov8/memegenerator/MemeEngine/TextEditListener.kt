@@ -1,7 +1,7 @@
 package com.innov8.memegenerator.MemeEngine
 
-import com.innov8.memegenerator.Models.MyTypeFace
-import com.innov8.memegenerator.Models.TextStyleProperty
+import com.innov8.memeit.commons.models.MyTypeFace
+import com.innov8.memeit.commons.models.TextStyleProperty
 
 interface TextEditListener {
     fun onAddText(memeTextView: MemeTextView)

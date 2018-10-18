@@ -11,9 +11,9 @@ import android.text.Layout
 import android.text.TextPaint
 import android.util.AttributeSet
 import com.afollestad.materialdialogs.MaterialDialog
-import com.innov8.memegenerator.Models.MyTypeFace
-import com.innov8.memegenerator.Models.TextProperty
-import com.innov8.memegenerator.Models.TextStyleProperty
+import com.innov8.memeit.commons.models.MyTypeFace
+import com.innov8.memeit.commons.models.TextProperty
+import com.innov8.memeit.commons.models.TextStyleProperty
 import com.innov8.memegenerator.utils.dp
 import com.innov8.memegenerator.utils.log
 import com.innov8.memegenerator.utils.sp
@@ -40,7 +40,7 @@ class MemeTextView : MemeItemView {
             field = value
             resizeToWrapText(true)
         }
-    private var myTypeface:MyTypeFace= MyTypeFace.DEFAULT
+    private var myTypeface: MyTypeFace = MyTypeFace.DEFAULT
     fun setTypeface(value: MyTypeFace) {
         myTypeface=value
         dl.paint.typeface = value.getTypeFace(context)
@@ -191,11 +191,11 @@ class MemeTextView : MemeItemView {
         super.onDraw(canvas)
 
     }
-    fun generateTextProperty(totalW:Float,totalH:Float):TextProperty{
-        return TextProperty(x/totalW,
-                y/totalH,
-                memeItemWidth/totalW,
-                memeItemHeight/totalH,
+    fun generateTextProperty(totalW:Float,totalH:Float): TextProperty {
+        return TextProperty(x / totalW,
+                y / totalH,
+                memeItemWidth / totalW,
+                memeItemHeight / totalH,
                 generateTextStyleProperty())
     }
     fun generateTextStyleProperty(): TextStyleProperty {
@@ -204,7 +204,7 @@ class MemeTextView : MemeItemView {
                 stroke, strokeColor, dl.paint.strokeWidth
         )
     }
-    fun applyTextProperty(tp:TextProperty,totalW:Float,totalH:Float,xoff:Float=0f,yOff:Float=0f){
+    fun applyTextProperty(tp: TextProperty, totalW:Float, totalH:Float, xoff:Float=0f, yOff:Float=0f){
         x=totalW*tp.xP+xoff
         y=totalH*tp.yP+yOff
         memeItemWidth= (totalW*tp.widthP).toInt()

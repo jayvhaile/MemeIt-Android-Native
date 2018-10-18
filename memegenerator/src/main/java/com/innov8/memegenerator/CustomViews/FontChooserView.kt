@@ -9,7 +9,7 @@ import android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.innov8.memegenerator.Models.MyTypeFace
+import com.innov8.memeit.commons.models.MyTypeFace
 import com.innov8.memegenerator.utils.dp
 
 class FontChooser : HorizontalScrollView {

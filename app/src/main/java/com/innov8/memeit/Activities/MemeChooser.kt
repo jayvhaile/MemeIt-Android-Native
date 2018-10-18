@@ -18,7 +18,7 @@ import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import com.google.gson.Gson
 import com.innov8.memegenerator.MemeEditorActivity
-import com.innov8.memegenerator.Models.MemeTemplate
+import com.innov8.memeit.commons.models.MemeTemplate
 import com.innov8.memegenerator.utils.initWithGrid
 import com.innov8.memeit.Adapters.MemeTemplatesListAdapter
 import com.innov8.memeit.Adapters.GifAdapter

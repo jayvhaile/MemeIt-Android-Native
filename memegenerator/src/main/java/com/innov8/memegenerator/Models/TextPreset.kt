@@ -2,6 +2,8 @@ package com.innov8.memegenerator.Models
 
 import android.graphics.Color
 import com.innov8.memegenerator.utils.AsyncLoader
+import com.innov8.memeit.commons.models.MyTypeFace
+import com.innov8.memeit.commons.models.TextStyleProperty
 
 data class TextPreset(val name:String,val textStyleProperty: TextStyleProperty){
     companion object {
