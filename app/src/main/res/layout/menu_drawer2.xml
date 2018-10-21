@@ -52,6 +52,18 @@
             android:paddingTop="0dp"
             android:text="  Invite"
             android:textSize="18sp" />
+        <TextView
+            android:id="@+id/menu_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="?attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_person_add_black_24dp"
+            android:drawablePadding="16dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingTop="0dp"
+            android:text="  Feedback"
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"

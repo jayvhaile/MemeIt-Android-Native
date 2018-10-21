@@ -34,7 +34,6 @@ class MemePosterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meme_poster)
         gif = intent?.getStringExtra("gif")
-        log("fiki", gif ?: "")
         when {
             gif != null -> {
                 memeType = Meme.MemeType.GIF
@@ -70,13 +69,17 @@ class MemePosterActivity : AppCompatActivity() {
             Meme.MemeType.IMAGE -> {
                 val bitmap = (meme_image_view.drawable as BitmapDrawable).bitmap
                 val byteArray = bitmap.toByteArray(Bitmap.CompressFormat.JPEG, 90)
-                MediaManager.get().upload(byteArray).callback(MyUploadCallback()).dispatch()
+                MediaManager.get()
+                        .upload(byteArray)
+                        .callback(MyUploadCallback())
+                        .dispatch()
             }
             Meme.MemeType.GIF -> {
                 MediaManager.get()
                         .upload(gif)
                         .option("resource_type", "video")
-                        .callback(MyUploadCallback()).dispatch(this)
+                        .callback(MyUploadCallback())
+                        .dispatch(this)
 
             }
         }
@@ -107,11 +110,12 @@ class MemePosterActivity : AppCompatActivity() {
                 toast("Meme Posted to MemeIt!")
                 post_status.text = "Meme Posted"
                 //todo goto the post
-            },{
+            }, {
                 post_btn.revertAnimation()
                 toast("Meme Posting failed: $it")
                 post_status.text = "Meme Posting Failed"
-            })        }
+            })
+        }
 
         override fun onError(s: String, errorInfo: ErrorInfo) {
             post_btn.revertAnimation()

@@ -25,10 +25,9 @@ import com.memeit.backend.MemeItUsers
 import com.memeit.backend.OnCompleted
 import okhttp3.ResponseBody
 
-class UserListAdapter(mContext: Context) : SimpleELEListAdapter<User>(mContext, R.layout.list_item_follower) {
-    override var emptyDrawableId: Int = R.drawable.ic_add
+class UserListAdapter(mContext: Context,override var emptyDescription: String) : SimpleELEListAdapter<User>(mContext, R.layout.list_item_follower) {
+    override var emptyDrawableId: Int = R.drawable.empty_list
     override var errorDrawableId: Int = R.drawable.ic_no_internet
-    override var emptyDescription: String = "No Memes"
     override var errorDescription: String = "Couldn't load Memes"
     override var emptyActionText: String? = ""
     override var errorActionText: String? = "Try Again"

@@ -9,9 +9,9 @@
     <View
         android:id="@+id/cover"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="@dimen/profile_cover_expanded_height"
         android:background="@drawable/bb"
-        app:layout_behavior="com.innov8.memeit.CustomClasses.ToolBarBehavior" />
+        app:layout_behavior="com.innov8.memeit.CustomClasses.CoverBehaviour" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/main.appbar"
@@ -24,7 +24,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/main.collapsing"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="@dimen/profile_collapsing_toolbar_expanded_height"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
 
@@ -82,7 +82,7 @@
                            android:id="@+id/profile_followers_count"
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
-                           android:text="24k"
+                           android:text="..."
                            android:textColor="@color/colorAccent"
                            android:textSize="16sp" />
 
@@ -106,7 +106,7 @@
                            android:id="@+id/profile_meme_count"
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
-                           android:text="24"
+                           android:text="..."
                            android:textColor="@color/colorAccent"
                            android:textSize="16sp" />
 
@@ -130,7 +130,7 @@
                            android:id="@+id/profile_badge_count"
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
-                           android:text="16"
+                           android:text="..."
                            android:textColor="@color/colorAccent"
                            android:textSize="16sp" />
 
@@ -148,7 +148,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/profile_toolbar_height"
                 android:background="#0000"
                 app:layout_collapseMode="pin"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark"
@@ -159,7 +159,7 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_profile"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/profile_tab_height"
             app:tabIndicatorColor="#ff5e00" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -175,26 +175,15 @@
 
     <com.innov8.memeit.CustomViews.ProfileDraweeView
         android:id="@+id/profile_image"
-        android:layout_width="@dimen/image_width"
-        android:layout_height="@dimen/image_width"
-        app:placeholderImage="@drawable/pp_pic"
-        app:placeholderImageScaleType="fitXY"
-        app:finalHeight="@dimen/image_final_width"
-        app:startXPosition="150dp"
-        app:startYPosition="150dp"
-        app:finalYPosition="28dp"
-        app:layout_behavior="com.innov8.memeit.CustomClasses.AvatarImageBehavior"
-        app:startHeight="2dp"
-        app:startToolbarPosition="2dp"/>
+        android:layout_width="@dimen/profile_image_expanded_size"
+        android:layout_height="@dimen/profile_image_expanded_size"
+        app:layout_behavior="com.innov8.memeit.CustomClasses.ProfileImageViewBehavior"
+        />
     <com.innov8.memeit.CustomClasses.FontTextView
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Alicia"
-        android:textSize="22sp"
-        app:ftextsize="16sp"
-        app:dscy="150dp"
-        app:dfcy="28dp"
-        app:margin="16dp"
-        app:layout_behavior="com.innov8.memeit.CustomClasses.AvatarNameBehavior"/>
+        android:textSize="@dimen/profile_name_expanded_textsize"
+        app:layout_behavior="com.innov8.memeit.CustomClasses.ProfileNameViewBehavior"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

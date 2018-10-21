@@ -268,5 +268,8 @@ interface MemeItService {
     fun getSuggestedTags(@Query("skip") skip: Int,
                          @Query("limit") limit: Int): Call<List<Tag>>
 
+    @POST("others/feedback")
+    fun postFeedback(@Body feedback: Feedback): Call<ResponseBody>
+
 
 }

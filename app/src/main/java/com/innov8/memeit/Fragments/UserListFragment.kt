@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Adapters.UserListAdapter
+import com.innov8.memeit.Loaders.FollowerLoader
 import com.innov8.memeit.Loaders.UserListLoader
 import com.innov8.memeit.MLHandler
 import com.memeit.backend.dataclasses.User
@@ -33,7 +34,8 @@ class UserListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userListLoader = arguments?.getParcelable("loader") ?: throw NullPointerException("Argument should not be null")
-        followerAdapter = UserListAdapter(context!!)
+        val desc=if(userListLoader is FollowerLoader) "You have no followers" else "You are not following anyone"
+        followerAdapter = UserListAdapter(context!!,desc)
         ml = MLHandler(followerAdapter, userListLoader)
         ml.onLoaded = { swipe_to_refresh?.isRefreshing = false }
         ml.onLoadFailed = { message ->
@@ -67,7 +69,6 @@ class UserListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-
     companion object {
         private const val LIMIT = 50
 
@@ -80,5 +81,4 @@ class UserListFragment : Fragment() {
         }
 
     }
-
-}// Required empty public constructor
+}

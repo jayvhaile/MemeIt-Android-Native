@@ -225,7 +225,7 @@
         app:layout_constraintTop_toBottomOf="@+id/fontTextView7" />
 
     <com.innov8.memeit.CustomClasses.FontTextView
-        android:id="@+id/feedback"
+        android:id="@+id/feedback_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -250,7 +250,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="64dp"
         android:background="#1d000000"
-        app:layout_constraintTop_toBottomOf="@+id/feedback" />
+        app:layout_constraintTop_toBottomOf="@+id/feedback_message" />
 
     <com.innov8.memeit.CustomClasses.FontTextView
         android:id="@+id/donate"

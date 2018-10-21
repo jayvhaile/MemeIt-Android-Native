@@ -3,15 +3,69 @@ package com.innov8.memegenerator.MemeEngine
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.RectF
+import android.os.Parcel
+import android.os.Parcelable
 
 abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: List<Bitmap>) {
+
+
+
+
+    class LayoutInfo(var type:Int) : Parcelable {
+
+        var span: Int = 2
+        var spacing: Int = 20
+        var orientation: Int = 0
+
+        constructor(parcel: Parcel) : this(parcel.readInt()) {
+            span = parcel.readInt()
+            spacing = parcel.readInt()
+            orientation = parcel.readInt()
+        }
+
+
+        fun create(maxWidth: Int,maxHeight: Int,images:List<Bitmap>):MemeLayout{
+            return when(type){
+                TYPE_SINGLE->SingleImageLayout(maxWidth,maxHeight,images[0])
+                TYPE_LINEAR->LinearImageLayout(spacing, orientation,maxWidth,maxHeight,images)
+                TYPE_GRID->GridImageLayout(span, orientation, spacing,maxWidth,maxHeight,images)
+                else->throw IllegalStateException("illegal meme layout type")
+            }
+
+        }
+
+        companion object CREATOR : Parcelable.Creator<LayoutInfo> {
+            const val TYPE_SINGLE:Int=0
+            const val TYPE_LINEAR:Int=1
+            const val TYPE_GRID:Int=2
+            override fun createFromParcel(parcel: Parcel): LayoutInfo {
+                return LayoutInfo(parcel)
+            }
+
+            override fun newArray(size: Int): Array<LayoutInfo?> {
+                return arrayOfNulls(size)
+            }
+        }
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeInt(type)
+            parcel.writeInt(span)
+            parcel.writeInt(spacing)
+            parcel.writeInt(orientation)
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+    }
 
     var invalidate: (() -> Unit)? = null
     lateinit var drawingRect: RectF
 
-    fun updateSize(w:Int,h:Int){
-        maxWidth=w
-        maxHeight=h
+    fun updateSize(w: Int, h: Int) {
+        maxWidth = w
+        maxHeight = h
         update()
     }
 
@@ -286,10 +340,10 @@ class GridImageLayout(spn: Int, orien: Int, spc: Int, maxWidth: Int, maxHeight: 
 
 
     private val totalHSpacing
-        get() = (columnCount-1) * hSpacing
+        get() = (columnCount - 1) * hSpacing
 
     private val totalVSpacing
-        get() = (rowCount-1) * vSpacing
+        get() = (rowCount - 1) * vSpacing
 
     private var totalIW = 0
     private var totalIH = 0
@@ -350,7 +404,7 @@ class GridImageLayout(spn: Int, orien: Int, spc: Int, maxWidth: Int, maxHeight: 
     }
 
     private fun calcImagesTotalHeight() {
-        totalIH = (0 until rowCount).map {getRowHeight(it)}.reduce { a, b ->a + b}
+        totalIH = (0 until rowCount).map { getRowHeight(it) }.reduce { a, b -> a + b }
     }
 
     override fun innerWidth(): Int = totalIW

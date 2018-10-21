@@ -24,25 +24,4 @@
         app:spinning_bar_padding="0dp"
         app:spinning_bar_width="3dp" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="100dp"
-        android:background="@drawable/edittextlogin"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        app:hintEnabled="false">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_l"
-            android:layout_width="match_parent"
-
-            android:layout_height="match_parent"
-            android:background="#0000"
-            android:hint="hint"
-            android:text="JvHaile" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-
 </FrameLayout>

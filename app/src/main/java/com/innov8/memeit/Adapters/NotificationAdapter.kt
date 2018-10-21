@@ -22,11 +22,11 @@ import com.innov8.memeit.CustomViews.ProfileDraweeView
 import com.memeit.backend.dataclasses.*
 
 class NotificationAdapter(context: Context) : ELEListAdapter<Notification, NotificationViewHolder>(context) {
-    override var emptyDrawableId: Int = R.drawable.ic_add
+    override var emptyDrawableId: Int = R.drawable.ic_notifications_black_24dp
     override var errorDrawableId: Int = R.drawable.ic_no_internet
-    override var emptyDescription: String = "No Memes"
-    override var errorDescription: String = "Couldn't load Memes"
-    override var emptyActionText: String? = ""
+    override var emptyDescription: String = "You have no notifications"
+    override var errorDescription: String = "Couldn't load notifications"
+    override var emptyActionText: String? = "Refresh"
     override var errorActionText: String? = "Try Again"
     override val loadingDrawable = CubeGrid().apply {
         color = Color.rgb(255, 100, 0)

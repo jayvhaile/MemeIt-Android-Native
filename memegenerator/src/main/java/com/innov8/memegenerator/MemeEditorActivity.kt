@@ -91,11 +91,11 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                 startActivity(intent)
             } else {
                 val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
-                val gifi = GifInfo(path!!, memeLayout.getDrawingRectRelAt(0))
+                val gifi = GifInfo(intent.getStringExtra(GIF_PATH), memeLayout.getDrawingRectRelAt(0))
 
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).mkdirs()
-                val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-                        "meme${Random().nextInt(100) + 100}.gif")
+                val da = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MemeIt/")
+                da.mkdirs()
+                val file = File(da, "meme${Random().nextInt(100) + 100}.gif")
                 file.createNewFile()
                 launch(UI) {
                     val pd = MaterialDialog.Builder(this@MemeEditorActivity)
@@ -111,6 +111,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                                 file.absolutePath)
                     }
                     pd.dismiss()
+                    startActivity(Intent(this@MemeEditorActivity, MemePosterActivity::class.java).apply {
+                        putExtra("gif", file.absolutePath)
+                    })
                 }
             }
         }
@@ -157,7 +160,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
     private fun handleImagesIntent(): Boolean {
         val paths = intent.getStringArrayExtra(MULTI_PATH) ?: null
-        return if (paths != null) {
+        val linfo: MemeLayout.LayoutInfo? = intent.getParcelableExtra<MemeLayout.LayoutInfo>(MULTI_LAYOUT)
+                ?: null
+        return if (paths != null && linfo != null) {
             launch(UI) {
                 withContext(CommonPool) {
                     try {
@@ -168,7 +173,11 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                         null
                     }
                 }?.let {
-                    //todo load images
+                    memeEditorView.setLayout(linfo.create(
+                            memeEditorView.width,
+                            memeEditorView.height,
+                            it
+                    ))
                 }
             }
             true
@@ -187,6 +196,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                     else null
                 }
                 b?.let {
+                    type = Meme.MemeType.GIF
                     memeEditorView.loadBitmab(it)
                 }
             }
@@ -268,8 +278,6 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
     }
 
     companion object {
-        private val actions = mutableListOf<Action>()
-
         private const val MODE_TEMPLATE = 0
         private const val MODE_SINGLE_IMAGE = 1
         private const val MODE_MULTI_IMAGE = 2
@@ -279,6 +287,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         private const val TEMPLATE = "template"
         private const val SINGLE_PATH = "single path"
         private const val MULTI_PATH = "multi path"
+        private const val MULTI_LAYOUT = "multi layout"
         private const val GIF_PATH = "gif path"
         fun startWithMemeTemplate(context: Context, template: MemeTemplate) {
             startThis(context) {
@@ -301,10 +310,11 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             }
         }
 
-        fun startWithImages(context: Context, paths: List<String>) {
+        fun startWithImages(context: Context, paths: List<String>, layoutInfo: MemeLayout.LayoutInfo) {
             startThis(context) {
                 putExtra(MODE, MODE_MULTI_IMAGE)
                 putExtra(MULTI_PATH, paths.toTypedArray())
+                putExtra(MULTI_LAYOUT, layoutInfo)
             }
         }
 

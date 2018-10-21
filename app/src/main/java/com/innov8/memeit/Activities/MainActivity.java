@@ -55,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-        if(MemeItClient.Auth.INSTANCE.isUserDataSaved()){
+        if (MemeItClient.Auth.INSTANCE.isUserDataSaved()) {
             initUI(savedInstanceState);
-        }else{
+        } else {
             goToSignUpDetails();
         }
     }
@@ -68,19 +68,21 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
     AppBarLayout appbar;
+
     private void initUI(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         viewPager = findViewById(R.id.main_viewpager);
         bottom_nav = findViewById(R.id.bottom_nav);
-        appbar=findViewById(R.id.appbar);
+        appbar = findViewById(R.id.appbar);
         mToolbar = findViewById(R.id.toolbar2);
         initToolbar();
         initBottomNav();
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(0);
-        SlidingRootNavBuilder sbd=new SlidingRootNavBuilder(this)
+        SlidingRootNavBuilder sbd = new SlidingRootNavBuilder(this)
                 .withSavedState(savedInstanceState)
                 .withContentClickableWhenMenuOpened(false)
                 .withRootViewElevationPx(5)
@@ -103,13 +105,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
+        findViewById(R.id.menu_feedback).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, FeedbackActivity.class));
+            }
+        });
     }
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        int selected=savedInstanceState.getInt("selected");
-        bottom_nav.select(selected,true);
+        int selected = savedInstanceState.getInt("selected");
+        bottom_nav.select(selected, true);
     }
+
     private void initToolbar() {
         this.setSupportActionBar(this.mToolbar);
     }
@@ -118,18 +128,18 @@ public class MainActivity extends AppCompatActivity {
         bottom_nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if(searchItem!=null&&searchItem.isActionViewExpanded())
+                if (searchItem != null && searchItem.isActionViewExpanded())
                     searchItem.collapseActionView();
-                appbar.setExpanded(true,false);
+                appbar.setExpanded(true, false);
                 switch (item.getItemId()) {
                     case R.id.menu_home:
                         setTitle(0);
-                        viewPager.setCurrentItem(0,false);
+                        viewPager.setCurrentItem(0, false);
                         getSupportActionBar().show();
                         return true;
                     case R.id.menu_trending:
                         setTitle(1);
-                        viewPager.setCurrentItem(1,false);
+                        viewPager.setCurrentItem(1, false);
                         getSupportActionBar().show();
                         return true;
                     case R.id.menu_create:
@@ -138,11 +148,11 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.menu_favorites:
                         setTitle(2);
                         getSupportActionBar().show();
-                        viewPager.setCurrentItem(2,false);
+                        viewPager.setCurrentItem(2, false);
                         return true;
                     case R.id.menu_me:
                         getSupportActionBar().hide();
-                        viewPager.setCurrentItem(3,false);
+                        viewPager.setCurrentItem(3, false);
                         return true;
                 }
                 return false;
@@ -213,11 +223,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadNotifCount() {
-        if(notifItem==null)return;
+        if (notifItem == null) return;
         MemeItUsers.INSTANCE.getNotifCount().enqueue(new OnCompleted<Integer>() {
             @Override
             public void onSuccess(Integer integer) {
-                Drawable d=new DrawableBadge.Builder(MainActivity.this)
+                Drawable d = new DrawableBadge.Builder(MainActivity.this)
                         .drawableResId(R.drawable.ic_notifications_black_24dp)
                         .maximumCounter(99)
                         .build()
@@ -250,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("selected",bottom_nav.getSelectedIndex());
+        outState.putInt("selected", bottom_nav.getSelectedIndex());
     }
 
     private static class MyPagerAdapter extends FragmentPagerAdapter {
@@ -259,9 +269,9 @@ public class MainActivity extends AppCompatActivity {
         MyPagerAdapter(FragmentManager fm) {
             super(fm);
             fragments = Arrays.asList(
-                    MemeListFragment.Companion.newInstance(MemeAdapter.HOME_ADAPTER,new HomeMemeLoader()),
-                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER,new TrendingMemeLoader()),
-                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER,new FavoriteMemeLoader()),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.HOME_ADAPTER, new HomeMemeLoader()),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER, new TrendingMemeLoader()),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER, new FavoriteMemeLoader()),
                     ProfileFragment.Companion.newInstance()
             );
         }

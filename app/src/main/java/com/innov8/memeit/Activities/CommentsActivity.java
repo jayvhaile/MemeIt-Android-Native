@@ -259,7 +259,7 @@ public class CommentsActivity extends AppCompatActivity implements View.OnClickL
         ProfileDraweeView pdv = findViewById(R.id.comment_pp);
         myUser = MemeItClient.INSTANCE.getMyUser();
         pdv.setText(KUtilsKt.prefix(myUser.getName()));
-        float size = dimen(R.dimen.profile_mini_size);
+        float size = dimen(R.dimen.profile_mini_size,this);
         loadImage(pdv, myUser.getProfilePic(), size, size);
         if (myUser == null) {
             findViewById(R.id.comment_group).setVisibility(View.GONE);

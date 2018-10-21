@@ -1,10 +1,12 @@
 package com.innov8.memeit
 
+import android.content.Context
+import android.content.res.Configuration.*
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.util.Log
-import androidx.annotation.IdRes
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
@@ -19,6 +21,7 @@ import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.innov8.memegenerator.utils.log
 import com.innov8.memeit.Activities.SettingsActivity
 import com.innov8.memeit.CustomViews.ProfileDraweeView
@@ -79,6 +82,12 @@ fun String?.prefix(): String {
 
 val screenWidth: Int = it.resources.displayMetrics.widthPixels
 val screenHeight: Int = it.resources.displayMetrics.heightPixels
+
+val screenWidthOriented
+    get() = it.resources.displayMetrics.widthPixels
+
+val screenHeightOriented
+    get() = it.resources.displayMetrics.widthPixels
 
 fun getCloudinaryImageUrlForId(id: String): String = MediaManager.get().url().source(id).generate()
 
@@ -224,6 +233,7 @@ fun Reaction.getDrawable(active: Boolean = true): Drawable {
     val inactiveRID = intArrayOf(R.drawable.laughing_inactive_light, R.drawable.rofl_inactive, R.drawable.neutral_inactive, R.drawable.angry_inactive)
     return VectorDrawableCompat.create(it.resources, if (active) activeRID[getType().ordinal] else inactiveRID[getType().ordinal], null)!!
 }
+
 fun Reaction.getDrawableID(active: Boolean = true): Int {
     val activeRID = intArrayOf(R.drawable.laughing, R.drawable.rofl, R.drawable.neutral, R.drawable.angry)
     val inactiveRID = intArrayOf(R.drawable.laughing_inactive_light, R.drawable.rofl_inactive, R.drawable.neutral_inactive, R.drawable.angry_inactive)
@@ -270,17 +280,21 @@ fun Int.formatNumber(suffix: String = "", suffixPlural: String = ""): String {
 
 }
 
-fun Int.dimenI(): Int = it.resources.getDimension(this).toInt()
-fun Int.dimen(): Float = it.resources.getDimension(this)
-fun Int.color(): Int = it.resources.getColor(this)
-fun Int.string(): String = it.resources.getString(this)
-fun Int.strinArray(): Array<String> = it.resources.getStringArray(this)
+fun Int.dimenI(context: Context = it): Int = context.resources.getDimension(this).toInt()
+fun Int.dimen(context: Context = it): Float = context.resources.getDimension(this)
+fun Int.color(context: Context = it): Int = context.resources.getColor(this)
+fun Int.string(context: Context = it): String = context.resources.getString(this)
+fun Int.strinArray(context: Context = it): Array<String> = context.resources.getStringArray(this)
 
 infix fun Int.trim(max: Int): Int = if (this < max) this else max
 fun Int.trim(min: Int, max: Int): Int = if (this < min) min else if (this > max) max else this
 val Float.DP: Float
     get() {
         return this * it.resources.displayMetrics.density
+    }
+val Float.SP: Float
+    get() {
+        return this * it.resources.displayMetrics.scaledDensity
     }
 val Int.dp: Int
     get() {
@@ -330,4 +344,6 @@ fun String?.isEmailOrEmpty(): Boolean {
 
 fun String?.validateEmailOrEmpty(): String? = if (!isEmailOrEmpty()) "Invalid Email" else null
 
-
+fun View.snack(message: String, duration: Int = Snackbar.LENGTH_SHORT, root: Boolean = false) {
+    Snackbar.make(if (root) rootView else this, message, duration).show()
+}

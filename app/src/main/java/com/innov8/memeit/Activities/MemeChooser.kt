@@ -40,7 +40,7 @@ class MemeChooser : AppCompatActivity() {
 }
 
 class MemeChooserPagerAdapter(mgr: FragmentManager) : FragmentPagerAdapter(mgr) {
-    private val titles = listOf("Templates", "Photos", "Videos")
+    private val titles = listOf("Templates", "Photos", "Gifs")
     override fun getCount(): Int = 3
     override fun getItem(position: Int): Fragment =
             when (position) {

@@ -62,12 +62,14 @@ class MemeListFragment : Fragment() {
     }
 
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_meme_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         swipe_to_refresh.setOnRefreshListener { ml.refresh(false) }
         meme_recycler_view.layoutManager = memeAdapter.createLayoutManager()
         meme_recycler_view.itemAnimator = DefaultItemAnimator()

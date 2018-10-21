@@ -7,9 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.innov8.memeit.Adapters.ELEAdapter
+import com.innov8.memeit.Adapters.MemeAdapters.GridMemeAdapter
 import com.innov8.memeit.Adapters.TagsAdapter
 import com.innov8.memeit.Loaders.*
 import com.innov8.memeit.MLHandler
@@ -29,6 +32,7 @@ class TagsActivity : AppCompatActivity() {
         tags_pager.adapter = pager
         tags_tab.setupWithViewPager(tags_pager)
     }
+
     class Pager(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
         private val frags = listOf("Followed Tags" to TagFragment.newInstance(MyTagLoader()),
                 "Popular Tags" to TagFragment.newInstance(PopularTagLoader()),
@@ -39,6 +43,7 @@ class TagsActivity : AppCompatActivity() {
         override fun getPageTitle(position: Int): CharSequence = frags[position].first
     }
 }
+
 class UserTagActivity : AppCompatActivity() {
     private lateinit var uid: String
     private lateinit var name: String
@@ -61,6 +66,7 @@ class UserTagActivity : AppCompatActivity() {
             }
     }
 }
+
 class TagsChooserActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,16 +110,16 @@ class TagFragment : Fragment() {
     }
 
     private lateinit var tagsAdapter: TagsAdapter
-    private lateinit var ml:MLHandler<Tag>
+    private lateinit var ml: MLHandler<Tag>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         tagLoader = arguments?.getParcelable("loader") ?: return
         tagsAdapter = TagsAdapter(context!!)
-        ml= MLHandler(tagsAdapter,tagLoader)
+        ml = MLHandler(tagsAdapter, tagLoader)
         ml.load()
         ml.onLoaded = { swipe_to_refresh?.isRefreshing = false }
         ml.onLoadFailed = { message ->
-            view?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show()}
+            view?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show() }
             swipe_to_refresh?.isRefreshing = false
         }
     }
@@ -125,7 +131,16 @@ class TagFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         meme_recycler_view.adapter = tagsAdapter
-        meme_recycler_view.layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
+        val lm = GridLayoutManager(context!!, 2, RecyclerView.VERTICAL, false)
+        lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (tagsAdapter.getItemViewType(position)) {
+                    ELEAdapter.TYPE_EMPTY, ELEAdapter.TYPE_ERROR, ELEAdapter.TYPE_LOADING, ELEAdapter.TYPE_LOAD_MORE -> 2
+                    else -> 1
+                }
+            }
+        }
+        meme_recycler_view.layoutManager = lm
         swipe_to_refresh.setOnRefreshListener {
             ml.refresh()
         }

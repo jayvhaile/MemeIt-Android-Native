@@ -16,8 +16,8 @@ import com.memeit.backend.dataclasses.SignInMethod
 class MemeItApp :MultiDexApplication() {
     companion object {
         lateinit var instance:Application
+        const val SERVER_URL = "https://safe-beyond-33046.herokuapp.com/api/"
         private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/"
-        public const val SERVER_URL = "https://safe-beyond-33046.herokuapp.com/api/"
         private const val STRICT_MODE=false
         private const val USE_LOCAL_SERVER=false
 

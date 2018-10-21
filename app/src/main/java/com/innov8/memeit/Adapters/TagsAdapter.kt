@@ -17,7 +17,7 @@ import com.memeit.backend.call
 class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layout.list_item_tags_new) {
 
 
-    override var emptyDrawableId: Int = R.drawable.ic_add
+    override var emptyDrawableId: Int = R.drawable.tag2
     override var errorDrawableId: Int = R.drawable.ic_no_internet
     override var emptyDescription: String = "No Tags"
     override var errorDescription: String = "Couldn't load Tags"
@@ -56,18 +56,18 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
                 if (tagFollowV.text == "Unfollow")
                     MemeItUsers.unfollowTag(t.tag).call({
 
-                        context.toast("Unfollowed")
+                        context?.toast("Unfollowed")
                         tagFollowV.text = "Follow"
                     }, {
-                        context.toast("Failed to Unfollow:- $it")
+                        context?.toast("Failed to Unfollow:- $it")
 
                     })
                 else
                     MemeItUsers.followTags(arrayOf(t.tag)).call({
-                        context.toast("Followed")
+                        context?.toast("Followed")
                         tagFollowV.text = "Unfollow"
                     }, {
-                        context.toast("Failed to Follow:- $it")
+                        context?.toast("Failed to Follow:- $it")
                     })
             }
         }

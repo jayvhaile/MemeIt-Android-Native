@@ -11,6 +11,7 @@ import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memegenerator.MemeEditorActivity
+import com.innov8.memegenerator.MemeEngine.MemeLayout
 import com.innov8.memegenerator.utils.initWithGrid
 import com.innov8.memeit.Activities.Frag
 import com.innov8.memeit.Adapters.PhotosAdapter
@@ -36,17 +37,17 @@ class PhotosChooserFragment : Frag() {
         meme_template_list.adapter = photosAdapter
         meme_template_list.itemAnimator = null
 
-        multi_select.setOnCheckedChangeListener { buttonView, isChecked ->
+        multi_select.setOnCheckedChangeListener { _, isChecked ->
             photosAdapter.multiSelectMode = isChecked
         }
         select_done.setOnClickListener {
             MaterialDialog.Builder(context!!)
                     .items("Horizontal Stack", "Vertical Stack", "Grid")
-                    .itemsCallback { dialog, itemView, position, text ->
-                        val intent = Intent(context, MemeEditorActivity::class.java)
-                        intent.putExtra("uris", photosAdapter.selectedItems.toTypedArray())
-                        intent.putExtra("layout", position)
-                        context?.startActivity(intent)
+                    .itemsCallback { _, _, position, _ ->
+                        MemeEditorActivity.startWithImages(context!!, photosAdapter.selectedItems,
+                                MemeLayout.LayoutInfo(if(position<2)1 else 2).apply {
+                                    orientation=if(position<2)position else 0
+                                })
                     }.show()
         }
     }
@@ -54,8 +55,8 @@ class PhotosChooserFragment : Frag() {
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         return CursorLoader(context!!, MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 null,
-                null,
-                null,
+                "${MediaStore.Images.Media.MIME_TYPE}<>?",
+                arrayOf("image/gif"),
                 "${MediaStore.Images.Media.DATE_ADDED} DESC")
     }
 

@@ -25,7 +25,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.call_biruk).setOnClickListener(this);
         findViewById(R.id.email_biruk).setOnClickListener(this);
         findViewById(R.id.email_jv).setOnClickListener(this);
-        findViewById(R.id.feedback).setOnClickListener(this);
+        findViewById(R.id.feedback_message).setOnClickListener(this);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
             case R.id.email_biruk:email(Person.biruk);
             case R.id.call_jv:call(Person.jv);
             case R.id.email_jv:email(Person.jv);
-            case R.id.feedback:email(Person.memeit);
+            case R.id.feedback_message:email(Person.memeit);
         }
     }
     public void call(Person p){

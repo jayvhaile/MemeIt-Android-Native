@@ -23,7 +23,19 @@ class GridMemeAdapter(context: Context) : MemeAdapter(context) {
         return MemeGridViewHolder(view, this)
     }
 
-    override fun createLayoutManager(): RecyclerView.LayoutManager = GridLayoutManager(context, GRID_SPAN_COUNT, RecyclerView.VERTICAL, false)
+    override fun createLayoutManager(): RecyclerView.LayoutManager {
+        val lm = GridLayoutManager(context, GRID_SPAN_COUNT, RecyclerView.VERTICAL, false)
+
+        lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (getItemViewType(position)) {
+                    TYPE_EMPTY, TYPE_ERROR, TYPE_LOADING, TYPE_LOAD_MORE -> GRID_SPAN_COUNT
+                    else -> 1
+                }
+            }
+        }
+        return lm
+    }
 
 
 }

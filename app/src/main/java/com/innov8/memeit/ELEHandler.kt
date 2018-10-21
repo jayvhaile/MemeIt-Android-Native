@@ -8,25 +8,28 @@ abstract class LoadingHandler<A : ELEAdapter<*>>(val adapter: A) {
 
     init {
         adapter.onErrorAction = { refresh(true) }
+        adapter.onEmptyAction = { refresh(true) }
         adapter.onLoadMore = { load() }
     }
 
     fun load() {
         adapter.loading = true
-        onLoad()
+        onLoad(false)
     }
 
     fun refresh(showLoading: Boolean = false) {
         adapter.loading = showLoading
-        onRefresh()
+        onLoad(true)
     }
 
-    protected abstract fun onLoad()
-    protected abstract fun onRefresh()
+    protected abstract fun onLoad(refresh: Boolean)
 
 
-    protected fun onLoaded() {
+    protected fun beforeLoaded() {
         adapter.loading = false
+    }
+
+    protected fun afterLoaded() {
         onLoaded?.invoke()
         if (adapter.getCount() == 0) adapter.mode = ELEAdapter.MODE_EMPTY
     }
@@ -49,21 +52,12 @@ class MLHandler<T : Any>(eleListAdapter: ELEListAdapter<T, *>,
     : LoadingHandler<ELEListAdapter<T, *>>(eleListAdapter) {
 
 
-    override fun onLoad() {
+    override fun onLoad(refresh: Boolean) {
+        if(refresh)loader.reset()
         loader.load(limit, {
-            adapter.addAll(it)
-            onLoaded()
-            loader.incSkip(limit)
-        }, {
-            onLoadFailed(it)
-        })
-    }
-
-    override fun onRefresh() {
-        loader.reset()
-        loader.load(limit, {
-            adapter.setAll(it)
-            onLoaded()
+            beforeLoaded()
+            if (refresh) adapter.setAll(it) else adapter.addAll(it)
+            afterLoaded()
             loader.incSkip(limit)
         }, {
             onLoadFailed(it)

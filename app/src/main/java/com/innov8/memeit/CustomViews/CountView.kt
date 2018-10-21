@@ -102,7 +102,14 @@ class CountView : View {
         super.draw(canvas)
         if (choosed)
             canvas.drawOval(rect, paint)
+        else{
+            paint.color=Color.parseColor("#55000000")
+            canvas.drawOval(rect, paint)
+            paint.color=backColor
+        }
+
         canvas.drawOval(rect, paintBorder)
+
         if (!choosed) return
         val x = rect.centerX() - (textPaint.measureText(text) / 2f)
         val y = rect.centerY() - (textPaint.ascent() + textPaint.descent()) * 0.5f
@@ -131,14 +138,14 @@ class CountView : View {
     }
 
     private fun calc() {
-        val widthF = width.toFloat()-paddingLeft-paddingRight
-        val heightF = height.toFloat()-paddingTop-paddingBottom
+        val widthF = width.toFloat() - paddingLeft - paddingRight
+        val heightF = height.toFloat() - paddingTop - paddingBottom
         val size = Math.min(widthF, heightF)
         val s = size - borderWidth
         val borderHalf = borderWidth / 2
         val xF = (widthF / 2) - (size / 2) + borderHalf + paddingLeft
         val yF = (heightF / 2) - (size / 2) + borderHalf + paddingTop
-        rect.set(xF, yF, xF + s , yF + s)
+        rect.set(xF, yF, xF + s, yF + s)
         textPaint.textSize = rect.height() * 0.55f
     }
 

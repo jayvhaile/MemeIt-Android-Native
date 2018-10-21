@@ -68,8 +68,9 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
             ImageViewer.Builder<Meme>(context, list)
                     .setFormatter { it.generateUrl() }
                     .setCustomDraweeHierarchyBuilder(hierarchy)
-                    .setBackgroundColor(Color.WHITE)
+                    .setBackgroundColor(Color.parseColor("#f6000000"))
                     .setStartPosition(list.map { it.id }.indexOf(memeID))
+                    .hideStatusBar(false)
                     .show()
         }
         return memeViewHolder
@@ -87,8 +88,7 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
     fun make(): MyS = MyS()
     inner class MyS : SwipeController() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-            val v = viewHolder as MemeViewHolder
-            return if (items.size > 0 && items[v.itemPosition] is Meme) {
+            return if (items.size > 0 && viewHolder is MemeViewHolder && items[viewHolder.itemPosition] is Meme) {
                 makeMovementFlags(0, /*ItemTouchHelper.LEFT or */ItemTouchHelper.RIGHT)
             } else {
                 makeMovementFlags(0, 0)
