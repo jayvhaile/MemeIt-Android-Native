@@ -21,6 +21,7 @@ import com.facebook.CallbackManager
 import com.facebook.imagepipeline.request.ImageRequest
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.iid.FirebaseInstanceId
 import com.innov8.memegenerator.utils.ViewAdapter
 import com.innov8.memeit.*
 import com.innov8.memeit.Adapters.IntroTransformer
@@ -34,7 +35,7 @@ import com.memeit.backend.dataclasses.User
 import com.memeit.backend.dataclasses.UsernameAuthRequest
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
-import kotlinx.android.synthetic.main.activity_auth2.*
+import kotlinx.android.synthetic.main.activity_auth.*
 
 class AuthActivity : AppCompatActivity() {
     private var mLoading: Boolean = false
@@ -64,7 +65,7 @@ class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         CustomMethods.makeWindowSeamless(this)
-        setContentView(R.layout.activity_auth2)
+        setContentView(R.layout.activity_auth)
         auth_root.background = ScrollingImageDrawable(this, R.drawable.many_pics_optimized,
                 screenWidth,
                 screenHeight)
@@ -178,7 +179,7 @@ class AuthActivity : AppCompatActivity() {
                 private val count = intArrayOf(titles.size, descriptions.size, drawables.length()).min()!!
 
                 val views = List<View>(count) {
-                    val view = LayoutInflater.from(this@AuthActivity).inflate(R.layout.slide_1, intro_pager, false)
+                    val view = LayoutInflater.from(this@AuthActivity).inflate(R.layout.pager_item_intro, intro_pager, false)
                     val iv = view.findViewById<ImageView>(R.id.intro_image)
                     val titleV = view.findViewById<TextView>(R.id.intro_login)
                     val descV = view.findViewById<TextView>(R.id.intro_description)
@@ -190,8 +191,8 @@ class AuthActivity : AppCompatActivity() {
                     view
                 }
 
-                override fun getItem(pos: Int): View {
-                    return views[pos]
+                override fun getItem(position: Int): View {
+                    return views[position]
                 }
 
                 override fun getCount(): Int = count
@@ -288,12 +289,20 @@ class AuthActivity : AppCompatActivity() {
 
         override fun onAction() {
             setLoading(true)
-            val req = UsernameAuthRequest(username_field.text, password_field.text, email_field.text)
-            MemeItClient.Auth.signUpWithUsername(req, {
-                setLoading(false) {
-                    setMode(personalizeMode)
-                }
-            }, onError)
+            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                val req = UsernameAuthRequest(username_field.text,
+                        password_field.text,
+                        email_field.text,
+                        it.token)
+                MemeItClient.Auth.signUpWithUsername(req, { _ ->
+                    setLoading(false) {
+                        setMode(personalizeMode)
+                    }
+                }, onError)
+            }.addOnFailureListener {
+                onError(it.message!!)
+            }
+
         }
 
 
@@ -366,8 +375,13 @@ class AuthActivity : AppCompatActivity() {
 
         override fun onAction() {
             setLoading(true)
-            val req = UsernameAuthRequest(username_field.text, password_field.text)
-            MemeItClient.Auth.signInWithUsername(req, onSignedIn, onError)
+            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                val req = UsernameAuthRequest(username_field.text, password_field.text, ftoken = it.token)
+                MemeItClient.Auth.signInWithUsername(req, onSignedIn, onError)
+            }.addOnFailureListener {
+                onError(it.message!!)
+            }
+
         }
 
         override fun getLastField(): TextInputLayout? = password_field
@@ -570,6 +584,7 @@ class AuthActivity : AppCompatActivity() {
         override fun updateElements() {
             action_btn.text = "Continue"
         }
+
         override fun getLastField(): TextInputLayout? = username_field
 
         override fun verifable(): Boolean = true
@@ -588,14 +603,19 @@ class AuthActivity : AppCompatActivity() {
         }
 
         override fun onAction() {
-            val freq = fbinfo.toSignUpReq(username_field.text)
-            MemeItClient.Auth.signUpWithFacebook(freq, {
-                val name = "${fbinfo.firstName} ${fbinfo.lastName}"
-                val b = Bundle()
-                b.putString("name", name)
-                b.putString("image", fbinfo.imageUrl)
-                setMode(personalizeMode, b)
-            }, onError)
+            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                val freq = fbinfo.toSignUpReq(username_field.text, it.token)
+                MemeItClient.Auth.signUpWithFacebook(freq, { _ ->
+                    val name = "${fbinfo.firstName} ${fbinfo.lastName}"
+                    val b = Bundle()
+                    b.putString("name", name)
+                    b.putString("image", fbinfo.imageUrl)
+                    setMode(personalizeMode, b)
+                }, onError)
+            }.addOnFailureListener {
+                onError(it.message!!)
+            }
+
         }
     }
 
@@ -606,13 +626,18 @@ class AuthActivity : AppCompatActivity() {
         }
 
         override fun onAction() {
-            val greq = ginfo.toSignUpReq(username_field.text)
-            MemeItClient.Auth.signUpWithGoogle(greq, {
-                val b = Bundle()
-                b.putString("name", ginfo.name)
-                b.putString("image", ginfo.imageUrl)
-                setMode(personalizeMode, b)
-            }, onError)
+            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                val greq = ginfo.toSignUpReq(username_field.text, it.token)
+                MemeItClient.Auth.signUpWithGoogle(greq, { _ ->
+                    val b = Bundle()
+                    b.putString("name", ginfo.name)
+                    b.putString("image", ginfo.imageUrl)
+                    setMode(personalizeMode, b)
+                }, onError)
+            }.addOnFailureListener {
+                onError(it.message!!)
+            }
+
         }
     }
 

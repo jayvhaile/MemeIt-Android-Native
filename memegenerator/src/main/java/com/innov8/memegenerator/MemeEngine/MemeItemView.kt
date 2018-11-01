@@ -10,10 +10,11 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import com.innov8.memegenerator.R
-import com.innov8.memegenerator.utils.dp
 import com.innov8.memegenerator.utils.enlarge
 import com.innov8.memegenerator.utils.inRect
-import com.innov8.memegenerator.utils.loadBitmap
+import com.innov8.memeit.commons.dp
+import com.innov8.memeit.commons.loadBitmap
+import com.innov8.memeit.commons.log
 
 
 open class MemeItemView : View {
@@ -21,8 +22,8 @@ open class MemeItemView : View {
 
     constructor(context: Context, memeItemWidth: Int, memeItemHeight: Int) : super(context) {
         isInMemeEditor = true
-        this.memeItemWidth = memeItemWidth
-        this.memeItemHeight = memeItemHeight
+        this.requiredWidth = memeItemWidth
+        this.requiredHeight = memeItemHeight
         init()
     }
 
@@ -39,43 +40,9 @@ open class MemeItemView : View {
     lateinit var mDetector: GestureDetector
     lateinit var upaint: Paint
 
-    var maxWidth: Int = 2000
-        set(value) {
-            field = value
-            memeItemWidth = memeItemWidth
-        }
+    var requiredWidth: Int = 0
+    var requiredHeight: Int = 0
 
-    var maxHeight: Int = 2000
-        set(value) {
-            field = value
-            memeItemHeight = memeItemHeight
-        }
-    var memeItemWidth: Int = 0
-        get() =
-            if (isInMemeEditor) field
-            else maxWidth
-        set(value) {
-            field = if (x + value > maxWidth) (maxWidth - x).toInt() else if (value < minimumWidth) minimumWidth else value
-        }
-    var memeItemHeight: Int = 0
-        get() =
-            if (isInMemeEditor) field
-            else maxHeight
-        set(value) {
-            field = if (y + value > maxHeight) (maxHeight - y).toInt() else if (value < minimumHeight) minimumHeight else value
-        }
-
-    fun setmw(value: Int): Int {
-        val m = memeItemWidth
-        memeItemWidth = value
-        return m - memeItemWidth
-    }
-
-    fun setmh(value: Int): Int {
-        val m = memeItemHeight
-        memeItemHeight = value
-        return m - memeItemHeight
-    }
 
     var onClickListener: ((MemeItemView) -> Unit)? = null
     var onCopyListener: ((MemeItemView) -> Unit)? = null
@@ -85,8 +52,8 @@ open class MemeItemView : View {
     private var topOffeset = 0
     val resizeRectSize = 8.dp(context)
     private fun init() {
-        isFocusable=true
-        isFocusableInTouchMode=true
+        isFocusable = true
+        isFocusableInTouchMode = true
         upaint = Paint(Paint.ANTI_ALIAS_FLAG)
         upaint.style = Paint.Style.STROKE
         upaint.strokeWidth = 1f.dp(context)
@@ -135,18 +102,33 @@ open class MemeItemView : View {
         }
     }
 
+    var maxWidth = 0
+    var maxHeight = 0
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        maxWidth = MeasureSpec.getSize(widthMeasureSpec)
-        maxHeight = MeasureSpec.getSize(heightMeasureSpec)
-        val rsh = resizeRectSize / 2
-        val w: Int = (memeItemWidth + controlsSize).toInt()
-        val h: Int = (memeItemHeight + controlsSize).toInt()
-        setMeasuredDimension(resolveSizeAndState(w, widthMeasureSpec, 1),
-                resolveSizeAndState(h, heightMeasureSpec, 1))
+        var w = MeasureSpec.getSize(widthMeasureSpec)
+        var h = MeasureSpec.getSize(heightMeasureSpec)
+        val wSpecMode = MeasureSpec.getMode(widthMeasureSpec)
+        val hSpecMode = MeasureSpec.getMode(heightMeasureSpec)
+
+        maxWidth = w
+        maxHeight = h
+        val hPadding = paddingLeft + paddingRight
+        val vPadding = paddingTop + paddingBottom
+        if (wSpecMode == MeasureSpec.EXACTLY) {
+            requiredWidth = (w - controlsSize - hPadding).toInt()
+        } else {
+            w = (requiredWidth + controlsSize + paddingLeft + paddingRight).toInt()
+        }
+        if (hSpecMode == MeasureSpec.EXACTLY) {
+            requiredHeight = (h - controlsSize - vPadding).toInt()
+        } else {
+            h = (requiredHeight + controlsSize + vPadding).toInt()
+        }
+        setMeasuredDimension(w, h)
     }
 
     val itemX: Float
-        get() = controlsSize / 2
+        get() = controlsSize / 2f
 
     val itemY: Float
         get() = controlsSize / 2f
@@ -221,7 +203,7 @@ open class MemeItemView : View {
         private var selectedBefore: Boolean = false
         private val resizeEnlarge = 5f.dp(context)
         override fun onDown(event: MotionEvent): Boolean {
-            selectedBefore =isFocused
+            selectedBefore = isFocused
             requestFocus()
             return when {
                 event.inRect(rotateRect) -> {
@@ -284,6 +266,18 @@ open class MemeItemView : View {
             }
         }
 
+        override fun onDoubleTap(e: MotionEvent?): Boolean {
+            log("xdxd", "===============================")
+            log("xdxd", "rotation ${rotation}")
+            log("xdxd", "x        ${x}")
+            log("xdxd", "y        ${y}")
+            log("xdxd", "width    ${width}")
+            log("xdxd", "height   ${height}")
+            log("xdxd", "===============================")
+
+            return super.onDoubleTap(e)
+        }
+
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             return if (isInMemeEditor)
                 when (type) {
@@ -308,29 +302,41 @@ open class MemeItemView : View {
             val xx = event.rawX - dx
             val yy = event.rawY - dy
 
+
+            val r = -1 * rotation * Math.PI / 180
+
+
+            val x1 = (xx * Math.cos(r) - yy * Math.sin(r)).toInt()
+            val y1 = (xx * Math.sin(r) + yy * Math.cos(r)).toInt()
             if (type == TYPE_RESIZE) {
-                x+=setmw(memeItemWidth+(xx*2).toInt())/2
-                y+=setmh(memeItemHeight+(yy*2).toInt())/2
+
+
+                requiredWidth += x1
+                requiredHeight += y1
+                requestLayout()
 
             } else {
-                val r = rotation * Math.PI / 180
-                val sx: Int = (xx * Math.cos(r) + yy * Math.sin(r)).toInt()
-                val sy: Int = (xx * Math.sin(r) + yy * Math.cos(r)).toInt()
                 when (type) {
                     TYPE_LEFT_RESIZE -> {
-                        x += setmw(memeItemWidth - sx)
+                        requiredWidth -= x1
+                        x += x1
                     }
                     TYPE_TOP_RESIZE -> {
-                        y += setmh(memeItemHeight - sy)
+                        requiredHeight -= y1
+                        y += y1
                     }
                     TYPE_RIGHT_RESIZE -> {
-                        memeItemWidth += sx
+                        requiredWidth += x1
+                        requestLayout()
                     }
-                    TYPE_BOTTOM_RESIZE -> memeItemHeight += sy
+                    TYPE_BOTTOM_RESIZE -> {
+                        requiredHeight += y1
+                        requestLayout()
+                    }
 
                 }
             }
-            onResize?.invoke(memeItemWidth, memeItemHeight)
+            onResize?.invoke(requiredWidth, requiredHeight)
             dx = event.rawX
             dy = event.rawY
             requestLayout()
@@ -345,8 +351,8 @@ open class MemeItemView : View {
         private fun onDrag(event: MotionEvent) {
             val nx = event.rawX + dx
             val ny = event.rawY + dy
-            x = if (nx < 0) 0f else if (nx + width > maxWidth) (maxWidth - width).toFloat() else nx
-            y = if (ny < 0) 0f else if (ny + height > maxHeight) (maxHeight - height).toFloat() else ny
+            x = nx
+            y = ny
         }
     }
 }

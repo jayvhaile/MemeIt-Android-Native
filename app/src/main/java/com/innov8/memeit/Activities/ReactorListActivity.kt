@@ -2,7 +2,7 @@ package com.innov8.memeit.Activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.innov8.memegenerator.utils.toast
+import com.innov8.memeit.commons.toast
 import com.innov8.memeit.Adapters.ReactorAdapter
 import com.innov8.memeit.R
 import com.innov8.memeit.makeLinear

@@ -17,7 +17,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:scaleType="fitCenter"
-        android:tint="#999"
+        android:tint="#777"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +27,7 @@
         app:layout_constraintWidth_percent="0.3"
         app:srcCompat="@drawable/ic_no_internet" />
 
-    <TextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/recyc_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@+id/recyc_drawable"
         tools:text="Could not connect to the Internet" />
 
-    <TextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/recyc_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

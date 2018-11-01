@@ -7,10 +7,9 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memegenerator.Adapters.ListAdapter
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.Activities.ProfileActivity
-import com.innov8.memeit.CustomViews.ProfileDraweeView
+import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.R
 import com.innov8.memeit.getDrawableID
 import com.innov8.memeit.loadImage

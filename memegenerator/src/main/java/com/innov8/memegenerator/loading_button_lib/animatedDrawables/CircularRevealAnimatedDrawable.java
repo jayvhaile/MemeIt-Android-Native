@@ -91,7 +91,7 @@ public class CircularRevealAnimatedDrawable extends Drawable implements Animatab
     }
 
     /**
-     * Setup all the animations. There are a reveal animation to show the button background
+     * Setup all the animations. There are a reveal animation to show the filled_button background
      * and a alpha animation to show the bitmap.
      */
     private void setupAnimations(){

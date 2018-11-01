@@ -31,4 +31,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/thumbnail_crop"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/circle_tint_background"
+        android:padding="6dp"
+        android:tint="#fff"
+        app:layout_constraintBottom_toBottomOf="@+id/thumbnail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_crop_black_24dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

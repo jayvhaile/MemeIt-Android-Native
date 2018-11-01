@@ -2,49 +2,87 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_tag"
-    android:layout_width="200dp"
-    android:layout_height="200dp"
-    android:layout_margin="10dp"
+    android:layout_width="wrap_content"
+    android:layout_height="150dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginBottom="8dp"
     android:orientation="vertical"
-    app:cardCornerRadius="32dp"
-    app:cardElevation="2dp"
+    app:cardCornerRadius="8dp"
     app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/tags_back">
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
 
-        <com.innov8.memeit.CustomClasses.FontTextView
-            android:id="@+id/hash"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:text="#"
-            android:textColor="#4a000000"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toStartOf="@+id/tagText"
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="14dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/follow_tag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/many_pics_optimized" />
+
+        <View
+            android:id="@+id/overlay"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#000"
+            app:layout_constraintBottom_toTopOf="@+id/follow_tag"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.innov8.memeit.CustomClasses.FontTextView
-            android:id="@+id/tagText"
+        <com.innov8.memeit.commons.views.FontTextView
+            android:id="@+id/follow_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:textColor="@color/colorAccent"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="@+id/hash"
+            android:gravity="center"
+            android:paddingLeft="24dp"
+            android:paddingTop="4dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="4dp"
+            android:text="Follow"
+            android:textColor="#313131"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/hash"
-            app:layout_constraintTop_toTopOf="@+id/hash"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.innov8.memeit.commons.views.FontTextView
+            android:id="@+id/tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/follow_tag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="programming" />
+
+        <com.innov8.memeit.commons.views.FontTextView
+            android:id="@+id/tag_post_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="#cfff"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tag"
+            tools:text="24k posts" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

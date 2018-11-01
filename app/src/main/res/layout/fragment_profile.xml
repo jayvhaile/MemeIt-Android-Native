@@ -42,13 +42,13 @@
                        android:orientation="horizontal"
                        app:layout_constraintGuide_begin="150dp" />
 
-                   <com.innov8.memeit.CustomClasses.FontTextView
+                   <com.innov8.memeit.commons.views.FontTextView
                        android:id="@+id/profile_follow_btn"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:layout_marginTop="16dp"
                        android:layout_marginRight="16dp"
-                       android:background="@drawable/button"
+                       android:background="@drawable/filled_button"
                        android:paddingLeft="16dp"
                        android:paddingTop="8dp"
                        android:paddingRight="16dp"
@@ -78,7 +78,7 @@
                        app:layout_constraintTop_toTopOf="parent"
                        app:layout_constraintVertical_bias="0.89">
 
-                       <com.innov8.memeit.CustomClasses.FontTextView
+                       <com.innov8.memeit.commons.views.FontTextView
                            android:id="@+id/profile_followers_count"
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                            android:textColor="@color/colorAccent"
                            android:textSize="16sp" />
 
-                       <com.innov8.memeit.CustomClasses.FontTextView
+                       <com.innov8.memeit.commons.views.FontTextView
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
                            android:text=" Followers"
@@ -102,7 +102,7 @@
                            android:alpha="0.8"
                            android:background="@drawable/dot" />
 
-                       <com.innov8.memeit.CustomClasses.FontTextView
+                       <com.innov8.memeit.commons.views.FontTextView
                            android:id="@+id/profile_meme_count"
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                            android:textColor="@color/colorAccent"
                            android:textSize="16sp" />
 
-                       <com.innov8.memeit.CustomClasses.FontTextView
+                       <com.innov8.memeit.commons.views.FontTextView
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
                            android:text=" Memes"
@@ -126,7 +126,7 @@
                            android:alpha="0.8"
                            android:background="@drawable/dot" />
 
-                       <com.innov8.memeit.CustomClasses.FontTextView
+                       <com.innov8.memeit.commons.views.FontTextView
                            android:id="@+id/profile_badge_count"
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
                            android:textColor="@color/colorAccent"
                            android:textSize="16sp" />
 
-                       <com.innov8.memeit.CustomClasses.FontTextView
+                       <com.innov8.memeit.commons.views.FontTextView
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
                            android:text=" Badges"
@@ -173,13 +173,13 @@
 
 
 
-    <com.innov8.memeit.CustomViews.ProfileDraweeView
+    <com.innov8.memeit.commons.views.ProfileDraweeView
         android:id="@+id/profile_image"
         android:layout_width="@dimen/profile_image_expanded_size"
         android:layout_height="@dimen/profile_image_expanded_size"
         app:layout_behavior="com.innov8.memeit.CustomClasses.ProfileImageViewBehavior"
         />
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

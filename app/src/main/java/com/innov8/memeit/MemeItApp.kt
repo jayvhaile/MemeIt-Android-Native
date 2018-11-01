@@ -9,17 +9,16 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.google.firebase.FirebaseApp
 import com.memeit.backend.MemeItClient
-import com.memeit.backend.dataclasses.MUser
-import com.memeit.backend.dataclasses.SignInMethod
 
 
-class MemeItApp :MultiDexApplication() {
+class MemeItApp : MultiDexApplication() {
     companion object {
-        lateinit var instance:Application
-        const val SERVER_URL = "https://safe-beyond-33046.herokuapp.com/api/"
-        private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/"
-        private const val STRICT_MODE=false
-        private const val USE_LOCAL_SERVER=false
+        lateinit var instance: Application
+        const val apiVersion = 1
+        const val SERVER_URL = "https://safe-beyond-33046.herokuapp.com/api/$apiVersion/"
+        private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/$apiVersion/"
+        private const val STRICT_MODE = false
+        private const val USE_LOCAL_SERVER = false
 
     }
 
@@ -41,8 +40,8 @@ class MemeItApp :MultiDexApplication() {
                     .build())
         }
         super.onCreate()
-        instance=this
-        MemeItClient.init(applicationContext,if(USE_LOCAL_SERVER) LOCAL_SERVER_URL else SERVER_URL)
+        instance = this
+        MemeItClient.init(applicationContext, if (USE_LOCAL_SERVER) LOCAL_SERVER_URL else SERVER_URL)
         FirebaseApp.initializeApp(this)
         val config = mapOf(
                 "cloud_name" to "innov8",

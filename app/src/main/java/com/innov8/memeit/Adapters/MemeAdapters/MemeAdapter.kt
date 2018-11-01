@@ -3,14 +3,15 @@ package com.innov8.memeit.Adapters.MemeAdapters
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.app.ShareCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
+import com.github.ybq.android.spinkit.style.CubeGrid
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.innov8.memeit.Adapters.ELEListAdapter
@@ -24,7 +25,6 @@ import com.innov8.memeit.getCloudinaryImageUrlForId
 import com.memeit.backend.dataclasses.HomeElement
 import com.memeit.backend.dataclasses.Meme
 import com.stfalcon.frescoimageviewer.ImageViewer
-import com.github.ybq.android.spinkit.style.CubeGrid
 
 abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeViewHolder>(context) {
     override var emptyDrawableId: Int = R.drawable.ic_add
@@ -65,13 +65,24 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
             val hierarchy = GenericDraweeHierarchyBuilder.newInstance(context.resources)
                     .setProgressBarImage(LoadingDrawable(context))
 
+            val overlayView = inflater.inflate(R.layout.overlay, null, false)
+            val overlayName = overlayView.findViewById<TextView>(R.id.overlay_name)
+            val overlayDesc = overlayView.findViewById<TextView>(R.id.overlay_description)
+            val overlayTags = overlayView.findViewById<TextView>(R.id.overlay_tags)
             ImageViewer.Builder<Meme>(context, list)
                     .setFormatter { it.generateUrl() }
+                    .setOverlayView(overlayView)
+                    .setImageChangeListener {
+                        overlayName.text = list[it].poster?.name
+                        overlayDesc.text = list[it].description
+                        overlayTags.text = list[it].tags.joinToString(", ") { tag -> "#$tag" }
+                    }
                     .setCustomDraweeHierarchyBuilder(hierarchy)
                     .setBackgroundColor(Color.parseColor("#f6000000"))
                     .setStartPosition(list.map { it.id }.indexOf(memeID))
                     .hideStatusBar(false)
                     .show()
+
         }
         return memeViewHolder
     }

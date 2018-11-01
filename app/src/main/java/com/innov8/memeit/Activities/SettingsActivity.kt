@@ -13,8 +13,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
-import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.toast
 import com.innov8.memeit.loadImage
 import com.innov8.memeit.prefix
 import com.memeit.backend.MemeItClient

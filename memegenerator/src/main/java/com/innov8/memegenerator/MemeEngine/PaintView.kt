@@ -4,7 +4,7 @@ import android.graphics.*
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import com.innov8.memegenerator.utils.dp
+import com.innov8.memeit.commons.dp
 
 class PaintHandler(val view:View){
     enum class PaintMode {

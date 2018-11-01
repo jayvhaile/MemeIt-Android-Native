@@ -53,12 +53,12 @@ class MLHandler<T : Any>(eleListAdapter: ELEListAdapter<T, *>,
 
 
     override fun onLoad(refresh: Boolean) {
-        if(refresh)loader.reset()
+        if (refresh) loader.reset()
         loader.load(limit, {
             beforeLoaded()
             if (refresh) adapter.setAll(it) else adapter.addAll(it)
             afterLoaded()
-            loader.incSkip(limit)
+            loader.incSkip(it.size)
         }, {
             onLoadFailed(it)
         })

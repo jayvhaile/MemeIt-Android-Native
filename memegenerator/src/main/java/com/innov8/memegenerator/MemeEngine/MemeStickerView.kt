@@ -6,7 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
-import com.innov8.memegenerator.utils.dp
+import com.innov8.memeit.commons.dp
 
 class MemeStickerView : MemeItemView {
 
@@ -20,8 +20,8 @@ class MemeStickerView : MemeItemView {
                 srcRect = Rect(0, 0, value.width, value.height)
         }
 
-    constructor(context: Context,bitmap: Bitmap,width:Int=100,height:Int=100) : super(context, width,height){
-        this.bitmap=bitmap
+    constructor(context: Context, bitmap: Bitmap, width: Int = 100, height: Int = 100) : super(context, width, height) {
+        this.bitmap = bitmap
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -36,14 +36,15 @@ class MemeStickerView : MemeItemView {
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        val xx=itemX.toInt()
-        val yy=itemY.toInt()
-        destRect = Rect(xx, yy, xx+memeItemWidth, yy+memeItemHeight)
+        val xx = itemX.toInt()
+        val yy = itemY.toInt()
+        destRect = Rect(xx + paddingLeft, yy + paddingTop, xx+paddingLeft+requiredWidth, yy+paddingTop+requiredHeight)
     }
-    override fun copy():MemeStickerView{
-        val nt=MemeStickerView(context,bitmap!!,memeItemWidth,memeItemHeight)
-        nt.x=x+10.dp(context)
-        nt.y=y+10.dp(context)
+
+    override fun copy(): MemeStickerView {
+        val nt = MemeStickerView(context, bitmap!!, requiredWidth, requiredHeight)
+        nt.x = x + 10.dp(context)
+        nt.y = y + 10.dp(context)
         return nt
     }
 }

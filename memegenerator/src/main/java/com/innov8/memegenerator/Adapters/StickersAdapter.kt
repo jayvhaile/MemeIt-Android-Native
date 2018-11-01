@@ -7,7 +7,7 @@ import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.innov8.memegenerator.R
-import com.innov8.memegenerator.utils.dp
+import com.innov8.memeit.commons.dp
 
 class StickersAdapter(context: Context) : ListAdapter<String>(context, R.layout.list_item_sticker) {
     var onItemClick: ((String) -> Unit)? = null

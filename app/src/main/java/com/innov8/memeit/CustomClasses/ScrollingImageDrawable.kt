@@ -5,7 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.view.animation.LinearInterpolator
-import com.innov8.memegenerator.utils.loadBitmap
+import com.innov8.memeit.commons.loadBitmap
 
 class ScrollingImageDrawable(val bitmap: Bitmap) : Drawable() {
 

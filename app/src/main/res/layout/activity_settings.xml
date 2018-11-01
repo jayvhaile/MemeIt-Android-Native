@@ -22,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/bb" />
 
-        <com.innov8.memeit.CustomViews.ProfileDraweeView
+        <com.innov8.memeit.commons.views.ProfileDraweeView
             android:id="@+id/settings_pp"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="@+id/settings_pp"
             app:layout_constraintVertical_bias="0.0" />
 
-        <com.innov8.memeit.CustomClasses.FontTextView
+        <com.innov8.memeit.commons.views.FontTextView
             android:id="@+id/namesettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
             app:layout_constraintTop_toBottomOf="@+id/settings_pp"
             tools:text="Jeff Beso" />
 
-        <com.innov8.memeit.CustomClasses.FontTextView
+        <com.innov8.memeit.commons.views.FontTextView
             android:id="@+id/usernamesettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

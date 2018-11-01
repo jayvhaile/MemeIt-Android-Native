@@ -1,7 +1,7 @@
 package com.innov8.memegenerator.MemeEngine
 
 import android.graphics.*
-import com.innov8.memegenerator.utils.log
+import com.innov8.memeit.commons.log
 import com.waynejo.androidndkgif.GifDecoder
 import com.waynejo.androidndkgif.GifEncoder
 

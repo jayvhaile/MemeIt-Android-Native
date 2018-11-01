@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
 
-        <com.innov8.memeit.CustomViews.ProfileDraweeView
+        <com.innov8.memeit.commons.views.ProfileDraweeView
             android:id="@+id/user_sug_pp"
             android:layout_width="128dp"
             android:layout_height="128dp"

@@ -18,7 +18,7 @@ import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memeit.*
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
-import com.innov8.memeit.CustomViews.ProfileDraweeView
+import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.memeit.backend.dataclasses.*
 
 class NotificationAdapter(context: Context) : ELEListAdapter<Notification, NotificationViewHolder>(context) {

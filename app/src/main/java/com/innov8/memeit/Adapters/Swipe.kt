@@ -26,7 +26,7 @@ abstract class SwipeController : ItemTouchHelper.Callback() {
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         if (actionState == ACTION_STATE_SWIPE) {
-            setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            setTouchListener(recyclerView, viewHolder, dX, dY, isCurrentlyActive)
         }
 
 
@@ -34,8 +34,8 @@ abstract class SwipeController : ItemTouchHelper.Callback() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setTouchListener(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
-        recyclerView.setOnTouchListener { v, event ->
+    private fun setTouchListener(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, isCurrentlyActive: Boolean) {
+        recyclerView.setOnTouchListener { _, event ->
             swipeBack = event.action == MotionEvent.ACTION_CANCEL || event.action == MotionEvent.ACTION_UP
             if (swipeBack) {
                 if (dX < -recyclerView.width * 0.2f) {

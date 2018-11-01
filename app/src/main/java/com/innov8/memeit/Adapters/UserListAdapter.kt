@@ -9,13 +9,11 @@ import android.widget.TextView
 import android.widget.Toast
 import com.github.ybq.android.spinkit.style.CubeGrid
 
-import com.innov8.memegenerator.Adapters.ListAdapter
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
-import com.innov8.memegenerator.loading_button_lib.interfaces.OnAnimationEndListener
 import com.innov8.memeit.Activities.ProfileActivity
-import com.innov8.memeit.CustomClasses.FontTextView
-import com.innov8.memeit.CustomViews.ProfileDraweeView
+import com.innov8.memeit.commons.views.FontTextView
+import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.*
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItClient

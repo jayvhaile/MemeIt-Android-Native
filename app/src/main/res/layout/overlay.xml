@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:background="#ff800a"
+    android:background="#ff800a"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -55,7 +55,7 @@
         app:layout_constraintTop_toTopOf="@+id/overlay_name" />
 
 
-    <com.innov8.memegenerator.CustomViews.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/overlay_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,9 +69,9 @@
         app:layout_constraintBottom_toTopOf="@+id/overlay_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="Biruk" />
+        android:text="Biruk" />
 
-    <com.innov8.memegenerator.CustomViews.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/overlay_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="That moment you realize that your friends are idiots" />
-    <com.innov8.memegenerator.CustomViews.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/overlay_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

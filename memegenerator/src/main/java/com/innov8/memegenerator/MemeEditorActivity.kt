@@ -18,6 +18,8 @@ import com.innov8.memeit.commons.models.MemeTemplate
 import com.innov8.memeit.commons.models.MyTypeFace
 import com.innov8.memeit.commons.models.TextStyleProperty
 import com.innov8.memegenerator.utils.*
+import com.innov8.memeit.commons.dp
+import com.innov8.memeit.commons.makeFullScreen
 import com.memeit.backend.dataclasses.Meme
 import com.waynejo.androidndkgif.GifDecoder
 import kotlinx.android.synthetic.main.meme_editor.*

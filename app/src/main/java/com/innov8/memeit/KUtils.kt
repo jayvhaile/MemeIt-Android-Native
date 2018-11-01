@@ -1,12 +1,15 @@
 package com.innov8.memeit
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.content.Context
-import android.content.res.Configuration.*
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.view.ViewConfiguration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
@@ -22,9 +25,9 @@ import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.innov8.memegenerator.utils.log
 import com.innov8.memeit.Activities.SettingsActivity
-import com.innov8.memeit.CustomViews.ProfileDraweeView
+import com.innov8.memeit.commons.log
+import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.memeit.backend.dataclasses.Meme
 import com.memeit.backend.dataclasses.Meme.MemeType.GIF
 import com.memeit.backend.dataclasses.Meme.MemeType.IMAGE
@@ -223,8 +226,6 @@ fun ProfileDraweeView.loadImage(url: String?, width: Float = R.dimen.profile_min
     log("awrk", u)
 
     setImageRequest(ImageRequest.fromUri(u))
-
-
 }
 
 
@@ -346,4 +347,24 @@ fun String?.validateEmailOrEmpty(): String? = if (!isEmailOrEmpty()) "Invalid Em
 
 fun View.snack(message: String, duration: Int = Snackbar.LENGTH_SHORT, root: Boolean = false) {
     Snackbar.make(if (root) rootView else this, message, duration).show()
+}
+
+fun View.animateVisibility() {
+    val isVisible = visibility == View.VISIBLE
+    val from = if (isVisible) 1.0f else 0.0f
+    val to = if (isVisible) 0.0f else 1.0f
+
+    val animation = ObjectAnimator.ofFloat(this, "alpha", from, to)
+    animation.duration = ViewConfiguration.getDoubleTapTimeout().toLong()
+
+    if (isVisible) {
+        animation.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                visibility = View.GONE
+            }
+        })
+    } else
+        visibility = View.VISIBLE
+
+    animation.start()
 }

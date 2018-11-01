@@ -8,8 +8,8 @@ import android.graphics.RectF
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
-import com.innov8.memegenerator.utils.dp
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.dp
 
 class CountView : View {
     var radius = 0

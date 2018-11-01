@@ -1,4 +1,4 @@
-package com.innov8.memeit.CustomClasses;
+package com.innov8.memeit.commons.views;
 
 import android.content.Context;
 import android.graphics.Typeface;

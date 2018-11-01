@@ -8,7 +8,7 @@
     android:layout_marginBottom="8dp"
     android:background="@drawable/bottom_nav_back">
     <!--====================================================THE TOP PARTS-->
-    <com.innov8.memeit.CustomViews.ProfileDraweeView
+    <com.innov8.memeit.commons.views.ProfileDraweeView
         android:id="@+id/notif_icon"
         android:layout_width="@dimen/profile_mini_size"
         android:layout_height="@dimen/profile_mini_size"
@@ -20,7 +20,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/meme_poster_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         app:layout_constraintLeft_toRightOf="@+id/notif_icon"
         app:layout_constraintTop_toTopOf="@+id/notif_icon" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/meme_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,7 +71,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#c000"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/meme_image"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toEndOf="parent"
@@ -123,7 +122,7 @@
         app:layout_constraintEnd_toEndOf="@id/meme_image"
         app:srcCompat="@drawable/angry" />
     <!--react counts-->
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/reacation_count_funny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -133,7 +132,7 @@
         app:layout_constraintStart_toStartOf="@+id/react_funny"
         app:layout_constraintTop_toBottomOf="@+id/react_funny" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/reacation_count_veryfunny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -143,7 +142,7 @@
         app:layout_constraintStart_toStartOf="@+id/react_veryfunny"
         app:layout_constraintTop_toBottomOf="@+id/react_veryfunny" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/reacation_count_stupid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -154,7 +153,7 @@
         app:layout_constraintStart_toStartOf="@+id/react_stupid"
         app:layout_constraintTop_toBottomOf="@+id/react_stupid" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/reacation_count_angry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -181,7 +180,7 @@
         app:sparkbutton_primaryColor="@color/spark_primary_emoji"
         app:sparkbutton_secondaryColor="@color/spark_secondary" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/meme_tags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -193,7 +192,7 @@
         app:layout_constraintTop_toBottomOf="@+id/description"
         tools:text="#programming #java" />
 
-    <com.innov8.memegenerator.CustomViews.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -209,7 +208,7 @@
         app:layout_constraintTop_toBottomOf="@+id/meme_image"
         tools:text="This meme goes out to all those people that have been struggling with the verbosity of java " />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/meme_reactions"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
@@ -265,15 +264,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="60dp" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/react_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:constraint_referenced_ids="react_stupid,react_veryfunny,tint,react_funny,react_angry,reacation_count_angry,reacation_count_funny,reacation_count_stupid,reacation_count_veryfunny"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints" />
 
 
 

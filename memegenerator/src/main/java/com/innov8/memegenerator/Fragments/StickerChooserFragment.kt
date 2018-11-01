@@ -8,15 +8,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.innov8.memegenerator.R
 import com.innov8.memegenerator.Adapters.StickersAdapter
 import com.innov8.memegenerator.MemeEngine.MemeStickerView
 import com.innov8.memegenerator.MemeEngine.StickerEditInterface
 import com.innov8.memegenerator.Models.StickerPack
-import com.innov8.memegenerator.utils.AsyncLoader
+import com.innov8.memegenerator.R
 import com.innov8.memegenerator.utils.onTabSelected
 import kotlinx.android.synthetic.main.bottom_tab.*
 import kotlinx.android.synthetic.main.sticker_frag.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 
 class StickerChooserFragment : Fragment() {
     private lateinit var stickersAdapter: StickersAdapter
@@ -34,12 +37,11 @@ class StickerChooserFragment : Fragment() {
         }
 
         stickersAdapter.onItemClick = { url ->
-            AsyncLoader {
-                val x = url.substring(9)
-                BitmapFactory.decodeStream(context!!.assets.open(x))
-            }.load { bitmap ->
-                val memeStickerView = MemeStickerView(context!!, bitmap)
-                stickerEditInterface?.onAddSticker(memeStickerView)
+            launch(UI) {
+                val bitmap = withContext(CommonPool) {
+                    BitmapFactory.decodeStream(context!!.assets.open(url.substring(9)))
+                }
+                stickerEditInterface?.onAddSticker(MemeStickerView(context!!, bitmap))
             }
         }
     }

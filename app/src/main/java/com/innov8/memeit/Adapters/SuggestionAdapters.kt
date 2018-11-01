@@ -9,9 +9,9 @@ import com.innov8.memegenerator.Adapters.ListAdapter
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
-import com.innov8.memegenerator.utils.getDrawableIdByName
-import com.innov8.memegenerator.utils.toast
-import com.innov8.memeit.CustomViews.ProfileDraweeView
+import com.innov8.memeit.commons.getDrawableIdByName
+import com.innov8.memeit.commons.toast
+import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.models.MemeTemplate

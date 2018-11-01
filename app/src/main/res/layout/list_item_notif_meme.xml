@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.innov8.memeit.CustomViews.ProfileDraweeView
+            <com.innov8.memeit.commons.views.ProfileDraweeView
                 android:id="@+id/notif_icon"
                 android:layout_width="@dimen/profile_mini_size"
                 android:layout_height="@dimen/profile_mini_size"

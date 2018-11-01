@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.innov8.memegenerator.utils.dp
+import com.innov8.memeit.commons.dp
 
 class MyToolBar : LinearLayout {
     lateinit var leftMenuHolder:LinearLayout

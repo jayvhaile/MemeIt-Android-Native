@@ -18,7 +18,6 @@ class GridMemeAdapter(context: Context) : MemeAdapter(context) {
     override fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
         if (viewType != HomeElement.MEME_TYPE)
             throw IllegalStateException("View Type must only be MEME_TYPE in GridMemeAdapter")
-        val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.list_item_meme_grid, parent, false)
         return MemeGridViewHolder(view, this)
     }

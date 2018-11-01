@@ -10,7 +10,7 @@ import com.innov8.memegenerator.R
 import com.innov8.memegenerator.Adapters.ListAdapter
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.commons.models.MemeTemplate
-import com.innov8.memegenerator.utils.getDrawableIdByName
+import com.innov8.memeit.commons.getDrawableIdByName
 
 class MemeTemplatesListAdapter (context: Context): ListAdapter<MemeTemplate>(context,R.layout.list_item_meme_template) {
     override fun createViewHolder(view: View): MyViewHolder<MemeTemplate> {

@@ -12,6 +12,9 @@ import com.innov8.memegenerator.CustomViews.CheckerBoardDrawable
 import com.innov8.memeit.commons.models.MemeTemplate
 import com.innov8.memeit.commons.models.TextProperty
 import com.innov8.memegenerator.utils.*
+import com.innov8.memeit.commons.dp
+import com.innov8.memeit.commons.getDrawableIdByName
+import com.innov8.memeit.commons.loadBitmap
 
 /**
  * Created by Haile on 5/19/2018.

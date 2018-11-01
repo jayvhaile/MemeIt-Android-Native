@@ -271,5 +271,8 @@ interface MemeItService {
     @POST("others/feedback")
     fun postFeedback(@Body feedback: Feedback): Call<ResponseBody>
 
+    @PUT("/auth/token/{ftoken}")
+    fun updateUserToken(@Path("ftoken") token: String): Call<ResponseBody>
+
 
 }

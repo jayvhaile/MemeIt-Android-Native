@@ -204,7 +204,7 @@ public class CircularProgressImageButton extends AppCompatImageButton implements
     }
 
     /**
-     * This method is called when the button and its dependencies are going to draw it selves.
+     * This method is called when the filled_button and its dependencies are going to draw it selves.
      *
      * @param canvas Canvas
      */
@@ -269,7 +269,7 @@ public class CircularProgressImageButton extends AppCompatImageButton implements
     }
 
     /**
-     * Stops the animation and sets the button in the STOPED state.
+     * Stops the animation and sets the filled_button in the STOPED state.
      */
     public void stopAnimation() {
         if(mState == State.PROGRESS && !mIsMorphingInProgress) {
@@ -284,7 +284,7 @@ public class CircularProgressImageButton extends AppCompatImageButton implements
      * want to put a icon for "sucess" and a blue color, otherwise red and a failure icon. You can also
      * show that a music is completed... or show some status on a game... be creative!
      *
-     * @param fillColor The color of the background of the button
+     * @param fillColor The color of the background of the filled_button
      * @param bitmap The image that will be shown
      */
     public void doneLoadingAnimation(int fillColor, Bitmap bitmap) {
@@ -320,7 +320,7 @@ public class CircularProgressImageButton extends AppCompatImageButton implements
     }
 
     /**
-     * Method called on the onDraw when the button is on DONE status
+     * Method called on the onDraw when the filled_button is on DONE status
      *
      * @param canvas Canvas
      */
@@ -522,14 +522,14 @@ public class CircularProgressImageButton extends AppCompatImageButton implements
     }
 
     /**
-     * Check if button is animating
+     * Check if filled_button is animating
      */
     public Boolean isAnimating() {
         return mState == State.PROGRESS;
     }
 
     /**
-     * Class with all the params to configure the button.
+     * Class with all the params to configure the filled_button.
      */
     private class Params {
         private float mSpinningBarWidth;

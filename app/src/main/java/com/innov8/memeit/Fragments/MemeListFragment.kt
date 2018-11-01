@@ -26,7 +26,6 @@ class MemeListFragment : Fragment() {
     private lateinit var memeAdapter: MemeAdapter
     private lateinit var memeLoader: MemeLoader<out HomeElement>
     private var memeAdapterType: Byte = 0
-    private var refresh: Boolean = false
     private lateinit var searchMemeLoader: SearchMemeLoader
     private var tempList: List<HomeElement>? = null
     private var searchMode: Boolean = false

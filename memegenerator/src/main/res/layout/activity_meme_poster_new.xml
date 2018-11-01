@@ -18,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:background="@drawable/got1" />
 
-        <com.innov8.memegenerator.CustomViews.FontTextView
+        <com.innov8.memeit.commons.views.FontTextView
             android:id="@+id/fontTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/meme_image_view" />
 
-        <com.innov8.memegenerator.CustomViews.FontTextView
+        <com.innov8.memeit.commons.views.FontTextView
             android:id="@+id/share"
             android:layout_width="match_parent"
             android:layout_height="50dp"

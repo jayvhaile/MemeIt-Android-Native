@@ -7,7 +7,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
-import com.innov8.memegenerator.utils.dp
+import com.innov8.memeit.commons.dp
 
 class ColorChooser : HorizontalScrollView {
 

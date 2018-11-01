@@ -17,9 +17,9 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.innov8.memegenerator.utils.dp
-import com.innov8.memegenerator.utils.log
-import com.innov8.memegenerator.utils.toast
+import com.innov8.memeit.commons.dp
+import com.innov8.memeit.commons.log
+import com.innov8.memeit.commons.toast
 import com.innov8.memeit.Adapters.TagSuggestionAdapter
 import com.innov8.memeit.DP
 import com.innov8.memeit.R

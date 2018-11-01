@@ -16,7 +16,7 @@ class MyRecyclerView : FrameLayout {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     val recyclerView = RecyclerView(context)
-    val infoView: View = LayoutInflater.from(context).inflate(R.layout.my_recycler_view, this, false)
+    val infoView: View = LayoutInflater.from(context).inflate(R.layout.list_item_error, this, false)
 
     private val infoDrawable: ImageView = infoView.findViewById(R.id.recyc_drawable)
     private val infoDescription: TextView = infoView.findViewById(R.id.recyc_desc)

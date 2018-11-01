@@ -79,7 +79,7 @@ public class CustomMethods {
 
     public static Bitmap getBitmapFromUri(Uri imageUri, Context c) {
         final InputStream imageStream;
-        Bitmap selectedImage = BitmapFactory.decodeResource(c.getResources(), R.drawable.button);
+        Bitmap selectedImage = BitmapFactory.decodeResource(c.getResources(), R.drawable.filled_button);
         try {
             imageStream = c.getContentResolver().openInputStream(imageUri);
             selectedImage = BitmapFactory.decodeStream(imageStream);

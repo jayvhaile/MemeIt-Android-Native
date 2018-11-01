@@ -2,12 +2,14 @@ package com.innov8.memeit.Activities;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter;
@@ -30,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 .withContentClickableWhenMenuOpened(false)
                 .withRootViewElevationPx(5)
                 .withRootViewScale(0.5f)
-                .withMenuLayout(R.layout.menu_drawer2); //todo fix the menu_drawer crashes due to the drawables on api level < 21
+                .withMenuLayout(R.layout.drawer_main); //todo fix the menu_drawer crashes due to the drawables on api level < 21
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             sbd.withToolbarMenuToggle(mToolbar);
         }
@@ -111,6 +114,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, FeedbackActivity.class));
             }
         });
+        findViewById(R.id.menu_invite).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new AppInviteInvitation.IntentBuilder("MemeIt")
+                        .setMessage("the world of meme")
+                        .setDeepLink(Uri.parse("meme"))
+                        .setCallToActionText("download")
+                        .build();
+                startActivityForResult(intent, 101);
+            }
+        });
+
     }
 
     @Override
@@ -261,6 +276,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("selected", bottom_nav.getSelectedIndex());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private static class MyPagerAdapter extends FragmentPagerAdapter {

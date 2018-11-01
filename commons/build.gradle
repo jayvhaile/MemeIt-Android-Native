@@ -31,6 +31,9 @@ dependencies {
     implementation 'com.facebook.android:facebook-login:4.37.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0'
+    implementation 'com.facebook.fresco:fresco:1.9.0'
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
     implementation 'com.google.code.gson:gson:2.8.5'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.19.0'

@@ -1,4 +1,4 @@
-package com.innov8.memeit.CustomViews
+package com.innov8.memeit.commons.views
 
 import android.content.Context
 import android.graphics.Color
@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import com.amulyakhare.textdrawable.TextDrawable
 import com.facebook.drawee.generic.RoundingParams
 import com.facebook.drawee.view.SimpleDraweeView
-import com.innov8.memegenerator.utils.dp
+import com.innov8.memeit.commons.dp
 
 class ProfileDraweeView:SimpleDraweeView{
     constructor(context: Context,text:String="",color:Int=Color.RED):super(context){

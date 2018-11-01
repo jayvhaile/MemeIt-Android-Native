@@ -11,24 +11,21 @@ abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: Lis
 
 
 
-    class LayoutInfo(var type:Int) : Parcelable {
-
-        var span: Int = 2
-        var spacing: Int = 20
-        var orientation: Int = 0
-
-        constructor(parcel: Parcel) : this(parcel.readInt()) {
-            span = parcel.readInt()
-            spacing = parcel.readInt()
-            orientation = parcel.readInt()
-        }
+    class LayoutInfo(var type:Int, var span: Int = 2, var hSpacing: Int = 20,var vSpacing: Int=hSpacing, var orientation: Int = 0) : Parcelable {
 
 
-        fun create(maxWidth: Int,maxHeight: Int,images:List<Bitmap>):MemeLayout{
+        constructor(parcel: Parcel) : this(
+                parcel.readInt(),
+                parcel.readInt(),
+                parcel.readInt(),
+                parcel.readInt(),
+                parcel.readInt())
+
+        fun create(maxWidth: Int, maxHeight: Int, images:List<Bitmap>):MemeLayout{
             return when(type){
                 TYPE_SINGLE->SingleImageLayout(maxWidth,maxHeight,images[0])
-                TYPE_LINEAR->LinearImageLayout(spacing, orientation,maxWidth,maxHeight,images)
-                TYPE_GRID->GridImageLayout(span, orientation, spacing,maxWidth,maxHeight,images)
+                TYPE_LINEAR->LinearImageLayout(hSpacing, orientation,maxWidth,maxHeight,images)
+                TYPE_GRID->GridImageLayout(span, orientation,hSpacing ,vSpacing,maxWidth,maxHeight,images)
                 else->throw IllegalStateException("illegal meme layout type")
             }
 
@@ -50,7 +47,8 @@ abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: Lis
         override fun writeToParcel(parcel: Parcel, flags: Int) {
             parcel.writeInt(type)
             parcel.writeInt(span)
-            parcel.writeInt(spacing)
+            parcel.writeInt(hSpacing)
+            parcel.writeInt(vSpacing)
             parcel.writeInt(orientation)
         }
 
@@ -303,28 +301,26 @@ class LinearImageLayout(spc: Int, orien: Int, maxWidth: Int, maxHeight: Int, ima
     }
 }
 
-class GridImageLayout(spn: Int, orien: Int, spc: Int, maxWidth: Int, maxHeight: Int, images: List<Bitmap>) : MemeLayout(maxWidth, maxHeight, images) {
+class GridImageLayout(var span: Int, orientation: Int, hSpace: Int, vSpace: Int, maxWidth: Int, maxHeight: Int, images: List<Bitmap>) : MemeLayout(maxWidth, maxHeight, images) {
     companion object {
         const val HORIZONTAL = 0
         const val VERTICAL = 1
     }
 
-    var span = spn
-
-    var hSpacing = spc
+    var hSpacing = hSpace
         set(value) {
             field = value
             calcImagesTotalWidth()
             update()
         }
 
-    var vSpacing = spc
+    var vSpacing = vSpace
         set(value) {
             field = value
             calcImagesTotalHeight()
             update()
         }
-    var orientation = orien
+    var orientation = orientation
         set(value) {
             field = value
             calcImagesTotalWidth()

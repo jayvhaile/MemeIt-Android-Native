@@ -5,7 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.Log
 import com.facebook.drawee.drawable.ProgressBarDrawable
-import com.innov8.memegenerator.utils.dp
+import com.innov8.memeit.commons.dp
 
 //todo change the px to dp
 class LoadingDrawable (val context:Context): ProgressBarDrawable() {

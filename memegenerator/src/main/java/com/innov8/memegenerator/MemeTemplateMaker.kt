@@ -14,7 +14,13 @@ import com.innov8.memegenerator.MemeEngine.MemeEditorView
 import com.innov8.memegenerator.MemeEngine.MemeTextView
 import com.innov8.memeit.commons.models.MemeTemplate
 import com.innov8.memeit.commons.models.MemeTemplate.CREATOR.LOCAL_DATA_SOURCE
-import com.innov8.memegenerator.utils.*
+import com.innov8.memeit.commons.getDrawableIdByName
+import com.innov8.memeit.commons.loadBitmap
+import com.innov8.memeit.commons.toast
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter
@@ -26,7 +32,7 @@ class MemeTemplateMaker : AppCompatActivity() {
     var gson = Gson()
     var memeTemplates = mutableListOf<MemeTemplate>()
     lateinit var memeEditorView: MemeEditorView
-//    lateinit var memeTextEditorFragment: MemeTextEditorFragment
+    //    lateinit var memeTextEditorFragment: MemeTextEditorFragment
     val view: View? = null
     lateinit var file: File
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +57,7 @@ class MemeTemplateMaker : AppCompatActivity() {
             memeEditorView.removeSelectedItem()
         }
         findViewById<Button>(R.id.next).setOnClickListener {
-            if(!load()){
+            if (!load()) {
                 loadNext()
             }
         }
@@ -69,31 +75,35 @@ class MemeTemplateMaker : AppCompatActivity() {
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).mkdirs()
             file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "meme_template.json")
             if (file.exists()) {
-                MyAsyncTask<List<MemeTemplate>>()
-                        .start {
-                            val x = FileInputStream(file)
-                            val bis = InputStreamReader(x, "UTF-8")
-                            val jsonReader = JsonReader(bis)
-                            gson.fromJson(jsonReader, object : TypeToken<List<MemeTemplate>>() {}.type)
+                /*launch(UI) {
+                    val r = withContext(CommonPool) {
+                        val x = FileInputStream(file)
+                        val bis = InputStreamReader(x, "UTF-8")
+                        val jsonReader = JsonReader(bis)
+                        val a: List<MemeTemplate>=gson.fromJson(jsonReader, object : TypeToken<List<MemeTemplate>>(){
 
-                        }.onFinished {
-                            memeTemplates = it.toMutableList()
-                            meme_template_index
-                            if(!load()){
-                                var bitmap = loadBitmap(getDrawableIdByName(String.format("meme_%02d", meme_template_index)), .3f)
-                                memeEditorView.loadBitmab(bitmap)
-                                meme_template_index++
-                            }
-                        }
+                    }.type)
+                        a
+                    }
+                    memeTemplates = r.toMutableList()
+                    meme_template_index
+                    if (!load()) {
+                        var bitmap = loadBitmap(getDrawableIdByName(String.format("meme_%02d", meme_template_index)), .3f)
+                        memeEditorView.loadBitmab(bitmap)
+                        meme_template_index++
+                    }
+                }*/
             }
         }
 
     }
+
     /* Checks if external storage is available for read and write */
     fun isExternalStorageWritable(): Boolean {
         val state = Environment.getExternalStorageState()
         return Environment.MEDIA_MOUNTED == state
     }
+
     fun loadNext() {
         if (meme_template_index <= meme_template_count) {
             val imgname = String.format("meme_%02d", meme_template_index - 1)
@@ -114,7 +124,8 @@ class MemeTemplateMaker : AppCompatActivity() {
             this.toast("Finished")
         }
     }
-    fun load():Boolean {
+
+    fun load(): Boolean {
         if (memeTemplates.size > meme_template_index - 1) {
             memeEditorView.loadMemeTemplate(memeTemplates[meme_template_index - 1])
             meme_template_index++

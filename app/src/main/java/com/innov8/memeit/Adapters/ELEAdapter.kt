@@ -35,7 +35,6 @@ abstract class ELEAdapter<T : RecyclerView.ViewHolder>(val context: Context)
                 field = value
                 notifyDataSetChanged()
             }
-
         }
     var loading = false
         set(value) {
@@ -88,7 +87,7 @@ abstract class ELEAdapter<T : RecyclerView.ViewHolder>(val context: Context)
     }
 
     private fun createLoaderView(parent: ViewGroup): T {
-        val view = inflater.inflate(R.layout.item_list_meme_loading, parent, false)
+        val view = inflater.inflate(R.layout.list_item_meme_loading, parent, false)
         val progress: ProgressBar = view.findViewById(R.id.meme_loading)
         progress.indeterminateDrawable = loadingDrawable
         return object : RecyclerView.ViewHolder(view) {} as T
@@ -102,25 +101,25 @@ abstract class ELEAdapter<T : RecyclerView.ViewHolder>(val context: Context)
     }
 
     private fun createEmptyView(parent: ViewGroup): T {
-        val v = inflater.inflate(R.layout.my_recycler_view, parent, false)
+        val v = inflater.inflate(R.layout.list_item_error, parent, false)
         v.findViewById<ImageView>(R.id.recyc_drawable).setImageResource(emptyDrawableId)
         v.findViewById<TextView>(R.id.recyc_desc).text = emptyDescription
         val actionV = v.findViewById<TextView>(R.id.recyc_action)
         if (emptyActionText != null) {
             actionV.text = emptyActionText
-            actionV.setOnClickListener { v -> onEmptyAction?.invoke() }
+            actionV.setOnClickListener { onEmptyAction?.invoke() }
         } else actionV.visibility = View.GONE
         return object : RecyclerView.ViewHolder(v) {} as T
     }
 
     private fun createErrorView(parent: ViewGroup): T {
-        val v = inflater.inflate(R.layout.my_recycler_view, parent, false)
+        val v = inflater.inflate(R.layout.list_item_error, parent, false)
         v.findViewById<ImageView>(R.id.recyc_drawable).setImageResource(errorDrawableId)
         v.findViewById<TextView>(R.id.recyc_desc).text = errorDescription
         val actionV = v.findViewById<TextView>(R.id.recyc_action)
         if (errorActionText != null) {
             actionV.text = errorActionText
-            actionV.setOnClickListener { v -> onErrorAction?.invoke() }
+            actionV.setOnClickListener { onErrorAction?.invoke() }
         } else actionV.visibility = View.GONE
         return object : RecyclerView.ViewHolder(v) {} as T
     }
@@ -201,10 +200,11 @@ abstract class ELEListAdapter<T, VH : RecyclerView.ViewHolder>(context: Context)
         notifyItemRangeRemoved(0, items.size)
     }
 
-    fun setAll(items: List<T>) {
+    fun setAll(item: List<T>) {
         this.items.clear()
-        this.items.addAll(items)
-        notifyDataSetChanged()
+        this.items.addAll(item)
+        mode = if (items.size > 0) MODE_NORMAL
+        else MODE_EMPTY
     }
 
     fun updateItem(item: T, index: Int) {

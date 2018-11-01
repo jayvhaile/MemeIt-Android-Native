@@ -7,7 +7,7 @@ import android.widget.RadioGroup
 import android.widget.ScrollView
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.MemeEngine.LayoutEditInterface
-import com.innov8.memegenerator.utils.dp
+import com.innov8.memeit.commons.dp
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams

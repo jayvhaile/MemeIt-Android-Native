@@ -5,16 +5,15 @@ import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memegenerator.Adapters.ListAdapter
 import com.innov8.memegenerator.Adapters.MyViewHolder
-import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.CustomClasses.CustomMethods
 import com.innov8.memeit.R
-import com.memeit.backend.dataclasses.Tag
+import com.innov8.memeit.commons.toast
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
+import com.memeit.backend.dataclasses.Tag
 
-class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layout.list_item_tags_new) {
+class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layout.list_item_tags) {
 
 
     override var emptyDrawableId: Int = R.drawable.tag2

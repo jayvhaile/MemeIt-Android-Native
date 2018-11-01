@@ -13,20 +13,20 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.innov8.memegenerator.utils.toast
 import com.innov8.memeit.Activities.TagsActivity
 import com.innov8.memeit.Activities.UserTagActivity
 import com.innov8.memeit.CustomClasses.CustomMethods
 import com.innov8.memeit.Loaders.FollowerLoader
 import com.innov8.memeit.Loaders.FollowingLoader
+import com.innov8.memeit.R
+import com.innov8.memeit.commons.toast
 import com.innov8.memeit.loadImage
 import com.innov8.memeit.prefix
-import com.innov8.memeit.R
 import com.memeit.backend.MemeItClient
-import com.memeit.backend.dataclasses.User
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import kotlinx.android.synthetic.main.profile_page.*
+import com.memeit.backend.dataclasses.User
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
@@ -47,7 +47,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.profile_page, container, false)
+        return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

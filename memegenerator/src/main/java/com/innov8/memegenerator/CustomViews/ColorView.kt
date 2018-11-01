@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import com.innov8.memegenerator.utils.dp
+import com.innov8.memeit.commons.dp
 
 class ColorView : View {
 

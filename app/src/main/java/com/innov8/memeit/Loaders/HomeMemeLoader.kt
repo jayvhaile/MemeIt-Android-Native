@@ -2,9 +2,7 @@ package com.innov8.memeit.Loaders
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.facebook.common.util.UriUtil
 import com.innov8.memeit.commons.models.MemeTemplate
-import com.innov8.memegenerator.utils.getDrawableIdByName
 import com.innov8.memeit.CustomClasses.AdElement
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.trim

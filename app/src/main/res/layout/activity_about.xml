@@ -46,7 +46,7 @@
         app:layout_constraintStart_toStartOf="@+id/imageView4"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/fontTextView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
         app:layout_constraintStart_toEndOf="@+id/back"
         app:layout_constraintTop_toBottomOf="@+id/fontTextView4" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/fontTextView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
         app:layout_constraintStart_toStartOf="@+id/imageView9"
         app:layout_constraintTop_toBottomOf="@+id/imageView9" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/fontTextView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
         app:layout_constraintStart_toStartOf="@+id/cardView3"
         app:layout_constraintTop_toTopOf="@+id/cardView3" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/fontTextView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
         app:layout_constraintStart_toStartOf="@+id/imageView9"
         app:layout_constraintTop_toBottomOf="@+id/fontTextView5" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/fontTextView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
         app:layout_constraintStart_toStartOf="@+id/fontTextView6"
         app:layout_constraintTop_toBottomOf="@+id/fontTextView6" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/fontTextView8"
         android:layout_width="36dp"
         android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
         app:layout_constraintStart_toStartOf="@+id/imageView9"
         app:layout_constraintTop_toBottomOf="@+id/fontTextView9" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/email_biruk"
         android:layout_width="36dp"
         android:layout_height="wrap_content"
@@ -183,7 +183,7 @@
         app:layout_constraintStart_toEndOf="@+id/imageView9"
         app:layout_constraintTop_toBottomOf="@+id/fontTextView9" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/call_biruk"
         android:layout_width="36dp"
         android:layout_height="wrap_content"
@@ -196,7 +196,7 @@
         app:layout_constraintStart_toStartOf="@+id/imageView9"
         app:layout_constraintTop_toBottomOf="@+id/fontTextView9" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/call_jv"
         android:layout_width="36dp"
         android:layout_height="wrap_content"
@@ -211,7 +211,7 @@
         app:layout_constraintStart_toStartOf="@+id/imageView10"
         app:layout_constraintTop_toBottomOf="@+id/fontTextView7" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/email_jv"
         android:layout_width="36dp"
         android:layout_height="wrap_content"
@@ -224,7 +224,7 @@
         app:layout_constraintStart_toEndOf="@+id/imageView10"
         app:layout_constraintTop_toBottomOf="@+id/fontTextView7" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/feedback_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -252,7 +252,7 @@
         android:background="#1d000000"
         app:layout_constraintTop_toBottomOf="@+id/feedback_message" />
 
-    <com.innov8.memeit.CustomClasses.FontTextView
+    <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/donate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
