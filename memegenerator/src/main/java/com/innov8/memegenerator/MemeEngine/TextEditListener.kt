@@ -23,12 +23,16 @@ interface LayoutEditInterface {
     fun onRightMargin(size: Int)
     fun onTopMargin(size: Int)
     fun onBottomMargin(size: Int)
+    fun onVertivalSpacing(size: Int)
+    fun onHorizontalSpacing(size: Int)
     fun onBackgroundColorChanged(color: Int)
 }
-interface StickerEditInterface{
-    fun onAddSticker(memeStickerView:MemeStickerView)
+
+interface StickerEditInterface {
+    fun onAddSticker(memeStickerView: MemeStickerView)
 }
-interface PaintEditInterface{
+
+interface PaintEditInterface {
     fun onBrushSizeChanged(size: Float)
     fun onBrushColorChanged(color: Int)
     fun onShapeChanged(paintMode: PaintHandler.PaintMode)

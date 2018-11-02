@@ -10,6 +10,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 
 fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, duration).show()
@@ -64,6 +66,16 @@ fun Context.loadBitmap(id: Int, reqWidth: Int, reqHeight: Int = reqWidth): Bitma
     opt.inSampleSize = calcSampleSize(opt, reqWidth.dp(this), reqHeight.dp(this))
     opt.inJustDecodeBounds = false
     return BitmapFactory.decodeResource(resources, id, opt)
+}
+
+fun Context.loadBitmapfromStream(stream: InputStream, reqWidth: Int, reqHeight: Int = reqWidth): Bitmap? {
+    val opt = BitmapFactory.Options()
+    val ba = stream.readBytes()
+    opt.inJustDecodeBounds = true
+    BitmapFactory.decodeStream(ByteArrayInputStream(ba), null, opt)
+    opt.inSampleSize = calcSampleSize(opt, reqWidth.dp(this), reqHeight.dp(this))
+    opt.inJustDecodeBounds = false
+    return BitmapFactory.decodeStream(ByteArrayInputStream(ba), null, opt)
 }
 
 fun Context.getDrawableIdByName(name: String): Int {
@@ -121,6 +133,7 @@ fun Activity.makeFullScreen() {
                         or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
 }
+
 fun String?.prefix(): String {
     return if (this.isNullOrEmpty()) "..." else this!![0].toString()
 }

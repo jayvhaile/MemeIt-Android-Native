@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pager_tab"
     android:layout_width="wrap_content"
-    android:layout_height="56dp"
+    android:layout_height="42dp"
     app:tabTextColor="#fff"
     app:tabSelectedTextColor="#f06"
     app:tabIndicatorColor="#f06"
     app:tabMode="scrollable"
     app:tabGravity="center"
+    app:tabTextAppearance="@style/TextAppearance.AppCompat.Small"
     tools:showIn="@layout/text_pager" />

@@ -100,7 +100,7 @@ class MemePosterActivity : AppCompatActivity() {
     private fun handleGifUpload() {
         MediaManager.get()
                 .upload(gif)
-                .option("resource_type", "video")
+
                 .callback(MyUploadCallback())
                 .dispatch(this)
     }

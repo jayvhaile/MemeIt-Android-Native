@@ -9,32 +9,28 @@ import android.os.Parcelable
 abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: List<Bitmap>) {
 
 
-
-
-    class LayoutInfo(var type:Int, var span: Int = 2, var hSpacing: Int = 20,var vSpacing: Int=hSpacing, var orientation: Int = 0) : Parcelable {
+    class LayoutInfo(var type: Int, var span: Int = 2, var orientation: Int = 0) : Parcelable {
 
 
         constructor(parcel: Parcel) : this(
                 parcel.readInt(),
                 parcel.readInt(),
-                parcel.readInt(),
-                parcel.readInt(),
                 parcel.readInt())
 
-        fun create(maxWidth: Int, maxHeight: Int, images:List<Bitmap>):MemeLayout{
-            return when(type){
-                TYPE_SINGLE->SingleImageLayout(maxWidth,maxHeight,images[0])
-                TYPE_LINEAR->LinearImageLayout(hSpacing, orientation,maxWidth,maxHeight,images)
-                TYPE_GRID->GridImageLayout(span, orientation,hSpacing ,vSpacing,maxWidth,maxHeight,images)
-                else->throw IllegalStateException("illegal meme layout type")
+        fun create(maxWidth: Int, maxHeight: Int, images: List<Bitmap>): MemeLayout {
+            return when (type) {
+                TYPE_SINGLE -> SingleImageLayout(maxWidth, maxHeight, images[0])
+                TYPE_LINEAR -> LinearImageLayout(orientation, maxWidth, maxHeight, images)
+                TYPE_GRID -> GridImageLayout(span, orientation, maxWidth, maxHeight, images)
+                else -> throw IllegalStateException("illegal meme layout type")
             }
 
         }
 
         companion object CREATOR : Parcelable.Creator<LayoutInfo> {
-            const val TYPE_SINGLE:Int=0
-            const val TYPE_LINEAR:Int=1
-            const val TYPE_GRID:Int=2
+            const val TYPE_SINGLE: Int = 0
+            const val TYPE_LINEAR: Int = 1
+            const val TYPE_GRID: Int = 2
             override fun createFromParcel(parcel: Parcel): LayoutInfo {
                 return LayoutInfo(parcel)
             }
@@ -47,8 +43,6 @@ abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: Lis
         override fun writeToParcel(parcel: Parcel, flags: Int) {
             parcel.writeInt(type)
             parcel.writeInt(span)
-            parcel.writeInt(hSpacing)
-            parcel.writeInt(vSpacing)
             parcel.writeInt(orientation)
         }
 
@@ -184,13 +178,13 @@ class SingleImageLayout(maxWidth: Int, maxHeight: Int, bitmap: Bitmap) : MemeLay
 
 }
 
-class LinearImageLayout(spc: Int, orien: Int, maxWidth: Int, maxHeight: Int, images: List<Bitmap>) : MemeLayout(maxWidth, maxHeight, images) {
+class LinearImageLayout(orien: Int, maxWidth: Int, maxHeight: Int, images: List<Bitmap>) : MemeLayout(maxWidth, maxHeight, images) {
     companion object {
         const val HORIZONTAL = 0
         const val VERTICAL = 1
     }
 
-    var spacing = spc
+    var spacing = 0
         set(value) {
             field = value
             calcImagesTotalWidth()
@@ -206,8 +200,8 @@ class LinearImageLayout(spc: Int, orien: Int, maxWidth: Int, maxHeight: Int, ima
         }
 
     init {
-        calcImagesMaxHeight()
-        calcImagesMaxWidth()
+        calcImagesAverageWidth()
+        calcImagesAverageHeight()
         calcImagesTotalHeight()
         calcImagesTotalWidth()
         update()
@@ -218,48 +212,52 @@ class LinearImageLayout(spc: Int, orien: Int, maxWidth: Int, maxHeight: Int, ima
         get() = (images.size - 1) * spacing
     private var totalIW = 0
     private var totalIH = 0
-    private var maxIW = 0
-    private var maxIH = 0
+    private var averageIW = 0
+    private var averageIH = 0
     private fun calcImagesTotalWidth() {
         totalIW = images.asSequence()
-                .map { it.width }
-                .reduce { a, b -> a + b }
+                .map {
+                    averageIH * it.width / it.height
+                }.reduce { a, b -> a + b }
     }
 
     private fun calcImagesTotalHeight() {
         totalIH = images.asSequence()
-                .map { it.height }
+                .map {
+                    averageIW * it.height / it.width
+                }
                 .reduce { a, b -> a + b }
     }
 
-    private fun calcImagesMaxWidth() {
-        maxIW = images.maxBy { it.width }?.width ?: 0
+
+    private fun calcImagesAverageWidth() {
+        averageIW = images.map { it.width }.average().toInt()
     }
 
-    private fun calcImagesMaxHeight() {
-        maxIH = images.maxBy { it.height }?.height ?: 0
+    private fun calcImagesAverageHeight() {
+        averageIH = images.map { it.height }.average().toInt()
     }
 
     override fun innerWidth(): Int {
         return when (orientation) {
             HORIZONTAL -> totalIW
-            VERTICAL -> maxIW
+            VERTICAL -> averageIW
             else -> 0
         }
     }
 
     override fun innerHeight(): Int {
         return when (orientation) {
-            HORIZONTAL -> maxIH
+            HORIZONTAL -> averageIH
             VERTICAL -> totalIH
             else -> 0
         }
     }
 
     override val horizontalMargin: Int
-        get() = super.horizontalMargin + if (orientation == HORIZONTAL) spacing else 0
+        get() = super.horizontalMargin + if (orientation == HORIZONTAL) totalSpacing else 0
     override val verticalMargin: Int
-        get() = super.verticalMargin + if (orientation == VERTICAL) spacing else 0
+        get() = super.verticalMargin + if (orientation == VERTICAL) totalSpacing else 0
 
 
     override fun getDrawingRectAt(pos: Int): RectF {
@@ -269,13 +267,14 @@ class LinearImageLayout(spc: Int, orien: Int, maxWidth: Int, maxHeight: Int, ima
                 val t = drawingRect.top + topMargin
                 val b = drawingRect.bottom - bottomMargin
 
-                val availableTotalWidth = drawingRect.width() - horizontalMargin
-                val scaleX = availableTotalWidth / (totalIW)
+
+                val hh = b - t
 
                 for (i in 0 until pos) {
-                    l += (images[i].width * scaleX) + spacing
+                    val iw = hh * images[i].width / images[i].height
+                    l += iw + spacing
                 }
-                val rectF = RectF(l, t, l + (images[pos].width * scaleX), b)
+                val rectF = RectF(l, t, l + (hh * images[pos].width / images[pos].height), b)
                 val w = images[pos].width.toFloat()
                 val h = images[pos].height.toFloat()
                 return (w to h).fitCenter(rectF)
@@ -285,13 +284,12 @@ class LinearImageLayout(spc: Int, orien: Int, maxWidth: Int, maxHeight: Int, ima
                 var t = drawingRect.top + topMargin
                 val r = drawingRect.right - rightMargin
 
-                val availableTotalHeight = drawingRect.height() - verticalMargin
-                val scaleY = availableTotalHeight / totalIH
-
+                val ww = r - l
                 for (i in 0 until pos) {
-                    t += (images[i].height * scaleY) + spacing
+                    val ih = ww * images[i].height / images[i].width
+                    t += ih + spacing
                 }
-                val rectF = RectF(l, t, r, t + (images[pos].height * scaleY))
+                val rectF = RectF(l, t, r, t + (ww * images[pos].height / images[pos].width))
                 val w = images[pos].width.toFloat()
                 val h = images[pos].height.toFloat()
                 return (w to h).fitCenter(rectF)
@@ -301,20 +299,20 @@ class LinearImageLayout(spc: Int, orien: Int, maxWidth: Int, maxHeight: Int, ima
     }
 }
 
-class GridImageLayout(var span: Int, orientation: Int, hSpace: Int, vSpace: Int, maxWidth: Int, maxHeight: Int, images: List<Bitmap>) : MemeLayout(maxWidth, maxHeight, images) {
+class GridImageLayout(var span: Int, orientation: Int, maxWidth: Int, maxHeight: Int, images: List<Bitmap>) : MemeLayout(maxWidth, maxHeight, images) {
     companion object {
         const val HORIZONTAL = 0
         const val VERTICAL = 1
     }
 
-    var hSpacing = hSpace
+    var hSpacing = 0
         set(value) {
             field = value
             calcImagesTotalWidth()
             update()
         }
 
-    var vSpacing = vSpace
+    var vSpacing = 0
         set(value) {
             field = value
             calcImagesTotalHeight()
@@ -329,9 +327,22 @@ class GridImageLayout(var span: Int, orientation: Int, hSpace: Int, vSpace: Int,
         }
 
     init {
+        calcImagesAverageWidth()
+        calcImagesAverageHeight()
         calcImagesTotalHeight()
         calcImagesTotalWidth()
         update()
+    }
+
+
+    private var averageIW = 0
+    private var averageIH = 0
+    private fun calcImagesAverageWidth() {
+        averageIW = images.map { it.width }.average().toInt()
+    }
+
+    private fun calcImagesAverageHeight() {
+        averageIH = images.map { it.height }.average().toInt()
     }
 
 
@@ -358,49 +369,17 @@ class GridImageLayout(var span: Int, orientation: Int, hSpace: Int, vSpace: Int,
             else -> 0
         }
 
-    fun getImagesInRow(row: Int): List<Bitmap> {
-
-        return when (orientation) {
-            HORIZONTAL -> {
-                images.subList(row * columnCount, ((row + 1) * columnCount) max count)
-            }
-            VERTICAL -> {
-                val l = mutableListOf<Bitmap>()
-                for (i in row until count step span) {
-                    l.add(images[i])
-                }
-                return l
-            }
-            else -> throw IllegalStateException("Orientation should be 0 or 1")
-        }
-    }
-
-    fun getImagesInColumn(column: Int): List<Bitmap> {
-        return when (orientation) {
-            HORIZONTAL -> {
-                val l = mutableListOf<Bitmap>()
-                for (i in column until count step span) {
-                    l.add(images[i])
-                }
-                return l
-            }
-            VERTICAL -> {
-                images.subList(column * rowCount, ((column + 1) * rowCount) max count)
-            }
-            else -> throwError()
-        }
-    }
 
     fun throwError(): Nothing = throw IllegalStateException("Orientation should be 0 or 1")
     infix fun Int.max(max: Int) = if (this < max) this else max
 
 
     fun calcImagesTotalWidth() {
-        totalIW = (0 until columnCount).map { getColumnWidth(it) }.reduce { a, b -> a + b }
+        totalIW = averageIW * columnCount
     }
 
     private fun calcImagesTotalHeight() {
-        totalIH = (0 until rowCount).map { getRowHeight(it) }.reduce { a, b -> a + b }
+        totalIH = averageIH * rowCount
     }
 
     override fun innerWidth(): Int = totalIW
@@ -420,30 +399,21 @@ class GridImageLayout(var span: Int, orientation: Int, hSpace: Int, vSpace: Int,
                 else -> throwError()
             }
 
-    fun getRowHeight(row: Int) = getImagesInRow(row).maxBy { it.height }?.height ?: 0
-    fun getColumnWidth(column: Int) = getImagesInColumn(column).maxBy { it.width }?.width ?: 0
-
 
     override fun getDrawingRectAt(pos: Int): RectF {
-
         var l = drawingRect.left + leftMargin
         var t = drawingRect.top + topMargin
+        val (row, column) = getRowAndColumnFor(pos)
 
         val availableTotalWidth = drawingRect.width() - horizontalMargin
         val availableTotalHeight = drawingRect.height() - verticalMargin
         val scaleX = availableTotalWidth / totalIW
         val scaleY = availableTotalHeight / totalIH
 
-        val (row, column) = getRowAndColumnFor(pos)
+        l += (averageIW * scaleX + hSpacing) * column
+        t += (averageIH * scaleY + vSpacing) * row
 
-        for (i in 0 until column) {
-            l += (getColumnWidth(i) * scaleX) + hSpacing
-        }
-        for (i in 0 until row) {
-            t += (getRowHeight(i) * scaleY) + vSpacing
-        }
-
-        val rectF = RectF(l, t, l + getColumnWidth(column) * scaleX, t + (getRowHeight(row) * scaleY))
+        val rectF = RectF(l, t, l + averageIW * scaleX, t + averageIH * scaleY)
         val w = images[pos].width.toFloat()
         val h = images[pos].height.toFloat()
         return (w to h).fitCenter(rectF)

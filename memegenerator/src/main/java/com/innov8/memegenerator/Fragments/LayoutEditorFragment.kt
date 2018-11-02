@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.innov8.memegenerator.R
-import com.innov8.memegenerator.utils.ViewAdapter
 import com.innov8.memegenerator.CustomViews.ColorChooser
 import com.innov8.memegenerator.CustomViews.MarginControlView
+import com.innov8.memegenerator.CustomViews.SpacingControlView
 import com.innov8.memegenerator.MemeEngine.LayoutEditInterface
+import com.innov8.memegenerator.R
+import com.innov8.memegenerator.utils.ViewAdapter
 import kotlinx.android.synthetic.main.bottom_tab.*
 import kotlinx.android.synthetic.main.layout_pager.*
 
@@ -29,6 +30,11 @@ class LayoutEditorFragment : Fragment() {
         val mc = MarginControlView(context!!)
         mc.layoutEditInterface = layoutEditListener
         views.add(mc)
+
+        val sc = SpacingControlView(context!!)
+        sc.layoutEditInterface = layoutEditListener
+        views.add(sc)
+
         val cc = ColorChooser(context!!)
         cc.onColorChoosed = {
             layoutEditListener?.onBackgroundColorChanged(it)
@@ -41,7 +47,7 @@ class LayoutEditorFragment : Fragment() {
 
 
     inner class Adapter(context: Context) : ViewAdapter(context) {
-        private var titles = listOf("Margin", "Background")
+        private var titles = listOf("Margin", "Spacing", "Background")
 
 
         init {

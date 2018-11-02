@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:gravity="right"
     android:orientation="vertical"
-    tools:context=".MultiChooserDialogFragment"
+    tools:context=".Fragments.MultiChooserDialogFragment"
     tools:layout_editor_absoluteY="25dp">
 
     <androidx.cardview.widget.CardView
@@ -23,9 +23,12 @@
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/option_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -34,69 +37,15 @@
             android:paddingBottom="16dp">
 
             <com.innov8.memeit.commons.views.FontTextView
-                android:id="@+id/fontTextView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:text="Horizontal Spacing"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.warkiz.widget.IndicatorSeekBar
-                android:id="@+id/mcd_spacing_horizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                app:isb_max="256"
-                app:isb_ticks_count="43"
-                app:isb_show_tick_marks_type="divider"
-                app:layout_constraintBottom_toBottomOf="@+id/fontTextView3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/fontTextView3"
-                app:layout_constraintTop_toTopOf="@+id/fontTextView3" />
-
-            <com.innov8.memeit.commons.views.FontTextView
-                android:id="@+id/fontTextView35"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="16dp"
-                android:text="Vertical Spacing"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fontTextView3"
-                app:layout_gravity="center_vertical" />
-
-            <com.warkiz.widget.IndicatorSeekBar
-                android:id="@+id/mcd_spacing_vertical"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="26dp"
-                android:layout_marginLeft="26dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                app:isb_max="256"
-                app:isb_ticks_count="43"
-                app:isb_show_tick_marks_type="divider"
-                app:layout_constraintBottom_toBottomOf="@+id/fontTextView35"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/fontTextView35"
-                app:layout_constraintTop_toTopOf="@+id/fontTextView35" />
-
-            <com.innov8.memeit.commons.views.FontTextView
                 android:id="@+id/fontTextView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Orientation"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fontTextView35" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <RadioGroup
                 android:id="@+id/mcd_orientation_group"
@@ -110,7 +59,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="@+id/fontTextView10"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/fontTextView3"
+                app:layout_constraintStart_toEndOf="@+id/fontTextView10"
                 app:layout_constraintTop_toTopOf="@+id/fontTextView10">
 
                 <RadioButton
@@ -143,46 +92,15 @@
                 android:id="@+id/mcd_grid_span"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 app:isb_min="2"
-                app:isb_ticks_count="1"
                 app:isb_show_tick_marks_type="divider"
+                app:isb_ticks_count="1"
                 app:layout_constraintBottom_toBottomOf="@+id/fontTextView11"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/fontTextView3"
+                app:layout_constraintStart_toStartOf="@+id/mcd_orientation_group"
                 app:layout_constraintTop_toTopOf="@+id/fontTextView11" />
-
-
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/group_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="fontTextView3,mcd_spacing_horizontal" />
-
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/group_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:constraint_referenced_ids="fontTextView35,mcd_spacing_vertical" />
-
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/group_orientation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:constraint_referenced_ids="mcd_orientation_group,fontTextView10" />
-
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/group_span"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:constraint_referenced_ids="mcd_grid_span,fontTextView11"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -52,8 +52,8 @@ open class MemeItemView : View {
     private var topOffeset = 0
     val resizeRectSize = 8.dp(context)
     private fun init() {
-        isFocusable = true
-        isFocusableInTouchMode = true
+        isFocusable = isInMemeEditor
+        isFocusableInTouchMode = isFocusable
         upaint = Paint(Paint.ANTI_ALIAS_FLAG)
         upaint.style = Paint.Style.STROKE
         upaint.strokeWidth = 1f.dp(context)

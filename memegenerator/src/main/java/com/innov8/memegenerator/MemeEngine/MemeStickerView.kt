@@ -45,6 +45,7 @@ class MemeStickerView : MemeItemView {
         val nt = MemeStickerView(context, bitmap!!, requiredWidth, requiredHeight)
         nt.x = x + 10.dp(context)
         nt.y = y + 10.dp(context)
+        nt.rotation=this.rotation
         return nt
     }
 }

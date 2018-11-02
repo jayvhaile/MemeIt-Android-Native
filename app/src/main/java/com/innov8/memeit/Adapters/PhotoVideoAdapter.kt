@@ -16,7 +16,6 @@ import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.Adapters.GifAdapter.Video
 import com.innov8.memeit.CustomViews.CountView
 import com.innov8.memeit.R
-import com.memeit.backend.MemeItClient.context
 
 
 class PhotosAdapter(context: Context) : CursorAdapter<String>(context, R.layout.list_item_thumbnail_selectable) {
@@ -46,7 +45,10 @@ class PhotosAdapter(context: Context) : CursorAdapter<String>(context, R.layout.
 
         init {
             thumbnailV.setOnClickListener {
-                MemeEditorActivity.startWithImage(context, getItem(item_position))
+                if (multiSelectMode) {
+
+                } else
+                    MemeEditorActivity.startWithImage(context, getItem(item_position))
             }
             cropView.setOnClickListener {
                 onCropListener?.invoke(getItem(item_position))
@@ -110,7 +112,7 @@ class PhotosAdapterList(context: Context) : ListAdapter<String>(context, R.layou
 
         init {
             thumbnailV.setOnClickListener {
-                MemeEditorActivity.startWithImage(context, items[item_position])
+                //MemeEditorActivity.startWithImage(context, items[item_position])
             }
             cropView.setOnClickListener {
                 onCropListener?.invoke(items[item_position])

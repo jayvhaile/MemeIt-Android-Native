@@ -3,7 +3,7 @@ package com.innov8.memegenerator
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -14,12 +14,13 @@ import androidx.transition.TransitionManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memegenerator.Fragments.*
 import com.innov8.memegenerator.MemeEngine.*
+import com.innov8.memegenerator.utils.origin
+import com.innov8.memeit.commons.dp
+import com.innov8.memeit.commons.loadBitmapfromStream
+import com.innov8.memeit.commons.makeFullScreen
 import com.innov8.memeit.commons.models.MemeTemplate
 import com.innov8.memeit.commons.models.MyTypeFace
 import com.innov8.memeit.commons.models.TextStyleProperty
-import com.innov8.memegenerator.utils.*
-import com.innov8.memeit.commons.dp
-import com.innov8.memeit.commons.makeFullScreen
 import com.memeit.backend.dataclasses.Meme
 import com.waynejo.androidndkgif.GifDecoder
 import kotlinx.android.synthetic.main.meme_editor.*
@@ -28,7 +29,6 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import java.io.File
-import java.lang.Exception
 import java.util.*
 
 class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
@@ -59,7 +59,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                 PaintOptionsFragment().make("paint", 132) { paintEditInterface = interactionHandler },
                 "text" to CloseableFragment(TextEditorFragment()
                         .apply { textEditListener = interactionHandler }, 152.dp(this),
-                        TextPresetFragment(), 80.dp(this))
+                        TextPresetFragment().apply {
+                            textEditListener = interactionHandler
+                        }, 80.dp(this))
 
         )
         initListeners()
@@ -150,8 +152,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         return if (path != null) {
             launch(UI) {
                 withContext(CommonPool) {
-                    val stream = contentResolver.openInputStream(Uri.parse(path))
-                    BitmapFactory.decodeStream(stream)
+                    contentResolver.openInputStream(Uri.parse(path))?.let {
+                        this@MemeEditorActivity.loadBitmapfromStream(it, 400, 800)
+                    }
                 }?.let {
                     memeEditorView.loadBitmab(it)
                 }
@@ -162,24 +165,44 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
     private fun handleImagesIntent(): Boolean {
         val paths = intent.getStringArrayExtra(MULTI_PATH) ?: null
-        val linfo: MemeLayout.LayoutInfo? = intent.getParcelableExtra<MemeLayout.LayoutInfo>(MULTI_LAYOUT)
-                ?: null
-        return if (paths != null && linfo != null) {
+        val lInfo: MemeLayout.LayoutInfo? = intent.getParcelableExtra(MULTI_LAYOUT)
+
+
+        return if (paths != null && lInfo != null) {
+            val s = 400
+            val sh = 800
+            val ps = paths.size
+
+            val reqW = when (lInfo.type) {
+                MemeLayout.LayoutInfo.TYPE_LINEAR -> if (lInfo.orientation == 0) s / ps else s / 2
+                MemeLayout.LayoutInfo.TYPE_GRID -> if (lInfo.orientation == 0) s / lInfo.span else s / (ps / lInfo.span)
+                else -> s
+            }
+            val reqH = when (lInfo.type) {
+                MemeLayout.LayoutInfo.TYPE_LINEAR -> if (lInfo.orientation == 0) sh / 2 else sh / ps
+                MemeLayout.LayoutInfo.TYPE_GRID -> if (lInfo.orientation == 0) sh / (ps / lInfo.span) else sh / lInfo.span
+                else -> sh
+            }
             launch(UI) {
                 withContext(CommonPool) {
                     try {
-                        paths.map {
-                            BitmapFactory.decodeStream(contentResolver.openInputStream(Uri.parse(it)))
+                        paths.map { url ->
+                            contentResolver.openInputStream(Uri.parse(url))?.let {
+                                this@MemeEditorActivity.loadBitmapfromStream(it, reqW, reqH)
+                            }
                         }
                     } catch (e: Exception) {
                         null
                     }
-                }?.let {
-                    memeEditorView.setLayout(linfo.create(
+                }?.let { bitmaps ->
+                    val x = mutableListOf<Bitmap>()
+                    bitmaps.filter { it != null }.forEach { x.add(it!!) }
+                    memeEditorView.setLayout(lInfo.create(
                             memeEditorView.width,
                             memeEditorView.height,
-                            it
+                            x
                     ))
+
                 }
             }
             true
@@ -331,6 +354,8 @@ class EditorHandler(val memeEditorView: MemeEditorView) :
         LayoutEditInterface,
         StickerEditInterface,
         PaintEditInterface {
+
+
     override fun onAddText(memeTextView: MemeTextView) {
         memeEditorView.addMemeItemView(memeTextView)
     }
@@ -395,6 +420,26 @@ class EditorHandler(val memeEditorView: MemeEditorView) :
 
     override fun onBottomMargin(size: Int) {
         memeEditorView.memeLayout?.bottomMargin = size
+    }
+
+    override fun onVertivalSpacing(size: Int) {
+        val ml = memeEditorView.memeLayout
+        when (ml) {
+            is LinearImageLayout -> {
+                if (ml.orientation == 1) ml.spacing = size
+            }
+            is GridImageLayout -> ml.vSpacing = size
+        }
+    }
+
+    override fun onHorizontalSpacing(size: Int) {
+        val ml = memeEditorView.memeLayout
+        when (ml) {
+            is LinearImageLayout -> {
+                if (ml.orientation == 0) ml.spacing = size
+            }
+            is GridImageLayout -> ml.hSpacing = size
+        }
     }
 
     override fun onBackgroundColorChanged(color: Int) {

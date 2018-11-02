@@ -5,12 +5,11 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RadioGroup
 import android.widget.ScrollView
-import com.innov8.memegenerator.R
 import com.innov8.memegenerator.MemeEngine.LayoutEditInterface
+import com.innov8.memegenerator.R
+import com.innov8.memegenerator.utils.Listener
 import com.innov8.memeit.commons.dp
 import com.warkiz.widget.IndicatorSeekBar
-import com.warkiz.widget.OnSeekChangeListener
-import com.warkiz.widget.SeekParams
 
 class MarginControlView : ScrollView {
     constructor(context: Context) : super(context) {
@@ -65,22 +64,7 @@ class MarginControlView : ScrollView {
         val margin_bottom_seek = v.findViewById<IndicatorSeekBar>(R.id.margin_bottom_seek)
         seekbars = listOf(margin_left_seek, margin_right_seek, margin_top_seek, margin_bottom_seek)
 
-        class Listener(val onSeek: ((SeekParams) -> Unit)? = null,
-                       val onStart: ((IndicatorSeekBar) -> Unit)? = null,
-                       val onStop: ((IndicatorSeekBar) -> Unit)? = null) : OnSeekChangeListener {
-            override fun onSeeking(seekParams: SeekParams) {
-                onSeek?.invoke(seekParams)
-            }
 
-            override fun onStartTrackingTouch(seekBar: IndicatorSeekBar) {
-                onStart?.invoke(seekBar)
-            }
-
-            override fun onStopTrackingTouch(seekBar: IndicatorSeekBar) {
-                onStop?.invoke(seekBar)
-            }
-
-        }
         margin_left_seek.onSeekChangeListener = Listener(onSeek = {
             if (it.fromUser) {
                 when (mode) {

@@ -2,19 +2,23 @@ package com.innov8.memegenerator.MemeEngine
 
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.innov8.memegenerator.CustomViews.CheckerBoardDrawable
-import com.innov8.memeit.commons.models.MemeTemplate
-import com.innov8.memeit.commons.models.TextProperty
-import com.innov8.memegenerator.utils.*
+import com.innov8.memegenerator.utils.capture
+import com.innov8.memegenerator.utils.toRect
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.getDrawableIdByName
 import com.innov8.memeit.commons.loadBitmap
+import com.innov8.memeit.commons.models.MemeTemplate
+import com.innov8.memeit.commons.models.TextProperty
 
 /**
  * Created by Haile on 5/19/2018.
@@ -99,14 +103,13 @@ class MemeEditorView : ViewGroup {
         var curBottom: Int
         var curLeft: Int
         var curTop: Int
-        var maxHeight: Int
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             child.measure(View.MeasureSpec.makeMeasureSpec(childWidth, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.AT_MOST))
-            curLeft = if (child.left < eleft) eleft else child.left
-            curTop = if (child.left < etop) etop else child.top
-            curRight = if (curLeft + child.measuredWidth > eright) eright else curLeft + child.measuredWidth
-            curBottom = if (curTop + child.measuredHeight > ebottom) ebottom else curTop + child.measuredHeight
+            curLeft = child.left
+            curTop = child.top
+            curRight = curLeft + child.measuredWidth
+            curBottom = curTop + child.measuredHeight
             child.layout(curLeft, curTop, curRight, curBottom)
         }
     }
