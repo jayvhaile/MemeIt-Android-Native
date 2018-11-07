@@ -48,6 +48,7 @@ class CommentsActivity : AppCompatActivity() {
         comments_list.adapter = commentsAdapter
 
         comment_meme_image.memeClickedListener = {}
+        comment_meme_image.resizeToFit = false
         comment_meme_image.meme = meme
 
         comment_pp.loadImage(myUser.profilePic)

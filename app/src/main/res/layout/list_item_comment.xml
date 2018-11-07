@@ -91,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_marginTop="8dp"
-        android:drawableLeft="@drawable/ic_share_black_24dp"
+        android:drawableLeft="@drawable/ic_share_black_16dp"
         android:drawablePadding="8dp"
         android:drawableTint="#99000000"
         android:textSize="12sp"

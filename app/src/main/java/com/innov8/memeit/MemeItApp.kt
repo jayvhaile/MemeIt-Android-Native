@@ -40,21 +40,37 @@ class MemeItApp : MultiDexApplication() {
                     .build())
         }
         super.onCreate()
+
         instance = this
-        MemeItClient.init(applicationContext, if (USE_LOCAL_SERVER) LOCAL_SERVER_URL else SERVER_URL)
-        FirebaseApp.initializeApp(this)
-        val config = mapOf(
-                "cloud_name" to "innov8",
-                "api_key" to "591249199742556",
-                "api_secret" to "yT2mxv0vQrEWjzsPrmyD6xu5a-Y"
-        )
-        MediaManager.init(this, config)
-        Fresco.initialize(this, ImagePipelineConfig.newBuilder(this)
-                .setResizeAndRotateEnabledForNetwork(true)
-                .setDownsampleEnabled(true)
-                .build())
+        measure("init memeit") {
+
+
+            MemeItClient.init(applicationContext, if (USE_LOCAL_SERVER) LOCAL_SERVER_URL else SERVER_URL)
+        }
+        measure("init firebase") {
+
+            FirebaseApp.initializeApp(this)
+        }
+        measure("init cloudinary") {
+
+            val config = mapOf(
+                    "cloud_name" to "innov8",
+                    "api_key" to "591249199742556",
+                    "api_secret" to "yT2mxv0vQrEWjzsPrmyD6xu5a-Y"
+            )
+            MediaManager.init(this, config)
+        }
+        measure("init fresco") {
+
+            Fresco.initialize(this, ImagePipelineConfig.newBuilder(this)
+                    .setResizeAndRotateEnabledForNetwork(true)
+                    .setDownsampleEnabled(true)
+                    .build())
+        }
+        measure("init pref") {
+
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-        /*MUser.save(PreferenceManager.getDefaultSharedPreferences(this),
+            /*MUser.save(PreferenceManager.getDefaultSharedPreferences(this),
                 "123",
                 SignInMethod.USERNAME,
                 "1234",
@@ -62,5 +78,6 @@ class MemeItApp : MultiDexApplication() {
                 "Jv",
                 "aaa",
                 "aaa")*/
+        }
     }
 }

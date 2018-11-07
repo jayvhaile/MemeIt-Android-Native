@@ -1,8 +1,11 @@
 package com.innov8.memeit.CustomViews
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +17,19 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.app.ShareCompat
 import androidx.transition.TransitionManager
 import com.afollestad.materialdialogs.MaterialDialog
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
+import com.facebook.imagepipeline.image.CloseableBitmap
+import com.facebook.imagepipeline.request.ImageRequest
+import com.facebook.imagepipeline.request.ImageRequestBuilder
+import com.google.firebase.dynamiclinks.DynamicLink
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.innov8.memeit.*
 import com.innov8.memeit.Activities.CommentsActivity
+import com.innov8.memeit.Activities.MemeUpdateActivity
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.Activities.ReactorListActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeListAdapter
@@ -30,14 +41,27 @@ import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.memeit.backend.dataclasses.Meme
 import com.memeit.backend.dataclasses.Reaction
+import com.memeit.backend.dataclasses.Report
 import com.varunest.sparkbutton.SparkButton
+import kotlinx.android.synthetic.main.list_item_meme2.view.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 
 class MemeView : FrameLayout {
-    private lateinit var constraintSetReaction: ConstraintSet
+    private val constraintSetReaction by lazy {
+        ConstraintSet().apply {
+            clone(context, R.layout.list_item_meme)
+
+        }
+    }
     private lateinit var constraintSetDefault: ConstraintSet
 
-    constructor(context: Context, constraintSetR: ConstraintSet? = null, constraintSetD: ConstraintSet? = null) : super(context) {
-        initC(constraintSetR, constraintSetD)
+    var resizeToFit = true
+
+    constructor(context: Context) : super(context) {
+        initC()
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
@@ -48,16 +72,15 @@ class MemeView : FrameLayout {
         initC()
     }
 
-    private fun initC(constraintSetR: ConstraintSet? = null, constraintSetD: ConstraintSet? = null) {
-        constraintSetReaction = constraintSetR ?: ConstraintSet().apply {
-            clone(context, R.layout.list_item_meme)
-        }
-        constraintSetDefault = constraintSetD ?: ConstraintSet().apply {
-            clone(context, R.layout.list_item_meme2)
+    private fun initC() {
+        com.innov8.memeit.measure("constraint") {
+            constraintSetDefault = ConstraintSet().apply {
+                clone(itemView)
+            }
         }
     }
 
-    val itemView: ConstraintLayout = LayoutInflater.from(context).inflate(R.layout.list_item_meme2, null, false) as ConstraintLayout
+    val itemView: ConstraintLayout = LayoutInflater.from(context).inflate(R.layout.list_item_meme2, this, false) as ConstraintLayout
 
     private val posterPicV: ProfileDraweeView = itemView.findViewById(R.id.notif_icon)
     private val memeImageV: SimpleDraweeView = itemView.findViewById(R.id.meme_image)
@@ -81,7 +104,7 @@ class MemeView : FrameLayout {
     var meme: Meme = Meme()
         set(value) {
             field = value
-            onMemeUpdated(field)
+            onMemeUpdated()
         }
 
     var memeClickedListener: ((String) -> Unit)? = null
@@ -89,64 +112,69 @@ class MemeView : FrameLayout {
 
 
     init {
+        com.innov8.memeit.measure("init meme") {
 
-        memeImageV.setOnClickListener { memeClickedListener?.invoke(meme.id!!) }
-        commentBtnV.setOnClickListener {
-            val meme = meme
-            val intent = Intent(context, CommentsActivity::class.java)
-            intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme)
-            context.startActivity(intent)
-        }
-        posterPicV.setOnClickListener {
-            val i = Intent(context, ProfileActivity::class.java)
-            i.putExtra("user", meme.poster?.toUser())
-            context.startActivity(i)
-        }
-        reactionCountV.setOnClickListener {
-            val i = Intent(context, ReactorListActivity::class.java)
-            i.putExtra("mid", meme.id)
-            context.startActivity(i)
-        }
 
-        val reactListener = OnClickListener { view ->
-            val (reactRes, reactionType) = when (view.id) {
-                R.id.react_funny -> MemeListAdapter.activeRID[0] to Reaction.ReactionType.FUNNY
-                R.id.react_veryfunny -> MemeListAdapter.activeRID[1] to Reaction.ReactionType.VERY_FUNNY
-                R.id.react_stupid -> MemeListAdapter.activeRID[2] to Reaction.ReactionType.STUPID
-                R.id.react_angry -> MemeListAdapter.activeRID[3] to Reaction.ReactionType.ANGERING
-                else -> throw IllegalStateException()
+            memeImageV.setOnClickListener { memeClickedListener?.invoke(meme.id!!) }
+            commentBtnV.setOnClickListener {
+                val meme = meme
+                val intent = Intent(context, CommentsActivity::class.java)
+                intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme)
+                context.startActivity(intent)
             }
-            react(reactionType, reactRes)
-            toggleReactVisibility()
-        }
-        itemView.findViewById<View>(R.id.react_funny).setOnClickListener(reactListener)
-        itemView.findViewById<View>(R.id.react_veryfunny).setOnClickListener(reactListener)
-        itemView.findViewById<View>(R.id.react_stupid).setOnClickListener(reactListener)
-        itemView.findViewById<View>(R.id.react_angry).setOnClickListener(reactListener)
-        reactButton.setOnClickListener {
-            toggleReactVisibility()
+            posterPicV.setOnClickListener {
+                val i = Intent(context, ProfileActivity::class.java)
+                i.putExtra("user", meme.poster?.toUser())
+                context.startActivity(i)
+            }
+            reactionCountV.setOnClickListener {
+                val i = Intent(context, ReactorListActivity::class.java)
+                i.putExtra("mid", meme.id)
+                context.startActivity(i)
+            }
 
+            val reactListener = OnClickListener { view ->
+                val (reactRes, reactionType) = when (view.id) {
+                    R.id.react_funny -> MemeListAdapter.activeRID[0] to Reaction.ReactionType.FUNNY
+                    R.id.react_veryfunny -> MemeListAdapter.activeRID[1] to Reaction.ReactionType.VERY_FUNNY
+                    R.id.react_stupid -> MemeListAdapter.activeRID[2] to Reaction.ReactionType.STUPID
+                    R.id.react_angry -> MemeListAdapter.activeRID[3] to Reaction.ReactionType.ANGERING
+                    else -> throw IllegalStateException()
+                }
+                react(reactionType, reactRes)
+                toggleReactVisibility()
+            }
+            itemView.findViewById<View>(R.id.react_funny).setOnClickListener(reactListener)
+            itemView.findViewById<View>(R.id.react_veryfunny).setOnClickListener(reactListener)
+            itemView.findViewById<View>(R.id.react_stupid).setOnClickListener(reactListener)
+            itemView.findViewById<View>(R.id.react_angry).setOnClickListener(reactListener)
+            reactButton.setOnClickListener {
+                toggleReactVisibility()
+
+            }
+            favButton.isChecked = false
+            favButton.setOnClickListener { _ ->
+                val m = meme
+                if (m.isMyFavourite)
+                    MemeItMemes.removeMemeFromFavourite(m.id!!).call({
+                        m.isMyFavourite = false
+                        if (m == meme) favButton.isChecked = false
+                    }, onError())
+                else
+                    MemeItMemes.addMemeToFavourite(m.id!!).call({
+                        m.isMyFavourite = true
+                        favButton.playAnimation()
+                        if (m == meme) favButton.isChecked = true
+                    }, onError())
+            }
+            memeMenu.setOnClickListener { showMemeMenu() }
+            memeTags.setOnClickListener { showFollowDialog() }
+            this.addView(itemView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            this.layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            this.setBackgroundColor(Color.RED)
+
+            meme_share.setOnClickListener { onShare() }
         }
-        favButton.isChecked = false
-        favButton.setOnClickListener { _ ->
-            val m = meme
-            if (m.isMyFavourite)
-                MemeItMemes.removeMemeFromFavourite(m.id!!).call({
-                    m.isMyFavourite = false
-                    if (m == meme) favButton.isChecked = false
-                }, onError())
-            else
-                MemeItMemes.addMemeToFavourite(m.id!!).call({
-                    m.isMyFavourite = true
-                    favButton.playAnimation()
-                    if (m == meme) favButton.isChecked = true
-                }, onError())
-        }
-        memeMenu.setOnClickListener { showMemeMenu() }
-        memeTags.setOnClickListener { showFollowDialog() }
-        this.addView(itemView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        this.layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        this.setBackgroundColor(Color.RED)
     }
 
     private fun toggleReactVisibility() {
@@ -170,8 +198,41 @@ class MemeView : FrameLayout {
     }
 
     private fun showReaction() {
+        val h = (screenWidth / meme.imageRatio).toInt().trim(200.dp, screenHeight - 200.dp)
+        constraintSetReaction.constrainWidth(R.id.meme_image, screenWidth)
+        constraintSetReaction.constrainHeight(R.id.meme_image, h)
         TransitionManager.beginDelayedTransition(itemView)
         constraintSetReaction.applyTo(itemView)
+    }
+
+    private fun onShare() {
+        val ap = DynamicLink.AndroidParameters.Builder("com.innov8.memeit").build()
+        val ll = FirebaseDynamicLinks.getInstance()
+                .createDynamicLink()
+                .setDomainUriPrefix("memeit.page.link")
+                .setLink(Uri.parse("${MemeItApp.SERVER_URL}meme/${meme.id}"))
+                .setAndroidParameters(ap)
+                .buildDynamicLink().uri
+        val req = ImageRequestBuilder.newBuilderWithSource(Uri.parse(meme.generateUrl()))
+                .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE)
+                .build()
+        launch(UI) {
+            val res = withContext(CommonPool) { Fresco.getImagePipeline().fetchDecodedImage(req, context).result }
+            if (res != null && res.get() is CloseableBitmap) {
+                val bitmap = (res.get() as CloseableBitmap).underlyingBitmap
+                val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap!!, "memeit", "memeit")
+                val url = Uri.parse(path)
+                ShareCompat.IntentBuilder.from(context as Activity)
+                        .setText(ll.toString())
+                        .setStream(url)
+                        .setType("image/*")
+                        .startChooser()
+            } else {
+                context.toast("Image not downloaded yet")
+            }
+
+        }
+
     }
 
 
@@ -236,17 +297,32 @@ class MemeView : FrameLayout {
                     )
                     return@OnMenuItemClickListener true
                 }
+                R.id.menu_edit_meme -> {
+                    MemeUpdateActivity.startWithMeme(context, meme)
+                }
                 R.id.menu_report_meme -> {
+                    var message = ""
+                    val rt = Report.ReportTypes.values()
                     MaterialDialog.Builder(context)
                             .title("Report")
                             .items("Pornography", "Abuse", "Violence", "Not appropriate", "Other")
-                            .itemsCallbackMultiChoice(null) { _, _, _ ->
+                            .itemsCallbackMultiChoice(null) { d, which: Array<out Int>, _ ->
+                                if (which.contains(4)) {
+                                    //todo add a way for them to add their own report message
+                                } else message = which.filter { it != 4 }
+                                        .joinToString(", ") { rt[it].message }
                                 true
                             }
                             .positiveText("Report")
                             .negativeText("Cancel")
                             .onPositive { _, _ ->
-                                //todo jv finish this up this shit giving me a hard time
+                                if (message.isNotBlank()) {
+                                    MemeItMemes.reportMeme(Report.MemeReport(meme.id!!, message)).call({ _ ->
+                                        context.toast("Meme reported! We will look into it!")
+                                    }) {
+                                        context.toast("Meme report failed, Please Try Again!")
+                                    }
+                                }
                             }
                             .show()
 
@@ -258,18 +334,14 @@ class MemeView : FrameLayout {
     }
 
 
-    private fun onMemeUpdated(meme: Meme) {
-
+    private fun onMemeUpdated() {
         posterNameV.text = meme.poster?.name
         posterPicV.text = meme.poster?.name.prefix()
         reactionCountV.text = String.format("%d people reacted", meme.reactionCount)
         commentCountV.text = meme.commentCount.toString()
         posterPicV.loadImage(meme.poster?.profileUrl)
         memeDateV.text = meme.date?.formateAsDate()
-        memeTags.visibleBy(meme.tags.isNotEmpty())
-        if (meme.tags.isNotEmpty()) {
-            memeTags.text = meme.tags.joinToString(", ") { "#$it" }
-        }
+
         if (meme.myReaction !== null) {
             reactButton.setActiveImage(meme.myReaction!!.getDrawableID())
             reactButton.isChecked = true
@@ -277,17 +349,27 @@ class MemeView : FrameLayout {
             reactButton.isChecked = false
         }
 
-        if(meme.description.isNullOrEmpty()){
-            memeDescription.visibility=View.GONE
-        }else{
-            memeDescription.visibility=View.VISIBLE
-            memeDescription.text=meme.description
-        }
         favButton.isChecked = meme.isMyFavourite
-        memeImageV.layoutParams.width = screenWidth
-        memeImageV.layoutParams.height = (screenWidth / meme.imageRatio).toInt().trim(200.dp, screenHeight - 200.dp)
-        memeImageV.requestLayout()
-        constraintSetDefault.clone(itemView)
+        if (resizeToFit) {
+            val h = (screenWidth / meme.imageRatio).toInt().trim(200.dp, screenHeight - 200.dp)
+            constraintSetDefault.constrainWidth(R.id.meme_image, screenWidth)
+            constraintSetDefault.constrainHeight(R.id.meme_image, h)
+            constraintSetDefault.applyTo(itemView)
+        }
+        if (meme.tags.isEmpty()) {
+            memeTags.text = ""
+            memeTags.visibility = View.GONE
+        } else {
+            memeTags.text = meme.tags.joinToString(", ") { "#$it" }
+            memeTags.visibility = View.VISIBLE
+        }
+        if (meme.description == null || meme.description!!.isBlank()) {
+            memeDescription.visibility = View.GONE
+            memeDescription.text = ""
+        } else {
+            memeDescription.visibility = View.VISIBLE
+            memeDescription.text = meme.description
+        }
         memeImageV.loadMeme(meme)
     }
 }

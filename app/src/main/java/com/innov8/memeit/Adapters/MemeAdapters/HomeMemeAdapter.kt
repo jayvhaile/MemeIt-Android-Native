@@ -2,7 +2,6 @@ package com.innov8.memeit.Adapters.MemeAdapters
 
 import android.content.Context
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memeit.Adapters.MemeAdapters.ViewHolders.*
 import com.innov8.memeit.CustomViews.MemeView
@@ -14,17 +13,12 @@ class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
     val usersPool = RecyclerView.RecycledViewPool()
     val tagsPool = RecyclerView.RecycledViewPool()
     val temlplatesPool = RecyclerView.RecycledViewPool()
-    val constraintSetReaction = ConstraintSet().apply {
-        clone(context, R.layout.list_item_meme)
-    }
-    val constraintSetDefault = ConstraintSet().apply {
-        clone(context, R.layout.list_item_meme2)
-    }
+
 
     override fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
         when (viewType) {
             HomeElement.MEME_TYPE -> {
-                return MemeListViewHolder(MemeView(context, constraintSetReaction, constraintSetDefault), this)
+                return MemeListViewHolder(MemeView(context), this)
             }
             HomeElement.USER_SUGGESTION_TYPE -> {
                 val v = inflater.inflate(R.layout.list_item_list, parent, false)

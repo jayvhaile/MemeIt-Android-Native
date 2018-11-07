@@ -275,4 +275,9 @@ interface MemeItService {
     fun updateUserToken(@Path("ftoken") token: String): Call<ResponseBody>
 
 
+    @POST("user/report")
+    fun reportUser(@Body report: Report.UserReport): Call<ResponseBody>
+
+    @POST("meme/report")
+    fun reportMeme(@Body report: Report.MemeReport): Call<ResponseBody>
 }

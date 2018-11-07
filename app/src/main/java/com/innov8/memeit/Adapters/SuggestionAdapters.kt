@@ -9,12 +9,12 @@ import com.innov8.memegenerator.Adapters.ListAdapter
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
-import com.innov8.memeit.commons.getDrawableIdByName
-import com.innov8.memeit.commons.toast
-import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.getDrawableIdByName
 import com.innov8.memeit.commons.models.MemeTemplate
+import com.innov8.memeit.commons.toast
+import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.prefix
 import com.memeit.backend.dataclasses.User
 
@@ -50,7 +50,7 @@ class TemplateSugAdapter(context: Context) : ListAdapter<MemeTemplate>(context, 
 
         init {
             editBtn.setOnClickListener {
-                MemeEditorActivity.startWithMemeTemplate(mContext,getItemAt(item_position))
+                MemeEditorActivity.startWithMemeTemplate(context,getItemAt(item_position))
             }
         }
 

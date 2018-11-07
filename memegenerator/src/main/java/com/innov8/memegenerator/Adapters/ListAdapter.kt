@@ -9,12 +9,13 @@ import android.view.ViewGroup
  * Created by Jv on 7/21/2018.
  */
 
-abstract class ListAdapter<T>(protected var mContext: Context, private val mLayoutID: Int) : androidx.recyclerview.widget.RecyclerView.Adapter<MyViewHolder<T>>() {
+abstract class ListAdapter<T>(protected var context: Context, private val mLayoutID: Int) : androidx.recyclerview.widget.RecyclerView.Adapter<MyViewHolder<T>>() {
     val items: ArrayList<T> = ArrayList()
-    var OnItemClicked:((T)->Unit)?=null
+    var onItemClicked:((T)->Unit)?=null
+    protected val inflater=LayoutInflater.from(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder<T> {
-        val view = LayoutInflater.from(mContext).inflate(mLayoutID, parent, false)
+        val view = inflater.inflate(mLayoutID, parent, false)
         return createViewHolder(view)
     }
 
@@ -31,7 +32,7 @@ abstract class ListAdapter<T>(protected var mContext: Context, private val mLayo
 
 
     fun addAll(items: List<T>) {
-        if (items.size == 0) return
+        if (items.isEmpty()) return
         val start = this.items.size
         this.items.addAll(items)
         notifyItemRangeInserted(start, items.size)

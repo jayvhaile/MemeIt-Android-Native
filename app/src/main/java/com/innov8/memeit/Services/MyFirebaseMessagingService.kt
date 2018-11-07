@@ -1,6 +1,5 @@
 package com.innov8.memeit.Services
 
-import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -16,32 +15,36 @@ import com.innov8.memeit.log
 import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
+import com.memeit.backend.dataclasses.Notification
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(s: String) {
         super.onNewToken(s)
-        MemeItUsers.updateUserToken(s).call { log("fuckyeah", s) }
+        MemeItUsers.updateUserToken(s).call { }
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
+        val data = remoteMessage.data
+        val n = Notification.parseNotif(data)
+        sendUserNotification(NotifData(n.title, n.message), 542)
+        log("fuck yeahhh", data.toString())
 
-        sendUserNotification(NotifData(remoteMessage.data["title"]?:"error","hi"), 351)
     }
 
 
     private fun sendUserNotification(data: NotifData, notifyID: Int) {
 
         val pendingIntent = PendingIntent.getActivity(context, 0, data.intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val builder = Notification.Builder(context)
+        val builder = android.app.Notification.Builder(context)
         builder.setContentTitle(data.title)
                 .setAutoCancel(true)
-                .setPriority(Notification.PRIORITY_HIGH)
+                .setPriority(android.app.Notification.PRIORITY_HIGH)
                 .setSound(data.sound)
                 .setContentIntent(pendingIntent)
-                .setStyle(Notification.BigTextStyle().bigText(data.message))
+                .setStyle(android.app.Notification.BigTextStyle().bigText(data.message))
                 .setContentText(data.message)
-                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setDefaults(android.app.Notification.DEFAULT_VIBRATE)
                 .setSmallIcon(data.icon)
         if (!TextUtils.isEmpty(data.ticker)) builder.setTicker(data.ticker)
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

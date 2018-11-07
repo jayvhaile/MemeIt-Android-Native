@@ -24,6 +24,7 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
     override var errorActionText: String? = "Try Again"
     override val loadingDrawable = CubeGrid().apply {
         color = Color.rgb(255, 100, 0)
+
     }
 
 

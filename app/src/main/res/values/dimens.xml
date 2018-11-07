@@ -19,13 +19,13 @@
     <dimen name="toolbar_iheight">150dp</dimen>
 
 <!--====================================PROFILE DIMENS===========================================-->
-    <dimen name="profile_collapsing_toolbar_expanded_height">300dp</dimen>
+    <dimen name="profile_collapsing_toolbar_expanded_height">240dp</dimen>
     <dimen name="profile_toolbar_height">56dp</dimen>
     <dimen name="profile_tab_height">48dp</dimen>
 
-    <dimen name="profile_cover_expanded_height">150dp</dimen>
+    <dimen name="profile_cover_expanded_height">120dp</dimen>
 
-    <dimen name="profile_image_expanded_size">100dp</dimen>
+    <dimen name="profile_image_expanded_size">96dp</dimen>
     <dimen name="profile_image_collapsed_size">32dp</dimen>
     <dimen name="profile_image_collapsed_X">14dp</dimen>
 

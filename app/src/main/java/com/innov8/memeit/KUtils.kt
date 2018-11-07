@@ -307,9 +307,10 @@ val Int.sp: Int
     }
 
 fun <T> measure(tag: String = "", block: () -> T): T {
-    val x = System.currentTimeMillis()
+    val b = System.currentTimeMillis()
     val t = block()
-    log("fucck", tag, System.currentTimeMillis() - x)
+    val a = System.currentTimeMillis()
+    log("fucck", tag, "before $b after $a duration ${a - b}")
     return t
 }
 

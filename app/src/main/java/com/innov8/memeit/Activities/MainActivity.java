@@ -13,13 +13,13 @@ import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter;
-import com.innov8.memeit.Loaders.FavoriteMemeLoader;
-import com.innov8.memeit.Loaders.HomeMemeLoader;
-import com.innov8.memeit.Loaders.TrendingMemeLoader;
 import com.innov8.memeit.CustomViews.BottomNavigation;
 import com.innov8.memeit.CustomViews.SearchToolbar;
 import com.innov8.memeit.Fragments.MemeListFragment;
 import com.innov8.memeit.Fragments.ProfileFragment;
+import com.innov8.memeit.Loaders.FavoriteMemeLoader;
+import com.innov8.memeit.Loaders.HomeMemeLoader;
+import com.innov8.memeit.Loaders.TrendingMemeLoader;
 import com.innov8.memeit.R;
 import com.memeit.backend.MemeItClient;
 import com.memeit.backend.MemeItUsers;
@@ -54,14 +54,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!MemeItClient.Auth.INSTANCE.isSignedIn()) {
-            startActivity(new Intent(this, AuthActivity.class));
+            startActivity(new Intent(MainActivity.this, AuthActivity.class));
             finish();
-            return;
-        }
-        if (MemeItClient.Auth.INSTANCE.isUserDataSaved()) {
-            initUI(savedInstanceState);
-        } else {
+        } else if (!MemeItClient.Auth.INSTANCE.isUserDataSaved()) {
             goToSignUpDetails();
+        } else {
+            initUI(savedInstanceState);
         }
     }
 
@@ -84,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         initBottomNav();
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(0);
         SlidingRootNavBuilder sbd = new SlidingRootNavBuilder(this)
                 .withSavedState(savedInstanceState)
                 .withContentClickableWhenMenuOpened(false)
@@ -291,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
             fragments = Arrays.asList(
                     MemeListFragment.Companion.newInstance(MemeAdapter.HOME_ADAPTER, new HomeMemeLoader()),
                     MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER, new TrendingMemeLoader()),
-                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_ADAPTER, new FavoriteMemeLoader()),
+                    MemeListFragment.Companion.newInstance(MemeAdapter.LIST_FAVORITE_ADAPTER, new FavoriteMemeLoader()),
                     ProfileFragment.Companion.newInstance()
             );
         }

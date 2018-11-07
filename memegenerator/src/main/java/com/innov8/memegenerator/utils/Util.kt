@@ -31,22 +31,27 @@ fun TabLayout.onTabSelected(onSelected: (TabLayout.Tab) -> Unit) {
         }
     })
 }
+
 fun Bitmap.toByteArray(format: Bitmap.CompressFormat = PNG, quality: Int = 100): ByteArray {
     val stream = ByteArrayOutputStream()
     compress(format, quality, stream)
     return stream.toByteArray()
 }
+
 fun RectF.enlarge(x: Float, y: Float = x): RectF {
     return RectF(this.left - x, this.top - y, this.right + x, this.bottom + y)
 }
+
 fun RectF.origin(): RectF = RectF(0f, 0f, width(), height())
-fun MotionEvent.inRect(rectF: RectF): Boolean = rectF.contains(this.x, this.y)
+operator fun RectF.contains(event: MotionEvent): Boolean = this.contains(event.x, event.y)
 fun RectF.toRect(): Rect {
     return Rect(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
 }
+
 fun Rect.toRectF(): RectF {
     return RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 }
+
 fun View.capture(rect: Rect? = null): Bitmap {
     this.isDrawingCacheEnabled = true
     val rb: Bitmap = if (rect != null)
@@ -58,6 +63,7 @@ fun View.capture(rect: Rect? = null): Bitmap {
     this.isDrawingCacheEnabled = false
     return rb
 }
+
 fun SeekBar.onProgressChanged(change: (progress: Int, fromUser: Boolean) -> Unit) {
     setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
@@ -73,6 +79,7 @@ fun SeekBar.onProgressChanged(change: (progress: Int, fromUser: Boolean) -> Unit
         }
     })
 }
+
 fun IndicatorSeekBar.listener(onSeek: ((SeekParams) -> Unit)? = null,
                               onStart: ((IndicatorSeekBar) -> Unit)? = null,
                               onStop: ((IndicatorSeekBar) -> Unit)? = null) {

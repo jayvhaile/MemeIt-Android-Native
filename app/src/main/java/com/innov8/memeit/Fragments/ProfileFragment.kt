@@ -9,12 +9,15 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.google.android.material.tabs.TabLayout
 import com.innov8.memeit.Activities.TagsActivity
 import com.innov8.memeit.Activities.UserTagActivity
+import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomClasses.CustomMethods
 import com.innov8.memeit.Loaders.FollowerLoader
 import com.innov8.memeit.Loaders.FollowingLoader
@@ -55,6 +58,35 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         val adapter = ViewPagerAdapter(childFragmentManager)
         profile_viewpager.adapter = adapter
         tabs_profile.setupWithViewPager(profile_viewpager)
+
+
+        listOf(
+                R.drawable.ic_followers,
+                R.drawable.ic_followings,
+                R.drawable.ic_grid,
+                R.drawable.ic_list,
+                R.drawable.ic_badges
+        ).forEachIndexed { index, id ->
+            tabs_profile.getTabAt(index)?.apply {
+                setCustomView(R.layout.tab_icon)
+                (customView as ImageView).setImageResource(id)
+            }
+        }
+        tabs_profile.addOnTabSelectedListener(object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab?> {
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                tab?.customView?.isSelected = false
+
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                tab?.customView?.isSelected = true
+            }
+        })
+        profile_viewpager.setCurrentItem(2, false)
 
         toolbar.inflateMenu(R.menu.profile_page_menu)
         toolbar.setOnMenuItemClickListener(this)
@@ -134,18 +166,21 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
 
     internal inner class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
-        var titles = arrayOf("Memes", "Following", "Followers")
-        var fragments: Array<Fragment> = arrayOf(MemeListFragment.newInstanceForUserPosts(userID),
+        var titles = arrayOf("Following", "Followers", "Memes", "Memes", "Badges")
+        var fragments: Array<Fragment> = arrayOf(
                 UserListFragment.newInstance(FollowingLoader(userID)),
-                UserListFragment.newInstance(FollowerLoader(userID)))
+                UserListFragment.newInstance(FollowerLoader(userID)),
+                MemeListFragment.newInstanceForUserPosts(userID),
+                MemeListFragment.newInstanceForUserPosts(userID, MemeAdapter.LIST_ADAPTER),
+                BadgeFragment())
 
         override fun getItem(position: Int): Fragment = fragments[position]
 
 
         override fun getCount(): Int = fragments.size
+        override fun getPageTitle(position: Int): CharSequence? = null
 
 
-        override fun getPageTitle(position: Int): CharSequence? = titles[position]
     }
 
     companion object {

@@ -63,7 +63,7 @@ class TemplateFragment : Fragment() {
         MemeTemplate.loadLocalTemplates(context!!) {
             memeTemplatesListAdapter.addAll(it)
         }
-        memeTemplatesListAdapter.OnItemClicked = {
+        memeTemplatesListAdapter.onItemClicked = {
             context?.let { c ->
                 MemeEditorActivity.startWithMemeTemplate(c, it)
             }

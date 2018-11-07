@@ -1,0 +1,133 @@
+[
+  {
+    "id": "first_001",
+    "desc": "Upload your first Meme",
+    "level": 1
+  },
+  {
+    "id": "first_002",
+    "desc": "Get your first reaction",
+    "level": 2
+  },
+  {
+    "id": "first_003",
+    "desc": "Get your first comment",
+    "level": 2
+  },
+  {
+    "id": "react_001",
+    "desc": "Get 10 reactions",
+    "level": 3
+  },
+  {
+    "id": "react_002",
+    "desc": "Get 100 reactions",
+    "level": 5
+  },
+  {
+    "id": "react_003",
+    "desc": "Get 1k reactions",
+    "level": 7
+  },
+  {
+    "id": "react_004",
+    "desc": "Get 10k reactions",
+    "level": 9
+  },
+  {
+    "id": "react_005",
+    "desc": "Get 100k reactions",
+    "level": 11
+  },
+  {
+    "id": "comment_001",
+    "desc": "Get 10 Comments",
+    "level": 3
+  },
+  {
+    "id": "comment_002",
+    "desc": "Get 100 Comments",
+    "level": 5
+  },
+  {
+    "id": "comment_003",
+    "desc": "Get 1k Comments",
+    "level": 7
+  },
+  {
+    "id": "comment_004",
+    "desc": "Get 10k Comments",
+    "level": 9
+  },
+  {
+    "id": "comment_005",
+    "desc": "Get 100k Comments",
+    "level": 11
+  },
+  {
+    "id": "follower_001",
+    "desc": "Get 10 Followers",
+    "level": 4
+  },
+  {
+    "id": "follower_002",
+    "desc": "Get 100 Followers",
+    "level": 6
+  },
+  {
+    "id": "follower_003",
+    "desc": "Get 1k Followers",
+    "level": 8
+  },
+  {
+    "id": "follower_004",
+    "desc": "Get 10k Followers",
+    "level": 10
+  },
+  {
+    "id": "follower_005",
+    "label": "Mr.Popular",
+    "desc": "Get 100k Followers",
+    "level": 12
+  },
+  {
+    "id": "trending_001",
+    "desc": "Get Meme in Top 10 Trending",
+    "level": 4
+  },
+  {
+    "id": "trending_002",
+    "desc": "Get Meme in Top 5 Trending",
+    "level": 7
+  },
+  {
+    "id": "trending_003",
+    "desc": "Get Meme in Top 3 Trending",
+    "level": 10
+  },
+  {
+    "id": "invite_001",
+    "desc": "Invite 10 Users",
+    "level": 1
+  },
+  {
+    "id": "invite_002",
+    "desc": "Invite 50 Users",
+    "level": 2
+  },
+  {
+    "id": "invite_003",
+    "desc": "Invite 100 Users",
+    "level": 3
+  },
+  {
+    "id": "invite_004",
+    "desc": "Invite 500 Users",
+    "level": 4
+  },
+  {
+    "id": "invite_005",
+    "desc": "Invite 1000 Users",
+    "level": 4
+  }
+]

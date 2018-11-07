@@ -10,8 +10,8 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import com.innov8.memegenerator.R
+import com.innov8.memegenerator.utils.contains
 import com.innov8.memegenerator.utils.enlarge
-import com.innov8.memegenerator.utils.inRect
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.loadBitmap
 import com.innov8.memeit.commons.log
@@ -73,7 +73,7 @@ open class MemeItemView : View {
     }
 
     fun Number.isBetween(a: Number, b: Number): Boolean {
-        var d = this.toDouble()
+        val d = this.toDouble()
         return d >= a.toDouble() && d <= b.toDouble()
 
     }
@@ -206,14 +206,14 @@ open class MemeItemView : View {
             selectedBefore = isFocused
             requestFocus()
             return when {
-                event.inRect(rotateRect) -> {
+                event in rotateRect -> {
                     dx = pivotX + x
                     dy = pivotY + y + 56.dp(context)//todo change 56 to the top margin of the memeEditorView
                     r1 = Math.toDegrees(Math.atan2((event.rawY - dy).toDouble(), (event.rawX - dx).toDouble())) + 180
                     type = TYPE_ROTATE
                     true
                 }
-                event.inRect(resizeRect) -> {
+                event in resizeRect -> {
                     type = TYPE_RESIZE
                     dx = event.rawX
                     dy = event.rawY
@@ -224,7 +224,7 @@ open class MemeItemView : View {
                             .map {
                                 it.enlarge(resizeEnlarge)
                             }
-                    val i = rectList.indexOf(rectList.find { event.inRect(it) })
+                    val i = rectList.indexOf(rectList.find { event in it })
 
                     when {
                         i != -1 -> {
@@ -233,13 +233,13 @@ open class MemeItemView : View {
                             dy = event.rawY
                             true
                         }
-                        event.inRect(innerRect) -> {
+                        event in innerRect -> {
                             dx = x - event.rawX
                             dy = y - event.rawY
                             type = TYPE_DRAG
                             true
                         }
-                        else -> event.inRect(deleteRect) || event.inRect(copyRect)
+                        else -> event in deleteRect || event in copyRect
                     }
                 }
             }
@@ -248,14 +248,14 @@ open class MemeItemView : View {
 
         override fun onSingleTapUp(e: MotionEvent): Boolean {
             return if (isInMemeEditor) {
-                if (e.inRect(deleteRect)) {
+                if (e in deleteRect) {
                     onRemoveListener?.invoke(this@MemeItemView)
 
                     true
-                } else if (e.inRect(copyRect)) {
+                } else if (e in copyRect) {
                     onCopyListener?.invoke(this@MemeItemView)
                     true
-                } else if (e.inRect(innerRect) && selectedBefore) {
+                } else if (e in innerRect && selectedBefore) {
                     onClickListener?.invoke(this@MemeItemView)
                     true
                 } else

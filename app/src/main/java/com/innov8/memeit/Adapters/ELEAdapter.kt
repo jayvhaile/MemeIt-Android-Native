@@ -15,7 +15,7 @@ import com.innov8.memeit.R
 @Suppress("UNCHECKED_CAST")
 abstract class ELEAdapter<T : RecyclerView.ViewHolder>(val context: Context)
     : RecyclerView.Adapter<T>() {
-    protected val inflater = LayoutInflater.from(context)
+    protected val inflater:LayoutInflater = LayoutInflater.from(context)
 
     companion object {
         const val MODE_NORMAL = 0
@@ -175,7 +175,7 @@ abstract class ELEListAdapter<T, VH : RecyclerView.ViewHolder>(context: Context)
 
 
     fun addAll(items: List<T>) {
-        if (items.size == 0) return
+        if (items.isEmpty()) return
         val start = this.items.size
         this.items.addAll(items)
         notifyItemRangeInserted(start, items.size)
@@ -203,8 +203,10 @@ abstract class ELEListAdapter<T, VH : RecyclerView.ViewHolder>(context: Context)
     fun setAll(item: List<T>) {
         this.items.clear()
         this.items.addAll(item)
-        mode = if (items.size > 0) MODE_NORMAL
-        else MODE_EMPTY
+        if (items.size > 0) {
+            if (mode == MODE_NORMAL) notifyDataSetChanged()
+            else mode = MODE_NORMAL
+        } else mode = MODE_EMPTY
     }
 
     fun updateItem(item: T, index: Int) {
@@ -226,7 +228,7 @@ abstract class ELEListAdapter<T, VH : RecyclerView.ViewHolder>(context: Context)
 }
 
 abstract class SimpleELEListAdapter<T>(context: Context, private val mLayoutID: Int) : ELEListAdapter<T, MyViewHolder<T>>(context) {
-    var OnItemClicked: ((T) -> Unit)? = null
+    var onItemClicked: ((T) -> Unit)? = null
 
     override fun onCreateHolder(parent: ViewGroup, viewType: Int): MyViewHolder<T> {
         val view = inflater.inflate(mLayoutID, parent, false)

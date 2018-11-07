@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.Loaders.MemeLoader
@@ -61,7 +60,6 @@ class MemeListFragment : Fragment() {
     }
 
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_meme_list, container, false)
@@ -73,10 +71,7 @@ class MemeListFragment : Fragment() {
         meme_recycler_view.layoutManager = memeAdapter.createLayoutManager()
         meme_recycler_view.itemAnimator = DefaultItemAnimator()
         meme_recycler_view.adapter = memeAdapter
-        if (memeAdapterType == MemeAdapter.LIST_ADAPTER || memeAdapterType == MemeAdapter.HOME_ADAPTER) {
-            val itemTouchhelper = ItemTouchHelper(memeAdapter.make())
-            itemTouchhelper.attachToRecyclerView(meme_recycler_view)
-        }
+
     }
 
     fun setSearchMode(searchMode: Boolean) {
@@ -104,7 +99,6 @@ class MemeListFragment : Fragment() {
 
     companion object {
         private val TAG = "MemeListFragment"
-        private val LIMIT = 20
 
         fun newInstance(memeAdapterType: Byte, memeLoader: MemeLoader<out HomeElement>): MemeListFragment {
             val fragment = MemeListFragment()
@@ -115,10 +109,10 @@ class MemeListFragment : Fragment() {
             return fragment
         }
 
-        fun newInstanceForUserPosts(userID: String): MemeListFragment {
+        fun newInstanceForUserPosts(userID: String, memeAdapterType: Byte = MemeAdapter.GRID_ADAPTER): MemeListFragment {
             val fragment = MemeListFragment()
             val arg = Bundle()
-            arg.putByte("adapter_type", MemeAdapter.GRID_ADAPTER)
+            arg.putByte("adapter_type", memeAdapterType)
             arg.putParcelable("loader", UserMemePostsLoader(userID))
             arg.putString("uid", userID)
             fragment.arguments = arg

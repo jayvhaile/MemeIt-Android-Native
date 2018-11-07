@@ -22,13 +22,13 @@ class MemeTemplatesListAdapter (context: Context): ListAdapter<MemeTemplate>(con
         private val memeTemplateImageV: SimpleDraweeView = view.findViewById(R.id.meme_template_image)
         private val memeTemplateLabelV: TextView = view.findViewById(R.id.meme_template_label)
         init {
-            itemView.setOnClickListener({OnItemClicked?.invoke(getItemAt(item_position))})
+            itemView.setOnClickListener({onItemClicked?.invoke(getItemAt(item_position))})
         }
         override fun bind(t: MemeTemplate) {
 
             if (t.dataSource == MemeTemplate.LOCAL_DATA_SOURCE) {
                 memeTemplateImageV.setImageRequest(
-                        ImageRequestBuilder.newBuilderWithResourceId(mContext.getDrawableIdByName(t.imageURL))
+                        ImageRequestBuilder.newBuilderWithResourceId(context.getDrawableIdByName(t.imageURL))
                                 .build()
                 )
             }else{
