@@ -86,6 +86,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             open("paint")
         }
 
+        back.setOnClickListener {
+            onBackPressed()
+        }
         done.setOnClickListener {
             if (type == Meme.MemeType.IMAGE) {
                 val bitmap = memeEditorView.captureMeme()

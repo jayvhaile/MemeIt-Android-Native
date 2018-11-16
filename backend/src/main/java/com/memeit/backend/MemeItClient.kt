@@ -53,15 +53,16 @@ object MemeItClient {
             File(context.cacheDir, "memeit-http‐cache")
 
     }
-
+    data class SignedUrl(val message:String)
     fun uploadImage(file: File) {
         memeItService.getSignedUrl(file.name).call({
-            val url = it.string()
+            val url = it.message
 
             val reqFile = RequestBody.create(MediaType.parse("image/*"), file)
             val body = MultipartBody.Part.createFormData("upload", file.name, reqFile)
 
             context.toast("url sent")
+            log("fcck",url)
             memeItService.uploadImage(url, body).call({ _ ->
                 context.toast("Image Uploaded")
             }) { error ->
@@ -356,6 +357,12 @@ object MemeItUsers : MemeItService by MemeItClient.memeItService {
     fun getMyUser(onSuccess: ((User) -> Unit)? = null, onError: (String) -> Unit = {}) {
         MemeItClient.memeItService.loadMyUser().call({
             MyUser.save(MemeItClient.sharedPref, user = it)
+            onSuccess?.invoke(it)
+        }, onError)
+    }
+    fun getMyBadges(onSuccess: ((List<Badge>) -> Unit)? = null, onError: (String) -> Unit = {}) {
+        MemeItClient.memeItService.getMyBadges_DO_NOT_USE().call({
+            MyUser.save(MemeItClient.sharedPref, badges = it)
             onSuccess?.invoke(it)
         }, onError)
     }

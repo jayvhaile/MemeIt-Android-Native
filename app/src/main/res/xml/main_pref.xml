@@ -53,5 +53,6 @@
             android:key="pref_enable_notif_comment"
             android:title="Notify Comment on Upload" />
     </PreferenceCategory>
-    <Preference android:title="Logout" />
+    <Preference android:title="Logout"
+        android:key="pref_logout"/>
 </PreferenceScreen>

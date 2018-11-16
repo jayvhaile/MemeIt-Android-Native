@@ -19,6 +19,7 @@ data class MyUser(internal val token: String,
                   val followerCount: Int = 0,
                   val followingCount: Int = 0,
                   val postCount: Int = 0,
+                  val badges: List<Badge> = listOf(),
                   val tags: List<Tag> = listOf()) {
     fun toUser() = User(this)
 
@@ -35,6 +36,7 @@ data class MyUser(internal val token: String,
         private const val KEY_FOLLOWER_COUNT = "__myuser_fwr_count__"
         private const val KEY_FOLLOWING_COUNT = "__myuser_fwg_count__"
         private const val KEY_POST_COUNT = "__myuser_post_count__"
+        private const val KEY_BADGES = "__myuser_badges__"
         private const val KEY_TAGS = "__myuser_tags__"
 
         private var muser: MyUser? = null
@@ -51,6 +53,7 @@ data class MyUser(internal val token: String,
                  followerCount: Int? = null,
                  followingCount: Int? = null,
                  postCount: Int? = null,
+                 badges: List<Badge>? = null,
                  tags: List<Tag>? = null) {
             val e = dest.edit()
 
@@ -69,6 +72,10 @@ data class MyUser(internal val token: String,
             if (tags != null) {
                 val t = setOf(*tags.map { it.tag }.toTypedArray())
                 e.putStringSet(KEY_TAGS, t)
+            }
+            if (badges != null) {
+                val t = setOf(*badges.map { it.id }.toTypedArray())
+                e.putStringSet(KEY_BADGES, t)
             }
             e.apply()
             stale = true
@@ -112,7 +119,9 @@ data class MyUser(internal val token: String,
             val fwrc = pref.getInt(KEY_FOLLOWER_COUNT, 0)
             val fwgc = pref.getInt(KEY_FOLLOWING_COUNT, 0)
             val postc = pref.getInt(KEY_POST_COUNT, 0)
+            val badgeSet = pref.getStringSet(KEY_BADGES, null)
             val tagSet = pref.getStringSet(KEY_TAGS, null)
+            val badges: List<Badge> = badgeSet?.map { Badge.ofID(it) } ?: listOf()
             val tags: List<Tag> = tagSet?.map { Tag(it, 0, 0) } ?: listOf()
             return if (token.isNullOrEmpty() ||
                     method == null ||
@@ -120,7 +129,7 @@ data class MyUser(internal val token: String,
                     username.isNullOrEmpty())
                 null
             else
-                MyUser(token!!, method!!, uid!!, username!!, name, bio, pic, cpic, fwrc, fwgc, postc, tags)
+                MyUser(token!!, method!!, uid!!, username!!, name, bio, pic, cpic, fwrc, fwgc, postc, badges, tags)
         }
 
         fun delete(context: Context) {
@@ -136,8 +145,10 @@ data class MyUser(internal val token: String,
                     .remove(KEY_FOLLOWER_COUNT)
                     .remove(KEY_FOLLOWING_COUNT)
                     .remove(KEY_POST_COUNT)
+                    .remove(KEY_BADGES)
                     .remove(KEY_TAGS)
                     .apply()
+            stale = true
         }
 
 

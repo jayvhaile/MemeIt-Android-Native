@@ -25,11 +25,9 @@ class BadgeAdapter(val context: Context) : RecyclerView.Adapter<MyViewHolder<Bad
     var mode = MODE_GRID
 
     init {
-        Badge.loadBadges(context) {
-            allBadges = it.toMutableList()
-            addAll(allBadges.shuffled().subList(0, 5))
-            notifyDataSetChanged()
-        }
+        allBadges = Badge.allBadges.toMutableList()
+        notifyDataSetChanged()
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder<Badge> {
@@ -94,7 +92,7 @@ class BadgeAdapter(val context: Context) : RecyclerView.Adapter<MyViewHolder<Bad
             } else {
                 badgeIconV.setColorFilter(Color.parseColor("#aaaabb"))
             }
-            badgeLabelV.text = t.label + "aa"
+            badgeLabelV.text = t.label
             badgeDescV.text = t.description
         }
     }

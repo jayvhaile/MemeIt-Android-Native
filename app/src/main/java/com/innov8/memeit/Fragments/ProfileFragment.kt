@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.tabs.TabLayout
+import com.innov8.memeit.Activities.ProfileSettingsActivity
 import com.innov8.memeit.Activities.TagsActivity
 import com.innov8.memeit.Activities.UserListActivity
 import com.innov8.memeit.Activities.UserTagActivity
@@ -61,6 +62,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         initTab()
         initListeners()
         toolbar.inflateMenu(R.menu.profile_page_menu)
+        if (!isMe) toolbar.menu.removeItem(R.id.menu_profile_id)
         profile_follow_btn.visibility = if (isMe) GONE else VISIBLE
         size = resources.getDimension(R.dimen.image_width)
         if (isMe) updateView(MemeItClient.myUser!!.toUser())
@@ -164,6 +166,9 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                 }
                 return true
             }
+            R.id.menu_profile_id -> {
+                startActivity(Intent(context, ProfileSettingsActivity::class.java))
+            }
         }
         return false
     }
@@ -174,7 +179,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         var fragments: Array<Fragment> = arrayOf(
                 MemeListFragment.newInstanceForUserPosts(userID),
                 MemeListFragment.newInstanceForUserPosts(userID, MemeAdapter.LIST_ADAPTER),
-                BadgeFragment())
+                BadgeFragment.newInstance(if (isMe) null else userID))
 
         override fun getItem(position: Int): Fragment = fragments[position]
 

@@ -21,16 +21,17 @@ open class Notification(val type: Int = 0,
                 Notification.FOLLOWING_TYPE -> parseFollowingNotif(it)
                 Notification.REACTION_TYPE -> parseReactionNotif(it)
                 Notification.COMMENT_TYPE -> parseCommentNotif(it)
+                Notification.AWARd_TYPE -> parseAwardNotif(it)
                 else -> parseGeneralNotif(it)
             }
         }
-
         fun parseNotifString(it: Map<String, String>): Notification {
             val type: Int = (it["type"] ?: "0.0").toDouble().toInt()
             return when (type) {
                 Notification.FOLLOWING_TYPE -> parseFollowingNotifString(it)
                 Notification.REACTION_TYPE -> parseReactionNotifString(it)
                 Notification.COMMENT_TYPE -> parseCommentNotifString(it)
+                Notification.AWARd_TYPE -> parseAwardNotifString(it)
                 else -> parseGeneralNotifString(it)
             }
         }
@@ -43,7 +44,6 @@ open class Notification(val type: Int = 0,
                     it["date"] as Long? ?: 0L,
                     it["seen"] as Boolean? ?: false)
         }
-
         private fun parseGeneralNotifString(it: Map<String, String>): Notification {
             return Notification(0,
                     it["nid"] ?: "",
@@ -52,7 +52,6 @@ open class Notification(val type: Int = 0,
                     (it["date"] ?: "0").toLong(),
                     (it["seen"] ?: "false").toBoolean())
         }
-
         private fun parseCommentNotif(it: Map<String, Any>): CommentNotification {
             return CommentNotification(
                     it["nid"] as String? ?: "",
@@ -82,7 +81,6 @@ open class Notification(val type: Int = 0,
                     (it["seen"] ?: "false").toBoolean()
             )
         }
-
         private fun parseReactionNotif(it: Map<String, Any>): ReactionNotification {
             return ReactionNotification(
                     it["nid"] as String? ?: "",
@@ -97,7 +95,6 @@ open class Notification(val type: Int = 0,
                     it["seen"] as Boolean
             )
         }
-
         private fun parseReactionNotifString(it: Map<String, String>): ReactionNotification {
             return ReactionNotification(
                     it["nid"] ?: "",
@@ -122,13 +119,30 @@ open class Notification(val type: Int = 0,
                     (it["date"] as Double).toLong(),
                     it["seen"] as Boolean)
         }
-
         private fun parseFollowingNotifString(it: Map<String, String>): FollowingNotification {
             return FollowingNotification(
                     it["nid"] ?: "",
                     it["name"] ?: "",
                     it["pic"] ?: "",
                     it["uid"] ?: "",
+                    (it["date"] ?: "0").toLong(),
+                    (it["seen"] ?: "false").toBoolean())
+        }
+
+        private fun parseAwardNotif(it: Map<String, Any>): AwardNotification {
+            val badge = Badge.ofID(it["awardId"] as String)
+            return AwardNotification(
+                    it["nid"] as String? ?: "",
+                    badge,
+                    (it["date"] as Double).toLong(),
+                    it["seen"] as Boolean)
+        }
+
+        private fun parseAwardNotifString(it: Map<String, String>): AwardNotification {
+            val badge = Badge.ofID(it["awardId"]!!)
+            return AwardNotification(
+                    it["nid"] ?: "",
+                    badge,
                     (it["date"] ?: "0").toLong(),
                     (it["seen"] ?: "false").toBoolean())
         }
@@ -181,7 +195,7 @@ class CommentNotification(id: String,
 }
 
 class AwardNotification(id: String,
-                        val awardType: Int,
+                        val badge: Badge,
                         date: Long,
                         seen: Boolean = false) : Notification
-(4, id, "You are awarded...shit", "", date, seen)
+(4, id, "Congratulations!, You have achieved the ${badge.label} badge", badge.description, date, seen)

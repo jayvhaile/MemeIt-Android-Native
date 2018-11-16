@@ -24,7 +24,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/main.collapsing"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/profile_collapsing_toolbar_expanded_height"
+            android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
 
@@ -46,25 +46,28 @@
                     android:id="@+id/profile_follow_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/filled_button"
+                    android:gravity="center"
                     android:paddingLeft="16dp"
-                    android:paddingTop="8dp"
+                    android:paddingTop="4dp"
                     android:paddingRight="16dp"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="4dp"
                     android:text="Follow"
                     android:textColor="#fff"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@id/profile_bio"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/guideline3" />
+                    app:layout_constraintTop_toTopOf="@+id/profile_username" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="24dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
@@ -73,8 +76,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1">
+                    app:layout_constraintTop_toBottomOf="@id/profile_bio">
 
                     <com.innov8.memeit.commons.views.FontTextView
                         android:id="@+id/profile_meme_count"
@@ -142,23 +144,69 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
+
                 <com.innov8.memeit.commons.views.FontTextView
-                    android:id="@+id/profile_bio"
+                    android:id="@+id/profile_username"
                     android:layout_width="0dp"
-                    android:layout_height="52dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
-                    android:layout_marginBottom="8dp"
                     android:ellipsize="end"
+                    android:text="jvhaile"
                     android:textColor="#888"
                     android:textSize="13sp"
-                    android:text="this is where the user bio goes in, this is it the bio of the user"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintEnd_toStartOf="@+id/profile_follow_btn"
+                    app:layout_constraintStart_toEndOf="@+id/imageView8"
+                    app:layout_constraintTop_toBottomOf="@id/guideline3" />
+
+                <com.innov8.memeit.commons.views.FontTextView
+                    android:id="@+id/profile_bio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxHeight="56dp"
+                    android:text="the best"
+                    android:textColor="#888"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toStartOf="@+id/profile_follow_btn"
+                    app:layout_constraintStart_toEndOf="@+id/imageView3"
+                    app:layout_constraintTop_toBottomOf="@id/profile_username" />
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:tint="#59f"
+                    app:layout_constraintBottom_toBottomOf="@+id/profile_bio"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/profile_bio"
+                    app:srcCompat="@drawable/ic_info_black_24dp" />
+
+                <TextView
+                    android:id="@+id/imageView8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center"
+                    android:text="\@"
+                    android:textColor="#f30"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/profile_username"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/profile_username"
+                    app:srcCompat="@drawable/ic_info_black_24dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.Toolbar

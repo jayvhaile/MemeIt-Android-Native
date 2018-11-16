@@ -1,6 +1,7 @@
 package com.innov8.memeit.Activities
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceActivity
 import android.preference.PreferenceManager
@@ -16,6 +17,12 @@ class SettingsActivity : PreferenceActivity() {
         super.onCreate(savedInstanceState)
         user = MemeItClient.myUser!!
         addPreferencesFromResource(R.xml.main_pref)
+        preferenceScreen.findPreference(PREF_KEY_LOGOUT).setOnPreferenceClickListener {
+            MemeItClient.Auth.signOut()
+            startActivity(Intent(this, AuthActivity::class.java))
+            finish()
+            true
+        }
     }
 
     companion object {
@@ -24,6 +31,7 @@ class SettingsActivity : PreferenceActivity() {
         private const val PREF_KEY_ENABLE_NOTIF_FOLLOWED = "pref_enable_notif_followed"
         private const val PREF_KEY_ENABLE_NOTIF_REACTION = "pref_enable_notif_reaction"
         private const val PREF_KEY_ENABLE_NOTIF_COMMENT = "pref_enable_notif_comment"
+        private const val PREF_KEY_LOGOUT = "pref_logout"
         val quality = listOf(10, 25, 50, 75, 100)
         val factor = listOf(.4f, .6f, .8f, .9f, 1f)
 

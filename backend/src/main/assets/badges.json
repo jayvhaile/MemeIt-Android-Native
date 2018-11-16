@@ -1,132 +1,157 @@
 [
   {
     "id": "first_001",
+    "label":"One small step for a memer...",
     "desc": "Upload your first Meme",
     "level": 1
   },
   {
     "id": "first_002",
+    "label":"Baby steps ",
     "desc": "Get your first reaction",
     "level": 2
   },
   {
     "id": "first_003",
+    "label":"Silence is not a virtue",
     "desc": "Get your first comment",
     "level": 2
   },
   {
     "id": "react_001",
+    "label":"Stoic audience",
     "desc": "Get 10 reactions",
     "level": 3
   },
   {
     "id": "react_002",
+    "label":"Funny content",
     "desc": "Get 100 reactions",
     "level": 5
   },
   {
     "id": "react_003",
+    "label":"Daymaker",
     "desc": "Get 1k reactions",
     "level": 7
   },
   {
     "id": "react_004",
+    "label":" ",
     "desc": "Get 10k reactions",
     "level": 9
   },
   {
     "id": "react_005",
+    "label":"Worldwide phenomenon",
     "desc": "Get 100k reactions",
     "level": 11
   },
   {
     "id": "comment_001",
+    "label":"Spectator",
     "desc": "Get 10 Comments",
     "level": 3
   },
   {
     "id": "comment_002",
+    "label":"Commentator",
     "desc": "Get 100 Comments",
     "level": 5
   },
   {
     "id": "comment_003",
+    "label":"Commentary genius",
     "desc": "Get 1k Comments",
     "level": 7
   },
   {
     "id": "comment_004",
+    "label":"A pile of comments",
     "desc": "Get 10k Comments",
     "level": 9
   },
   {
     "id": "comment_005",
+    "label":"Comment horde! Incoming!",
     "desc": "Get 100k Comments",
     "level": 11
   },
   {
     "id": "follower_001",
+    "label":"You are getting there",
     "desc": "Get 10 Followers",
     "level": 4
   },
   {
     "id": "follower_002",
+    "label":"Hey everyone!",
     "desc": "Get 100 Followers",
     "level": 6
   },
   {
     "id": "follower_003",
+    "label":"Follower Magnet",
     "desc": "Get 1k Followers",
     "level": 8
   },
   {
     "id": "follower_004",
+    "label":"Mr Popular ",
     "desc": "Get 10k Followers",
     "level": 10
   },
   {
     "id": "follower_005",
-    "label": "Mr.Popular",
+    "label": "You've got a cult following",
     "desc": "Get 100k Followers",
     "level": 12
   },
   {
     "id": "trending_001",
+    "label":" ",
     "desc": "Get Meme in Top 10 Trending",
     "level": 4
   },
   {
     "id": "trending_002",
+    "label":" ",
     "desc": "Get Meme in Top 5 Trending",
     "level": 7
   },
   {
     "id": "trending_003",
+    "label":" ",
     "desc": "Get Meme in Top 3 Trending",
     "level": 10
   },
   {
     "id": "invite_001",
+    "label":"Let the word spread",
     "desc": "Invite 10 Users",
     "level": 1
   },
   {
     "id": "invite_002",
+    "label":"You and your friends",
     "desc": "Invite 50 Users",
     "level": 2
   },
   {
     "id": "invite_003",
+    "label":"Your whole neighborhood",
     "desc": "Invite 100 Users",
     "level": 3
   },
   {
     "id": "invite_004",
+    "label":"Worth of praise",
     "desc": "Invite 500 Users",
     "level": 4
   },
   {
     "id": "invite_005",
+    "label":"We owe you one!",
     "desc": "Invite 1000 Users",
     "level": 4
   }

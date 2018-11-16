@@ -67,14 +67,14 @@
         android:paddingTop="0dp"
         android:text="  Feedback"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView7"
+        app:layout_constraintBottom_toTopOf="@+id/aboutus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/menu_invite" />
 
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/aboutus"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_marginStart="8dp"
@@ -90,32 +90,11 @@
         android:paddingTop="0dp"
         android:text="  About Us"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/logout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/menu_feedback" />
 
-    <TextView
-        android:id="@+id/logout"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="?attr/selectableItemBackground"
-        android:drawablePadding="16dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="40dp"
-        android:paddingTop="0dp"
-        android:text="  Log Out"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <ImageView
         android:layout_width="24dp"
@@ -171,21 +150,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView7"
-        app:layout_constraintStart_toStartOf="@+id/textView7"
-        app:layout_constraintTop_toTopOf="@+id/textView7"
+        app:layout_constraintBottom_toBottomOf="@+id/aboutus"
+        app:layout_constraintStart_toStartOf="@+id/aboutus"
+        app:layout_constraintTop_toTopOf="@+id/aboutus"
         app:layout_constraintVertical_bias="0.437"
         app:srcCompat="@drawable/ic_help_outline_black_24dp" />
-    <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/logout"
-        app:layout_constraintStart_toStartOf="@+id/logout"
-        app:layout_constraintTop_toTopOf="@+id/logout"
-        app:layout_constraintVertical_bias="0.437"
-        app:srcCompat="@drawable/ic_exit_to_app_black_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -97,10 +97,13 @@ interface MemeItService {
     fun getNotifCount(): Call<Int>
 
     @GET("user/{id}/badges")
-    fun getBadgesFor(@Path("uid") uid: String): Call<List<Badge>>
+    fun getBadgesFor(@Path("id") uid: String): Call<List<Badge>>
 
+    /**
+     * @deprecate
+     * */
     @GET("user/me/badges")
-    fun getMyBadges(): Call<List<Badge>>
+    fun getMyBadges_DO_NOT_USE(): Call<List<Badge>>
 
     @GET("user/following/suggestion")
     fun getUserSuggestions(): Call<List<User>>
@@ -276,8 +279,9 @@ interface MemeItService {
     @POST("others/feedback")
     fun postFeedback(@Body feedback: Feedback): Call<ResponseBody>
 
+
     @GET("others/signedUrl")
-    fun getSignedUrl(@Query("filename") filename: String): Call<ResponseBody>
+    fun getSignedUrl(@Query("filename") filename: String): Call<MemeItClient.SignedUrl>
 
     @PUT("/auth/token/{ftoken}")
     fun updateUserToken(@Path("ftoken") token: String): Call<ResponseBody>
@@ -290,6 +294,6 @@ interface MemeItService {
 
 
     @Multipart
-    @POST
+    @POST()
     fun uploadImage(@Url url: String, @Part image: MultipartBody.Part): Call<ResponseBody>
 }

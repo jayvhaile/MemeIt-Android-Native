@@ -40,6 +40,7 @@ import androidx.viewpager.widget.ViewPager;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
 
+
 public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     BottomNavigation bottom_nav;
@@ -84,29 +85,32 @@ public class MainActivity extends AppCompatActivity {
                 .withSavedState(savedInstanceState)
                 .withContentClickableWhenMenuOpened(false)
                 .withRootViewElevationPx(5)
-                .withRootViewScale(0.5f)
+                .withRootViewScale(0.65f)
                 .withMenuLayout(R.layout.drawer_main2);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             sbd.withToolbarMenuToggle(mToolbar);
         }
         rootNav = sbd.inject();
-        findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.aboutus).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MemeItClient.Auth.INSTANCE.signOut();
-                recreate();
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                rootNav.closeMenu(false);
             }
         });
         findViewById(R.id.settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                rootNav.closeMenu(false);
+
             }
         });
         findViewById(R.id.menu_feedback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, FeedbackActivity.class));
+                rootNav.closeMenu(false);
             }
         });
         findViewById(R.id.menu_invite).setOnClickListener(new View.OnClickListener() {
@@ -118,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         .setCallToActionText("download")
                         .build();
                 startActivityForResult(intent, 101);
+                rootNav.closeMenu(false);
             }
         });
 

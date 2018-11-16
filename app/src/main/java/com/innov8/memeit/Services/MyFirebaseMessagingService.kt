@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.preference.PreferenceManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.innov8.memeit.Activities.NotificationActivity
@@ -14,6 +15,7 @@ import com.innov8.memeit.R
 import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
+import com.memeit.backend.dataclasses.MyUser
 import com.memeit.backend.dataclasses.Notification
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -25,6 +27,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         val data = remoteMessage.data
+        val nuid = data["nuid"]
+        val mu = MyUser.get(PreferenceManager.getDefaultSharedPreferences(context)) ?: return
+        if (nuid != mu.id) return
         val n = Notification.parseNotifString(data)
         val enabled = when (n.type) {
             Notification.FOLLOWING_TYPE -> SettingsActivity.isFollowedNotifEnabled(this)

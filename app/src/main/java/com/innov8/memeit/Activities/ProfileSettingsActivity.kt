@@ -39,7 +39,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
                     .start(this)
         }
         settings_name.editText?.text?.append(user.name)
-        settings_bio.editText?.text?.append(user.bio?:"")
+        settings_bio.editText?.text?.append(user.bio ?: "")
         setSupportActionBar(toolbar_profile_settings)
         supportActionBar?.title = "Edit Profile"
     }
@@ -71,7 +71,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
         return false
     }
 
-    fun onSave() {
+    private fun onSave() {
         settings_pp.snack("Updating Profile", duration = Snackbar.LENGTH_LONG)
         val user = MemeItClient.myUser!!
         val newName = settings_name.text
@@ -79,7 +79,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
         if (newName != user.name || newBio != user.bio) {
             if (newName != user.name && settings_name.validateLength(2, 32, "Name"))
                 MemeItUsers.updateName(newName, {
-                    if (newBio != user.bio) {
+                    if (newBio.isNotEmpty() && newBio != user.bio) {
                         MemeItUsers.updateBio(newBio, {
                             toast("Profile Updated")
                             finish()

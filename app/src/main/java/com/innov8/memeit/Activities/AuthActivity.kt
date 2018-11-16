@@ -660,7 +660,7 @@ interface AuthMode {
         }
 
         fun makeIntroGone(constraintSet: ConstraintSet) {
-            constraintSet.connect(R.id.intro_pager, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+            constraintSet.connect(R.id.intro_pager, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.TOP,24.dp)
             constraintSet.clear(R.id.intro_pager, ConstraintSet.TOP)
         }
 
