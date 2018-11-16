@@ -154,13 +154,13 @@ class GifAdapter(context: Context) : CursorAdapter<Video>(context, R.layout.list
             }
         }
 
-        override fun bind(t: Video) {/*
+        override fun bind(t: Video) {
             val r = ResizeOptions(screenWidth / 3, screenWidth / 3, 1024f)
             val req = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(t.uri))
                     .setLocalThumbnailPreviewsEnabled(true)
                     .setResizeOptions(r)
                     .build()
-            thumbnailV.setImageRequest(req)*/
+            thumbnailV.setImageRequest(req)
         }
     }
 }

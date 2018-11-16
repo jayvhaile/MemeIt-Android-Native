@@ -1,6 +1,10 @@
 package com.innov8.memeit
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.os.StrictMode
 import android.preference.PreferenceManager
 import androidx.multidex.MultiDexApplication
@@ -19,6 +23,8 @@ class MemeItApp : MultiDexApplication() {
         private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/$apiVersion/"
         private const val STRICT_MODE = false
         private const val USE_LOCAL_SERVER = false
+
+        const val notidChannelName = "MemeIt Events Notification"
 
     }
 
@@ -40,44 +46,33 @@ class MemeItApp : MultiDexApplication() {
                     .build())
         }
         super.onCreate()
-
         instance = this
-        measure("init memeit") {
-
-
-            MemeItClient.init(applicationContext, if (USE_LOCAL_SERVER) LOCAL_SERVER_URL else SERVER_URL)
-        }
-        measure("init firebase") {
-
-            FirebaseApp.initializeApp(this)
-        }
-        measure("init cloudinary") {
-
-            val config = mapOf(
-                    "cloud_name" to "innov8",
-                    "api_key" to "591249199742556",
-                    "api_secret" to "yT2mxv0vQrEWjzsPrmyD6xu5a-Y"
-            )
-            MediaManager.init(this, config)
-        }
-        measure("init fresco") {
-
-            Fresco.initialize(this, ImagePipelineConfig.newBuilder(this)
-                    .setResizeAndRotateEnabledForNetwork(true)
-                    .setDownsampleEnabled(true)
-                    .build())
-        }
-        measure("init pref") {
-
+        MemeItClient.init(applicationContext, if (USE_LOCAL_SERVER) LOCAL_SERVER_URL else SERVER_URL)
+        FirebaseApp.initializeApp(this)
+        val config = mapOf(
+                "cloud_name" to "innov8",
+                "api_key" to "591249199742556",
+                "api_secret" to "yT2mxv0vQrEWjzsPrmyD6xu5a-Y"
+        )
+        MediaManager.init(this, config)
+        Fresco.initialize(this, ImagePipelineConfig.newBuilder(this)
+                .setResizeAndRotateEnabledForNetwork(true)
+                .setDownsampleEnabled(true)
+                .build())
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-            /*MUser.save(PreferenceManager.getDefaultSharedPreferences(this),
-                "123",
-                SignInMethod.USERNAME,
-                "1234",
-                "jayv",
-                "Jv",
-                "aaa",
-                "aaa")*/
+        initNotificationChannel()
+    }
+
+    private fun initNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                    notidChannelName,
+                    notidChannelName,
+                    NotificationManager.IMPORTANCE_DEFAULT
+            )
+            channel.description = "A channel which shows notification about MemeIt Events"
+            val notifManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notifManager.createNotificationChannel(channel)
         }
     }
 }

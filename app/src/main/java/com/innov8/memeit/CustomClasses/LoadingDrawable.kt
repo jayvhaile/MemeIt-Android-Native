@@ -3,7 +3,6 @@ package com.innov8.memeit.CustomClasses
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
-import android.util.Log
 import com.facebook.drawee.drawable.ProgressBarDrawable
 import com.innov8.memeit.commons.dp
 
@@ -11,9 +10,11 @@ import com.innov8.memeit.commons.dp
 class LoadingDrawable (val context:Context): ProgressBarDrawable() {
     override fun onLevelChange(level: Int): Boolean {
         super.onLevelChange(level)
-        if (level>10000)return false
+        if (level>=10000){
+            anim.end()
+            return false
+        }
         sweepAngle=sweepInitialAngle+(360f-sweepInitialAngle)*(level/10000f)
-        Log.d("fuck",level.toString()+"\t"+(360f-sweepInitialAngle)*(level/10000f))
         invalidateSelf()
         return true
     }
@@ -41,7 +42,10 @@ class LoadingDrawable (val context:Context): ProgressBarDrawable() {
     val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val paint2:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val anim=ValueAnimator.ofFloat(0f,0.1f)
+
+
     init {
+
         paint.color=Color.WHITE
         paint.style=Paint.Style.STROKE
         paint.strokeWidth=strokeSize
@@ -57,6 +61,7 @@ class LoadingDrawable (val context:Context): ProgressBarDrawable() {
         }
         anim.start()
     }
+
 
 
     override fun draw(canvas: Canvas) {

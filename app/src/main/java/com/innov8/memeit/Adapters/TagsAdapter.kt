@@ -3,6 +3,7 @@ package com.innov8.memeit.Adapters
 import android.content.Context
 import android.graphics.Color
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memegenerator.Adapters.MyViewHolder
@@ -26,6 +27,8 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
         color = Color.rgb(255, 100, 0)
 
     }
+
+    var fillWidth = true
 
 
     override fun createViewHolder(view: View): MyViewHolder<Tag> {
@@ -51,11 +54,14 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
         private val tagFollowV: TextView = itemView.findViewById(R.id.follow_tag)
 
         init {
+            if (!fillWidth)
+                itemView.layoutParams = itemView.layoutParams.apply {
+                    width = ViewGroup.LayoutParams.WRAP_CONTENT
+                }
             tagFollowV.setOnClickListener { _ ->
                 val t = getItemAt(item_position)
                 if (tagFollowV.text == "Unfollow")
                     MemeItUsers.unfollowTag(t.tag).call({
-
                         context?.toast("Unfollowed")
                         tagFollowV.text = "Follow"
                     }, {

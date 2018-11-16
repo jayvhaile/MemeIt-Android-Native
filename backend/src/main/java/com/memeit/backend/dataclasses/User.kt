@@ -12,7 +12,7 @@ data class User(var uid: String? = null,
                 var bio: String? = null,
                 var username: String? = null,
                 @SerializedName("pic") var imageUrl: String? = null,
-                @SerializedName("cpic")var coverImageUrl: String? = null,
+                @SerializedName("cpic") var coverImageUrl: String? = null,
                 var followerCount: Int = 0,
                 var followingCount: Int = 0,
                 var postCount: Int = 0,
@@ -31,7 +31,20 @@ data class User(var uid: String? = null,
             parcel.readInt(),
             parcel.readByte() != 0.toByte(),
             parcel.readByte() != 0.toByte())
-    constructor(poster: Poster):this(uid=poster.id,name=poster.name,imageUrl = poster.profileUrl)
+
+    constructor(poster: Poster) : this(uid = poster.id, name = poster.name, imageUrl = poster.profileUrl)
+    constructor(mu: MyUser) : this(
+            mu.id,
+            mu.name,
+            mu.bio,
+            mu.username,
+            mu.profilePic,
+            mu.coverPic,
+            mu.followerCount,
+            mu.followingCount,
+            mu.postCount
+    )
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(uid)
         parcel.writeString(name)

@@ -12,30 +12,34 @@ import com.memeit.backend.dataclasses.HomeElement
 class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
     val usersPool = RecyclerView.RecycledViewPool()
     val tagsPool = RecyclerView.RecycledViewPool()
-    val temlplatesPool = RecyclerView.RecycledViewPool()
+    val templatesPool = RecyclerView.RecycledViewPool()
 
+    init {
+
+
+    }
 
     override fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
-        when (viewType) {
+        return when (viewType) {
             HomeElement.MEME_TYPE -> {
-                return MemeListViewHolder(MemeView(context), this)
+                MemeListViewHolder(MemeView(context), this)
             }
             HomeElement.USER_SUGGESTION_TYPE -> {
                 val v = inflater.inflate(R.layout.list_item_list, parent, false)
-                return UserSuggestionHolder(v, this)
+                UserSuggestionHolder(v, this)
             }
             HomeElement.TAG_SUGGESTION_TYPE -> {
                 val v = inflater.inflate(R.layout.list_item_list, parent, false)
-                return TagSuggestionHolder(v, this)
+                TagSuggestionHolder(v, this)
             }
             HomeElement.MEME_TEMPLATE_SUGGESTION_TYPE -> {
                 val v = inflater.inflate(R.layout.list_item_list, parent, false)
-                return MemeTemplateSuggestionHolder(v, this)
+                MemeTemplateSuggestionHolder(v, this)
             }
             HomeElement.AD_TYPE -> {
-                return measure("inflate") {
-                    val v = measure("flating") { inflater.inflate(R.layout.list_item_ad, parent, false) }
-                    measure("create") { AdHolder(v, this) }
+                measure("ad whole") {
+                    val v = inflater.inflate(R.layout.list_item_ad_holder, parent, false)
+                    measure("ad create") { AdHolder(v, this) }
                 }
             }
             else -> {

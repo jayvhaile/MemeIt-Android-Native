@@ -2,10 +2,11 @@ package com.innov8.memeit.Loaders
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.innov8.memeit.commons.models.MemeTemplate
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.innov8.memeit.*
 import com.innov8.memeit.CustomClasses.AdElement
-import com.innov8.memeit.MemeItApp
-import com.innov8.memeit.trim
+import com.innov8.memeit.commons.models.MemeTemplate
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.dataclasses.*
@@ -18,18 +19,35 @@ import retrofit2.Call
 import retrofit2.Response
 
 class HomeMemeLoader() : MemeLoader<HomeElement> {
+    private val frc = FirebaseRemoteConfig.getInstance().apply {
+        setConfigSettings(FirebaseRemoteConfigSettings.Builder().build())
+        setDefaults(getDefaults())
+        fetch().addOnSuccessListener {
+            activateFetched()
+        }.addOnFailureListener {
+            log(it.message?:"")
+
+        }
+    }
+    private val offsets = listOf(
+            RCK_USER_SUG_OFFSET,
+            RCK_TAG_SUG_OFFSET,
+            RCK_TEMPLATE_SUG_OFFSET,
+            RCK_AD_OFFSET
+    ).map { frc.getLong(it) }
+    private val freqs = listOf(
+            RCK_USER_SUG_FREQ,
+            RCK_TAG_SUG_FREQ,
+            RCK_TEMPLATE_SUG_FREQ,
+            RCK_AD_FREQ
+    ).map { frc.getLong(it) }
     override var skip: Int = 0
-
-
     private var userSuggestions: List<User>? = null
     private var tagsSuggestions: List<Tag>? = null
     private var memeTemplates: List<MemeTemplate>? = null
-
     private var usersLoaded = false
     private var tagsLoaded = false
     private var templateLoaded = false
-
-
     var index = 0
     val offset = 2
     var type = 0
@@ -44,16 +62,14 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
         constructor(res: Response<T>) : this(res.body(), res.errorBody()?.string() ?: res.message())
     }
 
-    fun <T> Call<T>.execSafe(): Result<T> =
+    private fun <T> Call<T>.execSafe(): Result<T> =
             try {
                 this.execute().toResult()
             } catch (e: Exception) {
                 Result(e.message)
             }
 
-
-    fun <T> Response<T>.toResult() = Result(this)
-
+    private fun <T> Response<T>.toResult() = Result(this)
     override fun load(limit: Int, onSuccess: (List<HomeElement>) -> Unit, onError: (String) -> Unit) {
         launch(UI) {
             val memes = withContext(CommonPool) { MemeItMemes.getHomeMemes(skip, limit).execSafe() }
@@ -87,11 +103,12 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
                     memes.body?.forEach {
                         homeElements.add(it)
                         index++
-                        if (index % offset == 0) {
-                            val x = loadHorizontalHomeElement()
-                            if (x != null) {
-                                homeElements.add(x)
-                            }
+                        bakersList.forEachIndexed { i, baker ->
+                            if ((index-offsets[i])%freqs[i]==0L)
+                                baker.invoke()?.let {elem->
+                                    homeElements.add(elem)
+                                    index++
+                                }
                         }
                     }
                     homeElements
@@ -100,17 +117,6 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
 
         }
     }
-
-    private fun loadHorizontalHomeElement(): HomeElement? {
-        var horizontalElement: HomeElement? = null
-        val s = type % bakersList.size
-        while (horizontalElement == null && s < s + bakersList.size) {
-            horizontalElement = bakersList[type % bakersList.size]()
-            type++
-        }
-        return horizontalElement
-    }
-
     private val bakersList = listOf(
             { bakeSuggestion() },
             { bakeTags() },

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <PreferenceCategory android:title="Account">
+        <Preference android:title="Username">
+            <intent
+                android:targetClass="com.innov8.memeit.Activities.UsernameSettingsActivity"
+                android:targetPackage="com.innov8.memeit" />
+        </Preference>
+        <Preference android:title="Password" android:key="pref_key_password">
+            <intent
+                android:targetClass="com.innov8.memeit.Activities.PasswordSettingsActivity"
+                android:targetPackage="com.innov8.memeit" />
+        </Preference>
+        <Preference android:title="Profile">
+            <intent
+                android:targetClass="com.innov8.memeit.Activities.ProfileSettingsActivity"
+                android:targetPackage="com.innov8.memeit" />
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Data Usage">
+        <ListPreference
+            android:defaultValue="@string/pref_image_quality_def"
+            android:dialogTitle="Choose Image Quality"
+            android:entries="@array/pref_image_quality"
+            android:entryValues="@array/pref_image_quality"
+            android:key="pref_image_quality"
+            android:title="Image Quality" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref_load_gif"
+            android:title="Automatically Load Gif Memes" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Push Notification">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref_enable_notif"
+            android:title="Enable Notifications" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="pref_enable_notif"
+            android:key="pref_enable_notif_followed"
+            android:title="Notify when followed" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="pref_enable_notif"
+            android:key="pref_enable_notif_reaction"
+            android:title="Notify Reaction on Upload" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="pref_enable_notif"
+            android:key="pref_enable_notif_comment"
+            android:title="Notify Comment on Upload" />
+    </PreferenceCategory>
+    <Preference android:title="Logout" />
+</PreferenceScreen>

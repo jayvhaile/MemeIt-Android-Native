@@ -4,14 +4,13 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.media.RingtoneManager
-import android.net.Uri
-import android.text.TextUtils
+import android.os.Build
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.innov8.memeit.Activities.MainActivity
+import com.innov8.memeit.Activities.NotificationActivity
+import com.innov8.memeit.Activities.SettingsActivity
+import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
-import com.innov8.memeit.log
 import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
@@ -26,27 +25,31 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         val data = remoteMessage.data
-        val n = Notification.parseNotif(data)
-        sendUserNotification(NotifData(n.title, n.message), 542)
-        log("fuck yeahhh", data.toString())
-
+        val n = Notification.parseNotifString(data)
+        val enabled = when (n.type) {
+            Notification.FOLLOWING_TYPE -> SettingsActivity.isFollowedNotifEnabled(this)
+            Notification.REACTION_TYPE -> SettingsActivity.isReactionNotifEnabled(this)
+            Notification.COMMENT_TYPE -> SettingsActivity.isCommentNotifEnabled(this)
+            else -> SettingsActivity.isNotifEnabled(this)
+        }
+        if (enabled) sendUserNotification(NotifData(n.title, n.message), 542)
     }
 
 
     private fun sendUserNotification(data: NotifData, notifyID: Int) {
 
         val pendingIntent = PendingIntent.getActivity(context, 0, data.intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val builder = android.app.Notification.Builder(context)
+        val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            android.app.Notification.Builder(context, MemeItApp.notidChannelName)
+        } else {
+            android.app.Notification.Builder(context)
+        }
         builder.setContentTitle(data.title)
                 .setAutoCancel(true)
-                .setPriority(android.app.Notification.PRIORITY_HIGH)
-                .setSound(data.sound)
                 .setContentIntent(pendingIntent)
                 .setStyle(android.app.Notification.BigTextStyle().bigText(data.message))
                 .setContentText(data.message)
-                .setDefaults(android.app.Notification.DEFAULT_VIBRATE)
                 .setSmallIcon(data.icon)
-        if (!TextUtils.isEmpty(data.ticker)) builder.setTicker(data.ticker)
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         manager.notify(notifyID, builder.build())
@@ -55,9 +58,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private data class NotifData(val title: String,
                                  val message: String,
                                  val icon: Int = R.mipmap.icon,
-                                 val intent: Intent = Intent(context, MainActivity::class.java).apply {
+                                 val intent: Intent = Intent(context, NotificationActivity::class.java).apply {
                                      addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                 },
-                                 val ticker: String? = null,
-                                 val sound: Uri? = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                                 })
 }

@@ -75,6 +75,8 @@ class AuthActivity : AppCompatActivity() {
         signupMode.init()
         loginMode.init()
         personalizeMode.init()
+
+        dots_indicator.setViewPager(intro_pager)
         action_btn.setOnClickListener {
             execOnAction()
         }
@@ -152,11 +154,11 @@ class AuthActivity : AppCompatActivity() {
     }
 
     companion object {
-        val STARTING_MODE_PARAM = "frag"
-        val MODE_INTRO = 0
-        val MODE_LOGIN = 1
-        val MODE_SIGNUP = 2
-        val MODE_PERSONALIZE = 3
+        const val STARTING_MODE_PARAM = "frag"
+        const val MODE_INTRO = 0
+        const val MODE_LOGIN = 1
+        const val MODE_SIGNUP = 2
+        const val MODE_PERSONALIZE = 3
     }
 
     fun setMode(mode: AuthMode, bundle: Bundle? = null, withAnimation: Boolean = true) {
@@ -300,11 +302,18 @@ class AuthActivity : AppCompatActivity() {
                     }
                 }, onError)
             }.addOnFailureListener {
-                onError(it.message!!)
+                val req = UsernameAuthRequest(username_field.text,
+                        password_field.text,
+                        email_field.text,
+                        "")
+                MemeItClient.Auth.signUpWithUsername(req, { _ ->
+                    setLoading(false) {
+                        setMode(personalizeMode)
+                    }
+                }, onError)
             }
 
         }
-
 
         override fun onFacebook() {
             MemeItClient.Auth.requestFacebookInfo(this@AuthActivity, callbackManager, {
@@ -387,8 +396,8 @@ class AuthActivity : AppCompatActivity() {
         override fun getLastField(): TextInputLayout? = password_field
 
 
-        val onSignedIn by lazy {
-            { user: User ->
+        private val onSignedIn by lazy {
+            { _: User ->
                 setLoading(false)
                 val i = Intent(this@AuthActivity, MainActivity::class.java)
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)

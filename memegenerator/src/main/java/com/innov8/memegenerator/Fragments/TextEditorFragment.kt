@@ -40,7 +40,7 @@ class TextEditorFragment : Fragment() {
     lateinit var strokeSize: IndicatorSeekBar
     lateinit var strokeColorChooser: ColorChooser
 
-    fun createViews(inflater: LayoutInflater) {
+    fun createViews() {
         colorChooser = ColorChooser(context!!).apply {
             onColorChoosed = { textEditListener?.onTextColorChanged(it) }
 
@@ -80,7 +80,7 @@ class TextEditorFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.text_pager, container, false)
         strokeView = inflater.inflate(R.layout.text_editor_stroke_tab, container, false)
-        createViews(inflater)
+        createViews()
         return v
     }
 

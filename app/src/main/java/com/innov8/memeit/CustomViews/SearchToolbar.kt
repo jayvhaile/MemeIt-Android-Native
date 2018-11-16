@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.log
 import com.innov8.memeit.commons.toast
-import com.innov8.memeit.Adapters.TagSuggestionAdapter
+import com.innov8.memeit.Adapters.TagSearchAdapter
 import com.innov8.memeit.DP
 import com.innov8.memeit.R
 import com.innov8.memeit.dp
@@ -56,7 +56,7 @@ class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
         init()
     }
 
-    lateinit var adapter: TagSuggestionAdapter
+    lateinit var adapter: TagSearchAdapter
 
 
     private fun init() {
@@ -66,7 +66,7 @@ class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
         editText = inflater.inflate(R.layout.search_edit, null) as EditText
         //editText.inputType = InputType.TYPE_CLASS_TEXT
         editText.maxLines = 1
-        adapter = TagSuggestionAdapter(context)
+        adapter = TagSearchAdapter(context)
 
         val v: View = inflater.inflate(R.layout.tag_suggestion, null)
         val list: RecyclerView = v.findViewById(R.id.sug_list)

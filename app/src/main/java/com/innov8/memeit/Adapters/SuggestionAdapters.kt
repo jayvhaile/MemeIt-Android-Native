@@ -34,7 +34,7 @@ class UserSugAdapter(context: Context) : ListAdapter<User>(context, R.layout.lis
         }
 
         override fun bind(t: User) {
-            profileV.text = t.name.prefix()
+            profileV.setText(t.name.prefix())
             nameV.text = t.name
         }
     }

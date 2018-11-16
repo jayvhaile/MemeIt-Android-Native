@@ -19,7 +19,7 @@
     <dimen name="toolbar_iheight">150dp</dimen>
 
 <!--====================================PROFILE DIMENS===========================================-->
-    <dimen name="profile_collapsing_toolbar_expanded_height">240dp</dimen>
+    <dimen name="profile_collapsing_toolbar_expanded_height">300dp</dimen>
     <dimen name="profile_toolbar_height">56dp</dimen>
     <dimen name="profile_tab_height">48dp</dimen>
 

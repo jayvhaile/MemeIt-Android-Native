@@ -115,13 +115,13 @@ class MemeTextView : MemeItemView {
                 MaterialDialog.Builder(context)
                         .title("Insert Text")
                         .inputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE)
-                        .input("Write the text here", text,
-                                { _, input ->
-                                    text = input.toString()
-                                })
+                        .input("Write the text here", text
+                        ) { _, input ->
+                            text = input.toString()
+                        }
                         .show()
             }
-        onResize = { w, h ->
+        onResize = { _, h ->
             resetDL()
         }
     }

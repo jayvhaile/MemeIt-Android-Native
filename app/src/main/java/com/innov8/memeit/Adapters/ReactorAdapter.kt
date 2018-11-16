@@ -9,8 +9,8 @@ import android.widget.TextView
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.Activities.ProfileActivity
-import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.getDrawableID
 import com.innov8.memeit.loadImage
 import com.innov8.memeit.prefix
@@ -48,7 +48,7 @@ class ReactorAdapter(context: Context) : SimpleELEListAdapter<Reaction>(context,
 
         override fun bind(t: Reaction) {
             reactorPPV.loadImage(t.poster!!.profileUrl)
-            reactorPPV.text = t.poster!!.name.prefix()
+            reactorPPV.setText(t.poster!!.name.prefix())
             reactorNameV.text = t.poster!!.name
             reactorReactionV.setImageResource(t.getDrawableID())
         }

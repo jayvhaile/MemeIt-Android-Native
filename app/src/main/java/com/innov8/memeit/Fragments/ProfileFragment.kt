@@ -2,6 +2,7 @@ package com.innov8.memeit.Fragments
 
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -16,6 +17,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.innov8.memeit.Activities.TagsActivity
+import com.innov8.memeit.Activities.UserListActivity
 import com.innov8.memeit.Activities.UserTagActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomClasses.CustomMethods
@@ -41,7 +43,6 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     private val isMe: Boolean
         get() = userID == MemeItClient.myUser?.id
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val myID = MemeItClient.myUser?.id
@@ -57,48 +58,47 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         val adapter = ViewPagerAdapter(childFragmentManager)
         profile_viewpager.adapter = adapter
+        initTab()
+        initListeners()
+        toolbar.inflateMenu(R.menu.profile_page_menu)
+        profile_follow_btn.visibility = if (isMe) GONE else VISIBLE
+        size = resources.getDimension(R.dimen.image_width)
+        if (isMe) updateView(MemeItClient.myUser!!.toUser())
+        else if (userData != null) updateView(userData!!)
+
+        loadData()
+    }
+
+    private fun initTab() {
         tabs_profile.setupWithViewPager(profile_viewpager)
-
-
         listOf(
-                R.drawable.ic_followers,
-                R.drawable.ic_followings,
                 R.drawable.ic_grid,
                 R.drawable.ic_list,
                 R.drawable.ic_badges
         ).forEachIndexed { index, id ->
             tabs_profile.getTabAt(index)?.apply {
                 setCustomView(R.layout.tab_icon)
-                (customView as ImageView).setImageResource(id)
+                (customView as ImageView).apply {
+                    setImageResource(id)
+                }
             }
         }
-        tabs_profile.addOnTabSelectedListener(object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab?> {
-            override fun onTabReselected(p0: TabLayout.Tab?) {
+    }
 
-            }
+    private fun initListeners() {
+        val onFollowerClicked = { _: View -> UserListActivity.startActivity(context!!, FollowerLoader(userID)) }
+        profile_followers.setOnClickListener(onFollowerClicked)
+        profile_followers_count.setOnClickListener(onFollowerClicked)
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                tab?.customView?.isSelected = false
+        val onFollowingClicked = { _: View -> UserListActivity.startActivity(context!!, FollowingLoader(userID)) }
+        profile_followings.setOnClickListener(onFollowingClicked)
+        profile_followings_count.setOnClickListener(onFollowingClicked)
 
-            }
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                tab?.customView?.isSelected = true
-            }
-        })
-        profile_viewpager.setCurrentItem(2, false)
-
-        toolbar.inflateMenu(R.menu.profile_page_menu)
-        toolbar.setOnMenuItemClickListener(this)
-
-        profile_follow_btn.visibility = if (isMe) GONE else VISIBLE
-
-        profile_follow_btn.setOnClickListener { view ->
+        profile_follow_btn.setOnClickListener { _ ->
             if (profile_follow_btn.text == "Follow") {
                 MemeItUsers.followUser(userID).call({
                     profile_follow_btn.text = "Unfollow"
                     context?.toast("Followed")
-
                 }, {
                     context?.toast("Failed to Follow:- $it")
                 })
@@ -106,30 +106,32 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                 MemeItUsers.unfollowUser(userID).call({
                     profile_follow_btn.text = "Follow"
                     context?.toast("Unfollowed")
-
                 }, {
                     context?.toast("Failed to unfollow:- $it")
                 })
             }
         }
-        size = resources.getDimension(R.dimen.image_width)
-        if (isMe) loadFast()
-        else if (userData != null) updateView()
-        loadData()
-    }
+        toolbar.setOnMenuItemClickListener(this)
+        tabs_profile.addOnTabSelectedListener(object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab?> {
+            override fun onTabReselected(p0: TabLayout.Tab?) {
 
-    private fun loadFast() {
-        val myUser = MemeItClient.myUser
-        profile_name.text = myUser!!.name
-        profile_image.text = myUser.name.prefix()
-        profile_image.loadImage(myUser.profilePic, size, size)
+            }
 
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                (tab?.customView as ImageView).setColorFilter(Color.GRAY)
+
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                (tab?.customView as ImageView).setColorFilter(Color.parseColor("#ff5e00"))
+            }
+        })
     }
 
     private fun loadData() {
         val onLoaded = { user: User ->
             userData = user
-            updateView()
+            updateView(user)
         }
         val onError: (String) -> Unit = { context?.toast("Failed to load User Data:- $it") }
         if (isMe)
@@ -139,13 +141,15 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
     }
 
-    private fun updateView() {
-        profile_name?.text = userData!!.name
-        profile_image?.text = userData!!.name.prefix()
-        profile_image?.loadImage(userData!!.imageUrl, size, size)
-        profile_followers_count?.text = CustomMethods.formatNumber(userData!!.followerCount)
-        profile_meme_count?.text = CustomMethods.formatNumber(userData!!.postCount)
-        profile_follow_btn?.text = if (userData?.isFollowedByMe == true) "Unfollow" else "Follow"
+    private fun updateView(user: User) {
+        profile_name?.text = user.name
+        profile_bio?.text = user.bio
+        profile_image?.setText(user.name.prefix())
+        profile_image?.loadImage(user.imageUrl, size, size)
+        profile_followers_count?.text = CustomMethods.formatNumber(user.followerCount)
+        profile_followings_count?.text = CustomMethods.formatNumber(user.followingCount)
+        profile_meme_count?.text = CustomMethods.formatNumber(user!!.postCount)
+        profile_follow_btn?.text = if (user.isFollowedByMe == true) "Unfollow" else "Follow"
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -166,10 +170,8 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
 
     internal inner class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
-        var titles = arrayOf("Following", "Followers", "Memes", "Memes", "Badges")
+        //        var titles = arrayOf("Following", "Followers", "Memes", "Memes", "Badges")
         var fragments: Array<Fragment> = arrayOf(
-                UserListFragment.newInstance(FollowingLoader(userID)),
-                UserListFragment.newInstance(FollowerLoader(userID)),
                 MemeListFragment.newInstanceForUserPosts(userID),
                 MemeListFragment.newInstanceForUserPosts(userID, MemeAdapter.LIST_ADAPTER),
                 BadgeFragment())

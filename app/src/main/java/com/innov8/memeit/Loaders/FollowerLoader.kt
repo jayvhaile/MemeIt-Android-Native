@@ -6,7 +6,7 @@ import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.memeit.backend.dataclasses.User
 
-class FollowerLoader(private val uid: String?) : UserListLoader {
+class FollowerLoader( val uid: String?) : UserListLoader {
     override var skip: Int = 0
 
     constructor(parcel: Parcel) : this(parcel.readString())

@@ -41,11 +41,10 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        7
+
         <activity android:name=".Activities.TagsActivity" />
         <activity android:name=".Activities.MemeChooser" />
         <activity android:name=".Activities.ReactorListActivity" />
-
         <activity android:name=".Activities.UserTagActivity" />
         <activity android:name=".Activities.TagsChooserActivity" />
         <activity android:name=".Activities.FeedbackActivity" />
@@ -70,6 +69,16 @@
 
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Activities.ProfileSettingsActivity"
+            android:parentActivityName=".Activities.SettingsActivity" />
+        <activity
+            android:name=".Activities.PasswordSettingsActivity"
+            android:parentActivityName=".Activities.SettingsActivity" />
+        <activity
+            android:name=".Activities.UsernameSettingsActivity"
+            android:parentActivityName=".Activities.SettingsActivity" />
+        <activity android:name=".Activities.UserListActivity" />
     </application>
 
 </manifest>

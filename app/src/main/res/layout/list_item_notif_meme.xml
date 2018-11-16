@@ -91,7 +91,6 @@
                 android:layout_marginBottom="8dp"
                 android:background="#eee"
                 app:actualImageScaleType="centerCrop"
-                app:failureImage="@drawable/ic_sync_problem"
                 app:layout_constraintBottom_toTopOf="@+id/notif_date"
                 app:layout_constraintDimensionRatio="w,16:9"
                 app:layout_constraintEnd_toEndOf="parent"

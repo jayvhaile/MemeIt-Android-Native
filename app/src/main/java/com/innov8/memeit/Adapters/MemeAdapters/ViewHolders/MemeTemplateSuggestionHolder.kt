@@ -22,7 +22,7 @@ class MemeTemplateSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : M
         list.adapter = adapter
         title.text = "Meme Templates to Edit"
         memeAdapter as HomeMemeAdapter
-        list.setRecycledViewPool(memeAdapter.temlplatesPool)
+        list.setRecycledViewPool(memeAdapter.templatesPool)
 
     }
 

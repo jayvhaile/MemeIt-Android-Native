@@ -3,9 +3,8 @@ package com.innov8.memeit.Adapters.MemeAdapters.ViewHolders
 import android.view.View
 import android.widget.FrameLayout
 import com.facebook.drawee.view.SimpleDraweeView
-import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.Adapters.MemeAdapters.GridMemeAdapter
-import com.innov8.memeit.CustomClasses.LoadingDrawable
+import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.R
 import com.innov8.memeit.loadMeme
 import com.innov8.memeit.screenWidth
@@ -20,7 +19,6 @@ class MemeGridViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
         val lp = FrameLayout.LayoutParams(width, width)
         memeImageV.layoutParams = lp
         memeImageV.setOnClickListener { memeClickedListener?.invoke(getCurrentMeme().id!!) }
-        memeImageV.hierarchy.setProgressBarImage(LoadingDrawable(memeAdapter.context))
     }
 
     override fun bind(homeElement: HomeElement) {

@@ -12,7 +12,7 @@ import com.innov8.memeit.R
 import com.memeit.backend.dataclasses.Tag
 import java.util.*
 
-class TagSuggestionAdapter(val context: Context) : RecyclerView.Adapter<TagSuggestionAdapter.TagViewHolder>() {
+class TagSearchAdapter(val context: Context) : RecyclerView.Adapter<TagSearchAdapter.TagViewHolder>() {
 
 
     private val items: MutableSet<Tag>
@@ -59,8 +59,7 @@ class TagSuggestionAdapter(val context: Context) : RecyclerView.Adapter<TagSugge
     }
 
     fun addAll(items: List<Tag>) {
-        if (items.size == 0) return
-        val start = this.items.size
+        if (items.isEmpty()) return
         this.items.addAll(items)
         filter()
     }

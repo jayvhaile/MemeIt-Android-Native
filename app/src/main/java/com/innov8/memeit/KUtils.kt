@@ -59,11 +59,12 @@ fun formatDate(date: Long): String {
     //todo locale based on selected lang
     val sdf = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
     val sdf2 = SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH)
-    if (date < 0 || date > now) {
+    if (date < 0) {
         throw IllegalArgumentException("Illegal Date")
     }
 
-    val diff = now - date
+
+    val diff = if (date > now) 0 else now - date
     return when {
         diff < MINUTE_MILLIS -> "just now"
         diff < 2 * MINUTE_MILLIS -> "a minute ago"
@@ -102,13 +103,7 @@ private fun getImageMemeUrl(id: String, ratio: Float = 1f): String {
     val w = (screenWidth * fac) step 50
     val h = ((screenWidth / ratio).toInt()
             .trim(200.dp, screenHeight - 200.dp) * fac) step 50
-
-    val thigh = Transformation<Transformation<*>>()
-            .quality(quality)
-            .crop("fit")
-            .width(w)
-            .height(h)
-    return MediaManager.get().url().transformation(thigh).source(id).generate()
+    return "http://res.cloudinary.com/innov8/image/upload/c_fit,h_$h,q_$quality,w_$w/$id"
 }
 
 private fun getGifMemeUrl(id: String): String {
@@ -131,13 +126,10 @@ fun Meme.generateUrl() = when (getType()) {
 }
 
 private fun SimpleDraweeView.loadImageMeme(id: String, ratio: Float = 1f, resizeWidth: Int, resizeHeight: Int) {
-    val tlow = Transformation<Transformation<*>>().quality("5")
-            .width(50)
-            .height(50)
-            .crop("fit")
-            .effect("blur", 60)
-
-    val low = MediaManager.get().url().transformation(tlow).source(id).generate()
+    val lowSize = 50
+    val lowQuality = 5
+    val blurSize = 60
+    val low = "http://res.cloudinary.com/innov8/image/upload/c_fit,e_blur:$blurSize,h_$lowSize,q_$lowQuality,w_$lowSize/$id"
     val high = getImageMemeUrl(id, ratio)
     val lowReq = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(low))
             .setPostprocessor(IterativeBoxBlurPostProcessor(2))
@@ -216,15 +208,12 @@ fun ProfileDraweeView.loadImage(url: String?, width: Float = R.dimen.profile_min
 
     val level = SettingsActivity.getImageQualityLevel(context)
     val quality = SettingsActivity.quality[level]
-    val t = Transformation<Transformation<*>>()
+    /*val t = Transformation<Transformation<*>>()
             .width(width)
             .height(height)
             .quality(quality)
-            .crop("fit")
-
-    val u = MediaManager.get().url().source(url).generate()
-    log("awrk", u)
-
+            .crop("fit")*/
+    val u="http://res.cloudinary.com/innov8/image/upload/$url"
     setImageRequest(ImageRequest.fromUri(u))
 }
 
@@ -348,6 +337,17 @@ fun String?.validateEmailOrEmpty(): String? = if (!isEmailOrEmpty()) "Invalid Em
 
 fun View.snack(message: String, duration: Int = Snackbar.LENGTH_SHORT, root: Boolean = false) {
     Snackbar.make(if (root) rootView else this, message, duration).show()
+}
+
+fun View.snack(message: String, actionText: String? = null, action: ((View) -> Unit)? = null, duration: Int = Snackbar.LENGTH_SHORT) {
+    Snackbar.make(this, message, duration).applyIf(actionText != null && action != null) {
+        setAction(actionText!!, action!!)
+    }.show()
+}
+
+fun <T> T.applyIf(condition: Boolean, block: T.() -> Unit): T {
+    if (condition) block()
+    return this
 }
 
 fun View.animateVisibility() {

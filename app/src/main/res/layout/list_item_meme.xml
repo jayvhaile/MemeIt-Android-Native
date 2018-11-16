@@ -55,14 +55,11 @@
         app:layout_constraintEnd_toStartOf="@+id/meme_options"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_share_black_24dp" />
-
     <ImageButton
         android:id="@+id/meme_options"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_height="0dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="4dp"
         android:background="#0000"
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintRight_toRightOf="parent"
@@ -84,6 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#c000"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/meme_image"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toEndOf="parent"
@@ -91,48 +89,42 @@
     <!--react buttons-->
     <ImageView
         android:id="@+id/react_funny"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="@+id/meme_image"
-        app:layout_constraintEnd_toStartOf="@+id/react_veryfunny"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="@+id/meme_image"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/react_button"
+        app:layout_constraintEnd_toEndOf="@+id/react_button"
+        app:layout_constraintStart_toStartOf="@+id/react_button"
+        app:layout_constraintTop_toTopOf="@+id/react_button"
         app:srcCompat="@drawable/laughing" />
 
     <ImageView
         android:id="@+id/react_veryfunny"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="@+id/meme_image"
-        app:layout_constraintEnd_toStartOf="@+id/react_stupid"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintLeft_toRightOf="@id/react_funny"
-        app:layout_constraintRight_toLeftOf="@+id/react_stupid"
-        app:layout_constraintStart_toEndOf="@+id/react_funny"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/react_button"
+        app:layout_constraintEnd_toEndOf="@+id/react_button"
+        app:layout_constraintStart_toStartOf="@+id/react_button"
+        app:layout_constraintTop_toTopOf="@+id/react_button"
         app:srcCompat="@drawable/rofl" />
 
     <ImageView
         android:id="@+id/react_stupid"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="@+id/meme_image"
-        app:layout_constraintEnd_toStartOf="@+id/react_angry"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toEndOf="@+id/react_veryfunny"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/react_button"
+        app:layout_constraintEnd_toEndOf="@+id/react_button"
+        app:layout_constraintStart_toStartOf="@+id/react_button"
+        app:layout_constraintTop_toTopOf="@+id/react_button"
         app:srcCompat="@drawable/neutral" />
 
     <ImageView
         android:id="@+id/react_angry"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="@+id/meme_image"
-        app:layout_constraintEnd_toEndOf="@id/meme_image"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toEndOf="@+id/react_stupid"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/react_button"
+        app:layout_constraintEnd_toEndOf="@+id/react_button"
+        app:layout_constraintStart_toStartOf="@+id/react_button"
+        app:layout_constraintTop_toTopOf="@+id/react_button"
         app:srcCompat="@drawable/angry" />
     <!--react counts-->
     <com.innov8.memeit.commons.views.FontTextView
@@ -277,6 +269,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="60dp" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

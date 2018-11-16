@@ -1,7 +1,6 @@
 package com.innov8.memeit.Activities;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import com.innov8.memeit.R;
 import com.memeit.backend.MemeItClient;
 import com.memeit.backend.MemeItUsers;
 import com.memeit.backend.OnCompleted;
-import com.minibugdev.drawablebadge.DrawableBadge;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void goToSignUpDetails() {
         Intent intent = new Intent(this, AuthActivity.class);
-        intent.putExtra(AuthActivity.Companion.getSTARTING_MODE_PARAM(), AuthActivity.Companion.getMODE_PERSONALIZE());
+        intent.putExtra(AuthActivity.STARTING_MODE_PARAM, AuthActivity.MODE_PERSONALIZE);
         startActivity(intent);
         finish();
     }
@@ -87,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 .withContentClickableWhenMenuOpened(false)
                 .withRootViewElevationPx(5)
                 .withRootViewScale(0.5f)
-                .withMenuLayout(R.layout.drawer_main); //todo fix the menu_drawer crashes due to the drawables on api level < 21
+                .withMenuLayout(R.layout.drawer_main2);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             sbd.withToolbarMenuToggle(mToolbar);
         }
@@ -239,12 +237,12 @@ public class MainActivity extends AppCompatActivity {
         MemeItUsers.INSTANCE.getNotifCount().enqueue(new OnCompleted<Integer>() {
             @Override
             public void onSuccess(Integer integer) {
-                Drawable d = new DrawableBadge.Builder(MainActivity.this)
+                /*Drawable d = new DrawableBadge.Builder(MainActivity.this)
                         .drawableResId(R.drawable.ic_notifications_black_24dp)
                         .maximumCounter(99)
                         .build()
                         .get(integer);
-                notifItem.setIcon(d);
+                notifItem.setIcon(d);*/
             }
 
             @Override

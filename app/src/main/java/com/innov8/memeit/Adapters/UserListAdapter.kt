@@ -8,19 +8,19 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import com.github.ybq.android.spinkit.style.CubeGrid
-
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
 import com.innov8.memeit.Activities.ProfileActivity
+import com.innov8.memeit.R
 import com.innov8.memeit.commons.views.FontTextView
 import com.innov8.memeit.commons.views.ProfileDraweeView
-import com.innov8.memeit.*
-import com.innov8.memeit.R
+import com.innov8.memeit.loadImage
+import com.innov8.memeit.prefix
 import com.memeit.backend.MemeItClient
-import com.memeit.backend.dataclasses.MUser
-import com.memeit.backend.dataclasses.User
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.OnCompleted
+import com.memeit.backend.dataclasses.MyUser
+import com.memeit.backend.dataclasses.User
 import okhttp3.ResponseBody
 
 class UserListAdapter(mContext: Context,override var emptyDescription: String) : SimpleELEListAdapter<User>(mContext, R.layout.list_item_follower) {
@@ -33,7 +33,7 @@ class UserListAdapter(mContext: Context,override var emptyDescription: String) :
         color = Color.rgb(255, 100, 0)
     }
     private val tf: Typeface = Typeface.createFromAsset(mContext.assets, FontTextView.asset)
-    private val myUser: MUser? = MemeItClient.myUser
+    private val myUser: MyUser? = MemeItClient.myUser
     internal var size: Float = mContext.resources.getDimension(R.dimen.profile_mini_size)
 
 
@@ -66,9 +66,9 @@ class UserListAdapter(mContext: Context,override var emptyDescription: String) :
                             followButton.revertAnimation { followButton.text = "Follow" }
                         }
 
-                        override fun onError(error: String) {
+                        override fun onError(message: String) {
                             followButton.revertAnimation()
-                            Toast.makeText(context, "Error $error", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Error $message", Toast.LENGTH_SHORT).show()
                         }
                     })
                 } else {
@@ -77,9 +77,9 @@ class UserListAdapter(mContext: Context,override var emptyDescription: String) :
                             followButton.revertAnimation { followButton.text = "Unfollow" }
                         }
 
-                        override fun onError(error: String) {
+                        override fun onError(message: String) {
                             followButton.revertAnimation()
-                            Toast.makeText(context, "Error $error", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Error $message", Toast.LENGTH_SHORT).show()
                         }
                     })
                 }
@@ -94,8 +94,8 @@ class UserListAdapter(mContext: Context,override var emptyDescription: String) :
 
         override fun bind(user: User) {
             followerName.text = user.name
-            followerDetail.text = user.postCount.toString() + " posts"
-            followerImage.text = user.name.prefix()
+            followerDetail.text = "${user.postCount} posts"
+            followerImage.setText(user.name.prefix())
             followerImage.loadImage(user.imageUrl, size, size)
             if (isMe(user.uid)) {
                 followButton.visibility = View.GONE

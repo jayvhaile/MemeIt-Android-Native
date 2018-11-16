@@ -23,16 +23,13 @@ class ProfileDraweeView:SimpleDraweeView{
 
 
     lateinit var textDrawable:TextDrawable
-    var text:String=""
-        set(value) {
-            field = value
-            init()
-        }
-    var color:Int= Color.RED
-        set(value) {
-            field = value
-            init()
-        }
+    private var text:String=""
+    private var color:Int= Color.RED
+
+    fun setText(t:String){
+        this.text=t
+        init()
+    }
 
     fun init (){
         textDrawable=TextDrawable
@@ -41,6 +38,7 @@ class ProfileDraweeView:SimpleDraweeView{
                 .bold()
                 .endConfig()
                 .buildRound(text,color)
+
 
         val rp=RoundingParams.asCircle()
         rp.setBorder(Color.WHITE,2f.dp(context))

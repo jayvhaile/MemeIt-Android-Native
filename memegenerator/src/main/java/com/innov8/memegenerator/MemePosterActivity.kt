@@ -41,7 +41,7 @@ class MemePosterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_meme_poster2)
         setSupportActionBar(toolbar)
         val muser = MemeItClient.myUser!!
-        poster_pp.text = muser.name?.prefix() ?: ""
+        poster_pp.setText(muser.name?.prefix() ?: "")
         handleIntent()
     }
 
@@ -98,11 +98,7 @@ class MemePosterActivity : AppCompatActivity() {
     }
 
     private fun handleGifUpload() {
-        MediaManager.get()
-                .upload(gif)
-
-                .callback(MyUploadCallback())
-                .dispatch(this)
+        MemeItClient.uploadImage(File(gif))
     }
 
 
@@ -165,6 +161,7 @@ class MemePosterActivity : AppCompatActivity() {
                 tags = tags.toMutableList())
 
     }
+
     private val tags
         get() = tags_field.text.split(" ")
                 .asSequence()

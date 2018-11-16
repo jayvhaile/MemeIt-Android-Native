@@ -25,13 +25,32 @@ open class Notification(val type: Int = 0,
             }
         }
 
+        fun parseNotifString(it: Map<String, String>): Notification {
+            val type: Int = (it["type"] ?: "0.0").toDouble().toInt()
+            return when (type) {
+                Notification.FOLLOWING_TYPE -> parseFollowingNotifString(it)
+                Notification.REACTION_TYPE -> parseReactionNotifString(it)
+                Notification.COMMENT_TYPE -> parseCommentNotifString(it)
+                else -> parseGeneralNotifString(it)
+            }
+        }
+
         private fun parseGeneralNotif(it: Map<String, Any>): Notification {
             return Notification(0,
                     it["nid"] as String? ?: "",
                     it["title"] as String? ?: "",
                     it["message"] as String? ?: "",
-                    it["date"] as Long? ?:0L,
-                    it["seen"] as Boolean??:false)
+                    it["date"] as Long? ?: 0L,
+                    it["seen"] as Boolean? ?: false)
+        }
+
+        private fun parseGeneralNotifString(it: Map<String, String>): Notification {
+            return Notification(0,
+                    it["nid"] ?: "",
+                    it["title"] ?: "",
+                    it["message"] ?: "",
+                    (it["date"] ?: "0").toLong(),
+                    (it["seen"] ?: "false").toBoolean())
         }
 
         private fun parseCommentNotif(it: Map<String, Any>): CommentNotification {
@@ -46,6 +65,21 @@ open class Notification(val type: Int = 0,
                     it["comment"] as String,
                     (it["date"] as Double).toLong(),
                     it["seen"] as Boolean
+            )
+        }
+
+        private fun parseCommentNotifString(it: Map<String, String>): CommentNotification {
+            return CommentNotification(
+                    it["nid"] ?: "",
+                    it["name"] ?: "",
+                    it["pic"] ?: "",
+                    it["uid"] ?: "",
+                    it["mid"] ?: "",
+                    it["img_url"] ?: "",
+                    Meme.MemeType.of(it["mtype"] ?: "" ?: "image"),
+                    it["comment"] ?: "",
+                    (it["date"] ?: "0").toLong(),
+                    (it["seen"] ?: "false").toBoolean()
             )
         }
 
@@ -64,6 +98,21 @@ open class Notification(val type: Int = 0,
             )
         }
 
+        private fun parseReactionNotifString(it: Map<String, String>): ReactionNotification {
+            return ReactionNotification(
+                    it["nid"] ?: "",
+                    it["name"] ?: "",
+                    it["pic"] ?: "",
+                    it["uid"] ?: "",
+                    it["mid"] ?: "",
+                    it["img_url"] ?: "",
+                    Meme.MemeType.of(it["mtype"] ?: "" ?: "image"),
+                    (it["reaction"] ?: "0").toInt(),
+                    (it["date"] ?: "0").toLong(),
+                    (it["seen"] ?: "false").toBoolean()
+            )
+        }
+
         private fun parseFollowingNotif(it: Map<String, Any>): FollowingNotification {
             return FollowingNotification(
                     it["nid"] as String? ?: "",
@@ -72,6 +121,16 @@ open class Notification(val type: Int = 0,
                     it["uid"] as String,
                     (it["date"] as Double).toLong(),
                     it["seen"] as Boolean)
+        }
+
+        private fun parseFollowingNotifString(it: Map<String, String>): FollowingNotification {
+            return FollowingNotification(
+                    it["nid"] ?: "",
+                    it["name"] ?: "",
+                    it["pic"] ?: "",
+                    it["uid"] ?: "",
+                    (it["date"] ?: "0").toLong(),
+                    (it["seen"] ?: "false").toBoolean())
         }
     }
 }

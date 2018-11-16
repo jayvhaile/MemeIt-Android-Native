@@ -26,7 +26,7 @@ dependencies {
     implementation project(path: ':backend')
 
 
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -54,7 +54,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-invites:16.0.4'
     implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.2'
     implementation 'com.google.firebase:firebase-config:16.1.0'
-    //    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+//    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
 
     implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
@@ -66,6 +66,7 @@ dependencies {
     implementation 'com.github.minibugdev:drawablebadge:1.0.3'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.0'
+    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:2.1.2'
 
 
     implementation 'com.facebook.android:audience-network-sdk:5.0.0'

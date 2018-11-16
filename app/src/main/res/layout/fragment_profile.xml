@@ -28,7 +28,6 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -78,30 +77,6 @@
                     app:layout_constraintVertical_bias="1">
 
                     <com.innov8.memeit.commons.views.FontTextView
-                        android:id="@+id/profile_followers_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="..."
-                        android:textColor="@color/colorAccent"
-                        android:textSize="16sp" />
-
-                    <com.innov8.memeit.commons.views.FontTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" Followers"
-                        android:textSize="16sp" />
-
-                    <View
-                        android:layout_width="10dp"
-                        android:layout_height="10dp"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginRight="5dp"
-                        android:alpha="0.8"
-                        android:background="@drawable/dot" />
-
-                    <com.innov8.memeit.commons.views.FontTextView
                         android:id="@+id/profile_meme_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -110,6 +85,7 @@
                         android:textSize="16sp" />
 
                     <com.innov8.memeit.commons.views.FontTextView
+                        android:id="@+id/profile_memes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=" Memes"
@@ -126,7 +102,7 @@
                         android:background="@drawable/dot" />
 
                     <com.innov8.memeit.commons.views.FontTextView
-                        android:id="@+id/profile_badge_count"
+                        android:id="@+id/profile_followers_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="..."
@@ -134,13 +110,55 @@
                         android:textSize="16sp" />
 
                     <com.innov8.memeit.commons.views.FontTextView
+                        android:id="@+id/profile_followers"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=" Badges"
+                        android:text=" Followers"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="5dp"
+                        android:alpha="0.8"
+                        android:background="@drawable/dot" />
+
+                    <com.innov8.memeit.commons.views.FontTextView
+                        android:id="@+id/profile_followings_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="..."
+                        android:textColor="@color/colorAccent"
+                        android:textSize="16sp" />
+
+                    <com.innov8.memeit.commons.views.FontTextView
+                        android:id="@+id/profile_followings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Followings"
                         android:textSize="16sp" />
                 </LinearLayout>
 
-
+                <com.innov8.memeit.commons.views.FontTextView
+                    android:id="@+id/profile_bio"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:textColor="#888"
+                    android:textSize="13sp"
+                    android:text="this is where the user bio goes in, this is it the bio of the user"
+                    app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.Toolbar
@@ -151,8 +169,6 @@
                 app:layout_collapseMode="pin"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark"
                 app:title="" />
-
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.google.android.material.tabs.TabLayout
@@ -169,7 +185,6 @@
         android:id="@+id/profile_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="50dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 

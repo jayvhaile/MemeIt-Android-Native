@@ -1,6 +1,7 @@
 package com.memeit.backend
 
 import com.memeit.backend.dataclasses.*
+import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -36,7 +37,7 @@ interface MemeItService {
 
     //todo fix this
     @DELETE("user/me")
-    fun deleteMe(@Body user: MUser): Call<ResponseBody>
+    fun deleteMe(@Body user: MyUser): Call<ResponseBody>
 
     @GET("auth/username")
     fun isUsernameAvailable(@Query("username") username: String): Call<Username>
@@ -119,6 +120,10 @@ interface MemeItService {
 
     @PUT("user/me/name")
     fun updateName(@Body name: User): Call<ResponseBody>
+
+    @PUT("user/me/bio")
+
+    fun updateBio(@Body bio: User): Call<ResponseBody>
 
     @PUT("user/me/profile_pic")
     fun updateProfilePic(@Body pic: User): Call<ResponseBody>
@@ -271,13 +276,20 @@ interface MemeItService {
     @POST("others/feedback")
     fun postFeedback(@Body feedback: Feedback): Call<ResponseBody>
 
+    @GET("others/signedUrl")
+    fun getSignedUrl(@Query("filename") filename: String): Call<ResponseBody>
+
     @PUT("/auth/token/{ftoken}")
     fun updateUserToken(@Path("ftoken") token: String): Call<ResponseBody>
-
 
     @POST("user/report")
     fun reportUser(@Body report: Report.UserReport): Call<ResponseBody>
 
     @POST("meme/report")
     fun reportMeme(@Body report: Report.MemeReport): Call<ResponseBody>
+
+
+    @Multipart
+    @POST
+    fun uploadImage(@Url url: String, @Part image: MultipartBody.Part): Call<ResponseBody>
 }

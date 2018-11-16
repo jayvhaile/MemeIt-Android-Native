@@ -122,7 +122,7 @@ class FollowingNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : 
         super.bind(notif)
         notif as FollowingNotification
         icon as ProfileDraweeView
-        icon.text = notif.title.prefix()
+        icon.setText(notif.title.prefix())
         icon.loadImage(notif.followerPic)
     }
 
@@ -152,7 +152,7 @@ class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : N
         super.bind(notif)
         notif as ReactionNotification
         icon as ProfileDraweeView
-        icon.text = notif.reactorName.prefix()
+        icon.setText(notif.reactorName.prefix())
         icon.loadImage(notif.reactorPic)
         memeImage.loadMeme(notif.getMeme())
         val span = ImageSpan(notif.getReaction().getDrawable())
@@ -188,7 +188,7 @@ class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : No
         super.bind(notif)
         notif as CommentNotification
         icon as ProfileDraweeView
-        icon.text = notif.commenterName.prefix()
+        icon.setText(notif.commenterName.prefix())
         icon.loadImage(notif.commenterPic)
         memeImage.loadMeme(notif.getMeme())
     }

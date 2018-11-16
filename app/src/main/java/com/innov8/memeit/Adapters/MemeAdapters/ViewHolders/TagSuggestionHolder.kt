@@ -16,6 +16,7 @@ class TagSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHo
     val title: TextView = itemView.findViewById(R.id.list_title)
     private val adapter: TagsAdapter = TagsAdapter(memeAdapter.context).apply {
         hasMore = false
+        fillWidth=false
     }
 
     init {

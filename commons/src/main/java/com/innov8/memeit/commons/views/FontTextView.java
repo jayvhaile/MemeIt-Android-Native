@@ -1,8 +1,9 @@
 package com.innov8.memeit.commons.views;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
+
+import com.innov8.memeit.commons.models.MyTypeFace;
 
 /**
  * Created by Biruk on 5/11/2018.
@@ -23,6 +24,6 @@ public class FontTextView extends androidx.appcompat.widget.AppCompatTextView {
         setCustomFont(context, asset);
     }
     public void setCustomFont(Context c, String asset){
-        this.setTypeface(Typeface.createFromAsset(c.getAssets(),asset));
+        this.setTypeface(MyTypeFace.CREATOR.byName("Avenir",getContext()).getTypeFace(getContext()));
     }
 }
