@@ -5,7 +5,9 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.appbar.AppBarLayout
-import com.innov8.memeit.*
+import com.innov8.memeit.R
+import com.innov8.memeit.dimen
+import com.innov8.memeit.screenWidth
 
 class ProfileImageViewBehavior : CoordinatorLayout.Behavior<View> {
     constructor() : super()
@@ -24,11 +26,10 @@ class ProfileImageViewBehavior : CoordinatorLayout.Behavior<View> {
     private val xDiff = expandedX - collapsedX
     private val yDiff = expandedY - collapsedY
 
-    private val appBarStartingHeight = R.dimen.profile_collapsing_toolbar_expanded_height.dimen() +
-            R.dimen.profile_tab_height.dimen()
+    private var appBarStartingHeight = 0
     private val appBarMinHeight = R.dimen.profile_toolbar_height.dimen() +
             R.dimen.profile_tab_height.dimen()
-    private val appBarDiff = appBarStartingHeight - appBarMinHeight
+    private val appBarDiff get() = appBarStartingHeight - appBarMinHeight
 
     override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
         return dependency is AppBarLayout
@@ -36,6 +37,7 @@ class ProfileImageViewBehavior : CoordinatorLayout.Behavior<View> {
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
         if (dependency is AppBarLayout) {
+            if (appBarStartingHeight == 0) appBarStartingHeight = dependency.height
             val appBarCurrentDiff = dependency.bottom - appBarMinHeight
             val appBarRatio = appBarCurrentDiff / appBarDiff
 

@@ -4,34 +4,29 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.graphics.drawable.Animatable
+import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewConfiguration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import com.cloudinary.Transformation
-import com.cloudinary.android.MediaManager
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.drawee.controller.BaseControllerListener
-import com.facebook.drawee.view.SimpleDraweeView
-import com.facebook.fresco.animation.drawable.AnimatedDrawable2
-import com.facebook.imagepipeline.common.ResizeOptions
-import com.facebook.imagepipeline.image.ImageInfo
-import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.imagepipeline.request.ImageRequest
-import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.Activities.SettingsActivity
+import com.innov8.memeit.CustomClasses.LoadingDrawable
 import com.innov8.memeit.commons.log
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.memeit.backend.dataclasses.Meme
 import com.memeit.backend.dataclasses.Meme.MemeType.GIF
 import com.memeit.backend.dataclasses.Meme.MemeType.IMAGE
 import com.memeit.backend.dataclasses.Reaction
+import com.stfalcon.frescoimageviewer.ImageViewer
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
 import java.text.SimpleDateFormat
@@ -93,8 +88,6 @@ val screenWidthOriented
 val screenHeightOriented
     get() = it.resources.displayMetrics.widthPixels
 
-fun getCloudinaryImageUrlForId(id: String): String = MediaManager.get().url().source(id).generate()
-
 private fun getImageMemeUrl(id: String, ratio: Float = 1f): String {
     val level = SettingsActivity.getImageQualityLevel(MemeItApp.instance)
     val quality = SettingsActivity.quality[level]
@@ -106,97 +99,19 @@ private fun getImageMemeUrl(id: String, ratio: Float = 1f): String {
     return "http://res.cloudinary.com/innov8/image/upload/c_fit,h_$h,q_$quality,w_$w/$id"
 }
 
-private fun getGifMemeUrl(id: String): String {
-    val t = Transformation<Transformation<*>>()
-            .effect("loop")
-    /*.quality(quality)
-    .crop("fit")
-    .width(w)
-    .height(h)*/
-
-    return MediaManager.get().url().resourcType("video")
-            .format("gif")
-            .transformation(t)
-            .generate(id)
+private fun getGifMemeUrl(id: String, ratio: Float = 1f): String {
+    val level = SettingsActivity.getImageQualityLevel(MemeItApp.instance)
+    val quality = SettingsActivity.quality[level]
+    val fac = SettingsActivity.factor[level]
+    val w = (screenWidth * fac) step 50
+    val h = ((screenWidth / ratio).toInt()
+            .trim(200.dp, screenHeight - 200.dp) * fac) step 50
+    return "http://res.cloudinary.com/innov8/image/fetch/c_fit,h_$h,q_$quality,w_$w/${Uri.encode(id)}"
 }
 
 fun Meme.generateUrl() = when (getType()) {
     IMAGE -> getImageMemeUrl(imageId!!, imageRatio.toFloat())
     GIF -> getGifMemeUrl(imageId!!)
-}
-
-private fun SimpleDraweeView.loadImageMeme(id: String, ratio: Float = 1f, resizeWidth: Int, resizeHeight: Int) {
-    val lowSize = 50
-    val lowQuality = 5
-    val blurSize = 60
-    val low = "http://res.cloudinary.com/innov8/image/upload/c_fit,e_blur:$blurSize,h_$lowSize,q_$lowQuality,w_$lowSize/$id"
-    val high = getImageMemeUrl(id, ratio)
-    val lowReq = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(low))
-            .setPostprocessor(IterativeBoxBlurPostProcessor(2))
-            .build()
-    var req = ImageRequest.fromUri(high)
-    if (resizeWidth > 0 && resizeHeight > 0)
-        req = ImageRequestBuilder.fromRequest(req)
-                .setResizeOptions(ResizeOptions.forDimensions(resizeWidth, resizeHeight))
-                .build()
-    val c = Fresco.newDraweeControllerBuilder()
-            .setLowResImageRequest(lowReq)
-            .setImageRequest(req)
-            .setOldController(controller)
-            .build()
-    controller = c
-}
-
-private fun SimpleDraweeView.loadGifMeme(id: String, ratio: Float, resizeWidth: Int, resizeHeight: Int) {
-
-    val level = SettingsActivity.getImageQualityLevel(context)
-    val quality = SettingsActivity.quality[level]
-    val fac = SettingsActivity.factor[level]
-
-
-    val w = (screenWidth * fac) step 50
-    val h = ((screenWidth / ratio).toInt()
-            .trim(200.dp, screenHeight - 200.dp) * fac) step 50
-
-    val tb = Transformation<Transformation<*>>()
-            .quality(quality)
-            .crop("fit")
-            .width(w)
-            .height(h)
-    val thumb = MediaManager.get().url().resourcType("video")
-            .format("jpg")
-            .transformation(tb)
-            .generate(id)
-
-
-    val url = getGifMemeUrl(id)
-
-    class m : BaseControllerListener<ImageInfo>() {
-        override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
-            if (animatable != null) {
-                val a = animatable as AnimatedDrawable2
-                a.start()
-            }
-        }
-    }
-
-    var req = ImageRequest.fromUri(url)
-    if (resizeWidth > 0 && resizeHeight > 0)
-        req = ImageRequestBuilder.fromRequest(req)
-                .setResizeOptions(ResizeOptions.forDimensions(resizeWidth, resizeHeight))
-                .build()
-
-    controller = Fresco.newDraweeControllerBuilder()
-            .setLowResImageRequest(ImageRequest.fromUri(thumb))
-            .setImageRequest(req)
-            .setAutoPlayAnimations(false)
-            .setControllerListener(m())
-            .build()
-}
-
-fun SimpleDraweeView.loadMeme(meme: Meme, resizeWidth: Int = 0, resizeHeight: Int = width) {
-    if (meme.getType() == IMAGE) loadImageMeme(meme.imageId!!, meme.imageRatio.toFloat(), resizeWidth, resizeHeight)
-    else if (meme.getType() == GIF) loadGifMeme(meme.imageId!!, meme.imageRatio.toFloat(), resizeWidth, resizeHeight)
 }
 
 
@@ -213,7 +128,7 @@ fun ProfileDraweeView.loadImage(url: String?, width: Float = R.dimen.profile_min
             .height(height)
             .quality(quality)
             .crop("fit")*/
-    val u="http://res.cloudinary.com/innov8/image/upload/$url"
+    val u = "http://res.cloudinary.com/innov8/image/upload/$url"
     setImageRequest(ImageRequest.fromUri(u))
 }
 
@@ -368,4 +283,26 @@ fun View.animateVisibility() {
         visibility = View.VISIBLE
 
     animation.start()
+}
+
+fun Context.showMemeZoomView(list: List<Meme>, startingMemeIt: String = list[0].id!!) {
+    val hierarchy = GenericDraweeHierarchyBuilder.newInstance(resources)
+            .setProgressBarImage(LoadingDrawable(this))
+    val overlayView = LayoutInflater.from(this).inflate(R.layout.overlay, null, false)
+    /*val overlayName = overlayView.findViewById<TextView>(R.id.overlay_name)
+    val overlayDesc = overlayView.findViewById<TextView>(R.id.overlay_description)
+    val overlayTags = overlayView.findViewById<TextView>(R.id.overlay_tags)
+    */ImageViewer.Builder<Meme>(this, list)
+            .setFormatter { it.generateUrl() }
+            .setOverlayView(overlayView)
+            .setImageChangeListener {
+                /*overlayName.text = list[it].poster?.name
+                overlayDesc.text = list[it].description
+                overlayTags.text = list[it].tags.joinToString(", ") { tag -> "#$tag" }*/
+            }
+            .setCustomDraweeHierarchyBuilder(hierarchy)
+            .setBackgroundColor(Color.parseColor("#f6000000"))
+            .setStartPosition(list.map { it.id }.indexOf(startingMemeIt))
+            .hideStatusBar(false)
+            .show()
 }

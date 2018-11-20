@@ -42,7 +42,7 @@
                 android:id="@+id/notif_icon"
                 android:layout_width="@dimen/profile_mini_size"
                 android:layout_height="@dimen/profile_mini_size"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
                 android:padding="4dp"

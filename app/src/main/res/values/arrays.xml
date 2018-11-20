@@ -2,9 +2,9 @@
 <resources>
     <integer-array name="intro_drawables" >
         <item>@drawable/logo_vector</item>
+        <item>@drawable/browse_memes</item>
         <item>@drawable/create_meme</item>
         <item>@drawable/grow_an_audience</item>
         <item>@drawable/share_memes</item>
-        <item>@drawable/browse_memes</item>
     </integer-array>
 </resources>

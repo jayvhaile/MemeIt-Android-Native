@@ -66,7 +66,7 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         CustomMethods.makeWindowSeamless(this)
         setContentView(R.layout.activity_auth)
-        auth_root.background = ScrollingImageDrawable(this, R.drawable.many_pics_optimized,
+        auth_root.background = ScrollingImageDrawable(this, R.drawable.many_memes,
                 screenWidth,
                 screenHeight)
         constraintSet = ConstraintSet()

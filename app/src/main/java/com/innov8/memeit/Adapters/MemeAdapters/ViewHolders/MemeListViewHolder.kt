@@ -7,9 +7,6 @@ import com.memeit.backend.dataclasses.HomeElement
 import com.memeit.backend.dataclasses.Meme
 
 class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
-
-
-
     init {
         itemView as MemeView
         itemView.memeClickedListener = {
@@ -19,8 +16,6 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHol
             memeAdapter.remove(it)
         }
     }
-
-
     override fun bind(homeElement: HomeElement) {
         val meme = homeElement as Meme
         itemView as MemeView

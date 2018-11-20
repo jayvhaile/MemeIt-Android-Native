@@ -1,21 +1,19 @@
 package com.innov8.memeit.Adapters.MemeAdapters
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.github.ybq.android.spinkit.style.CubeGrid
+import com.innov8.memeit.Activities.MemeChooser
 import com.innov8.memeit.Adapters.ELEListAdapter
 import com.innov8.memeit.Adapters.MemeAdapters.ViewHolders.MemeViewHolder
-import com.innov8.memeit.CustomClasses.LoadingDrawable
 import com.innov8.memeit.R
-import com.innov8.memeit.generateUrl
+import com.innov8.memeit.showMemeZoomView
 import com.memeit.backend.dataclasses.HomeElement
 import com.memeit.backend.dataclasses.Meme
-import com.stfalcon.frescoimageviewer.ImageViewer
 
 abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeViewHolder>(context) {
     override var emptyDrawableId: Int = R.drawable.ic_add
@@ -32,20 +30,44 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
     override fun getItemType(position: Int): Int = items[position].itemType
 
     companion object {
-        const val LIST_ADAPTER: Byte = 1
-        const val LIST_FAVORITE_ADAPTER: Byte = 4
-        const val GRID_ADAPTER: Byte = 2
-        const val HOME_ADAPTER: Byte = 3
+        const val LIST_ADAPTER: Byte = 0
+        const val LIST_ADAPTER_USER_POSTS: Byte = 1
+        const val LIST_ADAPTER_MY_POSTS: Byte = 2
+        const val LIST_FAVORITE_ADAPTER: Byte = 3
+        const val GRID_ADAPTER_MY_POSTS: Byte = 4
+        const val GRID_ADAPTER_USER_POSTS: Byte = 5
+        const val HOME_ADAPTER: Byte = 6
         fun create(type: Byte, context: Context): MemeAdapter = when (type) {
             LIST_ADAPTER -> MemeListAdapter(context)
+            LIST_ADAPTER_USER_POSTS -> MemeListAdapter(context).apply {
+                emptyDescription = "User has no uploads yet."
+                showErrorAtTop = true
+            }
+            LIST_ADAPTER_MY_POSTS -> MemeListAdapter(context).apply {
+                emptyDescription = "Your meme uploads would appear here"
+                emptyActionText = "Tap here to create one"
+                onEmptyAction = {
+                    this.context.startActivity(Intent(this.context, MemeChooser::class.java))
+                }
+                showErrorAtTop = true
+            }
             LIST_FAVORITE_ADAPTER -> MemeListAdapter(context).apply {
                 emptyDrawableId = R.drawable.ic_favorite_black_24dp
                 emptyDescription = "Favorite Collection is Empty"
             }
-            GRID_ADAPTER -> GridMemeAdapter(context).apply {
-                emptyDrawableId = R.drawable.ic_favorite_black_24dp
-                emptyDescription = "Meme upload list is empty"
+            GRID_ADAPTER_USER_POSTS -> GridMemeAdapter(context).apply {
+                emptyDescription = "User has no uploads yet."
+                showErrorAtTop = true
             }
+            GRID_ADAPTER_MY_POSTS -> GridMemeAdapter(context).apply {
+                emptyDescription = "Your meme uploads would appear here"
+                emptyActionText = "Tap here to create one"
+                onEmptyAction = {
+                    this.context.startActivity(Intent(this.context, MemeChooser::class.java))
+                }
+                showErrorAtTop = true
+            }
+
             HOME_ADAPTER -> HomeMemeAdapter(context)
             else ->
                 throw IllegalArgumentException("Use one of (LIST_ADAPTER,GRID_ADAPTER,HOME_ADAPTER)")
@@ -61,27 +83,7 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
             val list: List<Meme> = items.filter { it is Meme }
                     .map { it as Meme }
                     .toList()
-            val hierarchy = GenericDraweeHierarchyBuilder.newInstance(context.resources)
-                    .setProgressBarImage(LoadingDrawable(context))
-
-            val overlayView = inflater.inflate(R.layout.overlay, null, false)
-            val overlayName = overlayView.findViewById<TextView>(R.id.overlay_name)
-            val overlayDesc = overlayView.findViewById<TextView>(R.id.overlay_description)
-            val overlayTags = overlayView.findViewById<TextView>(R.id.overlay_tags)
-            ImageViewer.Builder<Meme>(context, list)
-                    .setFormatter { it.generateUrl() }
-                    .setOverlayView(overlayView)
-                    .setImageChangeListener {
-                        overlayName.text = list[it].poster?.name
-                        overlayDesc.text = list[it].description
-                        overlayTags.text = list[it].tags.joinToString(", ") { tag -> "#$tag" }
-                    }
-                    .setCustomDraweeHierarchyBuilder(hierarchy)
-                    .setBackgroundColor(Color.parseColor("#f6000000"))
-                    .setStartPosition(list.map { it.id }.indexOf(memeID))
-                    .hideStatusBar(false)
-                    .show()
-
+            context.showMemeZoomView(list, memeID)
         }
         return memeViewHolder
     }

@@ -18,6 +18,7 @@ import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memeit.*
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
+import com.innov8.memeit.CustomViews.MemeDraweeView
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.memeit.backend.dataclasses.*
 
@@ -32,7 +33,7 @@ class NotificationAdapter(context: Context) : ELEListAdapter<Notification, Notif
         color = Color.rgb(255, 100, 0)
     }
 
-    val colors = listOf(R.color.blue, R.color.purple, R.color.orange, R.color.greeny)
+    val colors = listOf(R.color.blue, R.color.purple, R.color.orange, R.color.greeny, R.color.golden)
             .map { idToColor(it) }
 
     fun idToColor(id: Int): Int =
@@ -129,22 +130,23 @@ class FollowingNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : 
 }
 
 class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
-    val memeImage: SimpleDraweeView = itemView.findViewById(R.id.meme_image)
+    val memeImage: MemeDraweeView = itemView.findViewById(R.id.meme_image)
 
     init {
-        itemView.setOnClickListener {
-            val n = getCurrentItem()
-            val meme = Meme(n.memeId, imageId = n.memePic)
-            val intent = Intent(notifAdapter.context, CommentsActivity::class.java)
-            intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme)
-            notifAdapter.context.startActivity(intent)
-        }
+        itemView.setOnClickListener { goToComment() }
+        memeImage.onClick = { goToComment() }
         icon.setOnClickListener {
             val i = Intent(notifAdapter.context, ProfileActivity::class.java)
             val n = getCurrentItem()
             i.putExtra("user", User(n.reactorId, n.reactorName, n.reactorPic))
             notifAdapter.context.startActivity(i)
+
         }
+    }
+
+    private fun goToComment() {
+        val n = getCurrentItem()
+        CommentsActivity.startWithMeme(notifAdapter.context, Meme(n.memeId, imageId = n.memePic))
     }
 
     private fun getCurrentItem(): ReactionNotification = notifAdapter.items[itemPosition] as ReactionNotification
@@ -165,16 +167,11 @@ class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : N
 }
 
 class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
-    val memeImage: SimpleDraweeView = itemView.findViewById(R.id.meme_image)
+    private val memeImage: MemeDraweeView = itemView.findViewById(R.id.meme_image)
 
     init {
-        itemView.setOnClickListener {
-            val n = getCurrentItem()
-            val meme = Meme(n.memeId, imageId = n.memePic)
-            val intent = Intent(notifAdapter.context, CommentsActivity::class.java)
-            intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme)
-            notifAdapter.context.startActivity(intent)
-        }
+        itemView.setOnClickListener { goToComment() }
+        memeImage.onClick = { goToComment() }
         icon.setOnClickListener {
             val i = Intent(notifAdapter.context, ProfileActivity::class.java)
             val n = getCurrentItem()
@@ -182,6 +179,11 @@ class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : No
             notifAdapter.context.startActivity(i)
         }
     }
+    private fun goToComment() {
+        val n = getCurrentItem()
+        CommentsActivity.startWithMeme(notifAdapter.context, Meme(n.memeId, imageId = n.memePic))
+    }
+
 
     private fun getCurrentItem(): CommentNotification = notifAdapter.items[itemPosition] as CommentNotification
     override fun bind(notif: Notification) {
@@ -198,5 +200,7 @@ class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : No
 class AwardNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
     override fun bind(notif: Notification) {
         super.bind(notif)
+        notif as AwardNotification
+        icon.setImageResource(notif.badge.getDrawableId(notifAdapter.context))
     }
 }

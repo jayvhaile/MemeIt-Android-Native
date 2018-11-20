@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="128dp"
+    tools:background="#000">
+
+
+    <com.innov8.memegenerator.CustomViews.BrushSizeChooserView
+        android:id="@+id/brush_size"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <com.divyanshu.colorseekbar.ColorSeekBar
+        android:id="@+id/color_seek_bar"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/brush_size"
+        app:layout_constraintEnd_toStartOf="@+id/paint_shape_chooser"
+        app:layout_constraintStart_toEndOf="@+id/paint_undo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:thumbBorderColor="#fff" />
+
+    <ImageView
+        android:id="@+id/paint_shape_chooser"
+        android:layout_width="36dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="8dp"
+        android:tint="#fff"
+        app:layout_constraintBottom_toTopOf="@+id/brush_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/paint_shape_doodle" />
+
+    <ImageView
+        android:id="@+id/paint_undo"
+        android:layout_width="36dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/brush_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_undo" />
+</androidx.constraintlayout.widget.ConstraintLayout>

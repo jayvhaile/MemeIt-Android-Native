@@ -160,6 +160,9 @@ interface MemeItService {
     @GET("meme/{id}")
     fun getMemeById(@Path("id") id: String): Call<Meme>
 
+    @GET("meme/{id}/guest")
+    fun getMemeByIdGuest(@Path("id") id: String): Call<Meme>
+
     @GET("meme/{id}/refresh")
     fun getRefreshedMeme(@Path("id") id: String): Call<Meme>
 
@@ -167,9 +170,9 @@ interface MemeItService {
     fun getHomeMemes(@Query("skip") skip: Int,
                      @Query("limit") limit: Int): Call<List<Meme>>
 
-    @GET("meme/home/guest")
-    fun getHomeMemesForGuest(@Query("skip") skip: Int,
-                             @Query("limit") limit: Int): Call<List<Meme>>
+    @GET("meme/trending/guest")
+    fun getTrendingMemesForGuest(@Query("skip") skip: Int,
+                                 @Query("limit") limit: Int): Call<List<Meme>>
 
     @GET("meme/trending")
     fun getTrendingMemes(@Query("skip") skip: Int,

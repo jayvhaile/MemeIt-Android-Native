@@ -9,10 +9,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.Adapters.ELEAdapter
-import com.innov8.memeit.Adapters.MemeAdapters.GridMemeAdapter
 import com.innov8.memeit.Adapters.TagsAdapter
 import com.innov8.memeit.Loaders.*
 import com.innov8.memeit.MLHandler
@@ -74,7 +72,9 @@ class TagsChooserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_user_tag)
         setSupportActionBar(tags_toolbar)
         supportActionBar?.title = "Choose Tags"
-        supportFragmentManager.beginTransaction().replace(R.id.holder, TagFragment.newInstance(PopularTagLoader()))
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.holder, TagFragment.newInstance(PopularTagLoader()))
+                .commit()
     }
 
 

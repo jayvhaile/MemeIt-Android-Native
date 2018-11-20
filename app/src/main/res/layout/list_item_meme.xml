@@ -74,7 +74,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        tools:background="#000" />
+        tools:background="@drawable/meme_10" />
 
     <View
         android:id="@+id/tint"
@@ -192,7 +192,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        android:textColor="#1394fd"
+        android:textColor="#1384fd"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description"
         tools:text="#programming #java" />
@@ -270,7 +270,33 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="60dp" />
 
+    <com.innov8.memeit.commons.views.FontTextView
+        android:id="@+id/meme_gif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Gif"
+        android:textColor="#05d"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/guideline12"
+        app:layout_constraintEnd_toStartOf="@+id/meme_share"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/meme_control"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9000"
+        android:scaleType="centerInside"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/meme_image"
+        app:layout_constraintEnd_toEndOf="@id/meme_image"
+        app:layout_constraintStart_toStartOf="@id/meme_image"
+        app:layout_constraintTop_toTopOf="@+id/meme_image"
+        app:srcCompat="@drawable/ic_file_download_white_36dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,9 +19,9 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
 
     override var emptyDrawableId: Int = R.drawable.tag2
     override var errorDrawableId: Int = R.drawable.ic_no_internet
-    override var emptyDescription: String = "No Tags"
-    override var errorDescription: String = "Couldn't load Tags"
-    override var emptyActionText: String? = ""
+    override var emptyDescription: String = "Tags Empty"
+    override var errorDescription: String = "Failed to load tags"
+    override var emptyActionText: String? = "Reload"
     override var errorActionText: String? = "Try Again"
     override val loadingDrawable = CubeGrid().apply {
         color = Color.rgb(255, 100, 0)

@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.R
@@ -15,7 +17,7 @@ import com.innov8.memeit.R
 @Suppress("UNCHECKED_CAST")
 abstract class ELEAdapter<T : RecyclerView.ViewHolder>(val context: Context)
     : RecyclerView.Adapter<T>() {
-    protected val inflater:LayoutInflater = LayoutInflater.from(context)
+    protected val inflater: LayoutInflater = LayoutInflater.from(context)
 
     companion object {
         const val MODE_NORMAL = 0
@@ -76,6 +78,9 @@ abstract class ELEAdapter<T : RecyclerView.ViewHolder>(val context: Context)
     var onEmptyAction: (() -> Unit)? = null
     var onErrorAction: (() -> Unit)? = null
 
+    //normally the error view is centered vertically this is an option to make it stick to the top
+    var showErrorAtTop = false
+
     final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): T {
         return when (viewType) {
             TYPE_ERROR -> createErrorView(parent)
@@ -101,7 +106,14 @@ abstract class ELEAdapter<T : RecyclerView.ViewHolder>(val context: Context)
     }
 
     private fun createEmptyView(parent: ViewGroup): T {
-        val v = inflater.inflate(R.layout.list_item_error, parent, false)
+        val v = inflater.inflate(R.layout.list_item_error, parent, false) as ConstraintLayout
+        if (showErrorAtTop) {
+            ConstraintSet().apply {
+                clone(v)
+                clear(R.id.recyc_drawable, ConstraintSet.BOTTOM)
+                applyTo(v)
+            }
+        }
         v.findViewById<ImageView>(R.id.recyc_drawable).setImageResource(emptyDrawableId)
         v.findViewById<TextView>(R.id.recyc_desc).text = emptyDescription
         val actionV = v.findViewById<TextView>(R.id.recyc_action)
@@ -113,7 +125,14 @@ abstract class ELEAdapter<T : RecyclerView.ViewHolder>(val context: Context)
     }
 
     private fun createErrorView(parent: ViewGroup): T {
-        val v = inflater.inflate(R.layout.list_item_error, parent, false)
+        val v = inflater.inflate(R.layout.list_item_error, parent, false) as ConstraintLayout
+        if (showErrorAtTop) {
+            ConstraintSet().apply {
+                clone(v)
+                clear(R.id.recyc_drawable, ConstraintSet.BOTTOM)
+                applyTo(v)
+            }
+        }
         v.findViewById<ImageView>(R.id.recyc_drawable).setImageResource(errorDrawableId)
         v.findViewById<TextView>(R.id.recyc_desc).text = errorDescription
         val actionV = v.findViewById<TextView>(R.id.recyc_action)

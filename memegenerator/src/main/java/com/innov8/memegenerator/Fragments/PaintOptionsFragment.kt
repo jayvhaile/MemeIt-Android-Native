@@ -1,23 +1,15 @@
 package com.innov8.memegenerator.Fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.innov8.memegenerator.Adapters.PaintShapeInfo
-import com.innov8.memegenerator.Adapters.PaintShapesListAdapter
-import com.innov8.memegenerator.CustomViews.ColorChooser
 import com.innov8.memegenerator.MemeEngine.PaintEditInterface
+import com.innov8.memegenerator.MemeEngine.PaintHandler
 import com.innov8.memegenerator.R
-import com.innov8.memegenerator.utils.ViewAdapter
-import com.innov8.memegenerator.utils.listener
-import com.warkiz.widget.IndicatorSeekBar
-import kotlinx.android.synthetic.main.bottom_tab.*
-import kotlinx.android.synthetic.main.paint_pager.*
+import kotlinx.android.synthetic.main.paint_options_view.*
 
 class PaintOptionsFragment : Fragment() {
 
@@ -26,47 +18,49 @@ class PaintOptionsFragment : Fragment() {
 
     var paintEditInterface: PaintEditInterface? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.paint_pager, container, false)
+        return inflater.inflate(R.layout.paint_options_view, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val paintShapesAdapter = PaintShapesListAdapter(context!!).apply {
-            onSelectionChangedListener = {
-                paintEditInterface?.onShapeChanged(it)
-            }
+        color_seek_bar.colorChangeListener = {
+            paintEditInterface?.onBrushColorChanged(it)
+//            brush_size.setColorForAll(it)
         }
-        paintShapesAdapter.addAll(PaintShapeInfo.getList())
+        brush_size.onBrushSizeSelected = {
+            paintEditInterface?.onBrushSizeChanged(it)
+        }
 
-        views.add(RecyclerView(context!!).apply {
-            layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            adapter = paintShapesAdapter
-        })
+        val popup = PopupMenu(context, paint_shape_chooser)
+        popup.inflate(R.menu.paint_shape_menu)
 
-        views.add(ColorChooser(context!!).apply {
-            onColorChoosed = { paintEditInterface?.onBrushColorChanged(it) }
-        })
-        views.add(IndicatorSeekBar.with(context!!)
-                .min(5f)
-                .max(100f)
-                .tickCount(1)
-                .build().apply {
-                    listener(onSeek = {
-                        paintEditInterface?.onBrushSizeChanged(it.progressFloat)
-                    })
-                })
-
-        paint_pager.adapter = Adapter(context!!)
-        pager_tab.setupWithViewPager(paint_pager)
+        paint_shape_chooser.setOnClickListener {
+            popup.show()
+        }
+        popup.setOnMenuItemClickListener {
+            paintEditInterface?.onShapeChanged(when (it.itemId) {
+                R.id.menu_shape_rect -> (PaintHandler.PaintMode.RECT)
+                R.id.menu_shape_circle -> (PaintHandler.PaintMode.CIRCLE)
+                R.id.menu_shape_oval -> (PaintHandler.PaintMode.OVAL)
+                R.id.menu_shape_line -> (PaintHandler.PaintMode.LINE)
+                R.id.menu_shape_arrow -> (PaintHandler.PaintMode.ARROW)
+                else -> (PaintHandler.PaintMode.DOODLE)
+            })
+            true
+        }
+        paint_undo.setOnClickListener {
+            paintEditInterface?.onPaintUndo()
+            updateUndoState()
+        }
+        updateUndoState()
     }
 
-    inner class Adapter(context: Context) : ViewAdapter(context) {
-        private var titles = listOf("Shapes", "Brush Color", "Brush Size")
-        override fun getItem(position: Int): View = views[position]
-        override fun getCount(): Int = titles.size
-        override fun getPageTitle(position: Int): CharSequence? = titles[position]
+    fun updateUndoState() {
+        val hasUndo = paintEditInterface?.hasUndo() ?: true
+        paint_undo?.isEnabled = hasUndo
+        paint_undo?.alpha = if (hasUndo) 1f else 0.5f
     }
+
 
 }

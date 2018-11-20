@@ -32,6 +32,7 @@ class SettingsActivity : PreferenceActivity() {
         private const val PREF_KEY_ENABLE_NOTIF_REACTION = "pref_enable_notif_reaction"
         private const val PREF_KEY_ENABLE_NOTIF_COMMENT = "pref_enable_notif_comment"
         private const val PREF_KEY_LOGOUT = "pref_logout"
+        private const val PREF_KEY_AUTO_LOAD_GIFS = "pref_load_gif"
         val quality = listOf(10, 25, 50, 75, 100)
         val factor = listOf(.4f, .6f, .8f, .9f, 1f)
 
@@ -42,9 +43,15 @@ class SettingsActivity : PreferenceActivity() {
             return values.indexOf(value)
         }
 
+
         fun isNotifEnabled(context: Context): Boolean {
             val pref = PreferenceManager.getDefaultSharedPreferences(context)
             return pref.getBoolean(PREF_KEY_ENABLE_NOTIF, true)
+        }
+
+        fun autoLoadGifs(context: Context): Boolean {
+            val pref = PreferenceManager.getDefaultSharedPreferences(context)
+            return pref.getBoolean(PREF_KEY_AUTO_LOAD_GIFS, true)
         }
 
         fun isFollowedNotifEnabled(context: Context): Boolean {

@@ -12,15 +12,15 @@ const val RCK_TEMPLATE_SUG_OFFSET = "home_template_sug_offset"
 
 fun getDefaults(): MutableMap<String, Any> {
     return mutableMapOf(
-
             RCK_AD_FREQ to 10L,
             RCK_USER_SUG_FREQ to 12L,
             RCK_TAG_SUG_FREQ to 8L,
             RCK_TEMPLATE_SUG_FREQ to 15L,
 
-            RCK_AD_OFFSET to 0L,
-            RCK_USER_SUG_OFFSET to -4L,
-            RCK_TAG_SUG_OFFSET to -4L,
-            RCK_TEMPLATE_SUG_OFFSET to -1L
+            RCK_AD_OFFSET to 10L,
+            RCK_USER_SUG_OFFSET to 3L,
+            RCK_TAG_SUG_OFFSET to 8L,
+            RCK_TEMPLATE_SUG_OFFSET to 5L
     )
+
 }

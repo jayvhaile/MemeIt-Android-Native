@@ -10,7 +10,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.toast
 import com.innov8.memeit.loadImage
-import com.innov8.memeit.loadMeme
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
 import com.memeit.backend.dataclasses.Meme

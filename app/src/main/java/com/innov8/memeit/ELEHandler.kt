@@ -8,7 +8,8 @@ abstract class LoadingHandler<A : ELEAdapter<*>>(val adapter: A) {
 
     init {
         adapter.onErrorAction = { refresh(true) }
-        adapter.onEmptyAction = { refresh(true) }
+        if (adapter.onEmptyAction == null)
+            adapter.onEmptyAction = { refresh(true) }
         adapter.onLoadMore = { load() }
     }
 

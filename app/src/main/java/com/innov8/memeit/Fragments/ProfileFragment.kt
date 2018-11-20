@@ -145,6 +145,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
     private fun updateView(user: User) {
         profile_name?.text = user.name
+        profile_username?.text = user.username
         profile_bio?.text = user.bio
         profile_image?.setText(user.name.prefix())
         profile_image?.loadImage(user.imageUrl, size, size)
@@ -177,8 +178,16 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     internal inner class ViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
         //        var titles = arrayOf("Following", "Followers", "Memes", "Memes", "Badges")
         var fragments: Array<Fragment> = arrayOf(
-                MemeListFragment.newInstanceForUserPosts(userID),
-                MemeListFragment.newInstanceForUserPosts(userID, MemeAdapter.LIST_ADAPTER),
+                MemeListFragment.newInstanceForUserPosts(userID,
+                        if (isMe)
+                            MemeAdapter.GRID_ADAPTER_MY_POSTS
+                        else
+                            MemeAdapter.GRID_ADAPTER_USER_POSTS),
+                MemeListFragment.newInstanceForUserPosts(userID,
+                        if (isMe)
+                            MemeAdapter.LIST_ADAPTER_MY_POSTS
+                        else
+                            MemeAdapter.LIST_ADAPTER_USER_POSTS),
                 BadgeFragment.newInstance(if (isMe) null else userID))
 
         override fun getItem(position: Int): Fragment = fragments[position]

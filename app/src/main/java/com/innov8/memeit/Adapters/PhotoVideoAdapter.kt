@@ -2,6 +2,7 @@ package com.innov8.memeit.Adapters
 
 import android.content.ContentUris.withAppendedId
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.provider.MediaStore
 import android.view.View
@@ -13,6 +14,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.innov8.memegenerator.Adapters.ListAdapter
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memegenerator.MemeEditorActivity
+import com.innov8.memegenerator.MemePosterActivity
 import com.innov8.memeit.Adapters.GifAdapter.Video
 import com.innov8.memeit.CustomViews.CountView
 import com.innov8.memeit.R
@@ -149,8 +151,12 @@ class GifAdapter(context: Context) : CursorAdapter<Video>(context, R.layout.list
         private val thumbnailV: SimpleDraweeView = itemView.findViewById(R.id.thumbnail)
 
         init {
+
             thumbnailV.setOnClickListener {
-                MemeEditorActivity.startWithGif(context, getItem(item_position).data)
+                context.startActivity(Intent(context, MemePosterActivity::class.java).apply {
+                    putExtra("gif", getItem(item_position).data)
+                })
+//                MemeEditorActivity.startWithGif(context, getItem(item_position).data)
             }
         }
 

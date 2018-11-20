@@ -25,6 +25,7 @@ open class Notification(val type: Int = 0,
                 else -> parseGeneralNotif(it)
             }
         }
+
         fun parseNotifString(it: Map<String, String>): Notification {
             val type: Int = (it["type"] ?: "0.0").toDouble().toInt()
             return when (type) {
@@ -44,6 +45,7 @@ open class Notification(val type: Int = 0,
                     it["date"] as Long? ?: 0L,
                     it["seen"] as Boolean? ?: false)
         }
+
         private fun parseGeneralNotifString(it: Map<String, String>): Notification {
             return Notification(0,
                     it["nid"] ?: "",
@@ -52,6 +54,7 @@ open class Notification(val type: Int = 0,
                     (it["date"] ?: "0").toLong(),
                     (it["seen"] ?: "false").toBoolean())
         }
+
         private fun parseCommentNotif(it: Map<String, Any>): CommentNotification {
             return CommentNotification(
                     it["nid"] as String? ?: "",
@@ -62,6 +65,7 @@ open class Notification(val type: Int = 0,
                     it["img_url"] as String,
                     Meme.MemeType.of((it["mtype"] as String?) ?: "image"),
                     it["comment"] as String,
+                    (it["ratio"] as? Double?) ?: 1.0,
                     (it["date"] as Double).toLong(),
                     it["seen"] as Boolean
             )
@@ -77,10 +81,12 @@ open class Notification(val type: Int = 0,
                     it["img_url"] ?: "",
                     Meme.MemeType.of(it["mtype"] ?: "" ?: "image"),
                     it["comment"] ?: "",
+                    (it["ratio"] ?: "1.0").toDouble(),
                     (it["date"] ?: "0").toLong(),
                     (it["seen"] ?: "false").toBoolean()
             )
         }
+
         private fun parseReactionNotif(it: Map<String, Any>): ReactionNotification {
             return ReactionNotification(
                     it["nid"] as String? ?: "",
@@ -90,11 +96,13 @@ open class Notification(val type: Int = 0,
                     it["mid"] as String,
                     it["img_url"] as String,
                     Meme.MemeType.of((it["mtype"] as String?) ?: "image"),
+                    (it["ratio"] as? Double?) ?: 1.0,
                     (it["reaction"] as Double).toInt(),
                     (it["date"] as Double).toLong(),
                     it["seen"] as Boolean
             )
         }
+
         private fun parseReactionNotifString(it: Map<String, String>): ReactionNotification {
             return ReactionNotification(
                     it["nid"] ?: "",
@@ -104,6 +112,7 @@ open class Notification(val type: Int = 0,
                     it["mid"] ?: "",
                     it["img_url"] ?: "",
                     Meme.MemeType.of(it["mtype"] ?: "" ?: "image"),
+                    (it["ratio"] ?: "1.0").toDouble(),
                     (it["reaction"] ?: "0").toInt(),
                     (it["date"] ?: "0").toLong(),
                     (it["seen"] ?: "false").toBoolean()
@@ -119,6 +128,7 @@ open class Notification(val type: Int = 0,
                     (it["date"] as Double).toLong(),
                     it["seen"] as Boolean)
         }
+
         private fun parseFollowingNotifString(it: Map<String, String>): FollowingNotification {
             return FollowingNotification(
                     it["nid"] ?: "",
@@ -130,7 +140,7 @@ open class Notification(val type: Int = 0,
         }
 
         private fun parseAwardNotif(it: Map<String, Any>): AwardNotification {
-            val badge = Badge.ofID(it["awardId"] as String)
+            val badge = Badge.ofID((it["awardId"] as? String?) ?: "none")
             return AwardNotification(
                     it["nid"] as String? ?: "",
                     badge,
@@ -164,13 +174,14 @@ class ReactionNotification(id: String,
                            val memeId: String,
                            val memePic: String,
                            val memeType: Meme.MemeType,
+                           val memeRatio: Double,
                            val reactionType: Int,
                            date: Long,
                            seen: Boolean = false) : Notification
 (2, id, "$reactorName reacted to your meme", "", date, seen) {
 
     fun getMeme(): Meme =
-            Meme(id = memeId, imageId = memePic, type = memeType.name)
+            Meme(id = memeId, imageId = memePic, type = memeType.name, imageRatio = memeRatio)
 
     fun getReaction(): Reaction =
             Reaction.ReactionType.values()[reactionType].create(memeId)
@@ -185,12 +196,13 @@ class CommentNotification(id: String,
                           val memePic: String,
                           val memeType: Meme.MemeType,
                           val comment: String,
+                          val memeRatio: Double,
                           date: Long,
                           seen: Boolean = false) : Notification
 (3, id, "$commenterName commented on your meme", comment, date, seen) {
 
     fun getMeme(): Meme =
-            Meme(id = memeId, imageId = memePic, type = memeType.name)
+            Meme(id = memeId, imageId = memePic, type = memeType.name, imageRatio = memeRatio)
 
 }
 

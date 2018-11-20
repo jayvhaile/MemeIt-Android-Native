@@ -107,7 +107,6 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
                             if ((index-offsets[i])%freqs[i]==0L)
                                 baker.invoke()?.let {elem->
                                     homeElements.add(elem)
-                                    index++
                                 }
                         }
                     }

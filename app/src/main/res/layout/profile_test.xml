@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="232dp">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
@@ -11,7 +11,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="@dimen/profile_cover_expanded_height" />
-
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="208dp" />
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/profile_follow_btn"
         android:layout_width="wrap_content"
@@ -22,16 +27,15 @@
         android:background="@drawable/filled_button"
         android:gravity="center"
         android:paddingLeft="16dp"
-        android:paddingTop="4dp"
+        android:paddingTop="8dp"
         android:paddingRight="16dp"
-        android:paddingBottom="4dp"
+        android:paddingBottom="8dp"
         android:text="Follow"
         android:textColor="#fff"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@id/profile_bio"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/profile_username" />
-
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -113,25 +117,18 @@
             android:text=" Followings"
             android:textSize="16sp" />
     </LinearLayout>
-
-
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/profile_username"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:ellipsize="end"
         android:text="jvhaile"
         android:textColor="#888"
         android:textSize="13sp"
-        app:layout_constraintEnd_toStartOf="@+id/profile_follow_btn"
         app:layout_constraintStart_toEndOf="@+id/imageView8"
-        app:layout_constraintTop_toBottomOf="@id/guideline3" />
-
+        app:layout_constraintTop_toTopOf="@+id/guideline4" />
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/profile_bio"
         android:layout_width="0dp"
@@ -149,8 +146,7 @@
         android:textSize="13sp"
         app:layout_constraintEnd_toStartOf="@+id/profile_follow_btn"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@id/profile_username" />
-
+        app:layout_constraintTop_toBottomOf="@+id/profile_username" />
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="20dp"
@@ -162,7 +158,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/profile_bio"
         app:srcCompat="@drawable/ic_info_black_24dp" />
-
     <TextView
         android:id="@+id/imageView8"
         android:layout_width="20dp"

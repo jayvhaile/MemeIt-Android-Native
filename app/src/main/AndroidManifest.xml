@@ -66,7 +66,6 @@
                     android:path="meme/\\*"
                     android:pathPrefix="/api/1/"
                     android:scheme="https" />
-
             </intent-filter>
         </activity>
         <activity
@@ -79,6 +78,7 @@
             android:name=".Activities.UsernameSettingsActivity"
             android:parentActivityName=".Activities.SettingsActivity" />
         <activity android:name=".Activities.UserListActivity" />
+        <activity android:name=".Activities.TestActivity"></activity>
     </application>
 
 </manifest>

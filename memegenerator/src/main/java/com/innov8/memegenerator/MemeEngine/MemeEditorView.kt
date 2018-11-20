@@ -145,7 +145,7 @@ class MemeEditorView : ViewGroup {
 
     fun loadMemeTemplate(memeTemplate: MemeTemplate) {
         clearMemeItems()
-        val image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL),1f)
+        val image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), 1f)
         val memeLayout = SingleImageLayout(width, height, image)
         setLayout(memeLayout)
         Handler().postDelayed({

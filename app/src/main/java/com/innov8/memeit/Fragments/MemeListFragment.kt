@@ -50,16 +50,6 @@ class MemeListFragment : Fragment() {
 
         ml.load()
     }
-
-
-    fun swapAdapter(adapterType: Byte) {
-        memeAdapterType = adapterType
-        val elem = ArrayList(memeAdapter.items)
-        memeAdapter = MemeAdapter.create(memeAdapterType, context!!)
-        memeAdapter.addAll(elem)
-    }
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_meme_list, container, false)
@@ -109,7 +99,7 @@ class MemeListFragment : Fragment() {
             return fragment
         }
 
-        fun newInstanceForUserPosts(userID: String, memeAdapterType: Byte = MemeAdapter.GRID_ADAPTER): MemeListFragment {
+        fun newInstanceForUserPosts(userID: String, memeAdapterType: Byte = MemeAdapter.GRID_ADAPTER_MY_POSTS): MemeListFragment {
             val fragment = MemeListFragment()
             val arg = Bundle()
             arg.putByte("adapter_type", memeAdapterType)

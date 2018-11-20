@@ -56,7 +56,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         closeableFragments = mapOf(
                 LayoutEditorFragment().make("layout", 152) { layoutEditListener = interactionHandler },
                 StickerChooserFragment().make("sticker", 80 + 56) { stickerEditInterface = interactionHandler },
-                PaintOptionsFragment().make("paint", 132) { paintEditInterface = interactionHandler },
+                PaintOptionsFragment().make("paint", 128) { paintEditInterface = interactionHandler },
                 "text" to CloseableFragment(TextEditorFragment()
                         .apply { textEditListener = interactionHandler }, 152.dp(this),
                         TextPresetFragment().apply {
@@ -73,6 +73,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
     private fun initListeners() {
         memeEditorView.itemSelectedInterface = this
+        memeEditorView.paintHandler.actionManager.onActionListChanged = {
+            (closeableFragments["paint"]?.bottomFragment as? PaintOptionsFragment)?.updateUndoState()
+        }
         layout.setOnClickListener {
             open("layout")
         }
@@ -473,5 +476,14 @@ class EditorHandler(val memeEditorView: MemeEditorView) :
     override fun onShapeChanged(paintMode: PaintHandler.PaintMode) {
         memeEditorView.paintHandler.paintMode = paintMode
     }
+
+    override fun onPaintUndo() {
+        memeEditorView.paintHandler.actionManager.undo()
+    }
+
+    override fun hasUndo(): Boolean {
+        return memeEditorView.paintHandler.actionManager.head != null
+    }
+
 }
 

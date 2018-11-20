@@ -123,9 +123,9 @@ public class MainActivity extends AppCompatActivity {
                         .build();
                 startActivityForResult(intent, 101);
                 rootNav.closeMenu(false);
+
             }
         });
-
     }
 
     @Override

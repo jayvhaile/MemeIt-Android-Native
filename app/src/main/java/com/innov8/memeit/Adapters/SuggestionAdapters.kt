@@ -13,9 +13,11 @@ import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.getDrawableIdByName
 import com.innov8.memeit.commons.models.MemeTemplate
-import com.innov8.memeit.commons.toast
 import com.innov8.memeit.commons.views.ProfileDraweeView
+import com.innov8.memeit.loadImage
 import com.innov8.memeit.prefix
+import com.memeit.backend.MemeItUsers
+import com.memeit.backend.call
 import com.memeit.backend.dataclasses.User
 
 class UserSugAdapter(context: Context) : ListAdapter<User>(context, R.layout.list_item_user_sug) {
@@ -28,14 +30,22 @@ class UserSugAdapter(context: Context) : ListAdapter<User>(context, R.layout.lis
         private val followBtn: CircularProgressButton = itemView.findViewById(R.id.follower_follow_btn)
 
         init {
-            followBtn.setOnClickListener {
-                it.context.toast("Follow ${getItemAt(item_position).name}")
+            followBtn.setOnClickListener { view ->
+                view as CircularProgressButton
+                if (view.text == "Followed") return@setOnClickListener
+                view.text = "Followed"
+                MemeItUsers.followUser(getItemAt(item_position).uid!!).call {
+                    view.text = "Follow"
+                }
             }
         }
 
         override fun bind(t: User) {
+            profileV.hasBorder = false
             profileV.setText(t.name.prefix())
+            profileV.loadImage(t.imageUrl)
             nameV.text = t.name
+
         }
     }
 }
@@ -50,7 +60,7 @@ class TemplateSugAdapter(context: Context) : ListAdapter<MemeTemplate>(context, 
 
         init {
             editBtn.setOnClickListener {
-                MemeEditorActivity.startWithMemeTemplate(context,getItemAt(item_position))
+                MemeEditorActivity.startWithMemeTemplate(context, getItemAt(item_position))
             }
         }
 

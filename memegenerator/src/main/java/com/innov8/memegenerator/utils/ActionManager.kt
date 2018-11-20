@@ -1,12 +1,14 @@
 package com.innov8.memegenerator.utils
 
 import android.view.View
-import java.util.*
 
-class ActionManager  {
+class ActionManager {
+    var onActionListChanged: (() -> Unit)? = null
+
     fun hasNext(): Boolean {
         return head != null && head!!.nextAction != null
     }
+
     fun hasPrevious(): Boolean {
         return head != null && head!!.previousAction != null
     }
@@ -16,6 +18,7 @@ class ActionManager  {
             head!!.nextAction!!
         } else null
     }
+
     fun previous(): Action? {
         return if (hasPrevious()) {
             head!!.previousAction!!
@@ -26,36 +29,41 @@ class ActionManager  {
     fun reset() {
         while (undo()) {
         }
+        onActionListChanged?.invoke()
     }
 
 
     fun clearHistory() {
         clearPrevious()
         head = null
+        onActionListChanged?.invoke()
     }
 
     fun clearPrevious() {
         head?.previousAction = null
-    }
-    fun clearNext(){
-        head?.nextAction=null
+        onActionListChanged?.invoke()
     }
 
-    fun getLatest():Action?{
-        var l:Action?=null
-        while (hasNext()){
-            l=next()
-        }
-        return l
+    fun clearNext() {
+        head?.nextAction = null
+        onActionListChanged?.invoke()
     }
-    fun getFirst():Action?{
-        var l:Action?=null
-        while (hasPrevious()){
-            l=previous()
+
+    fun getLatest(): Action? {
+        var l: Action? = null
+        while (hasNext()) {
+            l = next()
         }
         return l
     }
 
+    fun getFirst(): Action? {
+        var l: Action? = null
+        while (hasPrevious()) {
+            l = previous()
+        }
+        return l
+    }
 
 
     fun pushAction(action: Action, `do`: Boolean = true) {
@@ -67,11 +75,15 @@ class ActionManager  {
             head = action
         }
         if (`do`) `do`()
+        onActionListChanged?.invoke()
+
     }
 
     fun `do`(): Boolean = if (head != null && head!!.nextAction != null) {
         head = head!!.nextAction
         head!!.`do`()
+        onActionListChanged?.invoke()
+
         true
     } else false
 
@@ -79,6 +91,8 @@ class ActionManager  {
     fun undo(): Boolean = if (head != null) {
         head!!.undo()
         head = head!!.previousAction
+        onActionListChanged?.invoke()
+
         true
     } else false
 
@@ -125,6 +139,17 @@ class RotationAction(val view: View, val rotate: Float) : Action("R") {
         view.rotation = initialRotation
     }
 
+
+}
+
+class PaintAction() : Action("") {
+    override fun `do`() {
+
+    }
+
+    override fun undo() {
+
+    }
 
 }
 

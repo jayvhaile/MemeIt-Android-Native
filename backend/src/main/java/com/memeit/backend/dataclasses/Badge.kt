@@ -46,7 +46,7 @@ data class Badge(val id: String,
         }
 
         fun ofID(id: String) = allBadges.find { it.id == id } ?: Badge(
-                "none",
+                "react_001",
                 "None",
                 "none",
                 0

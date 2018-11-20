@@ -29,7 +29,7 @@ class CommentsAdapter(context: Context) : SimpleELEListAdapter<Comment>(context,
     }
 
 
-    override var emptyDrawableId: Int = R.drawable.tag2
+    override var emptyDrawableId: Int = R.drawable.ic_comment
     override var errorDrawableId: Int = R.drawable.ic_no_internet
     override var emptyDescription: String = ""
     override var errorDescription: String = "Couldn't load comments"

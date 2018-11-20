@@ -26,12 +26,12 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.innov8.memegenerator.utils.addWaterMark
 import com.innov8.memeit.*
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.MemeUpdateActivity
@@ -58,6 +58,12 @@ class MemeView : FrameLayout {
     private lateinit var constraintSetDefault: ConstraintSet
 
     var resizeToFit = true
+    var showCommentButton = true
+        set(value) {
+            field = value
+            applyVisible(R.id.meme_comment_count, if (field) View.VISIBLE else View.GONE)
+            applyVisible(R.id.meme_comment, if (field) View.VISIBLE else View.GONE, true)
+        }
 
     constructor(context: Context) : super(context) {
         initC()
@@ -82,7 +88,7 @@ class MemeView : FrameLayout {
     val itemView: ConstraintLayout = LayoutInflater.from(context).inflate(R.layout.list_item_meme, this, false) as ConstraintLayout
     private val reactionArray = intArrayOf(R.id.react_funny, R.id.react_veryfunny, R.id.react_angry, R.id.react_stupid)
     private val posterPicV: ProfileDraweeView = itemView.findViewById(R.id.notif_icon)
-    private val memeImageV: SimpleDraweeView = itemView.findViewById(R.id.meme_image)
+    private val memeImageV: MemeDraweeView = itemView.findViewById(R.id.meme_image)
     private val commentBtnV: ImageButton = itemView.findViewById(R.id.meme_comment)
     private val posterNameV: TextView = itemView.findViewById(R.id.meme_poster_name)
     private val memeDateV: TextView = itemView.findViewById(R.id.meme_time)
@@ -112,12 +118,11 @@ class MemeView : FrameLayout {
 
 
     init {
-        memeImageV.setOnClickListener { memeClickedListener?.invoke(meme.id!!) }
+        memeImageV.onClick = {
+            memeClickedListener?.invoke(meme.id!!)
+        }
         commentBtnV.setOnClickListener {
-            val meme = meme
-            val intent = Intent(context, CommentsActivity::class.java)
-            intent.putExtra(CommentsActivity.MEME_PARAM_KEY, meme)
-            context.startActivity(intent)
+            CommentsActivity.startWithMeme(context, meme)
         }
         posterPicV.setOnClickListener {
             val i = Intent(context, ProfileActivity::class.java)
@@ -217,7 +222,6 @@ class MemeView : FrameLayout {
         constraintSetDefault.applyTo(itemView)
     }
 
-
     private fun makeTransition(): TransitionSet {
         return TransitionSet().apply {
             reactionArray.mapIndexed { index, i ->
@@ -271,8 +275,8 @@ class MemeView : FrameLayout {
         launch(UI) {
             val res = withContext(CommonPool) { Fresco.getImagePipeline().fetchDecodedImage(req, context).result }
             if (res != null && res.get() is CloseableBitmap) {
-                val bitmap = (res.get() as CloseableBitmap).underlyingBitmap
-                val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap!!, "memeit", "memeit")
+                val bitmap = (res.get() as CloseableBitmap).underlyingBitmap.addWaterMark(context)
+                val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "memeit", "memeit")
                 val url = Uri.parse(path)
                 ShareCompat.IntentBuilder.from(context as Activity)
                         .setText(ll.toString())
@@ -286,7 +290,6 @@ class MemeView : FrameLayout {
         }
 
     }
-
 
     private fun showFollowDialog() {
         val meme = meme
@@ -385,7 +388,6 @@ class MemeView : FrameLayout {
         menu.show()
     }
 
-
     private fun onMemeUpdated() {
         if (reactTint.visibility == View.VISIBLE) {
             hideReaction()
@@ -399,40 +401,35 @@ class MemeView : FrameLayout {
 
         if (meme.myReaction !== null) {
             reactButton.setActiveImage(meme.myReaction!!.getDrawableID())
-            reactButton.setChecked(true)
+            reactButton.isChecked = true
         } else {
-            reactButton.setChecked(false)
+            reactButton.isChecked = false
         }
 
-        favButton.setChecked(meme.isMyFavourite)
+        favButton.isChecked = meme.isMyFavourite
         if (resizeToFit) {
             val h = (screenWidth / meme.imageRatio).toInt().trim(200.dp, screenHeight - 200.dp)
             constraintSetDefault.constrainWidth(R.id.meme_image, screenWidth)
             constraintSetDefault.constrainHeight(R.id.meme_image, h)
             constraintSetDefault.applyTo(itemView)
         }
-        if (meme.tags.isEmpty()) {
-            memeTags.text = ""
-            applyVisible(R.id.meme_tags, View.GONE)
-        } else {
+        applyVisible(R.id.meme_gif, if (meme.getType() == Meme.MemeType.GIF) View.VISIBLE else View.GONE)
+        applyVisible(R.id.meme_tags, if (meme.tags.isEmpty()) View.GONE else View.VISIBLE)
+        applyVisible(R.id.description, if (meme.description.isNullOrBlank()) View.GONE else View.VISIBLE)
+        constraintSetDefault.applyTo(itemView)
+        if (meme.tags.isNotEmpty()) {
             memeTags.text = meme.tags.joinToString(", ") { "#$it" }
-            applyVisible(R.id.meme_tags, View.VISIBLE)
         }
-        if (meme.description == null || meme.description!!.isBlank()) {
-            applyVisible(R.id.description, View.GONE)
-            memeDescription.text = ""
-        } else {
-
-            applyVisible(R.id.description, View.VISIBLE)
+        if (!meme.description.isNullOrBlank()) {
             memeDescription.text = meme.description
         }
         memeImageV.loadMeme(meme)
     }
 
-    private fun applyVisible(id: Int, visibility: Int) {
+    private fun applyVisible(id: Int, visibility: Int, apply: Boolean = false) {
         constraintSetDefault.apply {
             setVisibility(id, visibility)
-            applyTo(itemView)
+            if (apply) applyTo(itemView)
         }
     }
 }

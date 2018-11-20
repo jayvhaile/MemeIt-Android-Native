@@ -1,7 +1,9 @@
 package com.innov8.memegenerator.utils
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat.PNG
+import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -9,6 +11,8 @@ import android.view.View
 import android.widget.SeekBar
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
+import com.innov8.memegenerator.R
+import com.innov8.memeit.commons.loadBitmap
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
@@ -109,4 +113,21 @@ fun RecyclerView.initWithStagger(spanCount: Int, orientation: Int = androidx.rec
     val glm = androidx.recyclerview.widget.StaggeredGridLayoutManager(spanCount, orientation)
     this.layoutManager = glm
     this.itemAnimator = androidx.recyclerview.widget.DefaultItemAnimator()
+}
+
+private infix fun Float.min(i: Float): Float = Math.max(this, i)
+private infix fun Float.max(i: Float): Float = Math.min(this, i)
+
+fun Bitmap.addWaterMark(context: Context): Bitmap {
+    val canvas = Canvas(this)
+    val ratio = 100f / 24f
+    val w = canvas.width * 0.2f min 150f
+    val h = w / ratio
+    val watermark = context.loadBitmap(R.drawable.watermark, w.toInt(), h.toInt())
+    val endMargin = 8
+    val left = canvas.width - w - endMargin
+    val top = canvas.height - h - endMargin
+    val destRect = RectF(left, top, left + w, top + h)
+    canvas.drawBitmap(watermark, null, destRect, null)
+    return this
 }
