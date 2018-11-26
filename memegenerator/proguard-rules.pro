@@ -23,3 +23,26 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+    -keep class com.afollestad.material-dialogs.*
+    -keep class com.jaredrummler.material-spinner.*
+    -keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
+    -keep,allowobfuscation @interface com.facebook.soloader.DoNotOptimize
+
+    # Do not strip any method/class that is annotated with @DoNotStrip
+    -keep @com.facebook.common.internal.DoNotStrip class *
+    -keepclassmembers class * {
+        @com.facebook.common.internal.DoNotStrip *;
+    }
+
+    # Do not strip any method/class that is annotated with @DoNotOptimize
+    -keep @com.facebook.soloader.DoNotOptimize class *
+    -keepclassmembers class * {
+        @com.facebook.soloader.DoNotOptimize *;
+    }
+
+    # Keep native methods
+    -keepclassmembers class * {
+        native <methods>;
+    }
+    -keep class com.google.code.gson.*
