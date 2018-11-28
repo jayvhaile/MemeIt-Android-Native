@@ -79,6 +79,12 @@
             android:parentActivityName=".Activities.SettingsActivity" />
         <activity android:name=".Activities.UserListActivity" />
         <activity android:name=".Activities.TestActivity"></activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="bcaff70c9ab33cd1ced5b526b485cad64f182f1b"
+            />
+
     </application>
 
 </manifest>

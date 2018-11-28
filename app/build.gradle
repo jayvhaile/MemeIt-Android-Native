@@ -75,12 +75,17 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') {
+        transitive = true;
+    }
 }
 repositories {
     mavenCentral()
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'io.fabric'
 kotlin {
     experimental {
         coroutines "enable"

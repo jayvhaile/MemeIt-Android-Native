@@ -9,10 +9,12 @@ import android.os.StrictMode
 import android.preference.PreferenceManager
 import androidx.multidex.MultiDexApplication
 import com.cloudinary.android.MediaManager
+import com.crashlytics.android.Crashlytics
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.google.firebase.FirebaseApp
 import com.memeit.backend.MemeItClient
+import io.fabric.sdk.android.Fabric
 
 
 class MemeItApp : MultiDexApplication() {
@@ -29,6 +31,7 @@ class MemeItApp : MultiDexApplication() {
     }
 
     override fun onCreate() {
+        Fabric.with(this, Crashlytics())
         if (STRICT_MODE) {
             StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
                     .detectDiskReads()
