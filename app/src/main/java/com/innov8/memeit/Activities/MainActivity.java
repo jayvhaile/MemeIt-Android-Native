@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             initUI(savedInstanceState);
         }
-        throw new RuntimeException("Crashlytics test");
+
     }
 
     private void goToSignUpDetails() {

@@ -21,7 +21,7 @@ class MemeItApp : MultiDexApplication() {
     companion object {
         lateinit var instance: Application
         const val apiVersion = 1
-        const val SERVER_URL = "https://safe-beyond-33046.herokuapp.com/api/$apiVersion/"
+        const val SERVER_URL = "https://safe-beyond-33046.herokuapp.com/api/v$apiVersion/"
         private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/$apiVersion/"
         private const val STRICT_MODE = false
         private const val USE_LOCAL_SERVER = false

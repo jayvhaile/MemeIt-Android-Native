@@ -1,6 +1,8 @@
 package com.innov8.memeit.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import mehdi.sakout.aboutpage.AboutPage;
+import mehdi.sakout.aboutpage.Element;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -18,14 +20,24 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
 
-        findViewById(R.id.donate).setOnClickListener(this);
-        findViewById(R.id.call_jv).setOnClickListener(this);
-        findViewById(R.id.call_biruk).setOnClickListener(this);
-        findViewById(R.id.email_biruk).setOnClickListener(this);
-        findViewById(R.id.email_jv).setOnClickListener(this);
-        findViewById(R.id.feedback_message).setOnClickListener(this);
+
+        View aboutPage = new AboutPage(this)
+                .addEmail("innovapp.ethio@gmail.com")
+                .addFacebook("")
+                .addWebsite("www.memeitapp.com")
+                .setImage(R.drawable.app_icon)
+                .addItem(new Element().setIconDrawable(R.drawable.telegram).setTitle("Telegram").setIntent(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/joinchat/D8nyzkIBl9N2YWJnsF1w-A"))))
+        .create();
+
+        setContentView(aboutPage);
+
+//        findViewById(R.id.donate).setOnClickListener(this);
+//        findViewById(R.id.call_jv).setOnClickListener(this);
+//        findViewById(R.id.call_biruk).setOnClickListener(this);
+//        findViewById(R.id.email_biruk).setOnClickListener(this);
+//        findViewById(R.id.email_jv).setOnClickListener(this);
+//        findViewById(R.id.feedback_message).setOnClickListener(this);
     }
 
     @Override
