@@ -6,7 +6,7 @@ import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.innov8.memeit.R
-import com.innov8.memeit.dimen
+import com.innov8.memeit.Utils.dimen
 
 class CoverBehaviour : CoordinatorLayout.Behavior<View> {
     constructor() : super()

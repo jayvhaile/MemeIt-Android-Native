@@ -1,10 +1,8 @@
 package com.innov8.memegenerator.Models
 
 import android.content.Context
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 
 class StickerPack(val name: String, val urls: List<String>) {
     companion object {
@@ -13,8 +11,8 @@ class StickerPack(val name: String, val urls: List<String>) {
                 "Chat Bubbles" to "bubbles")
 
         fun load(context: Context, onLoaded: (List<StickerPack>) -> Unit) {
-            launch(UI) {
-               onLoaded(withContext(CommonPool){
+            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+               onLoaded(withContext(Dispatchers.Default){
                    val list = MutableList(stickers.size) { index: Int ->
                        val (name, path) = stickers.toList()[index]
                        val urls = context.assets.list(path)?.map { "asset:///$path/$it" }

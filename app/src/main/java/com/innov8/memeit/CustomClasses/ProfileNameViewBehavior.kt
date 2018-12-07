@@ -9,8 +9,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
-import com.innov8.memeit.dimen
-import com.innov8.memeit.screenWidth
+import com.innov8.memeit.Utils.dimen
+import com.innov8.memeit.Utils.screenWidth
 
 class ProfileNameViewBehavior : CoordinatorLayout.Behavior<TextView> {
     constructor() : super()

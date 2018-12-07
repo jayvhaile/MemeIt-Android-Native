@@ -1,10 +1,10 @@
-package com.innov8.memeit
+package com.innov8.memeit.Utils
 
 import com.innov8.memeit.Adapters.ELEAdapter
 import com.innov8.memeit.Adapters.ELEListAdapter
 import com.innov8.memeit.Loaders.Loader
 
-abstract class LoadingHandler<A : ELEAdapter<*>>(val adapter: A) {
+abstract class AdapterHandler<A : ELEAdapter<*>>(val adapter: A) {
 
     init {
         adapter.onErrorAction = { refresh(true) }
@@ -47,10 +47,10 @@ abstract class LoadingHandler<A : ELEAdapter<*>>(val adapter: A) {
 
 }
 
-class MLHandler<T : Any>(eleListAdapter: ELEListAdapter<T, *>,
-                         var loader: Loader<out T>,
-                         val limit: Int = 20)
-    : LoadingHandler<ELEListAdapter<T, *>>(eleListAdapter) {
+class LoaderAdapterHandler<T : Any>(eleListAdapter: ELEListAdapter<T, *>,
+                                    var loader: Loader<out T>,
+                                    val limit: Int = 20)
+    : AdapterHandler<ELEListAdapter<T, *>>(eleListAdapter) {
 
 
     override fun onLoad(refresh: Boolean) {

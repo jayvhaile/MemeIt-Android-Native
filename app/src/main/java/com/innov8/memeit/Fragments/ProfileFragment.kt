@@ -25,19 +25,19 @@ import com.innov8.memeit.CustomClasses.CustomMethods
 import com.innov8.memeit.Loaders.FollowerLoader
 import com.innov8.memeit.Loaders.FollowingLoader
 import com.innov8.memeit.R
+import com.innov8.memeit.Utils.loadImage
+import com.innov8.memeit.Utils.prefix
 import com.innov8.memeit.commons.toast
-import com.innov8.memeit.loadImage
-import com.innov8.memeit.prefix
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.User
+import com.memeit.backend.models.User
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.profile_content.*
 
 
 class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var userID: String
-    internal var size: Float = 0.toFloat()
 
     private var userData: User? = null
 
@@ -49,6 +49,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         val myID = MemeItClient.myUser?.id
         userID = arguments?.getString("uid", myID!!) ?: myID!!
         userData = arguments?.getParcelable("user")
+        retainInstance=true
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,7 +65,6 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         toolbar.inflateMenu(R.menu.profile_page_menu)
         if (!isMe) toolbar.menu.removeItem(R.id.menu_profile_id)
         profile_follow_btn.visibility = if (isMe) GONE else VISIBLE
-        size = resources.getDimension(R.dimen.image_width)
         if (isMe) updateView(MemeItClient.myUser!!.toUser())
         else if (userData != null) updateView(userData!!)
 
@@ -148,7 +148,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         profile_username?.text = user.username
         profile_bio?.text = user.bio
         profile_image?.setText(user.name.prefix())
-        profile_image?.loadImage(user.imageUrl, size, size)
+        profile_image?.loadImage(user.imageUrl)
         profile_followers_count?.text = CustomMethods.formatNumber(user.followerCount)
         profile_followings_count?.text = CustomMethods.formatNumber(user.followingCount)
         profile_meme_count?.text = CustomMethods.formatNumber(user!!.postCount)

@@ -6,10 +6,8 @@ import android.os.Parcelable
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 import java.io.InputStreamReader
 
 data class MemeTemplate(val label: String, val imageURL: String, val dataSource: Byte = LOCAL_DATA_SOURCE, val textProperties: List<TextProperty>) : Parcelable {
@@ -44,8 +42,8 @@ data class MemeTemplate(val label: String, val imageURL: String, val dataSource:
         val SERVER_DATA_SOURCE: Byte = 1
 
         fun loadLocalTemplates(context: Context, onFinished: (List<MemeTemplate>) -> Unit) {
-            launch(UI) {
-                onFinished(withContext(CommonPool) {
+            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                onFinished(withContext(Dispatchers.Default) {
                     val gson = Gson()
                     val fr = context.assets.open("template.json")
                     val bis = InputStreamReader(fr, "UTF-8")

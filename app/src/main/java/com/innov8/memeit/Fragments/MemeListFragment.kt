@@ -7,49 +7,51 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
-import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.Loaders.MemeLoader
 import com.innov8.memeit.Loaders.SearchMemeLoader
 import com.innov8.memeit.Loaders.UserMemePostsLoader
-import com.innov8.memeit.MLHandler
+import com.innov8.memeit.Utils.LoaderAdapterHandler
 import com.innov8.memeit.R
-import com.memeit.backend.dataclasses.HomeElement
+import com.innov8.memeit.Utils.snack
+import com.memeit.backend.models.HomeElement
 import kotlinx.android.synthetic.main.fragment_meme_list.*
 import java.util.*
 
 
 class MemeListFragment : Fragment() {
 
+    private val memeAdapter by lazy {
 
-    private lateinit var memeAdapter: MemeAdapter
-    private lateinit var memeLoader: MemeLoader<out HomeElement>
-    private var memeAdapterType: Byte = 0
-    private lateinit var searchMemeLoader: SearchMemeLoader
+        MemeAdapter.create(arguments!!.getByte("adapter_type", -1), context!!)
+    }
+    private val memeLoader by lazy {
+        arguments!!.getParcelable<MemeLoader<out HomeElement>>("loader")!!
+    }
+    private val searchMemeLoader by lazy {
+        SearchMemeLoader()
+    }
     private var tempList: List<HomeElement>? = null
     private var searchMode: Boolean = false
 
-    lateinit var ml: MLHandler<HomeElement>
+    private val ml by lazy {
+        LoaderAdapterHandler(memeAdapter, memeLoader).apply {
+            onLoaded = { swipe_to_refresh?.isRefreshing = false }
+            onLoadFailed = {
+                view?.snack(it)
+                swipe_to_refresh?.isRefreshing = false
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments == null)
             throw NullPointerException("Argument should not be null")
-        memeAdapterType = arguments!!.getByte("adapter_type", MemeAdapter.LIST_ADAPTER)!!
-        memeLoader = arguments!!.getParcelable("loader")!!
-        searchMemeLoader = SearchMemeLoader()
-        memeAdapter = MemeAdapter.create(memeAdapterType, context!!)
-        ml = MLHandler(memeAdapter, memeLoader)
-        ml.onLoaded = { swipe_to_refresh?.isRefreshing = false }
-        ml.onLoadFailed = { message ->
-            view?.let {
-                Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show()
-            }
-            swipe_to_refresh?.isRefreshing = false
-        }
-
+        this.retainInstance = true
         ml.load()
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_meme_list, container, false)

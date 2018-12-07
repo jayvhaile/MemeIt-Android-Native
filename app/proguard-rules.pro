@@ -21,6 +21,18 @@
 #-renamesourcefileattribute SourceFile
 # Keep our interfaces so they can be used by other ProGuard rules.
 # See http://sourceforge.net/p/proguard/bugs/466/
+
+
+-keep class com.cloudinary.android.*Strategy
+-dontwarn javax.annotation.**
+-dontwarn com.google.errorprone.annotations.**
+-dontwarn okhttp3.internal.platform.*
+-dontnote retrofit2.Platform
+-dontwarn retrofit2.Platform$Java8
+
+-keep class com.cloudinary.android.demo.data.model.** { *; }
+#=======================================
+
 -keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
 -keep,allowobfuscation @interface com.facebook.soloader.DoNotOptimize
 
@@ -68,7 +80,7 @@
     @retrofit2.http.* <methods>;
 }
 
--keep class com.squareup.okhttp3.** { ;}
+-keep class com.squareup.okhttp3.** { *;}
 -keep class com.squareup.okio.*
 -keep class com.github.varunest.sparkbutton.*
 -keep class com.cloudinary.android.*
@@ -86,3 +98,4 @@
 -keep class com.amulyakhare.*
 -keep class com.facebook.android.*
 -keep class com.github.ybq.*
+-keep class com.google.code.gson.*

@@ -1,14 +1,13 @@
 package com.innov8.memeit.Adapters.MemeAdapters
 
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memeit.Adapters.MemeAdapters.ViewHolders.MemeGridViewHolder
 import com.innov8.memeit.Adapters.MemeAdapters.ViewHolders.MemeViewHolder
 import com.innov8.memeit.R
-import com.memeit.backend.dataclasses.HomeElement
+import com.memeit.backend.models.HomeElement
 
 class GridMemeAdapter(context: Context) : MemeAdapter(context) {
     companion object {

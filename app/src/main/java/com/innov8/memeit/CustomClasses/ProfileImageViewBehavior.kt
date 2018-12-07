@@ -6,8 +6,8 @@ import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.innov8.memeit.R
-import com.innov8.memeit.dimen
-import com.innov8.memeit.screenWidth
+import com.innov8.memeit.Utils.dimen
+import com.innov8.memeit.Utils.screenWidth
 
 class ProfileImageViewBehavior : CoordinatorLayout.Behavior<View> {
     constructor() : super()
@@ -15,7 +15,7 @@ class ProfileImageViewBehavior : CoordinatorLayout.Behavior<View> {
 
 
     private val expandedSize = R.dimen.profile_image_expanded_size.dimen()
-    private val expandedX = (screenWidth - expandedSize) / 2f
+    private val expandedX get() = (screenWidth - expandedSize) / 2f
     private val expandedY = R.dimen.profile_cover_expanded_height.dimen() - expandedSize / 2f
 
     private val collapsedSize = R.dimen.profile_image_collapsed_size.dimen()
@@ -55,5 +55,6 @@ class ProfileImageViewBehavior : CoordinatorLayout.Behavior<View> {
         }
         return false
     }
+
 }
 

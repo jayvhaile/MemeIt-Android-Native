@@ -3,10 +3,8 @@ package com.innov8.memeit.Loaders
 import android.os.Parcel
 import android.os.Parcelable
 import com.memeit.backend.MemeItMemes
-import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Meme
-import com.memeit.backend.dataclasses.Tag
+import com.memeit.backend.models.Meme
 
 class UserMemePostsLoader(private val userID: String?) : MemeLoader<Meme> {
 

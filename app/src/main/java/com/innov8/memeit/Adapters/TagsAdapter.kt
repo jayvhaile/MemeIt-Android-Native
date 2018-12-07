@@ -12,7 +12,7 @@ import com.innov8.memeit.R
 import com.innov8.memeit.commons.toast
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Tag
+import com.memeit.backend.models.Tag
 
 class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layout.list_item_tags) {
 

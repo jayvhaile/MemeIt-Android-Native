@@ -1,8 +1,7 @@
 package com.innov8.memeit.Loaders
 
 import android.os.Parcelable
-import com.memeit.backend.dataclasses.*
-import retrofit2.Call
+import com.memeit.backend.models.*
 
 interface Loader<T> {
     var skip: Int

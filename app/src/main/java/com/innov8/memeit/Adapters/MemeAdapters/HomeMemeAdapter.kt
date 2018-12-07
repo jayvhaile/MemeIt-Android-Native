@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memeit.Adapters.MemeAdapters.ViewHolders.*
 import com.innov8.memeit.CustomViews.MemeView
 import com.innov8.memeit.R
-import com.innov8.memeit.measure
-import com.memeit.backend.dataclasses.HomeElement
+import com.innov8.memeit.Utils.measure
+import com.memeit.backend.models.HomeElement
 
 class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
     val usersPool = RecyclerView.RecycledViewPool()

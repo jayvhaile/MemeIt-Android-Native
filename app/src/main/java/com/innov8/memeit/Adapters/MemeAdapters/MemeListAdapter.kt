@@ -6,7 +6,7 @@ import com.innov8.memeit.Adapters.MemeAdapters.ViewHolders.MemeListViewHolder
 import com.innov8.memeit.Adapters.MemeAdapters.ViewHolders.MemeViewHolder
 import com.innov8.memeit.CustomViews.MemeView
 import com.innov8.memeit.R
-import com.memeit.backend.dataclasses.HomeElement
+import com.memeit.backend.models.HomeElement
 
 class MemeListAdapter(context: Context) : MemeAdapter(context) {
     companion object {

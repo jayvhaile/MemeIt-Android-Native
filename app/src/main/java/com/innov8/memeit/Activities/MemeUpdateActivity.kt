@@ -9,10 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.toast
-import com.innov8.memeit.loadImage
+import com.innov8.memeit.Utils.loadImage
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Meme
+import com.memeit.backend.models.Meme
 import kotlinx.android.synthetic.main.activity_meme_update.*
 
 class MemeUpdateActivity : AppCompatActivity() {

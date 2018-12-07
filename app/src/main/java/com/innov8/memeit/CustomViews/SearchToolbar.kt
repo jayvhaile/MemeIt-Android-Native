@@ -21,9 +21,8 @@ import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.log
 import com.innov8.memeit.commons.toast
 import com.innov8.memeit.Adapters.TagSearchAdapter
-import com.innov8.memeit.DP
+import com.innov8.memeit.Utils.dp
 import com.innov8.memeit.R
-import com.innov8.memeit.dp
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
 
@@ -73,7 +72,7 @@ class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
         popupWindow = PopupWindow(v, 280.dp(context), 180.dp(context))
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            popupWindow.elevation = 2f.DP
+            popupWindow.elevation = 2f.dp
         }
         list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         list.adapter = adapter

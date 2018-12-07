@@ -216,7 +216,7 @@ abstract class ELEListAdapter<T, VH : RecyclerView.ViewHolder>(context: Context)
 
     fun clear() {
         items.clear()
-        notifyItemRangeRemoved(0, items.size)
+        notifyDataSetChanged()
     }
 
     fun setAll(item: List<T>) {

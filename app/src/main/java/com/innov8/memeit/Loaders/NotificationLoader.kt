@@ -2,7 +2,7 @@ package com.innov8.memeit.Loaders
 
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Notification
+import com.memeit.backend.models.Notification
 
 class MyNotificationLoader() : Loader<Notification> {
     override var skip: Int = 0

@@ -3,8 +3,8 @@ package com.innov8.memeit.CustomClasses
 import android.content.Context
 import com.facebook.ads.NativeAd
 import com.facebook.ads.NativeAdListener
-import com.innov8.memeit.measure
-import com.memeit.backend.dataclasses.HomeElement
+import com.innov8.memeit.Utils.measure
+import com.memeit.backend.models.HomeElement
 
 class AdElement(context: Context) : HomeElement {
     override val itemType: Int = HomeElement.AD_TYPE

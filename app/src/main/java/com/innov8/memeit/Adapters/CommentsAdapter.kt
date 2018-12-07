@@ -13,11 +13,15 @@ import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.*
 import com.innov8.memeit.Activities.ProfileActivity
+import com.innov8.memeit.Utils.formatDate
+import com.innov8.memeit.Utils.loadImage
+import com.innov8.memeit.Utils.prefix
+import com.innov8.memeit.Utils.snack
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Comment
+import com.memeit.backend.models.Comment
 
 /**
  * Created by Jv on 7/5/2018.
@@ -37,11 +41,6 @@ class CommentsAdapter(context: Context) : SimpleELEListAdapter<Comment>(context,
     override var errorActionText: String? = "Try Again"
     override val loadingDrawable = CubeGrid().apply {
         color = Color.rgb(255, 100, 0)
-    }
-    internal var size: Float = 0.toFloat()
-
-    init {
-        size = context.resources.getDimension(R.dimen.profile_mini_size)
     }
 
 
@@ -71,7 +70,7 @@ class CommentsAdapter(context: Context) : SimpleELEListAdapter<Comment>(context,
 
 
         override fun bind(t: Comment) {
-            posterPicV.loadImage(t.poster.profileUrl, size, size)
+            posterPicV.loadImage(t.poster.profileUrl)
             commentV.text = t.comment
             posterPicV.setText(t.poster.name.prefix())
             posterNameV.text = t.poster.name

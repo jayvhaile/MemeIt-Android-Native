@@ -3,10 +3,10 @@ package com.innov8.memeit.Activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.innov8.memeit.R
-import com.innov8.memeit.snack
+import com.innov8.memeit.Utils.snack
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Feedback
+import com.memeit.backend.models.Feedback
 import kotlinx.android.synthetic.main.activity_feedback.*
 
 class FeedbackActivity : AppCompatActivity() {

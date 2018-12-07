@@ -16,7 +16,7 @@ import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.Activities.Frag
 import com.innov8.memeit.Adapters.PhotosAdapter
 import com.innov8.memeit.R
-import com.innov8.memeit.snack
+import com.innov8.memeit.Utils.snack
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_photo_chooser.*
 

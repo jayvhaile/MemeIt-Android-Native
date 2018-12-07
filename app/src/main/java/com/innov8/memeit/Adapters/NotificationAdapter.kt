@@ -19,8 +19,12 @@ import com.innov8.memeit.*
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.CustomViews.MemeDraweeView
+import com.innov8.memeit.Utils.formateAsDate
+import com.innov8.memeit.Utils.getDrawable
+import com.innov8.memeit.Utils.loadImage
+import com.innov8.memeit.Utils.prefix
 import com.innov8.memeit.commons.views.ProfileDraweeView
-import com.memeit.backend.dataclasses.*
+import com.memeit.backend.models.*
 
 class NotificationAdapter(context: Context) : ELEListAdapter<Notification, NotificationViewHolder>(context) {
     override var emptyDrawableId: Int = R.drawable.ic_notifications_black_24dp

@@ -1,18 +1,17 @@
 package com.innov8.memegenerator.utils
 
 import android.content.Context
-import android.graphics.Bitmap
+import android.graphics.*
 import android.graphics.Bitmap.CompressFormat.PNG
-import android.graphics.Canvas
-import android.graphics.Rect
-import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.imageutils.BitmapUtil
 import com.google.android.material.tabs.TabLayout
 import com.innov8.memegenerator.R
 import com.innov8.memeit.commons.loadBitmap
+import com.innov8.memeit.commons.sp
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
@@ -120,14 +119,37 @@ private infix fun Float.max(i: Float): Float = Math.min(this, i)
 
 fun Bitmap.addWaterMark(context: Context): Bitmap {
     val canvas = Canvas(this)
-    val ratio = 100f / 24f
-    val w = canvas.width * 0.2f min 150f
-    val h = w / ratio
-    val watermark = context.loadBitmap(R.drawable.watermark, w.toInt(), h.toInt())
-    val endMargin = 8
-    val left = canvas.width - w - endMargin
-    val top = canvas.height - h - endMargin
-    val destRect = RectF(left, top, left + w, top + h)
-    canvas.drawBitmap(watermark, null, destRect, null)
+
+    val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color=Color.WHITE
+        textSize=12f.sp(context)
+    }
+
+    val w=canvas.width.toFloat()
+    val h=canvas.height.toFloat()
+
+    canvas.save()
+    canvas.rotate(-90f,w/2,h/2)
+
+    val ts=paint.measureText("MemeItApp.com")
+    /*
+    *  x=w-ts /2 y= h
+    *  x=h       y= w-ts /2
+    *  x=h-ts/2  y=w
+    *  x=w       y=h-ts/2
+    * */
+    val draw={
+        canvas.drawText("MemeItApp.com",w/2,h/2,paint)
+    }
+
+
+    draw()
+    paint.apply {
+        style=Paint.Style.STROKE
+        color=Color.BLACK
+
+    }
+    draw()
+    canvas.restore()
     return this
 }

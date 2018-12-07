@@ -21,13 +21,11 @@ import com.innov8.memeit.commons.makeFullScreen
 import com.innov8.memeit.commons.models.MemeTemplate
 import com.innov8.memeit.commons.models.MyTypeFace
 import com.innov8.memeit.commons.models.TextStyleProperty
-import com.memeit.backend.dataclasses.Meme
+import com.memeit.backend.models.Meme
 import com.waynejo.androidndkgif.GifDecoder
 import kotlinx.android.synthetic.main.meme_editor.*
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 import java.io.File
 import java.util.*
 
@@ -107,14 +105,15 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                 da.mkdirs()
                 val file = File(da, "meme${Random().nextInt(100) + 100}.gif")
                 file.createNewFile()
-                launch(UI) {
+                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+
                     val pd = MaterialDialog.Builder(this@MemeEditorActivity)
                             .title("Please wait a while")
                             .content("Processing Gif")
                             .progress(true, 0).build()
                     pd.show()
                     val overlay = memeEditorView.captureItems()
-                    withContext(CommonPool) {
+                    withContext(Dispatchers.Default) {
                         compileGifMeme(gifi, overlay,
                                 memeLayout.drawingRect.origin(),
                                 memeEditorView.paint,
@@ -156,8 +155,8 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
     private fun handleImageIntent(): Boolean {
         val path = intent.getStringExtra(SINGLE_PATH) ?: null
         return if (path != null) {
-            launch(UI) {
-                withContext(CommonPool) {
+            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                withContext(Dispatchers.Default) {
                     contentResolver.openInputStream(Uri.parse(path))?.let {
                         this@MemeEditorActivity.loadBitmapfromStream(it, 400, 800)
                     }
@@ -189,8 +188,8 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                 MemeLayout.LayoutInfo.TYPE_GRID -> if (lInfo.orientation == 0) sh / (ps / lInfo.span) else sh / lInfo.span
                 else -> sh
             }
-            launch(UI) {
-                withContext(CommonPool) {
+            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                withContext(Dispatchers.Default) {
                     try {
                         paths.map { url ->
                             contentResolver.openInputStream(Uri.parse(url))?.let {
@@ -218,8 +217,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
     private fun handleGifIntent(): Boolean {
         val path = intent.getStringExtra(GIF_PATH) ?: null
         return if (path != null) {
-            launch(UI) {
-                val b = withContext(CommonPool) {
+            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+
+            val b = withContext(Dispatchers.Default) {
                     val x = GifDecoder()
                     val i = x.loadUsingIterator(path)
                     if (i.hasNext())

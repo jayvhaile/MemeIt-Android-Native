@@ -14,16 +14,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
-import com.innov8.memeit.commons.log
-import com.innov8.memeit.commons.toast
-import com.memeit.backend.dataclasses.*
+import com.google.gson.Gson
+import com.memeit.backend.models.*
 import okhttp3.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.*
 import java.io.File
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @SuppressLint("StaticFieldLeak")
@@ -53,26 +54,48 @@ object MemeItClient {
             File(context.cacheDir, "memeit-http‐cache")
 
     }
-    data class SignedUrl(val message:String)
-    fun uploadImage(file: File) {
-        memeItService.getSignedUrl(file.name).call({
-            val url = it.message
 
-            val reqFile = RequestBody.create(MediaType.parse("image/*"), file)
-            val body = MultipartBody.Part.createFormData("upload", file.name, reqFile)
+    data class SignedUrl(val message: String)
 
-            context.toast("url sent")
-            log("fcck",url)
-            memeItService.uploadImage(url, body).call({ _ ->
-                context.toast("Image Uploaded")
-            }) { error ->
-                context.toast("image upload failed\n$error")
-                log("fcck", error)
-            }
-        }) {
-            context.toast("req url failed")
-            log("fcck", it)
-        }
+    interface Uploader {
+        @Multipart
+        @POST("o")
+        fun uploadObject(@Query("uploadType") uploadType: String = "multipart",
+                         @Part("json")desc:RequestBody,
+                         @Part image: MultipartBody.Part): Call<ResponseBody>
+    }
+
+    fun makeUploader(): Uploader {
+        val builder = OkHttpClient.Builder()
+        val retrofit = Retrofit.Builder()
+                .baseUrl("https://www.googleapis.com/upload/storage/v1/b/meme-store/")
+                .client(builder.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        return retrofit.create(Uploader::class.java)
+    }
+
+    data class UploadInfo(val name: String)
+
+    fun uploadFile(file: File, addID: Boolean = true, onSuccess: ((String) -> Unit), onError: ((String) -> Unit)) {
+        val ext = file.extension
+
+        val body = MultipartBody.Part.create(RequestBody.create(MediaType.get("image/$ext"), file))
+
+        val uniqueName = if (addID) "${UUID.randomUUID()}_${file.name}" else file.name
+
+        val json=Gson().toJson(UploadInfo(uniqueName))
+        val desc= RequestBody.create(MediaType.parse("application/json"),json)
+
+        makeUploader().uploadObject(desc = desc,image = body).call({ onSuccess(uniqueName) }, onError)
+
+    }
+    fun uploadByteArray(byteArray: ByteArray,ext:String, onSuccess: ((String) -> Unit), onError: ((String) -> Unit)) {
+        val body = MultipartBody.Part.create(RequestBody.create(MediaType.get("image/$ext"), byteArray))
+        val uniqueName = "${UUID.randomUUID()}.$ext"
+        val json=Gson().toJson(UploadInfo(uniqueName))
+        val desc= RequestBody.create(MediaType.parse("application/json"),json)
+        makeUploader().uploadObject(desc = desc,image = body).call({ onSuccess(uniqueName) }, onError)
     }
 
     fun init(context: Context, baseUrl: String) {
@@ -153,7 +176,8 @@ object MemeItClient {
 
 
     fun clearCache() {
-        cacheFile.delete()
+        cache.evictAll()
+
     }
 
     val calls = mutableListOf<Call<out Any>>()
@@ -207,7 +231,7 @@ object MemeItClient {
         fun requestGoogleInfo(activity: Activity) {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
-                    .requestIdToken("")
+                    .requestIdToken("813763497137-ht8gb84gk1h8qo8gbi2t9ic7665cq6a0.apps.googleusercontent.com")
                     .requestProfile()
                     .build()
             val client = GoogleSignIn.getClient(activity, gso)
@@ -360,6 +384,7 @@ object MemeItUsers : MemeItService by MemeItClient.memeItService {
             onSuccess?.invoke(it)
         }, onError)
     }
+
     fun getMyBadges(onSuccess: ((List<Badge>) -> Unit)? = null, onError: (String) -> Unit = {}) {
         MemeItClient.memeItService.getMyBadges_DO_NOT_USE().call({
             MyUser.save(MemeItClient.sharedPref, badges = it)
@@ -367,13 +392,12 @@ object MemeItUsers : MemeItService by MemeItClient.memeItService {
         }, onError)
     }
 
-    //todo update server
-    fun setupMyUser(user: User, onSuccess: (() -> Unit)? = null, onError: (String) -> Unit = {}) {
+    fun updateMyUser(user: UserReq, onSuccess: ((User) -> Unit)? = null, onError: (String) -> Unit = {}) {
         MemeItClient.memeItService
-                .uploadUserData(user)
+                .updateUser(user)
                 .call({
-                    MyUser.save(MemeItClient.sharedPref, user = user)
-                    onSuccess?.invoke()
+                    MyUser.save(MemeItClient.sharedPref, user = it)
+                    onSuccess?.invoke(it)
                 }, onError)
     }
 
@@ -386,48 +410,6 @@ object MemeItUsers : MemeItService by MemeItClient.memeItService {
                     onSuccess?.invoke()
                 }, onError)
     }
-
-    fun updateName(name: String,
-                   onSuccess: (() -> Unit)? = null,
-                   onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateName(User(name = name))
-                .call({
-                    MyUser.save(MemeItClient.sharedPref, name = name)
-                    onSuccess?.invoke()
-                }, onError)
-    }
-
-    fun updateBio(bio: String,
-                  onSuccess: (() -> Unit)? = null,
-                  onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateBio(User(bio = bio))
-                .call({
-                    MyUser.save(MemeItClient.sharedPref, bio = bio)
-                    onSuccess?.invoke()
-                }, onError)
-    }
-
-    fun updateProfilePic(pic: String,
-                         onSuccess: (() -> Unit)? = null,
-                         onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateProfilePic(User(imageUrl = pic))
-                .call({
-                    MyUser.save(MemeItClient.sharedPref, profilePic = pic)
-                    onSuccess?.invoke()
-                }, onError)
-    }
-
-    fun updateCoverPic(cpic: String,
-                       onSuccess: (() -> Unit)? = null,
-                       onError: ((String) -> Unit) = {}) {
-        MemeItClient.memeItService.updateCoverPic(User(coverImageUrl = cpic))
-                .call({
-                    MyUser.save(MemeItClient.sharedPref, coverPic = cpic)
-                    onSuccess?.invoke()
-                }, onError)
-    }
-
-
 }
 
 object MemeItMemes : MemeItService by MemeItClient.memeItService

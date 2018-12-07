@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.R
-import com.memeit.backend.dataclasses.Tag
+import com.memeit.backend.models.Tag
 import java.util.*
 
 class TagSearchAdapter(val context: Context) : RecyclerView.Adapter<TagSearchAdapter.TagViewHolder>() {

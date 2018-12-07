@@ -7,7 +7,7 @@ import android.preference.PreferenceActivity
 import android.preference.PreferenceManager
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItClient
-import com.memeit.backend.dataclasses.MyUser
+import com.memeit.backend.models.MyUser
 
 class SettingsActivity : PreferenceActivity() {
 

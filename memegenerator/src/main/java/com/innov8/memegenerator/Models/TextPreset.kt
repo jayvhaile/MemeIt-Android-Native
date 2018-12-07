@@ -3,16 +3,15 @@ package com.innov8.memegenerator.Models
 import android.graphics.Color
 import com.innov8.memeit.commons.models.MyTypeFace
 import com.innov8.memeit.commons.models.TextStyleProperty
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 
 data class TextPreset(val name: String, val textStyleProperty: TextStyleProperty) {
     companion object {
         fun loadPresets(onload: (List<TextPreset>) -> Unit) {
-            launch(UI) {
-                onload(withContext(CommonPool) {
+            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+
+                onload(withContext(Dispatchers.Default) {
                     listOf(
                             TextPreset("Normal", TextStyleProperty(
                                     20f, Color.WHITE, MyTypeFace.byName("Arial")!!,

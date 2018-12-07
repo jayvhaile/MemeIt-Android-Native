@@ -9,16 +9,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memeit.Adapters.CommentsAdapter
 import com.innov8.memeit.Loaders.CommentLoader
-import com.innov8.memeit.MLHandler
+import com.innov8.memeit.Utils.LoaderAdapterHandler
 import com.innov8.memeit.R
-import com.innov8.memeit.loadImage
-import com.innov8.memeit.snack
+import com.innov8.memeit.Utils.loadImage
+import com.innov8.memeit.Utils.snack
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Comment
-import com.memeit.backend.dataclasses.Meme
-import com.memeit.backend.dataclasses.MyUser
+import com.memeit.backend.models.Comment
+import com.memeit.backend.models.Meme
+import com.memeit.backend.models.MyUser
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.loading_view_layout.*
 
@@ -28,7 +28,7 @@ class CommentsActivity : AppCompatActivity() {
 
     var myUser: MyUser = MemeItClient.myUser!!
 
-    lateinit var ml: MLHandler<Comment>
+    lateinit var loaderAdapter: LoaderAdapterHandler<Comment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,15 +66,15 @@ class CommentsActivity : AppCompatActivity() {
             showErrorAtTop=true
         }
         val commentLoader = CommentLoader(mid)
-        ml = MLHandler(commentsAdapter, commentLoader)
+        loaderAdapter = LoaderAdapterHandler(commentsAdapter, commentLoader)
 
-        ml.onLoaded = { comment_srl?.isRefreshing = false }
-        ml.onLoadFailed = { message ->
+        loaderAdapter.onLoaded = { comment_srl?.isRefreshing = false }
+        loaderAdapter.onLoadFailed = { message ->
             comment_srl?.snack(message)
             comment_srl?.isRefreshing = false
         }
 
-        comment_srl.setOnRefreshListener { ml.refresh() }
+        comment_srl.setOnRefreshListener { loaderAdapter.refresh() }
         comments_list.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         comments_list.itemAnimator = DefaultItemAnimator()
         comments_list.adapter = commentsAdapter
@@ -88,13 +88,13 @@ class CommentsActivity : AppCompatActivity() {
             isPostingComment = true
             MemeItMemes.postComment(comment).call({
                 comment_field.setText("")
-                ml.refresh()
+                loaderAdapter.refresh()
                 isPostingComment = false
             }, {
                 comments_list.snack("Failed to load Comments")
             })
         }
-        ml.load()
+        loaderAdapter.load()
     }
 
     private fun initMeme(meme: Meme) {

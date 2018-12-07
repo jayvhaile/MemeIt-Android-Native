@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.R
-import com.memeit.backend.dataclasses.Badge
+import com.memeit.backend.models.Badge
 
 class BadgeAdapter(val context: Context) : RecyclerView.Adapter<MyViewHolder<Badge>>() {
     private var allBadges = mutableListOf<Badge>()

@@ -13,11 +13,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.Adapters.ELEAdapter
 import com.innov8.memeit.Adapters.TagsAdapter
 import com.innov8.memeit.Loaders.*
-import com.innov8.memeit.MLHandler
+import com.innov8.memeit.Utils.LoaderAdapterHandler
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Tag
+import com.memeit.backend.models.Tag
 import kotlinx.android.synthetic.main.activity_tags.*
 import kotlinx.android.synthetic.main.activity_user_tag.*
 import kotlinx.android.synthetic.main.fragment_meme_list.*
@@ -110,15 +110,15 @@ class TagFragment : Fragment() {
     }
 
     private lateinit var tagsAdapter: TagsAdapter
-    private lateinit var ml: MLHandler<Tag>
+    private lateinit var loaderAdapter: LoaderAdapterHandler<Tag>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         tagLoader = arguments?.getParcelable("loader") ?: return
         tagsAdapter = TagsAdapter(context!!)
-        ml = MLHandler(tagsAdapter, tagLoader)
-        ml.load()
-        ml.onLoaded = { swipe_to_refresh?.isRefreshing = false }
-        ml.onLoadFailed = { message ->
+        loaderAdapter = LoaderAdapterHandler(tagsAdapter, tagLoader)
+        loaderAdapter.load()
+        loaderAdapter.onLoaded = { swipe_to_refresh?.isRefreshing = false }
+        loaderAdapter.onLoadFailed = { message ->
             view?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show() }
             swipe_to_refresh?.isRefreshing = false
         }
@@ -142,7 +142,7 @@ class TagFragment : Fragment() {
         }
         meme_recycler_view.layoutManager = lm
         swipe_to_refresh.setOnRefreshListener {
-            ml.refresh()
+            loaderAdapter.refresh()
         }
     }
 

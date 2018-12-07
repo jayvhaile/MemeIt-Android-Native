@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.innov8.memeit.commons.toast
 import com.innov8.memeit.Adapters.ReactorAdapter
 import com.innov8.memeit.R
-import com.innov8.memeit.makeLinear
+import com.innov8.memeit.Utils.makeLinear
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
 import kotlinx.android.synthetic.main.activity_reactor_list.*

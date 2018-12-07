@@ -7,9 +7,10 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.innov8.memeit.R
+import com.innov8.memeit.Utils.snack
+import com.innov8.memeit.Utils.text
 import com.innov8.memeit.commons.addOnTextChanged
 import com.innov8.memeit.commons.toast
-import com.innov8.memeit.snack
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
@@ -126,8 +127,8 @@ class UsernameSettingsActivity : AppCompatActivity() {
                 MemeItUsers.updateUsername(settings_username.text, {
                     toast("Username updated")
                     finish()
-                }) { error ->
-                    settings_username.snack("Couldn't update username\n$error", "Retry", { onSave() })
+                }) {
+                    settings_username.snack("Couldn't update username", "Retry", { onSave() })
                 }
             }
         }

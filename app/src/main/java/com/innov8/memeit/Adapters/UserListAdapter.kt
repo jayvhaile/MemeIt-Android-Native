@@ -14,13 +14,13 @@ import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.views.FontTextView
 import com.innov8.memeit.commons.views.ProfileDraweeView
-import com.innov8.memeit.loadImage
-import com.innov8.memeit.prefix
+import com.innov8.memeit.Utils.loadImage
+import com.innov8.memeit.Utils.prefix
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.OnCompleted
-import com.memeit.backend.dataclasses.MyUser
-import com.memeit.backend.dataclasses.User
+import com.memeit.backend.models.MyUser
+import com.memeit.backend.models.User
 import okhttp3.ResponseBody
 
 class UserListAdapter(mContext: Context,override var emptyDescription: String) : SimpleELEListAdapter<User>(mContext, R.layout.list_item_follower) {
@@ -34,7 +34,7 @@ class UserListAdapter(mContext: Context,override var emptyDescription: String) :
     }
     private val tf: Typeface = Typeface.createFromAsset(mContext.assets, FontTextView.asset)
     private val myUser: MyUser? = MemeItClient.myUser
-    internal var size: Float = mContext.resources.getDimension(R.dimen.profile_mini_size)
+
 
 
     override fun createViewHolder(view: View): MyViewHolder<User> {
@@ -96,7 +96,7 @@ class UserListAdapter(mContext: Context,override var emptyDescription: String) :
             followerName.text = user.name
             followerDetail.text = "${user.postCount} posts"
             followerImage.setText(user.name.prefix())
-            followerImage.loadImage(user.imageUrl, size, size)
+            followerImage.loadImage(user.imageUrl)
             if (isMe(user.uid)) {
                 followButton.visibility = View.GONE
             } else {

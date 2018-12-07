@@ -30,8 +30,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.facebook.android:facebook-login:4.37.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.27.0-eap13'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.27.0-eap13'
     implementation 'com.facebook.fresco:fresco:1.9.0'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -42,10 +42,4 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.19.0'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
-}
-
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
 }

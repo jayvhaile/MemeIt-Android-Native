@@ -4,10 +4,9 @@ import android.os.Bundle
 
 import com.innov8.memeit.Fragments.ProfileFragment
 import com.innov8.memeit.R
-import com.memeit.backend.dataclasses.User
+import com.memeit.backend.models.User
 
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.edit_btn.*
 
 class ProfileActivity : AppCompatActivity() {
 

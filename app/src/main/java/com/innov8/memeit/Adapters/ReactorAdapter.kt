@@ -11,10 +11,10 @@ import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.views.ProfileDraweeView
-import com.innov8.memeit.getDrawableID
-import com.innov8.memeit.loadImage
-import com.innov8.memeit.prefix
-import com.memeit.backend.dataclasses.Reaction
+import com.innov8.memeit.Utils.getDrawableID
+import com.innov8.memeit.Utils.loadImage
+import com.innov8.memeit.Utils.prefix
+import com.memeit.backend.models.Reaction
 
 class ReactorAdapter(context: Context) : SimpleELEListAdapter<Reaction>(context, R.layout.list_item_reactors) {
     override var emptyDrawableId: Int = R.drawable.ic_add

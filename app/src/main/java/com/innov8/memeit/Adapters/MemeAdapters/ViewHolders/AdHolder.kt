@@ -11,7 +11,7 @@ import com.github.ybq.android.spinkit.SpinKitView
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomClasses.AdElement
 import com.innov8.memeit.R
-import com.memeit.backend.dataclasses.HomeElement
+import com.memeit.backend.models.HomeElement
 
 class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
     private val loading: SpinKitView = itemView.findViewById(R.id.ad_holder_loading)

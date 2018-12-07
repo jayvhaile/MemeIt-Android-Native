@@ -17,10 +17,6 @@ import com.innov8.memeit.commons.models.MemeTemplate.CREATOR.LOCAL_DATA_SOURCE
 import com.innov8.memeit.commons.getDrawableIdByName
 import com.innov8.memeit.commons.loadBitmap
 import com.innov8.memeit.commons.toast
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter

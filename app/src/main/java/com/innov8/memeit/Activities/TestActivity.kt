@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Meme
+import com.memeit.backend.models.Meme
 import kotlinx.android.synthetic.main.activity_test.*
 
 class TestActivity : AppCompatActivity() {

@@ -13,13 +13,13 @@ import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.Adapters.MemeAdapters.ViewHolders.MemeViewHolder
 import com.innov8.memeit.CustomViews.MemeDraweeView
 import com.innov8.memeit.Loaders.GuestMemeLoader
-import com.innov8.memeit.MLHandler
+import com.innov8.memeit.Utils.LoaderAdapterHandler
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.HomeElement
-import com.memeit.backend.dataclasses.Meme
+import com.memeit.backend.models.HomeElement
+import com.memeit.backend.models.Meme
 import kotlinx.android.synthetic.main.activity_guest_user.*
 import kotlinx.android.synthetic.main.loading_view_layout.*
 
@@ -57,7 +57,7 @@ class GuestUserActivity : AppCompatActivity() {
             loader_view.setError(it)
         }
         val adapter = GuestMemesAdapter(this)
-        val handler = MLHandler(adapter, GuestMemeLoader())
+        val handler = LoaderAdapterHandler(adapter, GuestMemeLoader())
         handler.load()
         guest_meme_list.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         guest_meme_list.adapter = adapter

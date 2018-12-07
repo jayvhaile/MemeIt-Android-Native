@@ -35,8 +35,8 @@
         android:id="@+id/intro_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@id/action_top_guideline"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/dots_indicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -45,14 +45,14 @@
         android:id="@+id/dots_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         app:dotsColor="#fff"
         app:dotsSize="8dp"
         app:dotsSpacing="4dp"
         app:dotsWidthFactor="2.5"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/action_top_guideline"
         app:layout_constraintLeft_toLeftOf="@id/intro_pager"
-        app:layout_constraintRight_toRightOf="@id/intro_pager"
-        app:layout_constraintTop_toBottomOf="@id/intro_pager" />
+        app:layout_constraintRight_toRightOf="@id/intro_pager" />
 
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/setup_personalize"
@@ -85,9 +85,7 @@
         app:layout_constraintStart_toStartOf="@+id/left_guideline"
         app:placeholderImage="@drawable/ic_avatar"
         app:placeholderImageScaleType="fitCenter"
-        app:roundAsCircle="true"
-        app:roundingBorderColor="@color/white"
-        app:roundingBorderWidth="2dp" />
+        app:roundAsCircle="true" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/username_field"

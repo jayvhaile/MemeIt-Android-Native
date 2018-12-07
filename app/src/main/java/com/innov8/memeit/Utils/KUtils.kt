@@ -1,9 +1,10 @@
-package com.innov8.memeit
+package com.innov8.memeit.Utils
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -12,33 +13,34 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewConfiguration
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.imagepipeline.request.ImageRequest
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputLayout
 import com.innov8.memeit.Activities.SettingsActivity
+import com.innov8.memeit.Activities.SettingsActivity.Companion.quality
 import com.innov8.memeit.CustomClasses.LoadingDrawable
+import com.innov8.memeit.MemeItApp
+import com.innov8.memeit.R
 import com.innov8.memeit.commons.log
 import com.innov8.memeit.commons.views.ProfileDraweeView
-import com.memeit.backend.dataclasses.Meme
-import com.memeit.backend.dataclasses.Meme.MemeType.GIF
-import com.memeit.backend.dataclasses.Meme.MemeType.IMAGE
-import com.memeit.backend.dataclasses.Reaction
+import com.memeit.backend.models.Meme
+import com.memeit.backend.models.Meme.MemeType.GIF
+import com.memeit.backend.models.Meme.MemeType.IMAGE
+import com.memeit.backend.models.Reaction
 import com.stfalcon.frescoimageviewer.ImageViewer
-import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.CommonPool
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 import com.innov8.memeit.MemeItApp.Companion.instance as it
-
-fun launchTask(block: suspend CoroutineScope.() -> Unit): Job {
-    return launch(UI) { block() }
-}
-
-suspend fun <T> runAsync(block: suspend CoroutineScope.() -> T): T = async(CommonPool) { block() }.await()
 
 val SECOND_MILLIS = 1000L
 val MINUTE_MILLIS = SECOND_MILLIS * 60
@@ -76,62 +78,72 @@ fun formatDate(date: Long): String {
 fun Long.formateAsDate(): String = formatDate(this)
 
 fun String?.prefix(): String {
-    return if (this.isNullOrEmpty()) "..." else this!![0].toString()
+    return if (this.isNullOrEmpty()) "..." else this[0].toString()
 }
 
-val screenWidth: Int = it.resources.displayMetrics.widthPixels
-val screenHeight: Int = it.resources.displayMetrics.heightPixels
+val screenWidth get() = it.resources.displayMetrics.widthPixels
+val screenHeight get() = it.resources.displayMetrics.heightPixels
 
-val screenWidthOriented
-    get() = it.resources.displayMetrics.widthPixels
-
-val screenHeightOriented
-    get() = it.resources.displayMetrics.widthPixels
-
-private fun getImageMemeUrl(id: String, ratio: Float = 1f): String {
-    val level = SettingsActivity.getImageQualityLevel(MemeItApp.instance)
-    val quality = SettingsActivity.quality[level]
-    val fac = SettingsActivity.factor[level]
-
-    val w = (screenWidth * fac) step 50
-    val h = ((screenWidth / ratio).toInt()
-            .trim(200.dp, screenHeight - 200.dp) * fac) step 50
-    return "http://res.cloudinary.com/innov8/image/upload/c_fit,h_$h,q_$quality,w_$w/$id"
-}
-
-private fun getGifMemeUrl(id: String, ratio: Float = 1f): String {
-    val level = SettingsActivity.getImageQualityLevel(MemeItApp.instance)
-    val quality = SettingsActivity.quality[level]
-    val fac = SettingsActivity.factor[level]
-    val w = (screenWidth * fac) step 50
-    val h = ((screenWidth / ratio).toInt()
-            .trim(200.dp, screenHeight - 200.dp) * fac) step 50
-    return "http://res.cloudinary.com/innov8/image/fetch/c_fit,h_$h,q_$quality,w_$w/${Uri.encode(id)}"
-}
-
-fun Meme.generateUrl() = when (getType()) {
-    IMAGE -> getImageMemeUrl(imageId!!, imageRatio.toFloat())
-    GIF -> getGifMemeUrl(imageId!!)
-}
-
-
-fun ProfileDraweeView.loadImage(url: String?, width: Float = R.dimen.profile_mini_size.dimen(), height: Float = width) {
-    if (url == null) {
-        setImageURI(url as String?)
-        return
+val screenWidthOriented: Int
+    get() {
+        val orientation = it.resources.configuration.orientation
+        return when (orientation) {
+            Configuration.ORIENTATION_LANDSCAPE -> screenHeight
+            else -> screenWidth
+        }
     }
 
-    val level = SettingsActivity.getImageQualityLevel(context)
-    val quality = SettingsActivity.quality[level]
-    /*val t = Transformation<Transformation<*>>()
-            .width(width)
-            .height(height)
-            .quality(quality)
-            .crop("fit")*/
-    val u = "http://res.cloudinary.com/innov8/image/upload/$url"
-    setImageRequest(ImageRequest.fromUri(u))
+val screenHeightOriented: Int
+    get() {
+        val orientation = it.resources.configuration.orientation
+        return when (orientation) {
+            Configuration.ORIENTATION_LANDSCAPE -> screenWidth
+            else -> screenHeight
+        }
+    }
+
+
+
+fun getImageMemeUrl(id: String, ratio: Float = 1f, fac: Float, quality: Int): String {
+    val w = (screenWidthOriented * fac) step 50
+    val h = ((screenWidthOriented / ratio).toInt()
+            .trim(200.dp, screenHeightOriented - 200.dp) * fac) step 50
+
+    return "https://res.cloudinary.com/innov8/image/fetch/c_fit,h_$h,q_$quality,w_$w/${id.full}"
 }
 
+fun getGifMemeUrl(id: String, ratio: Float = 1f, fac: Float, quality: Int): String {
+    val w = (screenWidthOriented * fac) step 50
+    val h = ((screenWidthOriented / ratio).toInt()
+            .trim(200.dp, screenHeightOriented - 200.dp) * fac) step 50
+
+    return "https://res.cloudinary.com/innov8/image/fetch/c_fit,h_$h,q_$quality,w_$w/${id.full}"
+
+}
+
+fun Meme.generateUrl():String {
+    val level = SettingsActivity.getImageQualityLevel(MemeItApp.instance)
+    val quality = SettingsActivity.quality[level]
+    val fac = SettingsActivity.factor[level]
+    return when (getType()) {
+        IMAGE -> getImageMemeUrl(imageId!!, imageRatio.toFloat(), fac, quality)
+        GIF -> getGifMemeUrl(imageId!!, imageRatio.toFloat(), fac, quality)
+    }
+}
+
+val String.full get() = if (this.startsWith("http")) this else "${MemeItApp.STORAGE_URL}$this"
+
+
+fun ProfileDraweeView.loadImage(url: String?, width: Int = R.dimen.profile_image_expanded_size.dimen().toInt(), height: Int = width) {
+    if (url == null) {
+        setImageURI(null as String?)
+        return
+    }
+    val level = SettingsActivity.getImageQualityLevel(context)
+    val quality = SettingsActivity.quality[level]
+    val u="https://res.cloudinary.com/innov8/image/fetch/c_fit,h_$height,q_$quality,w_$width/${url.full}"
+    setImageRequest(ImageRequest.fromUri(u))
+}
 
 fun Reaction.getDrawable(active: Boolean = true): Drawable {
     val activeRID = intArrayOf(R.drawable.laughing, R.drawable.rofl, R.drawable.neutral, R.drawable.angry)
@@ -193,7 +205,7 @@ fun Int.strinArray(context: Context = it): Array<String> = context.resources.get
 
 infix fun Int.trim(max: Int): Int = if (this < max) this else max
 fun Int.trim(min: Int, max: Int): Int = if (this < min) min else if (this > max) max else this
-val Float.DP: Float
+val Float.dp: Float
     get() {
         return this * it.resources.displayMetrics.density
     }
@@ -226,7 +238,6 @@ fun String.validateLength(min: Int, max: Int, tag: String): String? {
         else -> null
     }
 }
-
 
 fun String.validateMatch(s2: String, tag: String): String? {
     return when {
@@ -305,4 +316,32 @@ fun Context.showMemeZoomView(list: List<Meme>, startingMemeIt: String = list[0].
             .setStartPosition(list.map { it.id }.indexOf(startingMemeIt))
             .hideStatusBar(false)
             .show()
+}
+fun ConstraintSet.makeGone(vararg ids: Int) = ids.forEach { this.setVisibility(it, View.GONE) }
+fun ConstraintSet.makeVisible(vararg ids: Int) = ids.forEach { this.setVisibility(it, View.VISIBLE) }
+val TextInputLayout.text get() = this.editText!!.text.toString()
+fun TextInputLayout.clear() {
+    this.editText!!.text.clear()
+    this.editText!!.error = null
+}
+
+fun TextInputLayout.validateLength(min: Int, max: Int, tag: String): Boolean {
+    this.text.validateLength(min, max, tag)?.let {
+        editText!!.error = it
+        return false
+    } ?: return true
+}
+
+fun TextInputLayout.validateEmailorEmpty(): Boolean {
+    this.text.validateEmailOrEmpty()?.let {
+        editText!!.error = it
+        return false
+    } ?: return true
+}
+
+fun Pair<TextInputLayout, TextInputLayout>.validateMatch(tag: String): Boolean {
+    first.text.validateMatch(second.text, tag)?.let {
+        second.editText!!.error = it
+        return false
+    } ?: return true
 }

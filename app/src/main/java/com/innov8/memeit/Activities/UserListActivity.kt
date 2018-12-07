@@ -13,11 +13,11 @@ import com.innov8.memeit.Adapters.UserListAdapter
 import com.innov8.memeit.Loaders.FollowerLoader
 import com.innov8.memeit.Loaders.FollowingLoader
 import com.innov8.memeit.Loaders.UserListLoader
-import com.innov8.memeit.MLHandler
+import com.innov8.memeit.Utils.LoaderAdapterHandler
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItClient.context
-import com.memeit.backend.dataclasses.User
+import com.memeit.backend.models.User
 import kotlinx.android.synthetic.main.activity_user_list.*
 
 class UserListActivity : AppCompatActivity() {
@@ -26,7 +26,7 @@ class UserListActivity : AppCompatActivity() {
 
     private lateinit var userListLoader: UserListLoader
 
-    private lateinit var ml: MLHandler<User>
+    private lateinit var loaderAdapter: LoaderAdapterHandler<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,9 +51,9 @@ class UserListActivity : AppCompatActivity() {
         }
 
         followerAdapter = UserListAdapter(this, desc)
-        ml = MLHandler(followerAdapter, userListLoader)
-        ml.onLoaded = { swipe_to_refresh?.isRefreshing = false }
-        ml.onLoadFailed = { message ->
+        loaderAdapter = LoaderAdapterHandler(followerAdapter, userListLoader)
+        loaderAdapter.onLoaded = { swipe_to_refresh?.isRefreshing = false }
+        loaderAdapter.onLoadFailed = { message ->
             swipe_to_refresh?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show() }
             swipe_to_refresh?.isRefreshing = false
         }
@@ -61,13 +61,13 @@ class UserListActivity : AppCompatActivity() {
             val users: Array<User> = savedInstanceState.getParcelableArray("users") as Array<User>
             followerAdapter.setAll(users.toList())
         } else
-            ml.load()
+            loaderAdapter.load()
 
         initView()
     }
 
     private fun initView() {
-        swipe_to_refresh.setOnRefreshListener { ml.refresh() }
+        swipe_to_refresh.setOnRefreshListener { loaderAdapter.refresh() }
         followers_recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         val animator = DefaultItemAnimator()
         followers_recycler_view.itemAnimator = animator

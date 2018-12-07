@@ -7,6 +7,19 @@
     android:background="#fafafc"
     tools:context=".Activities.FeedbackActivity">
 
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="80dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_meme_it" />
+
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
@@ -70,16 +83,4 @@
 
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/app_icon"
-        android:layout_width="80dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintDimensionRatio="h,1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_meme_it" />
 </androidx.constraintlayout.widget.ConstraintLayout>

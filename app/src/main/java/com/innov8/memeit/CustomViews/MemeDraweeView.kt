@@ -21,15 +21,22 @@ import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
-import com.innov8.memeit.*
 import com.innov8.memeit.Activities.SettingsActivity
 import com.innov8.memeit.CustomClasses.LoadingDrawable
+import com.innov8.memeit.R
+import com.innov8.memeit.Utils.full
+import com.innov8.memeit.Utils.getGifMemeUrl
+import com.innov8.memeit.Utils.getImageMemeUrl
+import com.innov8.memeit.Utils.sp
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.loadBitmap
-import com.memeit.backend.dataclasses.Meme
-import com.memeit.backend.dataclasses.Meme.MemeType
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import com.memeit.backend.models.Meme
+import com.memeit.backend.models.Meme.MemeType
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.android.Main
+import kotlinx.coroutines.launch
 
 private const val STATE_NONE = -1
 private const val STATE_LOADING = 0
@@ -143,8 +150,9 @@ class MemeDraweeView : SimpleDraweeView {
 
     private var anim: AnimatedDrawable2? = null
 
-    inner class CL(val iid: String) : BaseControllerListener<ImageInfo>() {
+    inner class Listener(val iid: String) : BaseControllerListener<ImageInfo>() {
         override fun onFailure(id: String?, throwable: Throwable?) {
+
             if (imageId == iid) state = STATE_FAILED
         }
 
@@ -176,7 +184,6 @@ class MemeDraweeView : SimpleDraweeView {
         type = meme.getType()
         this.resizeWidth = resizeWidth
         this.resizeHeight = resizeHeight
-        //l8ggt9gesqesqxbpsfahmze 0.82129276
         load()
     }
 
@@ -191,63 +198,53 @@ class MemeDraweeView : SimpleDraweeView {
 
 
     private fun loadImageMeme() {
-        val low = "http://res.cloudinary.com/innov8/image/upload/c_fit,e_blur:$blurSize,h_$lowSize,q_$lowQuality,w_$lowSize/$id"
-        val high = getImageMemeUrl(imageId, ratio)
-        val lowReq = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(low))
+        val lowReq = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(getLowResImageMemeUrl(imageId)))
                 .setPostprocessor(IterativeBoxBlurPostProcessor(2))
                 .build()
-        var req = ImageRequest.fromUri(high)
+
+        var req = ImageRequest.fromUri(getImageMemeUrl(imageId, ratio,fac,quality))
         if (resizeWidth > 0 && resizeHeight > 0)
             req = ImageRequestBuilder.fromRequest(req)
                     .setResizeOptions(ResizeOptions.forDimensions(resizeWidth, resizeHeight))
                     .build()
-        val c = Fresco.newDraweeControllerBuilder()
+
+        controller = Fresco.newDraweeControllerBuilder()
                 .setLowResImageRequest(lowReq)
                 .setImageRequest(req)
-                .setControllerListener(CL(imageId))
+                .setControllerListener(Listener(imageId))
                 .setOldController(controller)
                 .build()
-        controller = c
     }
 
     private fun setReq(req: ImageRequest) {
         controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(req)
-                .setControllerListener(CL(imageId))
+                .setControllerListener(Listener(imageId))
                 .setOldController(controller)
                 .build()
     }
 
     private fun loadGifMeme() {
-        val gifUrl = getGifMemeUrl(imageId, ratio)
+        val gifUrl = getGifMemeUrl(imageId, ratio,fac,quality)
         val gifDownloaded = Fresco.getImagePipeline().isInBitmapMemoryCache(Uri.parse(gifUrl))
+        //checking if gif is in memory cache
         if (gifDownloaded) {
+            //gif is in memory, setting the gif to the drawee
             setReq(makeHighResGifReq(gifUrl, resizeWidth, resizeHeight))
         } else {
+            //gif not in memory cache
             state = STATE_GIF_THUMB_LOADING
-            setReq(makeLowResGifReq(imageId))
-            Fresco.getImagePipeline().isInDiskCache(Uri.parse(gifUrl)).subscribe(object : DataSubscriber<Boolean?> {
-                override fun onFailure(dataSource: DataSource<Boolean?>) {
-                }
 
-                override fun onCancellation(dataSource: DataSource<Boolean?>) {
-                }
+            //loading the preview till then
+            setReq(makeLowResGifReq(getLowResGifMemeUrl(imageId)))
 
-                override fun onProgressUpdate(dataSource: DataSource<Boolean?>) {
-
-                }
-
-                override fun onNewResult(dataSource: DataSource<Boolean?>) {
-                    if (dataSource.result == true) {
-                        launch(UI) {
-                            state = STATE_LOADING
-                            loadGifWithThumb(gifUrl)
-                        }
-                    } else {
-                        if (autoLoadGif) {
-                            state = STATE_LOADING
-                            loadGifWithThumb(gifUrl)
-                        }
+            //checking in disk cache
+            Fresco.getImagePipeline().isInDiskCache(Uri.parse(gifUrl)).subscribe(Subscriber{
+                //load the meme if eithr
+                if(it.result==true || autoLoadGif){
+                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                        state = STATE_LOADING
+                        loadGifWithThumb(gifUrl)
                     }
                 }
             }, CallerThreadExecutor.getInstance())
@@ -255,35 +252,23 @@ class MemeDraweeView : SimpleDraweeView {
         }
     }
 
-    private fun loadGifWithThumb(gifUrl: String = getGifMemeUrl(imageId, ratio)) {
+    private fun loadGifWithThumb(gifUrl: String = getGifMemeUrl(imageId, ratio,fac,quality)) {
         controller = Fresco.newDraweeControllerBuilder()
-                .setLowResImageRequest(makeLowResGifReq(imageId))
+                .setLowResImageRequest(makeLowResGifReq(getLowResGifMemeUrl(imageId)))
                 .setImageRequest(makeHighResGifReq(gifUrl, resizeWidth, resizeHeight))
-                .setControllerListener(CL(imageId))
+                .setControllerListener(Listener(imageId))
                 .build()
     }
 
 
-    private fun getImageMemeUrl(id: String, ratio: Float = 1f): String {
-        val w = (screenWidth * fac) step 50
-        val h = ((screenWidth / ratio).toInt()
-                .trim(200.dp, screenHeight - 200.dp) * fac) step 50
-        return "http://res.cloudinary.com/innov8/image/upload/c_fit,h_$h,q_$quality,w_$w/$id"
-    }
-
-    private fun getGifMemeUrl(id: String, ratio: Float = 1f): String {
-        val w = (screenWidth * fac) step 50
-        val h = ((screenWidth / ratio).toInt()
-                .trim(200.dp, screenHeight - 200.dp) * fac) step 50
-        return "http://res.cloudinary.com/innov8/image/fetch/c_fit,h_$h,q_$quality,w_$w/${Uri.encode(id)}"
-    }
-
-    private fun lowResUrl(id: String): String =
-            "http://res.cloudinary.com/innov8/image/fetch/f_jpg,c_fit,e_blur:$blurSize,h_$lowSize,q_$lowQuality,w_$lowSize/${Uri.encode(id)}"
+    private fun getLowResGifMemeUrl(id: String): String =
+            "https://res.cloudinary.com/innov8/image/fetch/f_jpg,c_fit,e_blur:$blurSize,h_$lowSize,q_$lowQuality,w_$lowSize/${id.full}"
+    private fun getLowResImageMemeUrl(id: String): String =
+            "https://res.cloudinary.com/innov8/image/fetch/c_fit,e_blur:$blurSize,h_$lowSize,q_$lowQuality,w_$lowSize/${id.full}"
 
 
     private fun makeLowResGifReq(url: String) =
-            ImageRequestBuilder.fromRequest(ImageRequest.fromUri(lowResUrl(url)))
+            ImageRequestBuilder.fromRequest(ImageRequest.fromUri(url))
                     .setPostprocessor(IterativeBoxBlurPostProcessor(2))
                     .build()
 
@@ -296,4 +281,21 @@ class MemeDraweeView : SimpleDraweeView {
         return req
 
     }
+}
+
+class Subscriber(val onResult:(dataSource: DataSource<Boolean?>)->Unit):DataSubscriber<Boolean?>{
+    override fun onFailure(dataSource: DataSource<Boolean?>?) {
+    }
+
+    override fun onCancellation(dataSource: DataSource<Boolean?>?) {
+    }
+
+    override fun onProgressUpdate(dataSource: DataSource<Boolean?>?) {
+    }
+
+    override fun onNewResult(dataSource: DataSource<Boolean?>) {
+        onResult(dataSource)
+    }
+
+
 }

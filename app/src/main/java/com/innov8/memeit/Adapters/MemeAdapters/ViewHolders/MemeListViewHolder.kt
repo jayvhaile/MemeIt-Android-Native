@@ -3,8 +3,8 @@ package com.innov8.memeit.Adapters.MemeAdapters.ViewHolders
 import android.view.View
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomViews.MemeView
-import com.memeit.backend.dataclasses.HomeElement
-import com.memeit.backend.dataclasses.Meme
+import com.memeit.backend.models.HomeElement
+import com.memeit.backend.models.Meme
 
 class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
     init {

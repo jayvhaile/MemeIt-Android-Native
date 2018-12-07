@@ -3,7 +3,7 @@ package com.innov8.memeit.CustomClasses;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.memeit.backend.dataclasses.Reaction;
+import com.memeit.backend.models.Reaction;
 
 import org.json.JSONArray;
 import org.json.JSONException;

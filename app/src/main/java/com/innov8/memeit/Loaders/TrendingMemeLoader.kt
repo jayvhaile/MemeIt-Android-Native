@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Meme
+import com.memeit.backend.models.Meme
 
 class TrendingMemeLoader() : MemeLoader<Meme> {
     override var skip: Int = 0

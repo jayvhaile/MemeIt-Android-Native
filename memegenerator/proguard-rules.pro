@@ -23,6 +23,16 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep class com.cloudinary.android.*Strategy
+-dontwarn javax.annotation.**
+-dontwarn com.google.errorprone.annotations.**
+-dontwarn okhttp3.internal.platform.*
+-dontnote retrofit2.Platform
+-dontwarn retrofit2.Platform$Java8
+
+-keep class com.cloudinary.android.demo.data.model.** { *; }
+
+#=========================================
 
     -keep class com.afollestad.material-dialogs.*
     -keep class com.jaredrummler.material-spinner.*

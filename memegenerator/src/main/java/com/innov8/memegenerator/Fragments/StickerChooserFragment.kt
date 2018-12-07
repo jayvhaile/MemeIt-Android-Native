@@ -16,10 +16,8 @@ import com.innov8.memegenerator.R
 import com.innov8.memegenerator.utils.onTabSelected
 import kotlinx.android.synthetic.main.bottom_tab.*
 import kotlinx.android.synthetic.main.sticker_frag.*
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 
 class StickerChooserFragment : Fragment() {
     private lateinit var stickersAdapter: StickersAdapter
@@ -37,8 +35,8 @@ class StickerChooserFragment : Fragment() {
         }
 
         stickersAdapter.onItemClick = { url ->
-            launch(UI) {
-                val bitmap = withContext(CommonPool) {
+            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                val bitmap = withContext(Dispatchers.Default) {
                     BitmapFactory.decodeStream(context!!.assets.open(url.substring(9)))
                 }
                 stickerEditInterface?.onAddSticker(MemeStickerView(context!!, bitmap))

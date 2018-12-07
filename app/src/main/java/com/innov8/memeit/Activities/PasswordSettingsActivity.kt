@@ -6,10 +6,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.R
+import com.innov8.memeit.Utils.snack
+import com.innov8.memeit.Utils.text
+import com.innov8.memeit.Utils.validateLength
+import com.innov8.memeit.Utils.validateMatch
 import com.innov8.memeit.commons.toast
-import com.innov8.memeit.snack
 import com.memeit.backend.MemeItClient
-import com.memeit.backend.dataclasses.ChangePasswordRequest
+import com.memeit.backend.models.ChangePasswordRequest
 import kotlinx.android.synthetic.main.password_settings.*
 
 class PasswordSettingsActivity : AppCompatActivity() {

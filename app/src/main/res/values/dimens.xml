@@ -1,25 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="auth_bottom_guide">190dp</dimen>
     <dimen name="auth_icon_size">40dp</dimen>
     <dimen name="auth_item_height">50dp</dimen>
     <dimen name="auth_button_height">56dp</dimen>
     <dimen name="auth_button_text_size">26sp</dimen>
 
-    <dimen name="auth_title_width">50dp</dimen>
-    <dimen name="auth_title_height">50dp</dimen>
-
     <dimen name="auth_fields_spacing">16dp</dimen>
     <dimen name="auth_left_right_guideline">52dp</dimen>
 
     <dimen name="image_width">100dp</dimen>
-    <dimen name="image_final_width">32dp</dimen>
-    <dimen name="spacing_normal">16dp</dimen>
-    <dimen name="toolbar_height">56dp</dimen>
-    <dimen name="toolbar_iheight">150dp</dimen>
 
-<!--====================================PROFILE DIMENS===========================================-->
-    <dimen name="profile_collapsing_toolbar_expanded_height">300dp</dimen>
+    <!--====================================PROFILE DIMENS===========================================-->
     <dimen name="profile_toolbar_height">56dp</dimen>
     <dimen name="profile_tab_height">48dp</dimen>
 
@@ -36,7 +27,6 @@
 <!--==================================PROFILE DIMENS END=========================================-->
 
 
-    <dimen name="bottom_nav_items">22dp</dimen>
     <dimen name="bottom_nav_items_padding">17dp</dimen>
     <dimen name="bottom_nav_height">56dp</dimen>
     <dimen name="left_margin">24dp</dimen>

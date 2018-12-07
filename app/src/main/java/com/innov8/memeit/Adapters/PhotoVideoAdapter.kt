@@ -153,15 +153,15 @@ class GifAdapter(context: Context) : CursorAdapter<Video>(context, R.layout.list
         init {
 
             thumbnailV.setOnClickListener {
-                context.startActivity(Intent(context, MemePosterActivity::class.java).apply {
-                    putExtra("gif", getItem(item_position).data)
-                })
-//                MemeEditorActivity.startWithGif(context, getItem(item_position).data)
+//                context.startActivity(Intent(context, MemePosterActivity::class.java).apply {
+//                    putExtra("gif", getItem(item_position).data)
+//                })
+                MemeEditorActivity.startWithGif(context, getItem(item_position).data)
             }
         }
 
         override fun bind(t: Video) {
-            val r = ResizeOptions(screenWidth / 3, screenWidth / 3, 1024f)
+            val r = ResizeOptions(screenWidth / 6, screenWidth / 6, 512f)
             val req = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(t.uri))
                     .setLocalThumbnailPreviewsEnabled(true)
                     .setResizeOptions(r)

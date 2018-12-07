@@ -1,6 +1,6 @@
 package com.memeit.backend
 
-import com.memeit.backend.dataclasses.*
+import com.memeit.backend.models.*
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -32,8 +32,8 @@ interface MemeItService {
     @GET("user/me")
     fun loadMyUser(): Call<User>
 
-    @PUT("user/me/setup")
-    fun uploadUserData(@Body user: User): Call<ResponseBody>
+    @PUT("user/me")
+    fun updateUser(@Body user: UserReq): Call<User>
 
     //todo fix this
     @DELETE("user/me")
@@ -57,8 +57,6 @@ interface MemeItService {
     fun getUserById(@Path("id") uid: String): Call<User>
 
 
-    @GET("user/me/finished")
-    fun isMyUserDataSaved(): Call<Boolean>
 
     @GET("user/me/followers")
     fun getMyFollowersList(@Query("skip") skip: Int, @Query("limit") limit: Int): Call<List<User>>
@@ -119,20 +117,6 @@ interface MemeItService {
 
 
     //------PUT------
-
-
-    @PUT("user/me/name")
-    fun updateName(@Body name: User): Call<ResponseBody>
-
-    @PUT("user/me/bio")
-
-    fun updateBio(@Body bio: User): Call<ResponseBody>
-
-    @PUT("user/me/profile_pic")
-    fun updateProfilePic(@Body pic: User): Call<ResponseBody>
-
-    @PUT("user/me/cover_pic")
-    fun updateCoverPic(@Body cpic: User): Call<ResponseBody>
 
     @POST("user/me/follow_tags")
     fun setFollowingTags(@Body tags: Array<String>): Call<ResponseBody>
@@ -284,7 +268,7 @@ interface MemeItService {
 
 
     @GET("others/signedUrl")
-    fun getSignedUrl(@Query("filename") filename: String): Call<MemeItClient.SignedUrl>
+    fun getSignedUrl(@Query("filename") filename: String,@Query("contentType") contentType:String ): Call<MemeItClient.SignedUrl>
 
     @PUT("/auth/token/{ftoken}")
     fun updateUserToken(@Path("ftoken") token: String): Call<ResponseBody>
@@ -297,6 +281,6 @@ interface MemeItService {
 
 
     @Multipart
-    @POST()
+    @PUT()
     fun uploadImage(@Url url: String, @Part image: MultipartBody.Part): Call<ResponseBody>
 }

@@ -7,9 +7,9 @@ import com.innov8.memeit.Adapters.MemeAdapters.HomeMemeAdapter
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.Adapters.TagsAdapter
 import com.innov8.memeit.R
-import com.innov8.memeit.makeLinear
-import com.memeit.backend.dataclasses.HomeElement
-import com.memeit.backend.dataclasses.TagSuggestion
+import com.innov8.memeit.Utils.makeLinear
+import com.memeit.backend.models.HomeElement
+import com.memeit.backend.models.TagSuggestion
 
 class TagSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
     val list: RecyclerView = itemView.findViewById(R.id.list_recyc)

@@ -8,22 +8,24 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
-import com.cloudinary.android.MediaManager
-import com.cloudinary.android.callback.ErrorInfo
-import com.cloudinary.android.callback.UploadCallback
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.request.ImageRequest
 import com.innov8.memegenerator.utils.toByteArray
+import com.innov8.memeit.commons.log
 import com.innov8.memeit.commons.prefix
 import com.innov8.memeit.commons.toast
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Meme
+import com.memeit.backend.models.Meme
 import kotlinx.android.synthetic.main.activity_meme_poster2.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 import java.io.File
+import java.io.FileOutputStream
+import java.util.*
 
 class MemePosterActivity : AppCompatActivity() {
     companion object {
@@ -98,59 +100,58 @@ class MemePosterActivity : AppCompatActivity() {
     }
 
     private fun handleGifUpload() {
-        MemeItClient.uploadImage(File(gif))
+        upload(File(gif), rat)
     }
 
-
-    private fun handleImageUpload() {
-        val bitmap = (meme_image_view.drawable as BitmapDrawable).bitmap
-        val byteArray = bitmap.toByteArray(Bitmap.CompressFormat.JPEG, 90)
-        MediaManager.get()
-                .upload(byteArray)
-                .callback(MyUploadCallback())
-                .dispatch()
-    }
-
-
-    inner class MyUploadCallback : UploadCallback {
-        override fun onStart(s: String) {
-            progressDialog.setProgress(0)
-            progressDialog.setTitle("Uploading Image Started")
-        }
-
-        override fun onProgress(s: String, l: Long, l1: Long) {
-            val p = (l * 100 / l1)
-            progressDialog.setProgress(p.toInt())
-            progressDialog.setTitle("Uploading $p%")
-        }
-
-        override fun onSuccess(s: String, map: Map<*, *>) {
-            val public_id = map["public_id"].toString()
-            val width = map["width"].toString().toFloat()
-            val height = map["height"].toString().toFloat()
-            val ratio = width / height
-            progressDialog.setProgress(-1)
-            progressDialog.setTitle("Image Uploaded! Posting Meme")
-
-            MemeItMemes.postMeme(prepareRequest(public_id, ratio)).call({
+    private fun upload(file: File, ratio: Float = 1f, id: Boolean = true) {
+        progressDialog.setTitle("Uploading Image")
+        progressDialog.show()
+        MemeItClient.uploadFile(file, id, {
+            progressDialog.setTitle("Image Uploaded, Posting Meme")
+            MemeItMemes.postMeme(prepareRequest(it, ratio)).call({
                 progressDialog.hide()
                 toast("Meme Posted to MemeIt!")
             }, {
                 progressDialog.hide()
                 toast("Meme Posting failed: $it")
             })
-        }
-
-        override fun onError(s: String, errorInfo: ErrorInfo) {
+        }) {
             progressDialog.hide()
-            toast("Meme Image Uploading failed: " + errorInfo.description)
-        }
-
-        override fun onReschedule(s: String, errorInfo: ErrorInfo) {
-            progressDialog.hide()
-            toast("Meme Image Uploading rescheduled: " + errorInfo.description)
+            toast("Failed to upload Image")
+            log("fcck", it)
         }
     }
+
+    private fun upload(byteArray: ByteArray, ratio: Float = 1f, ext:String) {
+        progressDialog.setTitle("Uploading Image")
+        progressDialog.show()
+        MemeItClient.uploadByteArray(byteArray,ext, {
+            progressDialog.setTitle("Image Uploaded, Posting Meme")
+            MemeItMemes.postMeme(prepareRequest(it, ratio)).call({
+                progressDialog.hide()
+                toast("Meme Posted to MemeIt!")
+            }, {
+                progressDialog.hide()
+                toast("Meme Posting failed: $it")
+            })
+        }) {
+            progressDialog.hide()
+            toast("Failed to upload Image")
+            log("fcck", it)
+        }
+    }
+
+
+    private fun handleImageUpload() {
+        val bitmap = (meme_image_view.drawable as BitmapDrawable).bitmap
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            val byteArray = withContext(Dispatchers.Default) {
+                bitmap.toByteArray(Bitmap.CompressFormat.JPEG, 90)
+            }
+            upload(byteArray, bitmap.width.toFloat() / bitmap.height,"jpeg")
+        }
+    }
+
 
     private fun prepareRequest(uri: String, ratio: Float): Meme {
         return Meme(imageId = uri,
@@ -170,9 +171,15 @@ class MemePosterActivity : AppCompatActivity() {
                 .toList()
 }
 
+var rat = 1f
+
 class MyControllerListener : BaseControllerListener<ImageInfo>() {
     override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
         super.onFinalImageSet(id, imageInfo, animatable)
-        animatable?.start()
+        animatable?.let {
+            it.start()
+            rat = imageInfo!!.width.toFloat() / imageInfo.height.toFloat()
+        }
+
     }
 }

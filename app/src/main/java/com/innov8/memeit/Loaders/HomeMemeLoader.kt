@@ -4,17 +4,15 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.innov8.memeit.*
 import com.innov8.memeit.CustomClasses.AdElement
+import com.innov8.memeit.MemeItApp
+import com.innov8.memeit.Utils.*
 import com.innov8.memeit.commons.models.MemeTemplate
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
-import com.memeit.backend.dataclasses.*
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import com.memeit.backend.models.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 import retrofit2.Call
 import retrofit2.Response
 
@@ -25,7 +23,7 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
         fetch().addOnSuccessListener {
             activateFetched()
         }.addOnFailureListener {
-            log(it.message?:"")
+            log(it.message ?: "")
 
         }
     }
@@ -35,11 +33,11 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
             RCK_TEMPLATE_SUG_OFFSET,
             RCK_AD_OFFSET
     ).map { frc.getLong(it) }
-    private val freqs = listOf(
-            RCK_USER_SUG_FREQ,
-            RCK_TAG_SUG_FREQ,
-            RCK_TEMPLATE_SUG_FREQ,
-            RCK_AD_FREQ
+    private val periods = listOf(
+            RCK_USER_SUG_PERIOD,
+            RCK_TAG_SUG_PERIOD,
+            RCK_TEMPLATE_SUG_PERIOD,
+            RCK_AD_PERIOD
     ).map { frc.getLong(it) }
     override var skip: Int = 0
     private var userSuggestions: List<User>? = null
@@ -49,7 +47,6 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
     private var tagsLoaded = false
     private var templateLoaded = false
     var index = 0
-    val offset = 2
     var type = 0
     private var usersIndex = 0
     private var tagsIndex = 0
@@ -71,11 +68,12 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
 
     private fun <T> Response<T>.toResult() = Result(this)
     override fun load(limit: Int, onSuccess: (List<HomeElement>) -> Unit, onError: (String) -> Unit) {
-        launch(UI) {
-            val memes = withContext(CommonPool) { MemeItMemes.getHomeMemes(skip, limit).execSafe() }
-            val users = async(CommonPool) { MemeItUsers.getUserSuggestions().execSafe() }
-            val tags = async(CommonPool) { MemeItMemes.getSuggestedTags(0, 300).execSafe() }
-            val templates = async(CommonPool) { MemeTemplate.loadLocalTemplates(MemeItApp.instance) }
+
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            val memes = withContext(Dispatchers.Default) { MemeItMemes.getHomeMemes(skip, limit).execSafe() }
+            val users = async(Dispatchers.Default) { MemeItUsers.getUserSuggestions().execSafe() }
+            val tags = async(Dispatchers.Default) { MemeItMemes.getSuggestedTags(0, 300).execSafe() }
+            val templates = async(Dispatchers.Default) { MemeTemplate.loadLocalTemplates(MemeItApp.instance) }
 
             if (!memes.isSuccessful) {
                 onError(memes.error)
@@ -98,14 +96,14 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
                     memeTemplates = templates.await()
                     templateLoaded = true
                 }
-                onSuccess(withContext(CommonPool) {
+                onSuccess(withContext(Dispatchers.Default) {
                     val homeElements = mutableListOf<HomeElement>()
                     memes.body?.forEach {
                         homeElements.add(it)
                         index++
                         bakersList.forEachIndexed { i, baker ->
-                            if ((index-offsets[i])%freqs[i]==0L)
-                                baker.invoke()?.let {elem->
+                            if ((index - offsets[i]) % periods[i] == 0L)
+                                baker.invoke()?.let { elem ->
                                     homeElements.add(elem)
                                 }
                         }
@@ -116,6 +114,7 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
 
         }
     }
+
     private val bakersList = listOf(
             { bakeSuggestion() },
             { bakeTags() },

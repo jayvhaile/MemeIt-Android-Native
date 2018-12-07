@@ -14,11 +14,11 @@ import com.innov8.memeit.R
 import com.innov8.memeit.commons.getDrawableIdByName
 import com.innov8.memeit.commons.models.MemeTemplate
 import com.innov8.memeit.commons.views.ProfileDraweeView
-import com.innov8.memeit.loadImage
-import com.innov8.memeit.prefix
+import com.innov8.memeit.Utils.loadImage
+import com.innov8.memeit.Utils.prefix
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.User
+import com.memeit.backend.models.User
 
 class UserSugAdapter(context: Context) : ListAdapter<User>(context, R.layout.list_item_user_sug) {
     override fun createViewHolder(view: View): MyViewHolder<User> = UserSugViewHolder(view)

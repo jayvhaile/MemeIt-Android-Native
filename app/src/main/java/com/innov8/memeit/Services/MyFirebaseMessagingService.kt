@@ -15,8 +15,8 @@ import com.innov8.memeit.R
 import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.MyUser
-import com.memeit.backend.dataclasses.Notification
+import com.memeit.backend.models.MyUser
+import com.memeit.backend.models.Notification
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(s: String) {

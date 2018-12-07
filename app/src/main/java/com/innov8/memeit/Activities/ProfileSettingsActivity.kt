@@ -2,24 +2,35 @@ package com.innov8.memeit.Activities
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.cloudinary.android.MediaManager
-import com.cloudinary.android.callback.ErrorInfo
-import com.cloudinary.android.callback.UploadCallback
+import com.facebook.imagepipeline.request.ImageRequest
 import com.google.android.material.snackbar.Snackbar
+import com.innov8.memegenerator.MemePosterActivity.Companion.bitmap
+import com.innov8.memegenerator.utils.toByteArray
 import com.innov8.memeit.R
+import com.innov8.memeit.Utils.loadImage
+import com.innov8.memeit.Utils.snack
+import com.innov8.memeit.Utils.text
+import com.innov8.memeit.Utils.validateLength
 import com.innov8.memeit.commons.toast
-import com.innov8.memeit.loadImage
-import com.innov8.memeit.snack
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItUsers
+import com.memeit.backend.models.UserReq
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.profile_settings.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
+import java.io.ByteArrayInputStream
+import java.io.File
+import java.io.FileInputStream
 
 class ProfileSettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +62,8 @@ class ProfileSettingsActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val imageUrl = result.uri
                 if (result.uri == null) return
-                uploadImage(imageUrl)
+                settings_pp.setImageRequest(ImageRequest.fromUri(imageUrl))
+                uploadImage(result.uri)
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 settings_pp.snack(result.error.message ?: "Something went wrong.")
             }
@@ -73,60 +85,47 @@ class ProfileSettingsActivity : AppCompatActivity() {
 
     private fun onSave() {
         settings_pp.snack("Updating Profile", duration = Snackbar.LENGTH_LONG)
-        val user = MemeItClient.myUser!!
+        val muser = MemeItClient.myUser!!
         val newName = settings_name.text
         val newBio = settings_bio.text
-        if (newName != user.name || newBio != user.bio) {
-            if (newName != user.name && settings_name.validateLength(2, 32, "Name"))
-                MemeItUsers.updateName(newName, {
-                    if (newBio.isNotEmpty() && newBio != user.bio) {
-                        MemeItUsers.updateBio(newBio, {
-                            toast("Profile Updated")
-                            finish()
-                        }) {
-                            settings_pp.snack(it)
-                        }
-                    } else {
-                        toast("Profile Updated")
-                        finish()
-                    }
-                }) {
-                    settings_pp.snack(it)
-                }
 
-        } else {
-            finish()
+        val user = UserReq()
+        if (settings_name.validateLength(2, 32, "Name")) {
+            var changed = false
+            if (newName != muser.name) {
+                user.name = newName
+                changed = true
+            }
+            if (newBio != muser.bio) {
+                user.bio = newBio
+                changed = true
+            }
+            if (changed)
+                MemeItUsers.updateMyUser(user, {
+                    toast("Profile Updated")
+                }) { _ ->
+                    settings_name.snack("Error updating profile", "Retry", { onSave() })
+                }
+        }
+
+    }
+
+    private fun uploadImage(imageUrl: Uri) {
+        settings_pp.snack("Uploading Image", duration = Snackbar.LENGTH_INDEFINITE)
+        val file = File(imageUrl.path)
+        MemeItClient.uploadFile(file, true, {
+            postImageUrl(it)
+        }
+        ) {
+            settings_pp.snack("Failed to upload Image", "Retry", { uploadImage(imageUrl) })
         }
     }
 
-    fun uploadImage(imageUrl: Uri) {
-        settings_pp.snack("Uploading Image", duration = Snackbar.LENGTH_LONG)
-        MediaManager.get().upload(imageUrl).callback(object : UploadCallback {
-            override fun onStart(s: String) {
-
-            }
-
-            override fun onProgress(s: String, l: Long, l1: Long) {}
-
-            override fun onSuccess(s: String, map: Map<*, *>) {
-                postImageUrl(map["public_id"].toString())
-            }
-
-            override fun onError(s: String, errorInfo: ErrorInfo) {
-                settings_pp.snack("Failed to upload Image", "Retry", { uploadImage(imageUrl) })
-            }
-
-            override fun onReschedule(s: String, errorInfo: ErrorInfo) {
-
-            }
-        }).dispatch()
-    }
-
     fun postImageUrl(id: String) {
-        MemeItUsers.updateProfilePic(id, {
+        MemeItUsers.updateMyUser(UserReq(imageUrl = id), {
             settings_pp.snack("Profile Picture updated!")
         }) { err ->
-            settings_pp.snack("Failed to update profile picture\n$err", "Retry", { postImageUrl(id) })
+            settings_pp.snack("Failed to update profile picture\n$err", "Retry", { postImageUrl(id) },Snackbar.LENGTH_LONG)
         }
     }
 

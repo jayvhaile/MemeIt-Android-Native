@@ -269,7 +269,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="60dp" />
-
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/meme_gif"
         android:layout_width="wrap_content"
@@ -284,7 +283,6 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toStartOf="@+id/meme_share"
         app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/meme_control"
         android:layout_width="0dp"
@@ -297,6 +295,4 @@
         app:layout_constraintStart_toStartOf="@id/meme_image"
         app:layout_constraintTop_toTopOf="@+id/meme_image"
         app:srcCompat="@drawable/ic_file_download_white_36dp" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

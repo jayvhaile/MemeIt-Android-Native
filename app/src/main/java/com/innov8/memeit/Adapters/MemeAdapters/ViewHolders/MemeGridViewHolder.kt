@@ -6,13 +6,13 @@ import com.innov8.memeit.Adapters.MemeAdapters.GridMemeAdapter
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomViews.MemeDraweeView
 import com.innov8.memeit.R
-import com.innov8.memeit.screenWidth
-import com.memeit.backend.dataclasses.HomeElement
-import com.memeit.backend.dataclasses.Meme
+import com.innov8.memeit.Utils.screenWidth
+import com.memeit.backend.models.HomeElement
+import com.memeit.backend.models.Meme
 
 class MemeGridViewHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
     private val memeImageV: MemeDraweeView = itemView.findViewById(R.id.meme_image)
-    val width = screenWidth / GridMemeAdapter.GRID_SPAN_COUNT
+    val width get() = screenWidth / GridMemeAdapter.GRID_SPAN_COUNT
 
     init {
         val lp = FrameLayout.LayoutParams(width, width)

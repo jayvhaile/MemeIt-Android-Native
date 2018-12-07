@@ -32,12 +32,14 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.innov8.memegenerator.utils.addWaterMark
-import com.innov8.memeit.*
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.MemeUpdateActivity
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.Activities.ReactorListActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeListAdapter
+import com.innov8.memeit.MemeItApp
+import com.innov8.memeit.R
+import com.innov8.memeit.Utils.*
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.toast
 import com.innov8.memeit.commons.views.ProfileDraweeView
@@ -45,14 +47,12 @@ import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Meme
-import com.memeit.backend.dataclasses.Reaction
-import com.memeit.backend.dataclasses.Report
+import com.memeit.backend.models.Meme
+import com.memeit.backend.models.Reaction
+import com.memeit.backend.models.Report
 import com.varunest.sparkbutton.SparkButton
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 
 class MemeView : FrameLayout {
     private lateinit var constraintSetDefault: ConstraintSet
@@ -78,7 +78,7 @@ class MemeView : FrameLayout {
     }
 
     private fun initC() {
-        com.innov8.memeit.measure("constraint") {
+        com.innov8.memeit.Utils.measure("constraint") {
             constraintSetDefault = ConstraintSet().apply {
                 clone(itemView)
             }
@@ -272,8 +272,8 @@ class MemeView : FrameLayout {
         val req = ImageRequestBuilder.newBuilderWithSource(Uri.parse(meme.generateUrl()))
                 .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE)
                 .build()
-        launch(UI) {
-            val res = withContext(CommonPool) { Fresco.getImagePipeline().fetchDecodedImage(req, context).result }
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            val res = withContext(Dispatchers.Default) { Fresco.getImagePipeline().fetchDecodedImage(req, context).result }
             if (res != null && res.get() is CloseableBitmap) {
                 val bitmap = (res.get() as CloseableBitmap).underlyingBitmap.addWaterMark(context)
                 val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "memeit", "memeit")
@@ -286,7 +286,6 @@ class MemeView : FrameLayout {
             } else {
                 context.toast("Image not downloaded yet")
             }
-
         }
 
     }
@@ -356,30 +355,30 @@ class MemeView : FrameLayout {
                     MemeUpdateActivity.startWithMeme(context, meme)
                 }
                 R.id.menu_report_meme -> {
-                    var message = ""
                     val rt = Report.ReportTypes.values()
+                    fun reportMeme(message: String) {
+                        MemeItMemes.reportMeme(Report.MemeReport(meme.id!!, message!!)).call({ _ ->
+                            context.toast("Meme reported! We will look into it!")
+                        }) {
+                            snack("Reporting Failed", "Try Again", { reportMeme(message) })
+                        }
+                    }
                     MaterialDialog.Builder(context)
                             .title("Report")
-                            .items("Pornography", "Abuse", "Violence", "Not appropriate", "Other")
-                            .itemsCallbackMultiChoice(null) { _, which: Array<out Int>, _ ->
-                                if (which.contains(4)) {
-                                    //todo add a way for them to add their own report message
-                                } else message = which.filter { it != 4 }
-                                        .joinToString(", ") { rt[it].message }
+                            .items("Pornography", "Abuse", "Violence", "Not appropriate")
+                            .itemsCallbackMultiChoice(null) { _, _, _ ->
                                 true
                             }
                             .positiveText("Report")
                             .negativeText("Cancel")
-                            .onPositive { _, _ ->
-                                if (message.isNotBlank()) {
-                                    MemeItMemes.reportMeme(Report.MemeReport(meme.id!!, message)).call({ _ ->
-                                        context.toast("Meme reported! We will look into it!")
-                                    }) {
-                                        context.toast("Meme report failed, Please Try Again!")
-                                    }
-                                }
+                            .onPositive { dialog, _ ->
+                                dialog.selectedIndices?.filter { it != 4 }
+                                        ?.joinToString(", ") { rt[it].message }?.let {
+                                           if(it.isNotBlank()) reportMeme(it)
+                                        }
                             }
                             .show()
+
 
                 }
             }
@@ -408,8 +407,7 @@ class MemeView : FrameLayout {
 
         favButton.isChecked = meme.isMyFavourite
         if (resizeToFit) {
-            val h = (screenWidth / meme.imageRatio).toInt().trim(200.dp, screenHeight - 200.dp)
-            constraintSetDefault.constrainWidth(R.id.meme_image, screenWidth)
+            val h = (screenWidth / meme.imageRatio).toInt().trim(200.dp, screenHeightOriented - 112.dp)
             constraintSetDefault.constrainHeight(R.id.meme_image, h)
             constraintSetDefault.applyTo(itemView)
         }

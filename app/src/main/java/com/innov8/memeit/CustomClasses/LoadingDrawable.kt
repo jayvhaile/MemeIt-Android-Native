@@ -10,7 +10,10 @@ import com.innov8.memeit.commons.dp
 class LoadingDrawable (val context:Context): ProgressBarDrawable() {
     override fun onLevelChange(level: Int): Boolean {
         super.onLevelChange(level)
-        if (level>=10000){
+        if(level<10000 && !anim.isRunning){
+            anim.start()
+        }
+        if (level>=10000 && anim.isRunning){
             anim.end()
             return false
         }
@@ -35,13 +38,13 @@ class LoadingDrawable (val context:Context): ProgressBarDrawable() {
     var c:Long=0
 
     val radius=16f.dp(context)
-    val strokeSize=2f.dp(context)
-    val paddingSize=1f.dp(context)
-    val sweepInitialAngle=20f
-    var sweepAngle=sweepInitialAngle
-    val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    val paint2:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    val anim=ValueAnimator.ofFloat(0f,0.1f)
+    private val strokeSize=2f.dp(context)
+    private val paddingSize=1f.dp(context)
+    private val sweepInitialAngle=20f
+    private var sweepAngle=sweepInitialAngle
+    private val paint:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val paint2:Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val anim=ValueAnimator.ofFloat(0f,0.1f)
 
 
     init {

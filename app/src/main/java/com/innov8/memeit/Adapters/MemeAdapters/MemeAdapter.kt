@@ -11,9 +11,9 @@ import com.innov8.memeit.Activities.MemeChooser
 import com.innov8.memeit.Adapters.ELEListAdapter
 import com.innov8.memeit.Adapters.MemeAdapters.ViewHolders.MemeViewHolder
 import com.innov8.memeit.R
-import com.innov8.memeit.showMemeZoomView
-import com.memeit.backend.dataclasses.HomeElement
-import com.memeit.backend.dataclasses.Meme
+import com.innov8.memeit.Utils.showMemeZoomView
+import com.memeit.backend.models.HomeElement
+import com.memeit.backend.models.Meme
 
 abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeViewHolder>(context) {
     override var emptyDrawableId: Int = R.drawable.ic_add
@@ -67,7 +67,6 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
                 }
                 showErrorAtTop = true
             }
-
             HOME_ADAPTER -> HomeMemeAdapter(context)
             else ->
                 throw IllegalArgumentException("Use one of (LIST_ADAPTER,GRID_ADAPTER,HOME_ADAPTER)")

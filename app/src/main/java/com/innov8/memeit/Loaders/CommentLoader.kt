@@ -2,7 +2,7 @@ package com.innov8.memeit.Loaders
 
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Comment
+import com.memeit.backend.models.Comment
 
 class CommentLoader(var memeId: String) : Loader<Comment> {
     override var skip: Int = 0

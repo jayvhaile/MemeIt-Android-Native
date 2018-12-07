@@ -4,8 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.memeit.backend.dataclasses.Tag
-import retrofit2.Call
+import com.memeit.backend.models.Tag
 
 class MyTagLoader() : TagLoader, Parcelable {
     override var skip: Int = 0
