@@ -19,6 +19,9 @@
     <color name="orange">#Ff3d36</color>
     <color name="greeny">#31c240</color>
     <color name="golden">#FF9726</color>
+    <color name="black">#181818</color>
+    <color name="pink">#fb1fff</color>
+    <color name="red">#ff2626</color>
 
 
     <color name="like_bg">#99000000</color>

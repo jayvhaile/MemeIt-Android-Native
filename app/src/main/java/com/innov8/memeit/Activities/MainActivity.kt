@@ -1,19 +1,23 @@
 package com.innov8.memeit.Activities
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomClasses.MyFragmentPagerAdapter
+import com.innov8.memeit.CustomClasses.SharedPrefs
 import com.innov8.memeit.CustomViews.SearchToolbar
 import com.innov8.memeit.Fragments.MemeListFragment
 import com.innov8.memeit.Fragments.ProfileFragment
@@ -99,6 +103,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         this.setSupportActionBar(toolbar2)
+//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//        window.statusBarColor = Color.TRANSPARENT;
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
     }
 
     private fun initBottomNav() {
@@ -110,27 +118,28 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_home -> {
                     setTitle(0)
                     main_viewpager.setCurrentItem(0, false)
-                    supportActionBar!!.show()
+                    otherActivitiesMode()
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.menu_trending -> {
                     setTitle(1)
                     main_viewpager.setCurrentItem(1, false)
-                    supportActionBar!!.show()
+                    otherActivitiesMode()
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.menu_create -> {
+                    otherActivitiesMode()
                     startActivity(Intent(this@MainActivity, MemeChooser::class.java))
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.menu_favorites -> {
                     setTitle(2)
-                    supportActionBar!!.show()
+                    otherActivitiesMode()
                     main_viewpager.setCurrentItem(2, false)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.menu_me -> {
-                    supportActionBar!!.hide()
+                    profileActivityMode()
                     main_viewpager.setCurrentItem(3, false)
                     return@OnNavigationItemSelectedListener true
                 }
@@ -230,5 +239,13 @@ class MainActivity : AppCompatActivity() {
                 putExtras(data!!.extras!!)
             })
         }
+    }
+    fun otherActivitiesMode(){
+        supportActionBar!!.show()
+        window.statusBarColor = Color.WHITE;
+    }
+    fun profileActivityMode(){
+        supportActionBar!!.hide()
+        window.statusBarColor = SharedPrefs(this,null).coverColor
     }
 }

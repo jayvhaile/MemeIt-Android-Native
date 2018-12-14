@@ -6,13 +6,17 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.imagepipeline.request.ImageRequest
 import com.google.android.material.snackbar.Snackbar
+import com.innov8.memeit.CustomClasses.SharedPrefs
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.*
 import com.innov8.memeit.commons.toast
 import com.memeit.backend.MemeItClient
+import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.models.UserReq
 import com.theartofdev.edmodo.cropper.CropImage
@@ -37,6 +41,61 @@ class ProfileSettingsActivity : AppCompatActivity() {
                     .setCropShape(CropImageView.CropShape.OVAL)
                     .start(this)
         }
+        val sharedPrefs = SharedPrefs(this,null);
+        val colorListener:View.OnClickListener = View.OnClickListener {
+            var color = "";
+            when(it){
+                red->{
+                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.RED)
+                    color = "red";
+                }
+                pink-> {
+                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.PINK)
+                    color = "pink";
+                }
+                blue-> {
+                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.BLUE)
+                    color = "blue";
+                }
+                purple-> {
+                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.PURPLE)
+                    color = "purple";
+                }
+                black-> {
+                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.BLACK)
+                    color = "black";
+                }
+                green-> {
+                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.GREEN)
+                    color = "green";
+                }
+                orange-> {
+                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.ORANGE)
+                    color = "orange";
+                }
+                golden-> {
+                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.GOLDEN)
+                    color = "golden";
+                }
+                else->{sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.ORANGE)
+                    color = "orange";
+                };
+            }
+            MemeItUsers.updateMyUser(UserReq(coverImageUrl = color),{
+                context.toast(color + " is selected.",Toast.LENGTH_SHORT)
+            },{
+                context.toast("An error has occurred.",Toast.LENGTH_SHORT)
+
+            });
+        }
+        red.setOnClickListener(colorListener)
+        green.setOnClickListener(colorListener)
+        blue.setOnClickListener(colorListener)
+        purple.setOnClickListener(colorListener)
+        golden.setOnClickListener(colorListener)
+        orange.setOnClickListener(colorListener)
+        pink.setOnClickListener(colorListener)
+        black.setOnClickListener(colorListener)
         settings_name.editText?.text?.append(user.name)
         settings_bio.editText?.text?.append(user.bio ?: "")
         setSupportActionBar(toolbar_profile_settings)

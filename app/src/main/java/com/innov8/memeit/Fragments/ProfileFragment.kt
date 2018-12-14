@@ -22,6 +22,7 @@ import com.innov8.memeit.Activities.UserListActivity
 import com.innov8.memeit.Activities.UserTagActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomClasses.CustomMethods
+import com.innov8.memeit.CustomClasses.SharedPrefs
 import com.innov8.memeit.Loaders.FollowerLoader
 import com.innov8.memeit.Loaders.FollowingLoader
 import com.innov8.memeit.R
@@ -153,6 +154,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         profile_followings_count?.text = CustomMethods.formatNumber(user.followingCount)
         profile_meme_count?.text = CustomMethods.formatNumber(user!!.postCount)
         profile_follow_btn?.text = if (user.isFollowedByMe == true) "Unfollow" else "Follow"
+        cover.setBackgroundColor(SharedPrefs(context,null).coverColor)
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {

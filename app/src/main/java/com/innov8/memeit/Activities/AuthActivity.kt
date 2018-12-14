@@ -63,7 +63,7 @@ class AuthActivity : AppCompatActivity() {
         }
         auth_question_action.setOnClickListener {
             if (mLoading) {
-                showError("Please wait a While")
+                showError("Please wait a bit")
                 return@setOnClickListener
             }
             currentMode.onGoto()
@@ -72,14 +72,14 @@ class AuthActivity : AppCompatActivity() {
 
         signup_facebook.setOnClickListener {
             if (mLoading) {
-                showError("Please wait a While")
+                showError("Please wait a bit")
                 return@setOnClickListener
             }
             currentMode.onFacebook()
         }
         signup_google.setOnClickListener {
             if (mLoading) {
-                showError("Please wait a While")
+                showError("Please wait a bit")
                 return@setOnClickListener
             }
             currentMode.onGoogle()
@@ -102,7 +102,7 @@ class AuthActivity : AppCompatActivity() {
 
     private fun execOnAction() {
         if (mLoading) {
-            showError("Please wait a While")
+            showError("Please wait a bit")
             return
         }
         if (currentMode.verifable()) {

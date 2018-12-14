@@ -56,7 +56,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/poster_pp"
-        app:srcCompat="@drawable/meme_04" />
+        app:srcCompat="@drawable/meme_004" />
 
     <EditText
         android:id="@+id/tags_field"
