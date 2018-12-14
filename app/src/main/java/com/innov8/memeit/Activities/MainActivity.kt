@@ -10,14 +10,12 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomClasses.MyFragmentPagerAdapter
-import com.innov8.memeit.CustomClasses.SharedPrefs
 import com.innov8.memeit.CustomViews.SearchToolbar
 import com.innov8.memeit.Fragments.MemeListFragment
 import com.innov8.memeit.Fragments.ProfileFragment
@@ -246,6 +244,18 @@ class MainActivity : AppCompatActivity() {
     }
     fun profileActivityMode(){
         supportActionBar!!.hide()
-        window.statusBarColor = SharedPrefs(this,null).coverColor
+        window.statusBarColor = convertColor(MemeItClient.myUser?.coverPic)
+    }
+    fun convertColor(string: String?) : Int{
+        when(string){
+            "red"->return context!!.resources.getColor(R.color.red);
+            "green"->return context!!.resources.getColor(R.color.greeny);
+            "blue"->return context!!.resources.getColor(R.color.blue);
+            "pink"->return context!!.resources.getColor(R.color.pink);
+            "golden"->return context!!.resources.getColor(R.color.golden);
+            "black"->return context!!.resources.getColor(R.color.black);
+            "purple"->return context!!.resources.getColor(R.color.purple);
+            else->return context!!.resources.getColor(R.color.orange);
+        }
     }
 }

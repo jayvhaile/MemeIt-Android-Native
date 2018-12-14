@@ -11,6 +11,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -154,7 +155,20 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         profile_followings_count?.text = CustomMethods.formatNumber(user.followingCount)
         profile_meme_count?.text = CustomMethods.formatNumber(user!!.postCount)
         profile_follow_btn?.text = if (user.isFollowedByMe == true) "Unfollow" else "Follow"
-        cover.setBackgroundColor(SharedPrefs(context,null).coverColor)
+        cover.setBackgroundColor(convertColor(MemeItClient.myUser?.coverPic))
+        context?.toast(MemeItClient.myUser?.coverPic.toString(),Toast.LENGTH_LONG)
+    }
+    fun convertColor(string : String?) : Int{
+        when(string){
+            "red"->return context!!.resources.getColor(R.color.red);
+            "green"->return context!!.resources.getColor(R.color.greeny);
+            "blue"->return context!!.resources.getColor(R.color.blue);
+            "pink"->return context!!.resources.getColor(R.color.pink);
+            "golden"->return context!!.resources.getColor(R.color.golden);
+            "black"->return context!!.resources.getColor(R.color.black);
+            "purple"->return context!!.resources.getColor(R.color.purple);
+            else->return context!!.resources.getColor(R.color.orange);
+        }
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {

@@ -46,38 +46,30 @@ class ProfileSettingsActivity : AppCompatActivity() {
             var color = "";
             when(it){
                 red->{
-                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.RED)
                     color = "red";
                 }
                 pink-> {
-                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.PINK)
                     color = "pink";
                 }
                 blue-> {
-                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.BLUE)
                     color = "blue";
                 }
                 purple-> {
-                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.PURPLE)
                     color = "purple";
                 }
                 black-> {
-                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.BLACK)
                     color = "black";
                 }
                 green-> {
-                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.GREEN)
                     color = "green";
                 }
                 orange-> {
-                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.ORANGE)
                     color = "orange";
                 }
                 golden-> {
-                    sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.GOLDEN)
                     color = "golden";
                 }
-                else->{sharedPrefs.setCoverColor(SharedPrefs.ColorPreset.ORANGE)
+                else->{
                     color = "orange";
                 };
             }
