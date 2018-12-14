@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Meme(@SerializedName("mid") val id: String? = null,
                 @SerializedName("poster") val poster: Poster? = null,
-                @SerializedName("desc") val description: String? = null,
+                @SerializedName("desc") var description: String? = null,
                 @SerializedName("mr") var myReaction: Reaction? = null,
                 @SerializedName("img_url") val imageId: String? = null,
                 @SerializedName("ratio") val imageRatio: Double = 1.0,

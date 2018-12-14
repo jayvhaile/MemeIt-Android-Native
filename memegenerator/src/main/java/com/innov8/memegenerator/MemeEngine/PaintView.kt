@@ -53,7 +53,6 @@ class PaintHandler(val view: View) {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     //    val b = BlurMaskFilter(5f, BlurMaskFilter.Blur.NORMAL)
-    val e = EmbossMaskFilter(floatArrayOf(1f, 1f, 1f), 0.4f, 6f, 3.5f)
     var paintProperty = PaintProperty(Color.BLACK, 4f.dp(view.context))
 
     var actionManager = ActionManager()

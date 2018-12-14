@@ -91,7 +91,7 @@ class MemeTextView : MemeItemView {
         invalidate()
     }
 
-    private var color: Int = Color.WHITE
+    private var color: Int = Color.BLACK
     fun setTextColor(value: Int) {
         color = value
         dl.paint.color = value
@@ -103,7 +103,7 @@ class MemeTextView : MemeItemView {
         val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
         with(textPaint) {
             typeface = Typeface.DEFAULT
-            color = Color.WHITE
+            color = Color.BLACK
             textSize = 20f.sp(context)
             style = Paint.Style.FILL
         }
@@ -121,7 +121,7 @@ class MemeTextView : MemeItemView {
                         }
                         .show()
             }
-        onResize = { _, h ->
+        onResize = { _, _ ->
             resetDL()
         }
     }

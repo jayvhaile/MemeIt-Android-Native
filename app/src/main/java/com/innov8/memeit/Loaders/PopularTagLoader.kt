@@ -7,14 +7,18 @@ import com.memeit.backend.call
 import com.memeit.backend.models.Tag
 
 class PopularTagLoader() : TagLoader, Parcelable {
-    constructor(parcel: Parcel) : this() {
-    }
+    constructor(parcel: Parcel) : this()
+
+    var search: String? = null
 
     override var skip: Int = 0
 
     override fun load(limit: Int, onSuccess: (List<Tag>) -> Unit, onError: (String) -> Unit) {
-        MemeItUsers.getPopularTags(null,skip, limit).call(onSuccess,onError)
+        MemeItUsers.getPopularTags(search, skip, limit).call(onSuccess, onError)
     }
+
+
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
 
     }

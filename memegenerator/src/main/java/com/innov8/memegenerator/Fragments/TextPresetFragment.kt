@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.Adapters.TextPresetsAdapter
-import com.innov8.memegenerator.MemeEngine.TextEditListener
+import com.innov8.memegenerator.interfaces.TextEditListener
 import com.innov8.memegenerator.Models.TextPreset
 import com.innov8.memeit.commons.models.TextStyleProperty
 

@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Handler
 import android.provider.MediaStore
+import android.text.SpannableString
+import android.text.SpannedString
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -41,8 +43,12 @@ import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.*
 import com.innov8.memeit.commons.dp
+import com.innov8.memeit.commons.models.MyTypeFace
 import com.innov8.memeit.commons.toast
 import com.innov8.memeit.commons.views.ProfileDraweeView
+import com.luseen.autolinklibrary.AutoLinkMode
+import com.luseen.autolinklibrary.AutoLinkOnClickListener
+import com.luseen.autolinklibrary.AutoLinkTextView
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
@@ -100,7 +106,7 @@ class MemeView : FrameLayout {
     private val favButton: SparkButton = itemView.findViewById(R.id.fav_button)
     private val reactTint: View = itemView.findViewById(R.id.tint)
     private val memeTags: TextView = itemView.findViewById(R.id.meme_tags)
-    private val memeDescription: TextView = itemView.findViewById(R.id.description)
+    private val memeDescription: AutoLinkTextView = itemView.findViewById(R.id.description)
     private val reactionCountFunny: TextView = itemView.findViewById(R.id.reacation_count_funny)
     private val reactionCountVeryFunny: TextView = itemView.findViewById(R.id.reacation_count_veryfunny)
     private val reactionCountAngry: TextView = itemView.findViewById(R.id.reacation_count_angry)
@@ -118,6 +124,7 @@ class MemeView : FrameLayout {
 
 
     init {
+
         memeImageV.onClick = {
             memeClickedListener?.invoke(meme.id!!)
         }
@@ -177,6 +184,22 @@ class MemeView : FrameLayout {
 
         memeShare.setOnClickListener { onShare() }
 
+        memeDescription.addAutoLinkMode(AutoLinkMode.MODE_HASHTAG, AutoLinkMode.MODE_MENTION)
+
+        memeDescription.setMentionModeColor(Color.parseColor("#55aaff"))
+        memeDescription.setHashtagModeColor(Color.parseColor("#3388ff"))
+        memeDescription.setAutoLinkOnClickListener { autoLinkMode, matchedText ->
+            when (autoLinkMode) {
+                AutoLinkMode.MODE_HASHTAG -> {
+
+                }
+                AutoLinkMode.MODE_MENTION -> {
+
+                }
+            }
+
+            context.toast("click $matchedText")
+        }
     }
 
     private fun toggleReactVisibility() {
@@ -275,7 +298,8 @@ class MemeView : FrameLayout {
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             val res = withContext(Dispatchers.Default) { Fresco.getImagePipeline().fetchDecodedImage(req, context).result }
             if (res != null && res.get() is CloseableBitmap) {
-                val bitmap = (res.get() as CloseableBitmap).underlyingBitmap.addWaterMark(context)
+                val tf = MyTypeFace.byName("Ubuntu")!!.getTypeFace(context)
+                val bitmap = withContext(Dispatchers.Default) { (res.get() as CloseableBitmap).underlyingBitmap.addWaterMark(tf) }
                 val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "memeit", "memeit")
                 val url = Uri.parse(path)
                 ShareCompat.IntentBuilder.from(context as Activity)
@@ -334,6 +358,16 @@ class MemeView : FrameLayout {
         }, onError("Reaction Failed"))
     }
 
+    private fun reportMeme(message: String) {
+        MemeItMemes.reportMeme(Report.MemeReport(meme.id!!, message)).call({ _ ->
+            context.toast("Meme reported! We will look into it!")
+        }) {
+            snack("Reporting Failed",
+                    "Try Again",
+                    { reportMeme(message) }
+            )
+        }
+    }
     private fun showMemeMenu() {
         val menu = PopupMenu(context, memeMenu)
         if (MemeItClient.myUser?.id == meme.poster!!.id)
@@ -356,13 +390,6 @@ class MemeView : FrameLayout {
                 }
                 R.id.menu_report_meme -> {
                     val rt = Report.ReportTypes.values()
-                    fun reportMeme(message: String) {
-                        MemeItMemes.reportMeme(Report.MemeReport(meme.id!!, message!!)).call({ _ ->
-                            context.toast("Meme reported! We will look into it!")
-                        }) {
-                            snack("Reporting Failed", "Try Again", { reportMeme(message) })
-                        }
-                    }
                     MaterialDialog.Builder(context)
                             .title("Report")
                             .items("Pornography", "Abuse", "Violence", "Not appropriate")
@@ -373,8 +400,9 @@ class MemeView : FrameLayout {
                             .negativeText("Cancel")
                             .onPositive { dialog, _ ->
                                 dialog.selectedIndices?.filter { it != 4 }
-                                        ?.joinToString(", ") { rt[it].message }?.let {
-                                           if(it.isNotBlank()) reportMeme(it)
+                                        ?.joinToString(", ") { rt[it].message }
+                                        ?.let {
+                                            if (it.isNotBlank()) reportMeme(it)
                                         }
                             }
                             .show()
@@ -404,7 +432,6 @@ class MemeView : FrameLayout {
         } else {
             reactButton.isChecked = false
         }
-
         favButton.isChecked = meme.isMyFavourite
         if (resizeToFit) {
             val h = (screenWidth / meme.imageRatio).toInt().trim(200.dp, screenHeightOriented - 112.dp)
@@ -419,7 +446,8 @@ class MemeView : FrameLayout {
             memeTags.text = meme.tags.joinToString(", ") { "#$it" }
         }
         if (!meme.description.isNullOrBlank()) {
-            memeDescription.text = meme.description
+            memeDescription.setAutoLinkText(meme.description!!)
+
         }
         memeImageV.loadMeme(meme)
     }

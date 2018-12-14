@@ -1,5 +1,6 @@
 package com.innov8.memeit.Adapters
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.widget.TextView
@@ -52,15 +53,13 @@ class UserSugAdapter(context: Context) : ListAdapter<User>(context, R.layout.lis
 
 class TemplateSugAdapter(context: Context) : ListAdapter<MemeTemplate>(context, R.layout.list_item_template_sug) {
     override fun createViewHolder(view: View): MyViewHolder<MemeTemplate> = TemplateSugViewHolder(view)
-
-
     inner class TemplateSugViewHolder(itemView: View) : MyViewHolder<MemeTemplate>(itemView) {
         private val templateV: SimpleDraweeView = itemView.findViewById(R.id.template_sug_pp)
         private val editBtn: TextView = itemView.findViewById(R.id.edit_btn)
 
         init {
             editBtn.setOnClickListener {
-                MemeEditorActivity.startWithMemeTemplate(context, getItemAt(item_position))
+                MemeEditorActivity.startWithMemeTemplate(context as Activity, getItemAt(item_position))
             }
         }
 

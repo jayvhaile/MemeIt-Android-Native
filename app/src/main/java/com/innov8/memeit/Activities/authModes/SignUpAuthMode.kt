@@ -37,7 +37,7 @@ class SignUpAuthMode(private val authActivity: AuthActivity) : AuthMode {
 
     override fun updateElements() {
         authActivity.action_btn.text = "Sign Up"
-        authActivity.auth_question.text = "Already has an account?"
+        authActivity.auth_question.text = "Already have an account?"
         authActivity.auth_question_action.text = "Login"
         authActivity.username_field.editText!!.hint = "Username"
         authActivity.username_field.clear()
@@ -70,8 +70,7 @@ class SignUpAuthMode(private val authActivity: AuthActivity) : AuthMode {
         }.addOnFailureListener {
             val req = UsernameAuthRequest(authActivity.username_field.text,
                     authActivity.password_field.text,
-                    authActivity.email_field.text,
-                    "")
+                    authActivity.email_field.text)
             MemeItClient.Auth.signUpWithUsername(req, {
                 authActivity.setLoading(false) {
                     authActivity.setMode(authActivity.personalizeMode)

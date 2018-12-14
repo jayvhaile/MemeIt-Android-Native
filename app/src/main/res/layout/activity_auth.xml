@@ -177,7 +177,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#0000"
-            android:hint="Confrim Password"
+            android:hint="Confirm Password"
             android:inputType="textPassword" />
 
     </com.google.android.material.textfield.TextInputLayout>

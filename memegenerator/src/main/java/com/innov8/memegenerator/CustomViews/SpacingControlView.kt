@@ -4,10 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ScrollView
-import com.innov8.memegenerator.MemeEngine.LayoutEditInterface
+import com.innov8.memegenerator.interfaces.LayoutEditInterface
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.utils.Listener
-import com.innov8.memeit.commons.dp
 import com.warkiz.widget.IndicatorSeekBar
 
 class SpacingControlView : ScrollView {
@@ -35,12 +34,12 @@ class SpacingControlView : ScrollView {
 
         spacing_h_seek.onSeekChangeListener = Listener(onSeek = {
             if (it.fromUser) {
-                layoutEditInterface?.onHorizontalSpacing(it.progress.dp(context))
+                layoutEditInterface?.onHorizontalSpacing(it.progress)
             }
         })
         spacing_v_seek.onSeekChangeListener = Listener(onSeek = {
             if (it.fromUser) {
-                layoutEditInterface?.onVertivalSpacing(it.progress.dp(context))
+                layoutEditInterface?.onVertivalSpacing(it.progress)
             }
         })
         addView(v)

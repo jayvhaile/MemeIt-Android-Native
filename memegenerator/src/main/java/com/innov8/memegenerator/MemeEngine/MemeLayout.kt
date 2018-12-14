@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.RectF
 import android.os.Parcel
 import android.os.Parcelable
+import com.innov8.memeit.commons.dp
 
 abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: List<Bitmap>) {
 
@@ -53,8 +54,9 @@ abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: Lis
     }
 
     var invalidate: (() -> Unit)? = null
-    lateinit var drawingRect: RectF
+    var drawingRect: RectF = RectF(0f, 0f, 0f, 0f)
 
+    var lock = false
     fun updateSize(w: Int, h: Int) {
         maxWidth = w
         maxHeight = h
@@ -81,51 +83,48 @@ abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: Lis
             field = value
             update()
         }
-    var backgroudColor: Int = Color.BLACK
+
+    var hr = 1f
+    var vr = 1f
+
+
+    var leftMarginCalc = 0
+        get() = ((leftMargin * innerWidth() / 100) * hr).toInt()
+    var rightMarginCalc = 0
+        get() = ((rightMargin * innerWidth() / 100) * hr).toInt()
+    var topMarginCalc = 0
+        get() = ((topMargin * innerHeight() / 100) * vr).toInt()
+    var bottomMarginCalc = 0
+        get() = ((bottomMargin * innerHeight() / 100) * vr).toInt()
+
+    var backgroudColor: Int = Color.WHITE
         set(value) {
             field = value
             invalidate?.invoke()
         }
 
     fun setMargin(left: Int, top: Int = left, right: Int = left, bottom: Int = left) {
+        lock = true
         leftMargin = left
         topMargin = top
         rightMargin = right
         bottomMargin = bottom
+        lock = false
+        update()
     }
 
 
     internal fun update() {
-        val w: Float
-        val h: Float
-        val x: Float
-        val y: Float
-
-
+        if (lock) return
+        if (maxWidth == 0 || maxHeight == 0) return
         val iw = innerWidth().toFloat()
         val ih = innerHeight().toFloat()
-        val tw = maxWidth.toFloat()
-        val th = maxHeight.toFloat()
-        val cw = tw - horizontalMargin
-        val ch = th - verticalMargin
 
-        val ir = iw / ih
-        val cr = cw / ch
-
-        if (ir < cr) {
-            val hr = ch / ih
-            w = iw * hr + horizontalMargin
-            h = ch + verticalMargin
-            x = (tw / 2.0f) - (w / 2.0f)
-            y = 0f
-        } else {
-            val wr = cw / iw
-            w = cw + horizontalMargin
-            h = ih * wr + verticalMargin
-            x = 0f
-            y = (th / 2f) - (h / 2f)
-        }
-        drawingRect = RectF(x, y, x + w, y + h)
+        val ww = iw + ((iw * (horizontalMargin)) / 100f)
+        val hh = ih + ((ih * (verticalMargin)) / 100f)
+        drawingRect = (ww to hh).fitCenter(maxWidth.toFloat(), maxHeight.toFloat())
+        hr = drawingRect.width() / ww
+        vr = drawingRect.height() / hh
         invalidate?.invoke()
     }
 
@@ -142,10 +141,59 @@ abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: Lis
 
     abstract fun getDrawingRectAt(pos: Int): RectF
 
+    abstract fun loadPresets(): Map<String, MemeLayout>
+    abstract fun copy(): MemeLayout
+}
+
+class ImageLessLayout(maxWidth: Int, maxHeight: Int) : MemeLayout(maxWidth, maxHeight, listOf()) {
+    override fun copy(): MemeLayout {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun loadPresets() = mapOf<String, MemeLayout>()
+
+    override fun innerWidth(): Int = 1
+
+    override fun innerHeight(): Int = 1
+
+    override fun getDrawingRectAt(pos: Int): RectF = drawingRect
+
 }
 
 class SingleImageLayout(maxWidth: Int, maxHeight: Int, bitmap: Bitmap) : MemeLayout(maxWidth, maxHeight, listOf(bitmap)) {
+    override fun loadPresets(): Map<String, MemeLayout> {
+        return mapOf(
+                "Classic" to SingleImageLayout(maxWidth, maxHeight, images[0]),
+                "Modern" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
+                    leftMargin = 2; rightMargin = 2; topMargin = 25; bottomMargin = 2
+                },
+                "Top Bottom" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
+                    topMargin=25
+                    bottomMargin=25
+                },
+                "Left" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
+                    leftMargin = 100
+                },
+                "Top" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
+                    topMargin = 100
+                },
+                "Right" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
+                    rightMargin = 100
+                },
+                "Bottom" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
+                    bottomMargin = 100
+                }
+        )
+    }
 
+    override fun copy(): MemeLayout {
+        return SingleImageLayout(maxWidth,maxHeight,images[0]).apply {
+            leftMargin=this@SingleImageLayout.leftMargin
+            rightMargin=this@SingleImageLayout.rightMargin
+            topMargin=this@SingleImageLayout.topMargin
+            bottomMargin=this@SingleImageLayout.bottomMargin
+        }
+    }
     init {
         update()
     }
@@ -159,26 +207,61 @@ class SingleImageLayout(maxWidth: Int, maxHeight: Int, bitmap: Bitmap) : MemeLay
     override fun getDrawingRectAt(pos: Int): RectF {
         if (pos >= count) throw ArrayIndexOutOfBoundsException("pos must be 0")
 
-        val l = drawingRect.left + leftMargin
-        val t = drawingRect.top + topMargin
-        val r = drawingRect.right - rightMargin
-        val b = drawingRect.bottom - bottomMargin
+        val l = drawingRect.left + leftMarginCalc
+        val t = drawingRect.top + topMarginCalc
+        val r = drawingRect.right - rightMarginCalc
+        val b = drawingRect.bottom - bottomMarginCalc
         return RectF(l, t, r, b)
     }
 
     fun getDrawingRectRelAt(pos: Int): RectF {
         if (pos >= count) throw ArrayIndexOutOfBoundsException("pos must be 0")
 
-        val l = leftMargin.toFloat()
-        val t = topMargin.toFloat()
-        val r = drawingRect.right - rightMargin - drawingRect.left
-        val b = drawingRect.bottom - bottomMargin - drawingRect.top
+        val l = leftMarginCalc.toFloat()
+        val t = topMarginCalc.toFloat()
+        val r = drawingRect.right - rightMarginCalc - drawingRect.left
+        val b = drawingRect.bottom - bottomMarginCalc - drawingRect.top
         return RectF(l, t, r, b)
     }
-
 }
 
 class LinearImageLayout(orien: Int, maxWidth: Int, maxHeight: Int, images: List<Bitmap>) : MemeLayout(maxWidth, maxHeight, images) {
+    override fun loadPresets(): Map<String, MemeLayout> {
+        return mapOf(
+                "Horizontal" to LinearImageLayout(HORIZONTAL, maxWidth, maxHeight, images).apply {
+                    spacing = 2
+                },
+                "Vertical" to LinearImageLayout(VERTICAL, maxWidth, maxHeight, images).apply {
+                    spacing = 2
+                },
+                "Horizontal Top" to LinearImageLayout(HORIZONTAL, maxWidth, maxHeight, images).apply {
+                    spacing = 2
+                    topMargin = 100
+                },
+                "Horizontal Bottom" to LinearImageLayout(HORIZONTAL, maxWidth, maxHeight, images).apply {
+                    spacing = 2
+                    bottomMargin = 100
+                },
+                "Vertical Left" to LinearImageLayout(VERTICAL, maxWidth, maxHeight, images).apply {
+                    spacing = 2
+                    leftMargin = 100
+                },
+                "Vertical Right" to LinearImageLayout(VERTICAL, maxWidth, maxHeight, images).apply {
+                    spacing = 2
+                    rightMargin = 100
+                }
+        )
+    }
+
+    override fun copy(): MemeLayout {
+        return LinearImageLayout(orientation,maxWidth,maxHeight,images).apply {
+            leftMargin=this@LinearImageLayout.leftMargin
+            rightMargin=this@LinearImageLayout.rightMargin
+            topMargin=this@LinearImageLayout.topMargin
+            bottomMargin=this@LinearImageLayout.bottomMargin
+            spacing=this@LinearImageLayout.spacing
+        }
+    }
     companion object {
         const val HORIZONTAL = 0
         const val VERTICAL = 1
@@ -191,6 +274,12 @@ class LinearImageLayout(orien: Int, maxWidth: Int, maxHeight: Int, images: List<
             calcImagesTotalHeight()
             update()
         }
+    val spacingCalc
+        get() = if (orientation == HORIZONTAL)
+            ((spacing * innerWidth() / 100) * hr).toInt()
+        else
+            ((spacing * innerHeight() / 100) * vr).toInt()
+
     var orientation = orien
         set(value) {
             field = value
@@ -263,16 +352,16 @@ class LinearImageLayout(orien: Int, maxWidth: Int, maxHeight: Int, images: List<
     override fun getDrawingRectAt(pos: Int): RectF {
         when (orientation) {
             HORIZONTAL -> {
-                var l = drawingRect.left + leftMargin
-                val t = drawingRect.top + topMargin
-                val b = drawingRect.bottom - bottomMargin
+                var l = drawingRect.left + leftMarginCalc
+                val t = drawingRect.top + topMarginCalc
+                val b = drawingRect.bottom - bottomMarginCalc
 
 
                 val hh = b - t
 
                 for (i in 0 until pos) {
                     val iw = hh * images[i].width / images[i].height
-                    l += iw + spacing
+                    l += iw + spacingCalc
                 }
                 val rectF = RectF(l, t, l + (hh * images[pos].width / images[pos].height), b)
                 val w = images[pos].width.toFloat()
@@ -280,14 +369,14 @@ class LinearImageLayout(orien: Int, maxWidth: Int, maxHeight: Int, images: List<
                 return (w to h).fitCenter(rectF)
             }
             VERTICAL -> {
-                val l = drawingRect.left + leftMargin
-                var t = drawingRect.top + topMargin
-                val r = drawingRect.right - rightMargin
+                val l = drawingRect.left + leftMarginCalc
+                var t = drawingRect.top + topMarginCalc
+                val r = drawingRect.right - rightMarginCalc
 
                 val ww = r - l
                 for (i in 0 until pos) {
                     val ih = ww * images[i].height / images[i].width
-                    t += ih + spacing
+                    t += ih + spacingCalc
                 }
                 val rectF = RectF(l, t, r, t + (ww * images[pos].height / images[pos].width))
                 val w = images[pos].width.toFloat()
@@ -300,6 +389,52 @@ class LinearImageLayout(orien: Int, maxWidth: Int, maxHeight: Int, images: List<
 }
 
 class GridImageLayout(var span: Int, orientation: Int, maxWidth: Int, maxHeight: Int, images: List<Bitmap>) : MemeLayout(maxWidth, maxHeight, images) {
+    override fun loadPresets(): Map<String, MemeLayout> {
+        return mapOf(
+
+                "Normal " to GridImageLayout(span, orientation, maxWidth, maxHeight, images),
+                "Normal Spaced" to GridImageLayout(span, orientation, maxWidth, maxHeight, images).apply {
+                    hSpacing = 2
+                    vSpacing = 2
+                    leftMargin=2
+                    rightMargin=2
+                    topMargin=2
+                    bottomMargin=2
+                },
+                "Left" to GridImageLayout(span, orientation, maxWidth, maxHeight, images).apply {
+                    hSpacing = 2
+                    vSpacing = 2
+                    leftMargin = 100 / columnCount
+                },
+                "Top" to GridImageLayout(span, orientation, maxWidth, maxHeight, images).apply {
+                    hSpacing = 2
+                    vSpacing = 2
+                    topMargin = 100 / rowCount
+                },
+                "Right" to GridImageLayout(span, orientation, maxWidth, maxHeight, images).apply {
+                    hSpacing = 2
+                    vSpacing = 2
+                    rightMargin = 100 / columnCount
+                },
+                "Bottom" to GridImageLayout(span, orientation, maxWidth, maxHeight, images).apply {
+                    hSpacing = 2
+                    vSpacing = 2
+                    bottomMargin = 100 / rowCount
+                }
+        )
+
+    }
+
+    override fun copy(): MemeLayout {
+        return GridImageLayout(span,orientation,maxWidth,maxHeight,images).apply {
+            leftMargin=this@GridImageLayout.leftMargin
+            rightMargin=this@GridImageLayout.rightMargin
+            topMargin=this@GridImageLayout.topMargin
+            bottomMargin=this@GridImageLayout.bottomMargin
+            hSpacing=this@GridImageLayout.hSpacing
+            vSpacing=this@GridImageLayout.vSpacing
+        }
+    }
     companion object {
         const val HORIZONTAL = 0
         const val VERTICAL = 1
@@ -312,12 +447,19 @@ class GridImageLayout(var span: Int, orientation: Int, maxWidth: Int, maxHeight:
             update()
         }
 
+
     var vSpacing = 0
         set(value) {
             field = value
             calcImagesTotalHeight()
             update()
         }
+    // ((leftMargin * innerWidth() / 100) * hr).toInt()
+
+    val hSpacingCalc: Int
+        get() = ((hSpacing * innerWidth() / 100) * hr).toInt()
+    val vSpacingCalc: Int
+        get() = ((vSpacing * innerHeight() / 100) * vr).toInt()
     var orientation = orientation
         set(value) {
             field = value
@@ -388,9 +530,15 @@ class GridImageLayout(var span: Int, orientation: Int, maxWidth: Int, maxHeight:
 
     override val horizontalMargin: Int
         get() = super.horizontalMargin + totalHSpacing
+
+    val horizontalMarginCalc: Int
+        get() = ((horizontalMargin / 100f) * innerWidth() * hr).toInt()
+
     override val verticalMargin: Int
         get() = super.verticalMargin + totalVSpacing
 
+    val verticalMarginCalc: Int
+        get() = ((verticalMargin / 100f) * innerHeight() * vr).toInt()
 
     fun getRowAndColumnFor(pos: Int) =
             when (orientation) {
@@ -401,17 +549,17 @@ class GridImageLayout(var span: Int, orientation: Int, maxWidth: Int, maxHeight:
 
 
     override fun getDrawingRectAt(pos: Int): RectF {
-        var l = drawingRect.left + leftMargin
-        var t = drawingRect.top + topMargin
+        var l = drawingRect.left + leftMarginCalc
+        var t = drawingRect.top + topMarginCalc
         val (row, column) = getRowAndColumnFor(pos)
 
-        val availableTotalWidth = drawingRect.width() - horizontalMargin
-        val availableTotalHeight = drawingRect.height() - verticalMargin
+        val availableTotalWidth = drawingRect.width() - horizontalMarginCalc
+        val availableTotalHeight = drawingRect.height() - verticalMarginCalc
         val scaleX = availableTotalWidth / totalIW
         val scaleY = availableTotalHeight / totalIH
 
-        l += (averageIW * scaleX + hSpacing) * column
-        t += (averageIH * scaleY + vSpacing) * row
+        l += (averageIW * scaleX + hSpacingCalc) * column
+        t += (averageIH * scaleY + vSpacingCalc) * row
 
         val rectF = RectF(l, t, l + averageIW * scaleX, t + averageIH * scaleY)
         val w = images[pos].width.toFloat()
@@ -421,6 +569,7 @@ class GridImageLayout(var span: Int, orientation: Int, maxWidth: Int, maxHeight:
     }
 }
 
+fun Pair<Float, Float>.fitCenter(w: Float, h: Float) = fitCenter(RectF(0f, 0f, w, h))
 fun Pair<Float, Float>.fitCenter(rect: RectF): RectF {
     val w: Float
     val h: Float

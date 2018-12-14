@@ -1,16 +1,14 @@
 package com.innov8.memeit.Adapters.MemeAdapters.ViewHolders
 
 import android.view.View
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import com.facebook.ads.*
 import com.github.ybq.android.spinkit.SpinKitView
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomClasses.AdElement
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.toast
 import com.memeit.backend.models.HomeElement
 
 class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
@@ -47,18 +45,27 @@ class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemVi
         }
         listener = object : NativeAdListener {
             override fun onAdClicked(p0: Ad) {
+                memeAdapter.context.toast("clicked")
             }
 
             override fun onMediaDownloaded(p0: Ad) {
+                memeAdapter.context.toast("media downloaded")
+
             }
 
             override fun onError(p0: Ad, p1: AdError) {
+                memeAdapter.context.toast("ad error ${p1.errorCode}\n ${p1.errorMessage}",Toast.LENGTH_LONG)
+
             }
 
             override fun onLoggingImpression(p0: Ad) {
+                memeAdapter.context.toast("logging impression")
+
             }
 
             override fun onAdLoaded(ad: Ad) {
+                memeAdapter.context.toast("loaded")
+
                 bindAd((memeAdapter.items[itemPosition] as AdElement).nativeAd)
             }
         }

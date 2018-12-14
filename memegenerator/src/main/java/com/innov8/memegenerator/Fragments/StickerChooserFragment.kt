@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memegenerator.Adapters.StickersAdapter
 import com.innov8.memegenerator.MemeEngine.MemeStickerView
-import com.innov8.memegenerator.MemeEngine.StickerEditInterface
+import com.innov8.memegenerator.interfaces.StickerEditInterface
 import com.innov8.memegenerator.Models.StickerPack
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.utils.onTabSelected

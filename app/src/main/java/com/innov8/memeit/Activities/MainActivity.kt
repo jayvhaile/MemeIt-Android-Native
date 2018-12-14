@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomClasses.MyFragmentPagerAdapter
 import com.innov8.memeit.CustomViews.SearchToolbar
@@ -23,13 +24,14 @@ import com.innov8.memeit.R
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.minibugdev.drawablebadge.DrawableBadge
+import com.innov8.memeit.CustomViews.DrawableBadge
+import com.memeit.backend.MemeItClient.context
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-    private val titles = arrayOf("Home", "Trending", "Favorites")
+    private val titles = arrayOf("MemeIt", "Trending", "Favorites")
     private var searchItem: MenuItem? = null
     private var notifItem: MenuItem? = null
     private val pagerAdapter by lazy {
@@ -220,5 +222,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getCount() = 4
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == MemeEditorActivity.REQUEST_CODE && resultCode == MemeEditorActivity.RESULT_CODE_SUCCESS) {
+            startActivity(Intent(context!!, MemePosterActivity::class.java).apply {
+                putExtras(data!!.extras!!)
+            })
+        }
     }
 }

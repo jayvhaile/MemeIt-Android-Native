@@ -5,14 +5,12 @@
     android:layout_height="match_parent"
     android:background="#fff"
     tools:ignore="RtlHardcoded">
-
     <View
         android:id="@+id/cover"
         android:layout_width="match_parent"
         android:layout_height="@dimen/profile_cover_expanded_height"
         android:background="@drawable/bb"
         app:layout_behavior="com.innov8.memeit.CustomClasses.CoverBehaviour" />
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/main.appbar"
         android:layout_width="match_parent"
@@ -46,23 +44,19 @@
             android:layout_height="@dimen/profile_tab_height"
             app:tabIconTint="@color/tab_icon_tint"
             app:tabIndicatorColor="#ff5e00"
-
             app:tabRippleColor="#ff5e00" />
     </com.google.android.material.appbar.AppBarLayout>
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/profile_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="56dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-
     <com.innov8.memeit.commons.views.ProfileDraweeView
         android:id="@+id/profile_image"
         android:layout_width="@dimen/profile_image_expanded_size"
         android:layout_height="@dimen/profile_image_expanded_size"
         app:layout_behavior="com.innov8.memeit.CustomClasses.ProfileImageViewBehavior" />
-
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"

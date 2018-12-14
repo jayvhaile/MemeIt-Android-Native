@@ -22,7 +22,7 @@ class CheckerBoardDrawable(val size:Float,val lightColor:Int,val darkColor:Int):
         for (i in 0..vCount){
             for (j in 0..hCount){
                 val p=if((i+j)%2==0)lpaint else dpaint
-                canvas?.drawRect(j*size,i*size,j*size+size,i*size+size,p)
+                canvas.drawRect(j*size,i*size,j*size+size,i*size+size,p)
             }
         }
     }

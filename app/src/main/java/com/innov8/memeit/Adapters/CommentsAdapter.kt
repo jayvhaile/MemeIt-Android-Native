@@ -13,10 +13,7 @@ import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.*
 import com.innov8.memeit.Activities.ProfileActivity
-import com.innov8.memeit.Utils.formatDate
-import com.innov8.memeit.Utils.loadImage
-import com.innov8.memeit.Utils.prefix
-import com.innov8.memeit.Utils.snack
+import com.innov8.memeit.Utils.*
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
@@ -74,7 +71,7 @@ class CommentsAdapter(context: Context) : SimpleELEListAdapter<Comment>(context,
             commentV.text = t.comment
             posterPicV.setText(t.poster.name.prefix())
             posterNameV.text = t.poster.name
-            dateV.text = formatDate(t.date!!)
+            dateV.text = t.date!!.formateAsDate()
             like.text = t.likeCount.toString()
             dislike.text = t.dislikeCount.toString()
             val isOwnComment = MemeItClient.myUser!!.id == t.posterID

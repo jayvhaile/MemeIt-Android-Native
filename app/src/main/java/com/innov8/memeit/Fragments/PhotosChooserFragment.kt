@@ -17,6 +17,7 @@ import com.innov8.memeit.Activities.Frag
 import com.innov8.memeit.Adapters.PhotosAdapter
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.snack
+import com.innov8.memeit.commons.toast
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_photo_chooser.*
 
@@ -43,26 +44,30 @@ class PhotosChooserFragment : Frag() {
         meme_template_list.adapter = photosAdapter
         meme_template_list.itemAnimator = null
 
+        photosAdapter.onSelectedItemChanged = {
+            if (multi_select.isChecked) {
+                val s = it.size
+                select_done.visibility = View.VISIBLE
+                toolbar_text.text = "$s Photo${if (s > 0) "s" else ""} Selected"
+            } else {
+                toolbar_text.text = "Select Multiple"
+                select_done.visibility = View.GONE
+            }
+        }
         multi_select.setOnCheckedChangeListener { _, isChecked ->
             photosAdapter.multiSelectMode = isChecked
+
         }
         select_done.setOnClickListener {
-            val d = MultiChooserDialogFragment
-                    .newInstance(photosAdapter.selectedItems.toTypedArray())
-            d.setTargetFragment(this, 0)
-            d.show(fragmentManager, "dd")
+            val items = photosAdapter.selectedItems
+            if (items.size < 2) context!!.toast("Select at least 2 photos to continue")
+            else
+                MultiChooserDialogFragment
+                        .newInstance(items.toTypedArray())
+                        .apply {
+                            setTargetFragment(this@PhotosChooserFragment, 0)
+                        }.show(fragmentManager, "d")
 
-
-            /*
-            MaterialDialog.Builder(context!!)
-                    .customView(R.layout.list_item_thumbnail_selectable,false)
-                    .items("Horizontal Stack", "Vertical Stack", "Grid")
-                    .itemsCallback { _, _, position, _ ->
-                        MemeEditorActivity.startWithImages(context!!, photosAdapter.selectedItems,
-                                MemeLayout.LayoutInfo(if (position < 2) 1 else 2).apply {
-                                    orientation = if (position < 2) position else 0
-                                })
-                    }.show()*/
         }
     }
 
@@ -86,7 +91,7 @@ class PhotosChooserFragment : Frag() {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
             if (resultCode == Activity.RESULT_OK) {
-                MemeEditorActivity.startWithImage(context!!, result.uri.toString())
+                MemeEditorActivity.startWithImage(activity!!, result.uri.toString())
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 meme_template_list?.snack(result.error.message ?: "Could not load Image")
             }

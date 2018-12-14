@@ -63,7 +63,7 @@ class CommentsActivity : AppCompatActivity() {
 
     private fun initComments(mid: String) {
         commentsAdapter = CommentsAdapter(this).apply {
-            showErrorAtTop=true
+            showErrorAtTop = true
         }
         val commentLoader = CommentLoader(mid)
         loaderAdapter = LoaderAdapterHandler(commentsAdapter, commentLoader)
@@ -98,7 +98,7 @@ class CommentsActivity : AppCompatActivity() {
     }
 
     private fun initMeme(meme: Meme) {
-        comment_meme_image.showCommentButton=false
+        comment_meme_image.showCommentButton = false
         comment_meme_image.resizeToFit = false
         comment_meme_image.meme = meme
     }
@@ -118,5 +118,18 @@ class CommentsActivity : AppCompatActivity() {
                 putExtra(MEMEID_PARAM_KEY, memeId)
             })
         }
+
+        fun startWithMemeIntent(context: Context, meme: Meme) =
+                Intent(context, CommentsActivity::class.java).apply {
+                    putExtra(MEME_PARAM_KEY, meme)
+                }
+
+
+        fun startWithMemeIdIntent(context: Context, memeId: String) =
+                Intent(context, CommentsActivity::class.java).apply {
+                    putExtra(MEMEID_PARAM_KEY, memeId)
+                }
+
+
     }
 }

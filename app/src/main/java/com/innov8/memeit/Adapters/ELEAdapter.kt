@@ -246,6 +246,72 @@ abstract class ELEListAdapter<T, VH : RecyclerView.ViewHolder>(context: Context)
 
 }
 
+abstract class ELEFilterableListAdapter<T, VH : RecyclerView.ViewHolder>(context: Context) : ELEAdapter<VH>(context) {
+    protected val items: MutableSet<T> = hashSetOf()
+    private val filteredItems: MutableList<T> = mutableListOf()
+
+
+    abstract val filterer: (T) -> Boolean
+    abstract val sorter: Comparator<in T>
+    protected var filterable: Boolean = false
+        set(value) {
+            field = value
+            filter()
+        }
+
+    protected fun filter() {
+        filteredItems.clear()
+        if (filterable)
+            items.filter(filterer)
+                    .sortedWith(sorter)
+                    .toCollection(filteredItems)
+        else items.sortedWith(sorter).toCollection(filteredItems)
+        notifyDataSetChanged()
+    }
+
+
+    override fun getCount(): Int = items.size
+    fun addAll(items: List<T>) {
+        if (items.isEmpty()) return
+        this.items.addAll(items)
+        filter()
+    }
+
+    fun add(item: T) {
+        items.add(item)
+        filter()
+    }
+
+
+    fun remove(item: T) {
+        if (items.contains(item)) {
+            items.remove(item)
+            filter()
+        }
+    }
+
+    fun clear() {
+        items.clear()
+        filteredItems.clear()
+        notifyDataSetChanged()
+    }
+
+    fun setAll(item: List<T>) {
+        this.items.clear()
+        this.items.addAll(item)
+        filter()
+        if (filteredItems.size > 0) {
+            if (mode == MODE_NORMAL) notifyDataSetChanged()
+            else mode = MODE_NORMAL
+        } else mode = MODE_EMPTY
+    }
+
+    fun getItemAt(index: Int): T {
+        return filteredItems[index]
+    }
+
+}
+
 abstract class SimpleELEListAdapter<T>(context: Context, private val mLayoutID: Int) : ELEListAdapter<T, MyViewHolder<T>>(context) {
     var onItemClicked: ((T) -> Unit)? = null
 

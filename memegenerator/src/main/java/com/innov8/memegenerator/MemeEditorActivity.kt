@@ -1,12 +1,13 @@
 package com.innov8.memegenerator
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
@@ -14,6 +15,8 @@ import androidx.transition.TransitionManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memegenerator.Fragments.*
 import com.innov8.memegenerator.MemeEngine.*
+import com.innov8.memegenerator.interfaces.*
+import com.innov8.memegenerator.utils.CloseableFragment
 import com.innov8.memegenerator.utils.origin
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.loadBitmapfromStream
@@ -27,6 +30,7 @@ import kotlinx.android.synthetic.main.meme_editor.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
 import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
@@ -42,6 +46,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
     var type: Meme.MemeType = Meme.MemeType.IMAGE
     var path: String? = null
 
+    private val onEditorStateChangedListeners = mutableListOf<EditorStateChangedListener>()
     private lateinit var interactionHandler: EditorHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,10 +75,13 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             title to CloseableFragment(this.apply(block), size.dp(this@MemeEditorActivity))
 
     private fun initListeners() {
+
         memeEditorView.itemSelectedInterface = this
         memeEditorView.paintHandler.actionManager.onActionListChanged = {
             (closeableFragments["paint"]?.bottomFragment as? PaintOptionsFragment)?.updateUndoState()
         }
+        onEditorStateChangedListeners.add(memeEditorView)
+
         layout.setOnClickListener {
             open("layout")
         }
@@ -91,51 +99,96 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             onBackPressed()
         }
         done.setOnClickListener {
-            if (type == Meme.MemeType.IMAGE) {
+            onDone()
+        }
+
+    }
+
+    private fun onDone() {
+        when (mode) {
+            MODE_TEMPLATE, MODE_SINGLE_IMAGE, MODE_MULTI_IMAGE -> {
                 val bitmap = memeEditorView.captureMeme()
-                val intent = Intent(this, MemePosterActivity::class.java)
-                intent.putExtra("texts", memeEditorView.getTexts().toTypedArray())
-                MemePosterActivity.bitmap = bitmap
-                startActivity(intent)
-            } else {
-                val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
-                val gifi = GifInfo(intent.getStringExtra(GIF_PATH), memeLayout.getDrawingRectRelAt(0))
-
-                val da = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MemeIt/")
-                da.mkdirs()
-                val file = File(da, "meme${Random().nextInt(100) + 100}.gif")
-                file.createNewFile()
+                val file = File(filesDir, "${UUID.randomUUID()}_meme.jpg")
                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-
+                    withContext(Dispatchers.Default) {
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, FileOutputStream(file))
+                    }
+                    setResult(RESULT_CODE_SUCCESS, Intent().apply {
+                        putExtra("image", file.absolutePath)
+                        putExtra("texts", memeEditorView.getTexts().toTypedArray())
+                    })
+                    finish()
+                }
+            }
+            MODE_GIF_IMAGE -> {
+                val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
+                val gifInfo = GifInfo(intent.getStringExtra(GIF_PATH), memeLayout.getDrawingRectRelAt(0))
+                val file = File(filesDir, "${UUID.randomUUID()}_meme.gif")
+                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                     val pd = MaterialDialog.Builder(this@MemeEditorActivity)
                             .title("Please wait a while")
                             .content("Processing Gif")
-                            .progress(true, 0).build()
+                            .progress(true, 0)
+                            .build()
                     pd.show()
                     val overlay = memeEditorView.captureItems()
                     withContext(Dispatchers.Default) {
-                        compileGifMeme(gifi, overlay,
+                        compileGifMeme(gifInfo, overlay,
                                 memeLayout.drawingRect.origin(),
                                 memeEditorView.paint,
                                 file.absolutePath)
                     }
                     pd.dismiss()
-                    startActivity(Intent(this@MemeEditorActivity, MemePosterActivity::class.java).apply {
+                    setResult(RESULT_CODE_SUCCESS, Intent().apply {
                         putExtra("gif", file.absolutePath)
+                        putExtra("texts", memeEditorView.getTexts().toTypedArray())
                     })
+                    finish()
+                }
+            }
+            MODE_VIDEO -> {
+                val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
+                val file = File(filesDir, "${UUID.randomUUID()}_meme.gif")
+                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                    val pd = MaterialDialog.Builder(this@MemeEditorActivity)
+                            .title("Please wait a while")
+                            .content("Processing Gif")
+                            .progress(true, 0)
+                            .build()
+                    pd.show()
+                    val overlay = memeEditorView.captureItems()
+                    withContext(Dispatchers.Default) {
+                        compileGifFromVideo(intent.getStringExtra(VIDEO_PATH), memeLayout.getDrawingRectRelAt(0), overlay,
+                                memeLayout.drawingRect.origin(),
+                                memeEditorView.paint,
+                                file.absolutePath)
+                    }
+                    pd.dismiss()
+                    setResult(RESULT_CODE_SUCCESS, Intent().apply {
+                        putExtra("gif", file.absolutePath)
+                        putExtra("texts", memeEditorView.getTexts().toTypedArray())
+                    })
+                    finish()
                 }
             }
         }
+    }
 
+    val mode by lazy {
+        intent.getIntExtra(MODE, -1)
+    }
+
+    private fun getLayoutFrag(): LayoutEditorFragment? {
+        return (closeableFragments["layout"]?.bottomFragment as? LayoutEditorFragment)
     }
 
     private fun handleIntent() {
-        val mode = intent.getIntExtra(MODE, -1)
         val result = when (mode) {
             MODE_TEMPLATE -> handleTemplateIntent()
             MODE_SINGLE_IMAGE -> handleImageIntent()
             MODE_MULTI_IMAGE -> handleImagesIntent()
             MODE_GIF_IMAGE -> handleGifIntent()
+            MODE_VIDEO -> handleVideoIntent()
             else -> false
         }
         if (!result) {
@@ -148,6 +201,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         val template = intent.getParcelableExtra<MemeTemplate?>(TEMPLATE)
         return if (template != null) {
             memeEditorView.loadMemeTemplate(template)
+            getLayoutFrag()?.memeLayout = memeEditorView.memeLayout!!
             true
         } else false
     }
@@ -162,6 +216,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                     }
                 }?.let {
                     memeEditorView.loadBitmab(it)
+                    getLayoutFrag()?.memeLayout = memeEditorView.memeLayout!!
                 }
             }
             true
@@ -207,6 +262,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                             memeEditorView.height,
                             x
                     ))
+                    getLayoutFrag()?.memeLayout = memeEditorView.memeLayout!!
 
                 }
             }
@@ -219,7 +275,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         return if (path != null) {
             GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
 
-            val b = withContext(Dispatchers.Default) {
+                val b = withContext(Dispatchers.Default) {
                     val x = GifDecoder()
                     val i = x.loadUsingIterator(path)
                     if (i.hasNext())
@@ -229,15 +285,34 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                 b?.let {
                     type = Meme.MemeType.GIF
                     memeEditorView.loadBitmab(it)
+                    getLayoutFrag()?.memeLayout = memeEditorView.memeLayout!!
                 }
             }
             true
         } else false
     }
 
-    //==============================================================================================
-    private class CloseableFragment(val bottomFragment: Fragment? = null, val bottomSize: Int = 0,
-                                    val topFragment: Fragment? = null, val topSize: Int = 0)
+    private fun handleVideoIntent(): Boolean {
+        val path = intent.getStringExtra(VIDEO_PATH) ?: null
+        return if (path != null) {
+            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+
+
+                val b = withContext(Dispatchers.Default) {
+                    val ret = MediaMetadataRetriever()
+                    ret.setDataSource(path)
+                    ret.getFrameAtTime(1)
+
+                }
+                b?.let {
+                    type = Meme.MemeType.GIF
+                    memeEditorView.loadBitmab(it)
+                    getLayoutFrag()?.memeLayout = memeEditorView.memeLayout!!
+                }
+            }
+            true
+        } else false
+    }
 
     private fun open(tag: String) {
         val cf = closeableFragments[tag]
@@ -269,12 +344,16 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         }
         transaction.commit()
         current = tag
+
+        onEditorStateChangedListeners.forEach { it.onEditorOpened(tag, cf) }
     }
 
     private fun close() {
         TransitionManager.beginDelayedTransition(contraint_layout)
         constraintSet1.applyTo(contraint_layout)
         current = "none"
+        onEditorStateChangedListeners.forEach { it.onEditorClosed() }
+
     }
 
 
@@ -313,6 +392,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         private const val MODE_SINGLE_IMAGE = 1
         private const val MODE_MULTI_IMAGE = 2
         private const val MODE_GIF_IMAGE = 3
+        private const val MODE_VIDEO = 4
 
         private const val MODE = "mode"
         private const val TEMPLATE = "template"
@@ -320,28 +400,40 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         private const val MULTI_PATH = "multi path"
         private const val MULTI_LAYOUT = "multi layout"
         private const val GIF_PATH = "gif path"
-        fun startWithMemeTemplate(context: Context, template: MemeTemplate) {
+        private const val VIDEO_PATH = "video path"
+        const val REQUEST_CODE = 156
+        const val RESULT_CODE_SUCCESS = 84
+        const val RESULT_CODE_ERROR = 85
+
+        fun startWithMemeTemplate(context: Activity, template: MemeTemplate) {
             startThis(context) {
                 putExtra(MODE, MODE_TEMPLATE)
                 putExtra(TEMPLATE, template)
             }
         }
 
-        fun startWithGif(context: Context, path: String) {
+        fun startWithGif(context: Activity, path: String) {
             startThis(context) {
                 putExtra(MODE, MODE_GIF_IMAGE)
                 putExtra(GIF_PATH, path)
             }
         }
 
-        fun startWithImage(context: Context, path: String) {
+        fun startWithVideo(context: Activity, path: String) {
+            startThis(context) {
+                putExtra(MODE, MODE_VIDEO)
+                putExtra(VIDEO_PATH, path)
+            }
+        }
+
+        fun startWithImage(context: Activity, path: String) {
             startThis(context) {
                 putExtra(MODE, MODE_SINGLE_IMAGE)
                 putExtra(SINGLE_PATH, path)
             }
         }
 
-        fun startWithImages(context: Context, paths: List<String>, layoutInfo: MemeLayout.LayoutInfo) {
+        fun startWithImages(context: Activity, paths: List<String>, layoutInfo: MemeLayout.LayoutInfo) {
             startThis(context) {
                 putExtra(MODE, MODE_MULTI_IMAGE)
                 putExtra(MULTI_PATH, paths.toTypedArray())
@@ -349,8 +441,8 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             }
         }
 
-        private inline fun startThis(context: Context, applyToIntent: Intent.() -> Unit) =
-                context.startActivity(Intent(context, MemeEditorActivity::class.java).apply(applyToIntent))
+        private inline fun startThis(context: Activity, applyToIntent: Intent.() -> Unit) =
+                context.startActivityForResult(Intent(context, MemeEditorActivity::class.java).apply(applyToIntent), REQUEST_CODE)
 
     }
 }
@@ -407,6 +499,12 @@ class EditorHandler(val memeEditorView: MemeEditorView) :
     }
 
     //==============================================================================================
+
+    override fun onLayoutSet(memeLayout: MemeLayout) {
+        memeEditorView.setLayout(memeLayout.copy().apply {
+            backgroudColor = memeEditorView.memeLayout?.backgroudColor ?: Color.WHITE
+        })
+    }
 
     override fun onAllMarginSet(left: Int, top: Int, right: Int, bottom: Int) {
         memeEditorView.memeLayout?.setMargin(left, top, right, bottom)

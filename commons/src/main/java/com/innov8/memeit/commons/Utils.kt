@@ -1,6 +1,8 @@
 package com.innov8.memeit.commons
 
 import android.app.Activity
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -11,6 +13,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.TableLayout
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import java.io.ByteArrayInputStream
@@ -155,3 +158,27 @@ fun EditText.addOnTextChanged(listener: (String) -> Unit) {
         }
     })
 }
+
+const val notidChannelName = "MemeIt Events Notification"
+fun Context.sendUserNotification(data: NotifData, notifyID: Int) {
+
+    val pendingIntent = PendingIntent.getActivity(this, 0, data.intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        android.app.Notification.Builder(this, notidChannelName)
+    } else {
+        android.app.Notification.Builder(this)
+    }
+    builder.setContentTitle(data.title)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .setStyle(android.app.Notification.BigTextStyle().bigText(data.message))
+            .setContentText(data.message)
+            .setSmallIcon(data.icon)
+    val manager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    manager.notify(notifyID, builder.build())
+}
+data class NotifData(val title: String,
+                     val message: String,
+                     val icon: Int,
+                     val intent: Intent)

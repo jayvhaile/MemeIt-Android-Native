@@ -5,10 +5,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RadioGroup
 import android.widget.ScrollView
-import com.innov8.memegenerator.MemeEngine.LayoutEditInterface
+import com.innov8.memegenerator.interfaces.LayoutEditInterface
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.utils.Listener
-import com.innov8.memeit.commons.dp
 import com.warkiz.widget.IndicatorSeekBar
 
 class MarginControlView : ScrollView {
@@ -110,7 +109,7 @@ class MarginControlView : ScrollView {
 
     var layoutEditInterface: LayoutEditInterface? = null
     fun change(index: Int, progress: Float) {
-        val p = progress.toInt().dp(context)
+        val p = progress.toInt()
         val x: () -> Unit = {
             when (index) {
                 0 -> layoutEditInterface?.onLeftMargin(p)

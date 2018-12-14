@@ -57,7 +57,7 @@ class MultiChooserDialogFragment : BottomSheetDialogFragment() {
             }
         }
         mcd_finish.setOnClickListener {
-            MemeEditorActivity.startWithImages(context!!, photoListAdapter.items, extractInfo())
+            MemeEditorActivity.startWithImages(context as Activity, photoListAdapter.items, extractInfo())
         }
         mcd_grid_span.max = photoListAdapter.itemCount.toFloat()
 

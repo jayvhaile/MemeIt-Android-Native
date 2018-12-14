@@ -53,7 +53,8 @@ class LogInAuthMode(private val authActivity: AuthActivity) : AuthMode {
             val req = UsernameAuthRequest(authActivity.username_field.text, authActivity.password_field.text, ftoken = it.token)
             MemeItClient.Auth.signInWithUsername(req, onSignedIn, authActivity.onError)
         }.addOnFailureListener {
-            authActivity.onError(it.message!!)
+            val req = UsernameAuthRequest(authActivity.username_field.text, authActivity.password_field.text)
+            MemeItClient.Auth.signInWithUsername(req, onSignedIn, authActivity.onError)
         }
 
     }

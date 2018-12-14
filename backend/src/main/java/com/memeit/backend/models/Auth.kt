@@ -12,7 +12,7 @@ interface AuthRequest {
 data class UsernameAuthRequest(var username: String,
                                var password: String,
                                var email: String? = null,
-                               val ftoken:String) : AuthRequest {
+                               val ftoken:String?=null) : AuthRequest {
     init {
         username = username.trim()
         email = if (email.isNullOrEmpty()) null else email

@@ -7,12 +7,16 @@ import android.content.Context
 import android.os.Build
 import android.os.StrictMode
 import android.preference.PreferenceManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import com.cloudinary.android.MediaManager
 import com.crashlytics.android.Crashlytics
+import com.facebook.ads.AudienceNetworkActivity
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.google.firebase.FirebaseApp
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.innov8.memeit.commons.notidChannelName
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.MyUser
 import com.memeit.backend.models.SignInMethod
@@ -23,14 +27,14 @@ class MemeItApp : MultiDexApplication() {
     companion object {
         lateinit var instance: Application
         private const val apiVersion = 1
-        const val SERVER_URL = "https://memeit-innov8.appspot.com/api/v$apiVersion/"
+        const val SERVER_URL = "https://memeitapp.com/api/v$apiVersion/"
         const val STORAGE_URL="https://storage.googleapis.com/meme-store/"
 
         private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/v$apiVersion/"
         private const val STRICT_MODE = false
         private const val USE_LOCAL_SERVER = false
-
-        const val notidChannelName = "MemeIt Events Notification"
+        const val FACEBOOK_AD_PLACEMENT_ID="262717847755102_262724637754423"
+//        const val FACEBOOK_AD_PLACEMENT_ID="126436314944426_126436834944374"
 
     }
 
@@ -69,6 +73,8 @@ class MemeItApp : MultiDexApplication() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         initNotificationChannel()
 //        initUser()
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+
     }
 
     private fun initNotificationChannel() {

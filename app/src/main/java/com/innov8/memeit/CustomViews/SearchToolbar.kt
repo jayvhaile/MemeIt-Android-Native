@@ -77,15 +77,15 @@ class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
         list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         list.adapter = adapter
 
-        adapter.OnDataChange = {
+        /*adapter.OnDataChange = {
             if (it.isEmpty() && popupWindow.isShowing)
                 popupWindow.dismiss()
             else if (it.isNotEmpty()) {
                 popupWindow.showAsDropDown(editText, (-32).dp(context), 0)
             }
 
-        }
-        adapter.OnItemClicked = {
+        }*/
+        adapter.onItemClicked = {
             val s = editText.text
 
             val i = s.lastIndexOf('#')

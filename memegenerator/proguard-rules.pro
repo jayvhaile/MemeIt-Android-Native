@@ -24,35 +24,69 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep class com.cloudinary.android.*Strategy
--dontwarn javax.annotation.**
--dontwarn com.google.errorprone.annotations.**
--dontwarn okhttp3.internal.platform.*
--dontnote retrofit2.Platform
--dontwarn retrofit2.Platform$Java8
 
 -keep class com.cloudinary.android.demo.data.model.** { *; }
 
-#=========================================
+# Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
+# EnclosingMethod is required to use InnerClasses.
+-keepattributes Signature, InnerClasses, EnclosingMethod
 
-    -keep class com.afollestad.material-dialogs.*
-    -keep class com.jaredrummler.material-spinner.*
-    -keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
-    -keep,allowobfuscation @interface com.facebook.soloader.DoNotOptimize
+# Retain service method parameters when optimizing.
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
 
-    # Do not strip any method/class that is annotated with @DoNotStrip
-    -keep @com.facebook.common.internal.DoNotStrip class *
-    -keepclassmembers class * {
-        @com.facebook.common.internal.DoNotStrip *;
-    }
+# Ignore annotation used for build tooling.
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 
-    # Do not strip any method/class that is annotated with @DoNotOptimize
-    -keep @com.facebook.soloader.DoNotOptimize class *
-    -keepclassmembers class * {
-        @com.facebook.soloader.DoNotOptimize *;
-    }
+# Ignore JSR 305 annotations for embedding nullability information.
+-dontwarn javax.annotation.**
 
-    # Keep native methods
-    -keepclassmembers class * {
-        native <methods>;
-    }
-    -keep class com.google.code.gson.*
+# Guarded by a NoClassDefFoundError try/catch and only used when on the classpath.
+-dontwarn kotlin.Unit
+
+# Top-level functions that can only be used by Kotlin.
+-dontwarn retrofit2.-KotlinExtensions
+
+
+
+#OKHTTP
+-keepattributes Signature
+-keepattributes Annotation
+-keep class okhttp3.* { *; }
+-keep interface okhttp3.* { *; }
+-dontwarn okhttp3.
+
+
+#OKIO
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+#KOTLIN COROUTINES
+
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}
+
+
+
+#GSON
+-keepattributes Signature
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+
+# Gson specific classes
+-dontwarn sun.misc.**
+#-keep class com.google.gson.stream.** { *; }
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.google.gson.examples.android.model.** { *; }
+
+# Prevent proguard from stripping interface information from TypeAdapterFactory,
+# JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+

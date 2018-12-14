@@ -11,7 +11,12 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.children
+import androidx.core.view.forEach
 import com.innov8.memegenerator.CustomViews.CheckerBoardDrawable
+import com.innov8.memegenerator.interfaces.EditorStateChangedListener
+import com.innov8.memegenerator.interfaces.ItemSelectedInterface
+import com.innov8.memegenerator.utils.CloseableFragment
 import com.innov8.memegenerator.utils.capture
 import com.innov8.memegenerator.utils.toRect
 import com.innov8.memeit.commons.dp
@@ -24,7 +29,20 @@ import com.innov8.memeit.commons.models.TextProperty
  * Created by Haile on 5/19/2018.
  */
 
-class MemeEditorView : ViewGroup {
+class MemeEditorView : ViewGroup, EditorStateChangedListener {
+    override fun onEditorOpened(tag: String, cf: CloseableFragment) {
+        val en=enablePaint
+        enablePaint = tag == "paint"
+        if(en!=enablePaint)
+            forEach {
+                isEnabled=!enablePaint
+            }
+    }
+
+    override fun onEditorClosed() {
+        enablePaint = false
+    }
+
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
@@ -48,6 +66,13 @@ class MemeEditorView : ViewGroup {
         get() = focusedChild as? MemeItemView
 
     internal var memeLayout: MemeLayout? = null
+        set(value) {
+            field = value
+            field?.apply {
+                updateSize(width, height)
+            }
+            invalidate()
+        }
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val paintHandler = PaintHandler(this)
     fun addMemeItemView(child: MemeItemView) {
@@ -56,7 +81,6 @@ class MemeEditorView : ViewGroup {
         child.requestFocus()
         child.onRemoveListener = { removeMemeItemView(it) }
         child.onCopyListener = { it.copy()?.let { it1 -> addMemeItemView(it1) } }
-
     }
 
     fun removeMemeItemView(child: MemeItemView) {
@@ -67,7 +91,7 @@ class MemeEditorView : ViewGroup {
     fun setLayout(memeLayout: MemeLayout) {
         this.memeLayout = memeLayout
         this.memeLayout?.invalidate = {
-            paint.color = this.memeLayout?.backgroudColor ?: Color.BLACK
+            paint.color = this.memeLayout?.backgroudColor ?: Color.WHITE
             invalidate()
         }
         this.memeLayout?.invalidate?.invoke()
@@ -114,7 +138,7 @@ class MemeEditorView : ViewGroup {
         }
     }
 
-    val enablePaint = true
+    var enablePaint = false
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (enablePaint) paintHandler.onTouchEvent(event)
         return super.onTouchEvent(event)

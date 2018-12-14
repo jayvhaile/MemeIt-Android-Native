@@ -7,37 +7,53 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.net.Uri
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextUtils
+import android.text.format.DateUtils
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.text.style.TtsSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewConfiguration
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.text.set
+import androidx.core.text.toSpannable
+import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import androidx.work.*
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.imagepipeline.request.ImageRequest
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
 import com.innov8.memeit.Activities.SettingsActivity
-import com.innov8.memeit.Activities.SettingsActivity.Companion.quality
 import com.innov8.memeit.CustomClasses.LoadingDrawable
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
+import com.innov8.memeit.Workers.ProfileImageUploadWorker
+import com.innov8.memeit.Workers.ProfileUploadWorker
 import com.innov8.memeit.commons.log
+import com.innov8.memeit.commons.toast
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.memeit.backend.models.Meme
 import com.memeit.backend.models.Meme.MemeType.GIF
 import com.memeit.backend.models.Meme.MemeType.IMAGE
 import com.memeit.backend.models.Reaction
 import com.stfalcon.frescoimageviewer.ImageViewer
-import kotlinx.coroutines.CommonPool
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import java.net.ServerSocket
+import java.sql.Time
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.*
 import java.util.regex.Pattern
 import com.innov8.memeit.MemeItApp.Companion.instance as it
@@ -53,14 +69,12 @@ val YEAR_MILLIS = DAY_MILLIS * 365
 fun formatDate(date: Long): String {
     val now = System.currentTimeMillis()
 
-    //todo locale based on selected lang
-    val sdf = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
-    val sdf2 = SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH)
+    val sdf = SimpleDateFormat("hh:mm a")
+    val sdf2 = SimpleDateFormat("MMM dd, yyyy")
+
     if (date < 0) {
         throw IllegalArgumentException("Illegal Date")
     }
-
-
     val diff = if (date > now) 0 else now - date
     return when {
         diff < MINUTE_MILLIS -> "just now"
@@ -103,7 +117,6 @@ val screenHeightOriented: Int
     }
 
 
-
 fun getImageMemeUrl(id: String, ratio: Float = 1f, fac: Float, quality: Int): String {
     val w = (screenWidthOriented * fac) step 50
     val h = ((screenWidthOriented / ratio).toInt()
@@ -121,7 +134,7 @@ fun getGifMemeUrl(id: String, ratio: Float = 1f, fac: Float, quality: Int): Stri
 
 }
 
-fun Meme.generateUrl():String {
+fun Meme.generateUrl(): String {
     val level = SettingsActivity.getImageQualityLevel(MemeItApp.instance)
     val quality = SettingsActivity.quality[level]
     val fac = SettingsActivity.factor[level]
@@ -141,7 +154,7 @@ fun ProfileDraweeView.loadImage(url: String?, width: Int = R.dimen.profile_image
     }
     val level = SettingsActivity.getImageQualityLevel(context)
     val quality = SettingsActivity.quality[level]
-    val u="https://res.cloudinary.com/innov8/image/fetch/c_fit,h_$height,q_$quality,w_$width/${url.full}"
+    val u = "https://res.cloudinary.com/innov8/image/fetch/c_fit,h_$height,q_$quality,w_$width/${url.full}"
     setImageRequest(ImageRequest.fromUri(u))
 }
 
@@ -171,14 +184,13 @@ fun Any.log(vararg m: Any) {
     Log.d(this::class.java.simpleName, m.joinToString(", "))
 }
 
-fun Int.formatNumber(): String {
-    if (this < 1000) {
-        return this.toString()
-    } else {
-        val d = this / 1000.0f
-        return String.format("%.2fk", d)
-    }
+fun Int.formatNumber() = when {
+    this < 1000 -> this.toString()
+    this < 1000_000 -> String.format("%.2fk", this / 1000.0f)
+    this < 1000_000_000 -> String.format("%.2fm", this / 1000_000.0f)
+    else -> String.format("%.2fb", this / 1000_000_000.0f)
 }
+
 
 fun Int.formatNumber(suffix: String = "", suffixPlural: String = ""): String {
     if (this >= 1000000) {
@@ -317,6 +329,7 @@ fun Context.showMemeZoomView(list: List<Meme>, startingMemeIt: String = list[0].
             .hideStatusBar(false)
             .show()
 }
+
 fun ConstraintSet.makeGone(vararg ids: Int) = ids.forEach { this.setVisibility(it, View.GONE) }
 fun ConstraintSet.makeVisible(vararg ids: Int) = ids.forEach { this.setVisibility(it, View.VISIBLE) }
 val TextInputLayout.text get() = this.editText!!.text.toString()
@@ -344,4 +357,67 @@ fun Pair<TextInputLayout, TextInputLayout>.validateMatch(tag: String): Boolean {
         second.editText!!.error = it
         return false
     } ?: return true
+}
+
+fun makeDescSpan(s: String): Spanned {
+    return s.toSpannable().apply {
+        val sa = s.split(" ")
+        val linkColor = Color.BLUE
+        sa.forEach {
+            if (it.startsWith("@") && it.length > 1) {
+                val i = s.indexOf(it)
+                this[i..i + it.length] = ForegroundColorSpan(Color.CYAN)
+                this[i..i + it.length] = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        widget.context.toast("Goto user profile ${it.substring(1)}")
+                    }
+                }
+            } else if (it.startsWith("#") && it.length > 1) {
+                val i = s.indexOf(it)
+                this[i..i + it.length] = ForegroundColorSpan(linkColor)
+                this[i..i + it.length] = object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        widget.context.toast("Search Tag ${it.substring(1)}")
+                    }
+                }
+            }
+        }
+    }.toSpanned()
+}
+
+fun enqueueProfileImageUpload(imageUrl: String) {
+    val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+    val uploadWork = OneTimeWorkRequest.Builder(ProfileImageUploadWorker::class.java)
+            .setConstraints(constraints)
+            .addTag("upload")
+            .addTag("pp_upload")
+            .setInputData(Data.Builder().putString(ProfileImageUploadWorker.IMAGE_URL, imageUrl).build())
+            .build()
+    val postWork = OneTimeWorkRequest.Builder(ProfileUploadWorker::class.java)
+            .setConstraints(constraints)
+            .addTag("upload")
+            .addTag("pp_post")
+            .build()
+    WorkManager.getInstance()
+            .beginUniqueWork("pp_upload_post", ExistingWorkPolicy.REPLACE, uploadWork)
+            .then(postWork)
+            .enqueue()
+
+}
+
+fun TabLayout.addOnTabSelected(listener: (TabLayout.Tab) -> Unit) {
+    this.addOnTabSelectedListener(object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab?> {
+        override fun onTabReselected(p0: TabLayout.Tab?) {
+
+        }
+
+        override fun onTabUnselected(p0: TabLayout.Tab?) {
+        }
+
+        override fun onTabSelected(tab: TabLayout.Tab?) {
+            listener(tab!!)
+        }
+    })
 }

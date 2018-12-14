@@ -13,13 +13,11 @@ import com.innov8.memeit.Activities.AuthActivity
 import com.innov8.memeit.Activities.TagsChooserActivity
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.*
-import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.models.UserReq
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_auth.*
-import java.io.File
 
 class PersonalizeAuthMode(private val authActivity: AuthActivity) : AuthMode {
     override fun init() {
@@ -57,6 +55,7 @@ class PersonalizeAuthMode(private val authActivity: AuthActivity) : AuthMode {
                 R.id.action_holder
         )
     }
+
     override fun getLastField(): TextInputLayout? = authActivity.username_field
 
 
@@ -82,11 +81,12 @@ class PersonalizeAuthMode(private val authActivity: AuthActivity) : AuthMode {
         val name = authActivity.username_field.text
         authActivity.setLoading(true)
         if (isImageFrom3rdParty) {
-            uploadData(name, profileImageUrl!!.toString())
+            uploadData(UserReq(name = name, imageUrl = profileImageUrl!!.toString()))
         } else {
             profileImageUrl?.let {
-                uploadImageThenData(name, it.encodedPath!!)
-            } ?: uploadData(name, null)
+                enqueueProfileImageUpload(it.encodedPath!!)
+            }
+            uploadData(UserReq(name = name))
         }
     }
 
@@ -96,8 +96,7 @@ class PersonalizeAuthMode(private val authActivity: AuthActivity) : AuthMode {
         ).all { it }
     }
 
-    private fun uploadData(name: String, image_url: String?) {
-        val user = UserReq(name = name, imageUrl = image_url)
+    private fun uploadData(user: UserReq) {
         MemeItUsers.updateMyUser(user, {
             val i = Intent(authActivity, TagsChooserActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -106,16 +105,7 @@ class PersonalizeAuthMode(private val authActivity: AuthActivity) : AuthMode {
         }, authActivity.onError)
     }
 
-    private fun uploadImageThenData(name: String, imageUrl: String) {
-        authActivity.showError("Uploading Image")
-        MemeItClient.uploadFile(File(imageUrl),true, {
-            uploadData(name, it)
-        }) {
-            authActivity.setLoading(false)
-            authActivity.showError("Image Upload Error: $it")
-        }
 
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -125,9 +115,10 @@ class PersonalizeAuthMode(private val authActivity: AuthActivity) : AuthMode {
                 profileImageUrl = result.uri
                 isImageFrom3rdParty = false
                 authActivity.profile_pic.setImageURI(profileImageUrl)
-                authActivity.profile_pic.hierarchy.roundingParams= RoundingParams().apply {
-                    borderColor= Color.WHITE
-                    borderWidth=2f.dp
+                authActivity.profile_pic.hierarchy.roundingParams = RoundingParams().apply {
+                    borderColor = Color.WHITE
+                    borderWidth = 2f.dp
+                    roundAsCircle = true
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 authActivity.showError(result.error.message ?: "Cant read Image File")

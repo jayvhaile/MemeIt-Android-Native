@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
-import com.innov8.memegenerator.MemeEngine.PaintEditInterface
+import com.innov8.memegenerator.interfaces.PaintEditInterface
 import com.innov8.memegenerator.MemeEngine.PaintHandler
 import com.innov8.memegenerator.R
 import kotlinx.android.synthetic.main.paint_options_view.*

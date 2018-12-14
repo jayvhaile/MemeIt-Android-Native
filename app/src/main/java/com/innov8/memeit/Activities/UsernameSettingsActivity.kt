@@ -28,7 +28,7 @@ class UsernameSettingsActivity : AppCompatActivity() {
         settings_username.editText?.append(user.username)
         username_link.text ="https://memeit.innov8.io/un/${user.username}"
         settings_username.editText?.addOnTextChanged {
-            username_link.text ="https://memeit.innov8.io/un/$it"
+            username_link.text ="https://memeitapp.com/link/$it"
             if (it == user.username) status = STATUS_ORIGINAL
             if (isValid(it))
                 checkOnLocal()

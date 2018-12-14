@@ -129,7 +129,7 @@ data class MyUser(internal val token: String,
                     username.isNullOrEmpty())
                 null
             else
-                MyUser(token!!, method!!, uid!!, username!!, name, bio, pic, cpic, fwrc, fwgc, postc, badges, tags)
+                MyUser(token, method!!, uid, username, name, bio, pic, cpic, fwrc, fwgc, postc, badges, tags)
         }
 
         fun delete(context: Context) {

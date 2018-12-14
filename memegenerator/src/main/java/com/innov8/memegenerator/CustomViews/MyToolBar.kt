@@ -18,12 +18,12 @@ class MyToolBar : LinearLayout {
 
     }
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init(context, attrs)
+        init(context)
     }
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init(context, attrs)
+        init(context)
     }
-    private fun init(context: Context, attrs: AttributeSet?=null) {
+    private fun init(context: Context) {
         orientation=LinearLayout.HORIZONTAL
 
         leftMenuHolder=LinearLayout(context)

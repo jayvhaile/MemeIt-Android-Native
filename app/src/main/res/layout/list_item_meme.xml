@@ -55,6 +55,7 @@
         app:layout_constraintEnd_toStartOf="@+id/meme_options"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_share_black_24dp" />
+
     <ImageButton
         android:id="@+id/meme_options"
         android:layout_width="wrap_content"
@@ -197,7 +198,8 @@
         app:layout_constraintTop_toBottomOf="@+id/description"
         tools:text="#programming #java" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+
+    <com.luseen.autolinklibrary.AutoLinkTextView
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -206,12 +208,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:textColor="#313131"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meme_image"
-        tools:text="This meme goes out to all those people that have been struggling with the verbosity of java " />
+        app:layout_constraintTop_toBottomOf="@+id/meme_image" />
 
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/meme_reactions"
@@ -269,6 +268,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="60dp" />
+
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/meme_gif"
         android:layout_width="wrap_content"
@@ -283,6 +283,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toStartOf="@+id/meme_share"
         app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/meme_control"
         android:layout_width="0dp"

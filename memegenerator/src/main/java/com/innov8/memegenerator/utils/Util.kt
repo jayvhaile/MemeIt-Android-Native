@@ -6,11 +6,13 @@ import android.graphics.Bitmap.CompressFormat.PNG
 import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
+import androidx.core.graphics.withRotation
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.imageutils.BitmapUtil
 import com.google.android.material.tabs.TabLayout
 import com.innov8.memegenerator.R
 import com.innov8.memeit.commons.loadBitmap
+import com.innov8.memeit.commons.models.MyTypeFace
 import com.innov8.memeit.commons.sp
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
@@ -117,39 +119,38 @@ fun RecyclerView.initWithStagger(spanCount: Int, orientation: Int = androidx.rec
 private infix fun Float.min(i: Float): Float = Math.max(this, i)
 private infix fun Float.max(i: Float): Float = Math.min(this, i)
 
-fun Bitmap.addWaterMark(context: Context): Bitmap {
-    val canvas = Canvas(this)
-
-    val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color=Color.WHITE
-        textSize=12f.sp(context)
+fun Bitmap.addWaterMark(tf: Typeface): Bitmap {
+    return this.copy(Bitmap.Config.ARGB_8888, true).apply {
+        Canvas(this).apply {
+            val w = width.toFloat()
+            val h = height.toFloat()
+            withRotation(-90f, w / 2, h / 2) {
+                val offset = (w - h) / 2
+                val av = (h + w) / 2
+                translate(0f, offset)
+                drawText("MemeItApp.com", offset + 10, h, Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = Color.parseColor("#ccffffff")
+                    textSize = 0.045f * av
+                    typeface = tf
+                    this.setShadowLayer(0.02f * av, 5f, 5f, Color.parseColor("#cc000000"))
+                })
+            }
+        }
     }
-
-    val w=canvas.width.toFloat()
-    val h=canvas.height.toFloat()
-
-    canvas.save()
-    canvas.rotate(-90f,w/2,h/2)
-
-    val ts=paint.measureText("MemeItApp.com")
-    /*
-    *  x=w-ts /2 y= h
-    *  x=h       y= w-ts /2
-    *  x=h-ts/2  y=w
-    *  x=w       y=h-ts/2
-    * */
-    val draw={
-        canvas.drawText("MemeItApp.com",w/2,h/2,paint)
-    }
-
-
-    draw()
-    paint.apply {
-        style=Paint.Style.STROKE
-        color=Color.BLACK
-
-    }
-    draw()
-    canvas.restore()
-    return this
 }
+
+infix fun Pair<Float, Float>.maxBy(max: Float): Pair<Float, Float> {
+    if (first > second) {
+        if (first <= max) return this
+
+        val x = (max * second) / first
+        return max to x
+    } else {
+        if (second <= max) return this
+
+        val x = (max * first) / second
+        return x to max
+    }
+}
+
+fun RectF.scale(x: Float, y: Float) = RectF(left * x, top * y, right * x, bottom * y)

@@ -69,19 +69,14 @@ open class MemeItemView : View {
 
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return mDetector.onTouchEvent(event)
+        return if (isEnabled) mDetector.onTouchEvent(event) else false
     }
 
-    fun Number.isBetween(a: Number, b: Number): Boolean {
-        val d = this.toDouble()
-        return d >= a.toDouble() && d <= b.toDouble()
+    open fun copy(): MemeItemView? = null
+
+    protected fun doRRR(){
 
     }
-
-    open fun copy(): MemeItemView? {
-        return null
-    }
-
 
     override fun onDraw(canvas: Canvas?) {
         if (isInMemeEditor && isFocused) {

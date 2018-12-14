@@ -11,7 +11,7 @@ import com.innov8.memegenerator.CustomViews.ColorChooser
 import com.innov8.memegenerator.CustomViews.FontChooser
 import com.innov8.memegenerator.CustomViews.TextStyleView
 import com.innov8.memegenerator.MemeEngine.MemeTextView
-import com.innov8.memegenerator.MemeEngine.TextEditListener
+import com.innov8.memegenerator.interfaces.TextEditListener
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.utils.Listener
 import com.innov8.memegenerator.utils.ViewAdapter

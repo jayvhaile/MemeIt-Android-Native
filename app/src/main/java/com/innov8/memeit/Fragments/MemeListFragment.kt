@@ -1,12 +1,15 @@
 package com.innov8.memeit.Fragments
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
+import com.innov8.memegenerator.MemeEditorActivity
+import com.innov8.memeit.Activities.MemePosterActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.Loaders.MemeLoader
 import com.innov8.memeit.Loaders.SearchMemeLoader
@@ -78,6 +81,8 @@ class MemeListFragment : Fragment() {
         }
         this.searchMode = searchMode
     }
+
+
 
 
     fun search(s: String, tags: Array<String>) {
