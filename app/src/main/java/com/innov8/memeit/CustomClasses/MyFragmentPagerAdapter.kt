@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager.widget.PagerAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 
 abstract class MyFragmentPagerAdapter(private val mFragmentManager: FragmentManager) : PagerAdapter() {
     private var mCurTransaction: FragmentTransaction? = null
@@ -85,6 +86,9 @@ abstract class MyFragmentPagerAdapter(private val mFragmentManager: FragmentMana
     fun getItemTag(position: Int): String {
         return "android:switcher:$position"
     }
+
+    fun getFragmentAt(position: Int) = mFragmentManager.findFragmentByTag(getItemTag(position))
+
 
     companion object {
         private val TAG = "FragmentPagerAdapter"

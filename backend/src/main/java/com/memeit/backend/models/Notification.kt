@@ -14,6 +14,7 @@ open class Notification(val type: Int = 0,
         const val REACTION_TYPE = 2
         const val COMMENT_TYPE = 3
         const val AWARd_TYPE = 4
+        const val MENTION_TYPE = 5
 
         fun parseNotif(it: Map<String, Any>): Notification {
             val type: Int = (it["type"] as? Double ?: 0.0).toInt()
@@ -22,6 +23,7 @@ open class Notification(val type: Int = 0,
                 Notification.REACTION_TYPE -> parseReactionNotif(it)
                 Notification.COMMENT_TYPE -> parseCommentNotif(it)
                 Notification.AWARd_TYPE -> parseAwardNotif(it)
+                Notification.MENTION_TYPE -> parseMentionNotif(it)
                 else -> parseGeneralNotif(it)
             }
         }
@@ -33,6 +35,7 @@ open class Notification(val type: Int = 0,
                 Notification.REACTION_TYPE -> parseReactionNotifString(it)
                 Notification.COMMENT_TYPE -> parseCommentNotifString(it)
                 Notification.AWARd_TYPE -> parseAwardNotifString(it)
+                Notification.MENTION_TYPE -> parseMentionNotifString(it)
                 else -> parseGeneralNotifString(it)
             }
         }
@@ -156,6 +159,30 @@ open class Notification(val type: Int = 0,
                     (it["date"] ?: "0").toLong(),
                     (it["seen"] ?: "false").toBoolean())
         }
+
+        private fun parseMentionNotif(it: Map<String, Any>): MentionNotification {
+            return MentionNotification(
+                    it["nid"] as String? ?: "",
+                    it["name"] as String? ?: "",
+                    it["pic"] as String? ?: "",
+                    it["uid"] as String,
+                    it["mid"] as String,
+                    (it["date"] as Double).toLong(),
+                    it["seen"] as Boolean
+            )
+        }
+
+        private fun parseMentionNotifString(it: Map<String, String>): MentionNotification {
+            return MentionNotification(
+                    it["nid"] ?: "",
+                    it["name"] ?: "",
+                    it["pic"] ?: "",
+                    it["uid"] ?: "",
+                    it["mid"] ?: "",
+                    (it["date"] ?: "0").toLong(),
+                    (it["seen"] ?: "false").toBoolean()
+            )
+        }
     }
 }
 
@@ -165,7 +192,7 @@ class FollowingNotification(id: String,
                             val followerId: String,
                             date: Long,
                             seen: Boolean = false) : Notification
-(1, id, "$followerName started following you", "", date, seen)
+(FOLLOWING_TYPE, id, "$followerName started following you", "", date, seen)
 
 class ReactionNotification(id: String,
                            val reactorName: String,
@@ -178,7 +205,7 @@ class ReactionNotification(id: String,
                            val reactionType: Int,
                            date: Long,
                            seen: Boolean = false) : Notification
-(2, id, "$reactorName reacted to your meme", "", date, seen) {
+(REACTION_TYPE, id, "$reactorName reacted to your meme", "", date, seen) {
 
     fun getMeme(): Meme =
             Meme(id = memeId, imageId = memePic, type = memeType.name, imageRatio = memeRatio)
@@ -199,15 +226,24 @@ class CommentNotification(id: String,
                           val memeRatio: Double,
                           date: Long,
                           seen: Boolean = false) : Notification
-(3, id, "$commenterName commented on your meme", comment, date, seen) {
+(COMMENT_TYPE, id, "$commenterName commented on your meme", comment, date, seen) {
 
     fun getMeme(): Meme =
             Meme(id = memeId, imageId = memePic, type = memeType.name, imageRatio = memeRatio)
 
 }
 
+class MentionNotification(id: String,
+                          val mentionerName: String,
+                          val mentionerPic: String,
+                          val mentionerId: String,
+                          val memeId: String,
+                          date: Long,
+                          seen: Boolean = false) : Notification
+(MENTION_TYPE, id, "$mentionerName mentioned you on a post", "", date, seen)
+
 class AwardNotification(id: String,
                         val badge: Badge,
                         date: Long,
                         seen: Boolean = false) : Notification
-(4, id, "Congratulations!, You have achieved the ${badge.label} badge", badge.description, date, seen)
+(AWARd_TYPE, id, "Congratulations!, You have achieved the ${badge.label} badge", badge.description, date, seen)

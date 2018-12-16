@@ -5,12 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
+        android:background="@drawable/bottom_nav_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -18,61 +17,75 @@
     </androidx.appcompat.widget.Toolbar>
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/simpleDraweeView3"
+        android:id="@+id/meme_image_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText2"
+        app:actualImageScaleType="fitCenter"
+        android:layout_marginTop="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:background="@drawable/meme_04" />
 
-    <EditText
-        android:id="@+id/editText2"
+    <com.innov8.memeit.commons.views.FontEditText
+        android:id="@+id/description"
         android:layout_width="0dp"
-        android:layout_height="180dp"
+        android:layout_height="100dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        android:background="#0000"
         android:ems="10"
-        android:hint="Write a meme description . Use #tag to add tags, and @username to mention user"
+        android:hint="Write a meme description, Use #tag to add tags, and @username to mention users."
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_add_tag"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/button2"
+    <com.innov8.memeit.commons.views.FontTextView
+        android:id="@+id/btn_add_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginBottom="32dp"
         android:text="Add Tag"
+        android:background="?attr/selectableItemBackground"
+        android:textAllCaps="false"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/save_to_gallery"
-        app:layout_constraintEnd_toStartOf="@+id/button3"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/button3"
+    <com.innov8.memeit.commons.views.FontTextView
+        android:id="@+id/btn_mention_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:text="Mention User"
-        app:layout_constraintBottom_toBottomOf="@+id/button2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button2" />
+        android:background="?attr/selectableItemBackground"
+        android:textAllCaps="false"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_add_tag"
+        app:layout_constraintStart_toEndOf="@+id/btn_add_tag" />
 
     <Switch
         android:id="@+id/save_to_gallery"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="24dp"
         android:text="Save to Gallery"
         app:layout_constraintBottom_toTopOf="@id/post_to_facebook"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,11 +95,11 @@
         android:id="@+id/post_to_facebook"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="24dp"
         android:text="Post on Facebook"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

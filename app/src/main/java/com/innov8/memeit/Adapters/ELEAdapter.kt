@@ -270,7 +270,7 @@ abstract class ELEFilterableListAdapter<T, VH : RecyclerView.ViewHolder>(context
     }
 
 
-    override fun getCount(): Int = items.size
+    override fun getCount(): Int = filteredItems.size
     fun addAll(items: List<T>) {
         if (items.isEmpty()) return
         this.items.addAll(items)

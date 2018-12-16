@@ -56,6 +56,7 @@ class LoadingViewLayout : FrameLayout {
     fun init() {
         addView(loadingView, lp)
         retryView.setOnClickListener {
+            setLoading()
             onRetry?.invoke()
         }
         setLoading()

@@ -1,7 +1,6 @@
 package com.innov8.memeit.Adapters
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
@@ -15,14 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memeit.*
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.CustomViews.MemeDraweeView
-import com.innov8.memeit.Utils.formateAsDate
-import com.innov8.memeit.Utils.getDrawable
-import com.innov8.memeit.Utils.loadImage
-import com.innov8.memeit.Utils.prefix
+import com.innov8.memeit.R
+import com.innov8.memeit.Utils.*
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.memeit.backend.models.*
 
@@ -37,11 +33,8 @@ class NotificationAdapter(context: Context) : ELEListAdapter<Notification, Notif
         color = Color.rgb(255, 100, 0)
     }
 
-    val colors = listOf(R.color.blue, R.color.purple, R.color.orange, R.color.greeny, R.color.golden)
-            .map { idToColor(it) }
-
-    fun idToColor(id: Int): Int =
-            context.resources.getColor(id)
+    val colors = listOf(R.color.blue, R.color.purple, R.color.orange, R.color.greeny, R.color.golden, R.color.dodger_blue)
+            .map { it.color(context) }
 
 
     override fun onCreateHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
@@ -54,6 +47,10 @@ class NotificationAdapter(context: Context) : ELEListAdapter<Notification, Notif
             Notification.FOLLOWING_TYPE -> {
                 val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif_follower, parent, false)
                 FollowingNotifHolder(this, v)
+            }
+            Notification.MENTION_TYPE -> {
+                val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif_follower, parent, false)
+                MentionNotifHolder(this, v)
             }
 
             Notification.REACTION_TYPE -> {
@@ -114,14 +111,13 @@ open class NotificationViewHolder(val notifAdapter: NotificationAdapter, itemVie
 class FollowingNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
     init {
         itemView.setOnClickListener {
-            val i = Intent(notifAdapter.context, ProfileActivity::class.java)
-            val n = getCurrentItem()
-            i.putExtra("user", User(n.followerId, n.followerName, n.followerPic))
-            notifAdapter.context.startActivity(i)
+            val user = User(currentItem.followerId, currentItem.followerName, imageUrl = currentItem.followerPic)
+            ProfileActivity.startWithUser(notifAdapter.context, user)
         }
     }
 
-    private fun getCurrentItem(): FollowingNotification = notifAdapter.items[itemPosition] as FollowingNotification
+    private val currentItem: FollowingNotification
+        get() = notifAdapter.items[itemPosition] as FollowingNotification
 
     override fun bind(notif: Notification) {
         super.bind(notif)
@@ -133,6 +129,30 @@ class FollowingNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : 
 
 }
 
+class MentionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
+    init {
+        itemView.setOnClickListener {
+            CommentsActivity.startWithMemeId(notifAdapter.context, currentItem.memeId)
+        }
+        icon.setOnClickListener {
+            val user = User(currentItem.mentionerId, currentItem.mentionerName, imageUrl = currentItem.mentionerPic)
+            ProfileActivity.startWithUser(notifAdapter.context, user)
+        }
+    }
+
+    private val currentItem: MentionNotification
+        get() = notifAdapter.items[itemPosition] as MentionNotification
+
+    override fun bind(notif: Notification) {
+        super.bind(notif)
+        notif as MentionNotification
+        icon as ProfileDraweeView
+        icon.setText(notif.title.prefix())
+        icon.loadImage(notif.mentionerPic)
+    }
+
+}
+
 class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
     val memeImage: MemeDraweeView = itemView.findViewById(R.id.meme_image)
 
@@ -140,20 +160,19 @@ class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : N
         itemView.setOnClickListener { goToComment() }
         memeImage.onClick = { goToComment() }
         icon.setOnClickListener {
-            val i = Intent(notifAdapter.context, ProfileActivity::class.java)
-            val n = getCurrentItem()
-            i.putExtra("user", User(n.reactorId, n.reactorName, n.reactorPic))
-            notifAdapter.context.startActivity(i)
-
+            val user = User(currentItem.reactorId, currentItem.reactorName, imageUrl = currentItem.reactorPic)
+            ProfileActivity.startWithUser(notifAdapter.context, user)
         }
     }
 
     private fun goToComment() {
-        val n = getCurrentItem()
+        val n = currentItem
         CommentsActivity.startWithMeme(notifAdapter.context, Meme(n.memeId, imageId = n.memePic))
     }
 
-    private fun getCurrentItem(): ReactionNotification = notifAdapter.items[itemPosition] as ReactionNotification
+    private val currentItem: ReactionNotification
+        get() = notifAdapter.items[itemPosition] as ReactionNotification
+
     override fun bind(notif: Notification) {
         super.bind(notif)
         notif as ReactionNotification
@@ -177,19 +196,20 @@ class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : No
         itemView.setOnClickListener { goToComment() }
         memeImage.onClick = { goToComment() }
         icon.setOnClickListener {
-            val i = Intent(notifAdapter.context, ProfileActivity::class.java)
-            val n = getCurrentItem()
-            i.putExtra("user", User(n.commentorId, n.commenterName, n.commenterPic))
-            notifAdapter.context.startActivity(i)
+            val user = User(currentItem.commentorId, currentItem.commenterName, imageUrl = currentItem.commenterPic)
+            ProfileActivity.startWithUser(notifAdapter.context, user)
         }
     }
+
     private fun goToComment() {
-        val n = getCurrentItem()
+        val n = currentItem
         CommentsActivity.startWithMeme(notifAdapter.context, Meme(n.memeId, imageId = n.memePic))
     }
 
 
-    private fun getCurrentItem(): CommentNotification = notifAdapter.items[itemPosition] as CommentNotification
+    private val currentItem: CommentNotification
+        get() = notifAdapter.items[itemPosition] as CommentNotification
+
     override fun bind(notif: Notification) {
         super.bind(notif)
         notif as CommentNotification

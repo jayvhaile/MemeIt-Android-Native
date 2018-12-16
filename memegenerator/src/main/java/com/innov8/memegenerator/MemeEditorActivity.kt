@@ -123,7 +123,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             MODE_GIF_IMAGE -> {
                 val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
                 val gifInfo = GifInfo(intent.getStringExtra(GIF_PATH), memeLayout.getDrawingRectRelAt(0))
-                val file = File(filesDir, "${UUID.randomUUID()}_meme.gif")
+                val file = File(filesDir, "${UUID.randomUUID()}_meme.mp4")
                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                     val pd = MaterialDialog.Builder(this@MemeEditorActivity)
                             .title("Please wait a while")
@@ -148,7 +148,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             }
             MODE_VIDEO -> {
                 val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
-                val file = File(filesDir, "${UUID.randomUUID()}_meme.gif")
+                val file = File(filesDir, "${UUID.randomUUID()}_meme.mp4")
                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                     val pd = MaterialDialog.Builder(this@MemeEditorActivity)
                             .title("Please wait a while")

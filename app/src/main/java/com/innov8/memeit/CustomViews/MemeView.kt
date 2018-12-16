@@ -7,8 +7,6 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Handler
 import android.provider.MediaStore
-import android.text.SpannableString
-import android.text.SpannedString
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -34,10 +32,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.innov8.memegenerator.utils.addWaterMark
-import com.innov8.memeit.Activities.CommentsActivity
-import com.innov8.memeit.Activities.MemeUpdateActivity
-import com.innov8.memeit.Activities.ProfileActivity
-import com.innov8.memeit.Activities.ReactorListActivity
+import com.innov8.memeit.Activities.*
 import com.innov8.memeit.Adapters.MemeAdapters.MemeListAdapter
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
@@ -47,11 +42,9 @@ import com.innov8.memeit.commons.models.MyTypeFace
 import com.innov8.memeit.commons.toast
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.luseen.autolinklibrary.AutoLinkMode
-import com.luseen.autolinklibrary.AutoLinkOnClickListener
 import com.luseen.autolinklibrary.AutoLinkTextView
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
-import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.memeit.backend.models.Meme
 import com.memeit.backend.models.Reaction
@@ -105,7 +98,6 @@ class MemeView : FrameLayout {
     private val reactButton: SparkButton = itemView.findViewById(R.id.react_button)
     private val favButton: SparkButton = itemView.findViewById(R.id.fav_button)
     private val reactTint: View = itemView.findViewById(R.id.tint)
-    private val memeTags: TextView = itemView.findViewById(R.id.meme_tags)
     private val memeDescription: AutoLinkTextView = itemView.findViewById(R.id.description)
     private val reactionCountFunny: TextView = itemView.findViewById(R.id.reacation_count_funny)
     private val reactionCountVeryFunny: TextView = itemView.findViewById(R.id.reacation_count_veryfunny)
@@ -162,7 +154,7 @@ class MemeView : FrameLayout {
 
         }
         favButton.isChecked = false
-        favButton.setOnClickListener { _ ->
+        favButton.setOnClickListener {
             val m = meme
             if (m.isMyFavourite)
                 MemeItMemes.removeMemeFromFavourite(m.id!!).call({
@@ -177,7 +169,6 @@ class MemeView : FrameLayout {
                 }, onError())
         }
         memeMenu.setOnClickListener { showMemeMenu() }
-        memeTags.setOnClickListener { showFollowDialog() }
         this.addView(itemView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         this.layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         this.setBackgroundColor(Color.RED)
@@ -186,19 +177,18 @@ class MemeView : FrameLayout {
 
         memeDescription.addAutoLinkMode(AutoLinkMode.MODE_HASHTAG, AutoLinkMode.MODE_MENTION)
 
-        memeDescription.setMentionModeColor(Color.parseColor("#55aaff"))
-        memeDescription.setHashtagModeColor(Color.parseColor("#3388ff"))
+        memeDescription.setMentionModeColor(Color.parseColor("#1384fd"))
+        memeDescription.setHashtagModeColor(Color.parseColor("#1384fd"))
+        memeDescription.typeface = MyTypeFace.byName("Avenir")!!.getTypeFace(context)
         memeDescription.setAutoLinkOnClickListener { autoLinkMode, matchedText ->
             when (autoLinkMode) {
                 AutoLinkMode.MODE_HASHTAG -> {
-
+                    TagMemesActivity.startWithTag(context,matchedText.substring(1))
                 }
                 AutoLinkMode.MODE_MENTION -> {
-
+                    ProfileActivity.startWithUsername(context,matchedText.substring(1))
                 }
             }
-
-            context.toast("click $matchedText")
         }
     }
 
@@ -314,28 +304,6 @@ class MemeView : FrameLayout {
 
     }
 
-    private fun showFollowDialog() {
-        val meme = meme
-        MaterialDialog.Builder(context)
-                .title("Choose Tags to follow")
-                .items(meme.tags.map { "#$it" })
-                .itemsCallbackMultiChoice(null) { _, _, _ ->
-                    true
-                }
-                .positiveText("Follow")
-                .negativeText("Cancel")
-                .onPositive { dialog, _ ->
-                    val si = dialog.selectedIndices
-                    val selectedTags = meme.tags.filterIndexed { index, _ ->
-                        si?.contains(index) ?: false
-                    }.toTypedArray()
-                    log(selectedTags)
-                    MemeItUsers.followTags(selectedTags).call({ context.toast("Tags Followed.") },
-                            onError("Failed folloeing tags"))
-                }
-                .show()
-    }
-
     fun onError(message: String = "", action: (() -> Unit)? = null): (String) -> Unit = {
         snack("$message: $it")
         action?.invoke()
@@ -368,6 +336,7 @@ class MemeView : FrameLayout {
             )
         }
     }
+
     private fun showMemeMenu() {
         val menu = PopupMenu(context, memeMenu)
         if (MemeItClient.myUser?.id == meme.poster!!.id)
@@ -439,12 +408,8 @@ class MemeView : FrameLayout {
             constraintSetDefault.applyTo(itemView)
         }
         applyVisible(R.id.meme_gif, if (meme.getType() == Meme.MemeType.GIF) View.VISIBLE else View.GONE)
-        applyVisible(R.id.meme_tags, if (meme.tags.isEmpty()) View.GONE else View.VISIBLE)
         applyVisible(R.id.description, if (meme.description.isNullOrBlank()) View.GONE else View.VISIBLE)
         constraintSetDefault.applyTo(itemView)
-        if (meme.tags.isNotEmpty()) {
-            memeTags.text = meme.tags.joinToString(", ") { "#$it" }
-        }
         if (!meme.description.isNullOrBlank()) {
             memeDescription.setAutoLinkText(meme.description!!)
 

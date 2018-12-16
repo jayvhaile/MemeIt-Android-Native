@@ -9,12 +9,12 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
-import com.innov8.memeit.CustomClasses.MyFragmentPagerAdapter
-import com.innov8.memeit.CustomViews.SearchToolbar
+import com.innov8.memeit.CustomViews.DrawableBadge
 import com.innov8.memeit.Fragments.MemeListFragment
 import com.innov8.memeit.Fragments.ProfileFragment
 import com.innov8.memeit.Loaders.FavoriteMemeLoader
@@ -22,10 +22,9 @@ import com.innov8.memeit.Loaders.HomeMemeLoader
 import com.innov8.memeit.Loaders.TrendingMemeLoader
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItClient
+import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
-import com.innov8.memeit.CustomViews.DrawableBadge
-import com.memeit.backend.MemeItClient.context
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -120,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.menu_create -> {
-                    startActivity(Intent(this@MainActivity, MemeChooser::class.java))
+                    startActivity(Intent(this@MainActivity, MemeChooserActivity::class.java))
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.menu_favorites -> {
@@ -143,41 +142,9 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.title = titles[index]
     }
 
-    private val frag
-        get() = supportFragmentManager.findFragmentByTag(pagerAdapter.getItemTag(main_viewpager.currentItem))
-
-    private fun showSearch() {
-        val frag = frag as MemeListFragment
-        frag.setSearchMode(true)
-    }
-
-    private fun closeSearch() {
-        val frag = frag as MemeListFragment
-        frag.setSearchMode(false)
-    }
-
-    private val searchToolbar by lazy {
-        searchItem!!.actionView as SearchToolbar
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_top_menu, menu)
-        searchItem = menu.findItem(R.id.menu_search)
-        searchItem!!.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                showSearch()
-                return searchToolbar.onMenuItemActionExpand(item)
-            }
 
-            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                closeSearch()
-                return searchToolbar.onMenuItemActionCollapse(item)
-            }
-        })
-        searchToolbar.OnSearch = { s, strings ->
-            val frag = frag as MemeListFragment
-            frag.search(s, strings)
-        }
         notifItem = menu.findItem(R.id.menu_notif)
         loadNotifCount()
 
@@ -198,6 +165,7 @@ class MainActivity : AppCompatActivity() {
         super.onOptionsItemSelected(item)
         when (item.itemId) {
             R.id.menu_notif -> startActivity(Intent(this, NotificationActivity::class.java))
+            R.id.menu_search -> startActivity(Intent(this, SearchActivity::class.java))
         }
         return true
     }
@@ -212,7 +180,7 @@ class MainActivity : AppCompatActivity() {
         outState.putInt("selected", bottom_nav.selectedIndex)
     }
 
-    private inner class MyPagerAdapter(fm: FragmentManager) : MyFragmentPagerAdapter(fm) {
+    private inner class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         override fun getItem(position: Int) = when (position) {
             0 -> MemeListFragment.newInstance(MemeAdapter.HOME_ADAPTER, HomeMemeLoader())
             1 -> MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, TrendingMemeLoader())
@@ -223,10 +191,11 @@ class MainActivity : AppCompatActivity() {
 
         override fun getCount() = 4
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == MemeEditorActivity.REQUEST_CODE && resultCode == MemeEditorActivity.RESULT_CODE_SUCCESS) {
-            startActivity(Intent(context!!, MemePosterActivity::class.java).apply {
+            startActivity(Intent(context, MemePosterActivity::class.java).apply {
                 putExtras(data!!.extras!!)
             })
         }

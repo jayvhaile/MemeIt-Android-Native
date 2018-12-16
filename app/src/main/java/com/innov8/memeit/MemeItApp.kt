@@ -73,7 +73,6 @@ class MemeItApp : MultiDexApplication() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         initNotificationChannel()
 //        initUser()
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
     }
 

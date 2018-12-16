@@ -57,7 +57,6 @@ interface MemeItService {
     fun getUserById(@Path("id") uid: String): Call<User>
 
 
-
     @GET("user/me/followers")
     fun getMyFollowersList(@Query("skip") skip: Int, @Query("limit") limit: Int): Call<List<User>>
 
@@ -96,6 +95,14 @@ interface MemeItService {
 
     @GET("user/{id}/badges")
     fun getBadgesFor(@Path("id") uid: String): Call<List<Badge>>
+
+    @GET("user/search")
+    fun searchUser(@Query("name") name: String? = null,
+                    @Query("username") username: String? = null,
+                    @Query("and") and: Boolean = false,
+                    @Query("skip") skip: Int,
+                    @Query("limit") limit: Int): Call<List<User>>
+
 
     /**
      * @deprecate
@@ -183,7 +190,7 @@ interface MemeItService {
                     @Query("limit") limit: Int): Call<List<Meme>>
 
     @GET("meme/search")
-    fun getFilteredMemes(@Query("text") text: String,
+    fun getFilteredMemes(@Query("text") text: String?,
                          @Query("tags") tags: Array<String>,
                          @Query("skip") skip: Int,
                          @Query("limit") limit: Int): Call<List<Meme>>
@@ -268,7 +275,7 @@ interface MemeItService {
 
 
     @GET("others/signedUrl")
-    fun getSignedUrl(@Query("filename") filename: String,@Query("contentType") contentType:String ): Call<MemeItClient.SignedUrl>
+    fun getSignedUrl(@Query("filename") filename: String, @Query("contentType") contentType: String): Call<MemeItClient.SignedUrl>
 
     @PUT("/auth/token/{ftoken}")
     fun updateUserToken(@Path("ftoken") token: String): Call<ResponseBody>

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memeit.Activities.MemeChooser
+import com.innov8.memeit.Activities.MemeChooserActivity
 import com.innov8.memeit.Adapters.ELEListAdapter
 import com.innov8.memeit.Adapters.MemeAdapters.ViewHolders.MemeViewHolder
 import com.innov8.memeit.R
@@ -31,6 +31,7 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
 
     companion object {
         const val LIST_ADAPTER: Byte = 0
+        const val LIST_ADAPTER_FOR_TAG: Byte = 7
         const val LIST_ADAPTER_USER_POSTS: Byte = 1
         const val LIST_ADAPTER_MY_POSTS: Byte = 2
         const val LIST_FAVORITE_ADAPTER: Byte = 3
@@ -43,11 +44,14 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
                 emptyDescription = "User has no uploads yet."
                 showErrorAtTop = true
             }
+            LIST_ADAPTER_FOR_TAG -> MemeListAdapter(context).apply {
+                emptyDescription = "Oops, there are no memes for this tag yet."
+            }
             LIST_ADAPTER_MY_POSTS -> MemeListAdapter(context).apply {
                 emptyDescription = "Your meme uploads would appear here"
                 emptyActionText = "Tap here to create one"
                 onEmptyAction = {
-                    this.context.startActivity(Intent(this.context, MemeChooser::class.java))
+                    this.context.startActivity(Intent(this.context, MemeChooserActivity::class.java))
                 }
                 showErrorAtTop = true
             }
@@ -63,7 +67,7 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
                 emptyDescription = "Your meme uploads would appear here"
                 emptyActionText = "Tap here to create one"
                 onEmptyAction = {
-                    this.context.startActivity(Intent(this.context, MemeChooser::class.java))
+                    this.context.startActivity(Intent(this.context, MemeChooserActivity::class.java))
                 }
                 showErrorAtTop = true
             }

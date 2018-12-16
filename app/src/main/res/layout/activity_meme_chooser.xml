@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".Activities.MemeChooser">
+    tools:context=".Activities.MemeChooserActivity">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"

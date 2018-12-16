@@ -1,19 +1,28 @@
 package com.innov8.memeit.Adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.set
+import androidx.core.text.toSpannable
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.R
+import com.innov8.memeit.Utils.color
 import com.innov8.memeit.Utils.formatNumber
 import com.memeit.backend.models.Tag
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import kotlin.Comparator
 
 class TagSearchAdapter(context: Context) : ELEFilterableListAdapter<Tag, TagSearchAdapter.TagViewHolder>(context) {
-    override val filterer: (Tag) -> Boolean = { it.tag.contains(filterWord) }
+    override val filterer: (Tag) -> Boolean = { it.tag.toLowerCase().contains(filterWord.toLowerCase()) }
     override val sorter: Comparator<in Tag> = Comparator { tag1: Tag, tag2: Tag -> tag1.compareTo(tag2) }
     override var emptyDrawableId: Int = R.drawable.tag2
     override var errorDrawableId: Int = R.drawable.ic_no_internet
@@ -50,15 +59,25 @@ class TagSearchAdapter(context: Context) : ELEFilterableListAdapter<Tag, TagSear
 
     inner class TagViewHolder(itemView: View) : MyViewHolder<Tag>(itemView) {
         private val tagV: TextView = itemView.findViewById(R.id.tag_view)
-        private val tagCountV: TextView = itemView.findViewById(R.id.tag_count)
+        private val tagCountV: TextView = itemView.findViewById(R.id.post_count)
 
         init {
             itemView.setOnClickListener { onItemClicked?.invoke(getItemAt(item_position)) }
         }
 
+        @SuppressLint("SetTextI18n")
         override fun bind(t: Tag) {
-            tagV.text = t.tag.toLowerCase()
-            tagCountV.text = t.count.formatNumber()
+            val s = t.tag.toLowerCase()
+            val span = s.toSpannable()
+
+            val i = s.indexOf(filterWord)
+
+            if (i >= 0) {
+                span[i..filterWord.length] = ForegroundColorSpan(R.color.colorAccent.color())
+                span[i..filterWord.length] = StyleSpan(Typeface.BOLD)
+            }
+            tagV.text = span
+            tagCountV.text = "${t.count.formatNumber()} posts"
         }
     }
 

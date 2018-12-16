@@ -2,29 +2,24 @@ package com.innov8.memeit.Activities
 
 import android.content.Intent
 import android.graphics.drawable.Animatable
-import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
-import androidx.work.WorkInfo.State.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.request.ImageRequest
 import com.innov8.memeit.Workers.MemeUploadWorker
-import com.innov8.memeit.commons.prefix
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.Meme
-import kotlinx.android.synthetic.main.activity_meme_poster2.*
 import java.io.File
 import java.util.*
 import com.innov8.memeit.R
 import com.innov8.memeit.Workers.MemeImageUploadWorker
-import com.innov8.memeit.commons.toast
+import kotlinx.android.synthetic.main.meme_poster_3.*
 
 
 class MemePosterActivity : AppCompatActivity() {
@@ -35,10 +30,20 @@ class MemePosterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_meme_poster2)
+        setContentView(R.layout.meme_poster_3)
         setSupportActionBar(toolbar)
         val muser = MemeItClient.myUser!!
-        poster_pp.setText(muser.name?.prefix() ?: "")
+//        poster_pp.setText(muser.name?.prefix() ?: "")
+
+
+        btn_add_tag.setOnClickListener {
+            startActivityForResult(Intent(this, SearchTagActivity::class.java), SearchTagActivity.REQUEST_CODE)
+        }
+        btn_mention_user.setOnClickListener {
+            startActivityForResult(Intent(this, SearchUserActivity::class.java), SearchUserActivity.REQUEST_CODE)
+        }
+
+
         handleIntent()
     }
 
@@ -61,7 +66,7 @@ class MemePosterActivity : AppCompatActivity() {
             gif != null -> {
                 memeType = Meme.MemeType.GIF
                 val file = File(gif)
-                meme_image_view.controller= Fresco.newDraweeControllerBuilder()
+                meme_image_view.controller = Fresco.newDraweeControllerBuilder()
                         .setImageRequest(ImageRequest.fromFile(file))
                         .setAutoPlayAnimations(true)
                         .setControllerListener(MyControllerListener())
@@ -69,7 +74,7 @@ class MemePosterActivity : AppCompatActivity() {
             }
             image != null -> {
                 memeType = Meme.MemeType.IMAGE
-                meme_image_view.controller= Fresco.newDraweeControllerBuilder()
+                meme_image_view.controller = Fresco.newDraweeControllerBuilder()
                         .setImageRequest(ImageRequest.fromFile(File(image)))
                         .setAutoPlayAnimations(true)
                         .setControllerListener(MyControllerListener())
@@ -99,7 +104,7 @@ class MemePosterActivity : AppCompatActivity() {
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     })
                 }
-                .onNegative{ _, _ ->
+                .onNegative { _, _ ->
                     finish()
                 }
                 .show()
@@ -116,7 +121,7 @@ class MemePosterActivity : AppCompatActivity() {
     private fun enqueueMemeUpload(file: File, ratio: Float = 1f): UUID {
         val inputData = Data.Builder()
                 .putFloat(MemeUploadWorker.IMAGE_RATIO, ratio)
-                .putString(MemeUploadWorker.DESCRIPTION, caption_field.text?.toString())
+                .putString(MemeUploadWorker.DESCRIPTION, description.text?.toString())
                 .putString(MemeUploadWorker.TYPE, memeType.name)
                 .putStringArray(MemeUploadWorker.TEXTS, texts ?: arrayOf())
                 .putStringArray(MemeUploadWorker.TAGS, tags.toTypedArray())
@@ -144,11 +149,25 @@ class MemePosterActivity : AppCompatActivity() {
     }
 
     private val tags
-        get() = tags_field.text.split(" ")
-                .asSequence()
-                .filter { it.startsWith("#") && it.length > 1 }
-                .map { it.substring(1) }
-                .toList()
+        get() = listOf<String>()
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            SearchTagActivity.REQUEST_CODE -> {
+                if (resultCode == SearchTagActivity.RESULT_CODE_SELECTED) {
+                    description.append(" #")
+                    description.append(data?.getStringExtra(SearchTagActivity.PARAM_SELECTED_TAG))
+                }
+            }
+            SearchUserActivity.REQUEST_CODE -> {
+                if (resultCode == SearchUserActivity.RESULT_CODE_SELECTED){
+                    description.append(" @")
+                    description.append(data?.getStringExtra(SearchUserActivity.PARAM_SELECTED_USERNAME))
+                }
+            }
+        }
+    }
 }
 
 var rat = 1f

@@ -179,24 +179,12 @@
         android:layout_marginLeft="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meme_tags"
+        app:layout_constraintTop_toBottomOf="@+id/description"
         app:sparkbutton_activeImage="@drawable/laughing"
         app:sparkbutton_iconSize="28dp"
         app:sparkbutton_inActiveImage="@drawable/laughing_inactive_light"
         app:sparkbutton_primaryColor="@color/spark_primary_emoji"
         app:sparkbutton_secondaryColor="@color/spark_secondary" />
-
-    <com.innov8.memeit.commons.views.FontTextView
-        android:id="@+id/meme_tags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:textColor="#1384fd"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description"
-        tools:text="#programming #java" />
 
 
     <com.luseen.autolinklibrary.AutoLinkTextView
@@ -208,9 +196,11 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:textColor="#313131"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meme_image" />
+        app:layout_constraintTop_toBottomOf="@+id/meme_image"
+        tools:text="This meme is killing me" />
 
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/meme_reactions"

@@ -38,7 +38,7 @@ import kotlinx.android.synthetic.main.fragment_meme_templates.*
 import kotlinx.android.synthetic.main.fragment_ongoing_upload.*
 
 
-class MemeChooser : AppCompatActivity() {
+class MemeChooserActivity : AppCompatActivity() {
     private lateinit var adapter: MemeChooserPagerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

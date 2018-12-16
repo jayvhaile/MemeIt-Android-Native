@@ -216,6 +216,8 @@ class VideoAdapter(context: Context) : CursorAdapter<VideoAdapter.Video>(context
                     .setLocalThumbnailPreviewsEnabled(true)
                     .setResizeOptions(r)
                     .build()
+
+//            thumbnailV.controller=
             thumbnailV.setImageRequest(req)
         }
     }

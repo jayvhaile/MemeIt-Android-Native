@@ -1,25 +1,20 @@
 package com.innov8.memeit.Fragments
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
-import com.innov8.memegenerator.MemeEditorActivity
-import com.innov8.memeit.Activities.MemePosterActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.Loaders.MemeLoader
-import com.innov8.memeit.Loaders.SearchMemeLoader
 import com.innov8.memeit.Loaders.UserMemePostsLoader
 import com.innov8.memeit.Utils.LoaderAdapterHandler
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.snack
 import com.memeit.backend.models.HomeElement
 import kotlinx.android.synthetic.main.fragment_meme_list.*
-import java.util.*
 
 
 class MemeListFragment : Fragment() {
@@ -28,16 +23,11 @@ class MemeListFragment : Fragment() {
 
         MemeAdapter.create(arguments!!.getByte("adapter_type", -1), context!!)
     }
-    private val memeLoader by lazy {
+    val memeLoader by lazy {
         arguments!!.getParcelable<MemeLoader<out HomeElement>>("loader")!!
     }
-    private val searchMemeLoader by lazy {
-        SearchMemeLoader()
-    }
-    private var tempList: List<HomeElement>? = null
-    private var searchMode: Boolean = false
 
-    private val ml by lazy {
+    val loaderAdapterHandler by lazy {
         LoaderAdapterHandler(memeAdapter, memeLoader).apply {
             onLoaded = { swipe_to_refresh?.isRefreshing = false }
             onLoadFailed = {
@@ -52,7 +42,7 @@ class MemeListFragment : Fragment() {
         if (arguments == null)
             throw NullPointerException("Argument should not be null")
         this.retainInstance = true
-        ml.load()
+        loaderAdapterHandler.load()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -62,40 +52,18 @@ class MemeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        swipe_to_refresh.setOnRefreshListener { ml.refresh(false) }
+        swipe_to_refresh.setOnRefreshListener { loaderAdapterHandler.refresh(false) }
         meme_recycler_view.layoutManager = memeAdapter.createLayoutManager()
         meme_recycler_view.itemAnimator = DefaultItemAnimator()
         meme_recycler_view.adapter = memeAdapter
 
     }
 
-    fun setSearchMode(searchMode: Boolean) {
-        if (!this.searchMode && searchMode) {
-            tempList = ArrayList(memeAdapter.items)
-            memeAdapter.clear()
-            ml.loader = searchMemeLoader
-        } else if (this.searchMode && !searchMode) {
-            memeAdapter.setAll(ArrayList(tempList ?: arrayListOf()))
-            tempList = null
-            ml.loader = memeLoader
-        }
-        this.searchMode = searchMode
-    }
 
 
-
-
-    fun search(s: String, tags: Array<String>) {
-        if (searchMode) {
-            searchMemeLoader.search = s
-            searchMemeLoader.tags = tags
-            ml.refresh(true)
-        }
-    }
 
 
     companion object {
-        private val TAG = "MemeListFragment"
 
         fun newInstance(memeAdapterType: Byte, memeLoader: MemeLoader<out HomeElement>): MemeListFragment {
             val fragment = MemeListFragment()

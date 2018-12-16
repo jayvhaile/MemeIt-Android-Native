@@ -16,11 +16,9 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/search_toolbar"
             android:layout_width="match_parent"
-
             android:layout_height="?attr/actionBarSize"
             android:background="@drawable/bottom_nav_back"
             app:layout_scrollFlags="scroll|enterAlways">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,10 +30,10 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0000"
-                    android:hint="Search Tags"
                     android:imeOptions="actionDone"
                     android:inputType="text"
-                    android:lines="1" />
+                    android:lines="1"
+                    android:hint="Search Users" />
 
                 <ImageView
                     android:id="@+id/search_clear"
@@ -47,7 +45,6 @@
                     android:visibility="invisible"
                     app:srcCompat="@drawable/ic_clear_black_24dp" />
             </LinearLayout>
-
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

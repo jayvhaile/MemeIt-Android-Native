@@ -16,7 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".Activities.SearchActivity"></activity>
+        <activity android:name=".Activities.TagMemesActivity"></activity>
+        <activity
+            android:name=".Activities.SearchUserActivity"
+            android:parentActivityName=".Activities.MemePosterActivity" />
+        <activity android:name=".Activities.SearchActivity" />
         <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +37,9 @@
         <activity android:name=".Activities.CommentsActivity" />
         <activity android:name=".Activities.AboutActivity" />
         <activity android:name=".Activities.SettingsActivity" />
-        <activity android:name=".Activities.NotificationActivity" />
+        <activity
+            android:name=".Activities.NotificationActivity"
+            android:parentActivityName=".Activities.MainActivity" />
 
         <service
             android:name=".Services.MyFirebaseMessagingService"
@@ -44,7 +50,7 @@
         </service>
 
         <activity android:name=".Activities.TagsActivity" />
-        <activity android:name=".Activities.MemeChooser" />
+        <activity android:name=".Activities.MemeChooserActivity" />
         <activity android:name=".Activities.ReactorListActivity" />
         <activity android:name=".Activities.UserTagActivity" />
         <activity android:name=".Activities.TagsChooserActivity" />
@@ -151,7 +157,9 @@
             android:parentActivityName=".Activities.SettingsActivity" />
         <activity android:name=".Activities.UserListActivity" />
         <activity android:name=".Activities.TestActivity" />
-        <activity android:name=".Activities.SearchTagActivity" />
+        <activity
+            android:name=".Activities.SearchTagActivity"
+            android:parentActivityName=".Activities.MemePosterActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

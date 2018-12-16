@@ -24,10 +24,12 @@ class UserListFragment : Fragment() {
 
     companion object {
         const val PARAM_LOADER = "loader"
-        fun newInstance(userListLoader: UserListLoader): UserListFragment {
+        const val PARAM_SHOW_FOLLOW = "show follow"
+        fun newInstance(userListLoader: UserListLoader, showFollow: Boolean = true): UserListFragment {
             return UserListFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(PARAM_LOADER, userListLoader)
+                    putBoolean(PARAM_SHOW_FOLLOW, showFollow)
                 }
             }
         }
@@ -38,7 +40,8 @@ class UserListFragment : Fragment() {
         arguments?.getParcelable<UserListLoader>(PARAM_LOADER)!!
     }
 
-    private val followerAdapter by lazy {
+
+    private val userListAdapter by lazy {
         val myUID = MemeItClient.myUser!!.id
         val desc = when (userListLoader) {
             is FollowerLoader -> {
@@ -53,10 +56,10 @@ class UserListFragment : Fragment() {
             }
             else -> ""
         }
-        UserListAdapter(this.context!!, desc)
+        UserListAdapter(this.context!!, desc, arguments?.getBoolean(PARAM_SHOW_FOLLOW) ?: true)
     }
     private val loaderAdapter by lazy {
-        LoaderAdapterHandler(followerAdapter, userListLoader).apply {
+        LoaderAdapterHandler(userListAdapter, userListLoader).apply {
             onLoaded = { swipe_to_refresh?.isRefreshing = false }
             onLoadFailed = { message ->
                 swipe_to_refresh?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show() }
@@ -85,7 +88,7 @@ class UserListFragment : Fragment() {
         }
         if (savedInstanceState != null) {
             val users: Array<User> = savedInstanceState.getParcelableArray("users") as Array<User>
-            followerAdapter.setAll(users.toList())
+            userListAdapter.setAll(users.toList())
         } else
             loaderAdapter.load()
 
@@ -101,7 +104,7 @@ class UserListFragment : Fragment() {
         followers_recycler_view.layoutManager = LinearLayoutManager(MemeItClient.context, RecyclerView.VERTICAL, false)
         val animator = DefaultItemAnimator()
         followers_recycler_view.itemAnimator = animator
-        followers_recycler_view.adapter = followerAdapter
+        followers_recycler_view.adapter = userListAdapter
 
         (activity as? AppCompatActivity)?.apply {
             setSupportActionBar(toolbar_user_list)
@@ -112,7 +115,7 @@ class UserListFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArray("users", followerAdapter.items.toTypedArray())
+        outState.putParcelableArray("users", userListAdapter.items.toTypedArray())
         super.onSaveInstanceState(outState)
     }
 }

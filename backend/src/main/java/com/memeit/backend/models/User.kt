@@ -17,7 +17,10 @@ data class User(var uid: String? = null,
                 var followingCount: Int = 0,
                 var postCount: Int = 0,
                 var isFollowingMe: Boolean = false,
-                var isFollowedByMe: Boolean = false) : Parcelable {
+                var isFollowedByMe: Boolean = false) : Parcelable, Comparable<User> {
+    override fun compareTo(other: User): Int {
+        return other.postCount.compareTo(postCount)
+    }
 
     constructor(parcel: Parcel) : this(
             parcel.readString(),

@@ -23,7 +23,7 @@ import com.memeit.backend.models.MyUser
 import com.memeit.backend.models.User
 import okhttp3.ResponseBody
 
-class UserListAdapter(mContext: Context,override var emptyDescription: String) : SimpleELEListAdapter<User>(mContext, R.layout.list_item_follower) {
+class UserListAdapter(mContext: Context, override var emptyDescription: String, val showFollow: Boolean = true) : SimpleELEListAdapter<User>(mContext, R.layout.list_item_follower) {
     override var emptyDrawableId: Int = R.drawable.empty_list
     override var errorDrawableId: Int = R.drawable.ic_no_internet
     override var errorDescription: String = "Couldn't load Memes"
@@ -35,7 +35,14 @@ class UserListAdapter(mContext: Context,override var emptyDescription: String) :
     private val tf: Typeface = Typeface.createFromAsset(mContext.assets, FontTextView.asset)
     private val myUser: MyUser? = MemeItClient.myUser
 
-
+    init {
+        if (onItemClicked == null)
+            onItemClicked = {
+                val i = Intent(context, ProfileActivity::class.java)
+                i.putExtra("user", it)
+                context.startActivity(i)
+            }
+    }
 
     override fun createViewHolder(view: View): MyViewHolder<User> {
         return UserListViewHolder(view)
@@ -46,67 +53,67 @@ class UserListAdapter(mContext: Context,override var emptyDescription: String) :
     }
 
     inner class UserListViewHolder(itemView: View) : MyViewHolder<User>(itemView) {
-        internal var followerImage: ProfileDraweeView
-        internal var followerName: TextView
-        internal var followerDetail: TextView
-        internal var followButton: CircularProgressButton
+        private val followerImage: ProfileDraweeView = itemView.findViewById(R.id.notif_icon)
+        private val followerName: TextView = itemView.findViewById(R.id.follower_name)
+        private val followerDetail: TextView = itemView.findViewById(R.id.follower_detail)
+        private val followButton: CircularProgressButton = itemView.findViewById(R.id.follower_follow_btn)
 
         init {
-            followerImage = itemView.findViewById(R.id.notif_icon)
-            followerName = itemView.findViewById(R.id.follower_name)
-            followButton = itemView.findViewById(R.id.follower_follow_btn)
-            followerDetail = itemView.findViewById(R.id.follower_detail)
-            followButton.setOnClickListener {
-                val t = followButton.text.toString()
-                followButton.startAnimation()
-                val (uid) = getItemAt(item_position)
-                if (t.equals("unfollow", ignoreCase = true)) {
-                    MemeItUsers.unfollowUser(uid!!).enqueue(object : OnCompleted<ResponseBody>() {
-                        override fun onSuccess(responseBody: ResponseBody) {
-                            followButton.revertAnimation { followButton.text = "Follow" }
-                        }
+            if (showFollow) {
+                followButton.visibility = View.VISIBLE
+                followButton.setOnClickListener {
+                    val t = followButton.text.toString()
+                    followButton.startAnimation()
+                    val (uid) = getItemAt(item_position)
+                    if (t.equals("unfollow", ignoreCase = true)) {
+                        MemeItUsers.unfollowUser(uid!!).enqueue(object : OnCompleted<ResponseBody>() {
+                            override fun onSuccess(responseBody: ResponseBody) {
+                                followButton.revertAnimation { followButton.text = "Follow" }
+                            }
 
-                        override fun onError(message: String) {
-                            followButton.revertAnimation()
-                            Toast.makeText(context, "Error $message", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                } else {
-                    MemeItUsers.followUser(uid!!).enqueue(object : OnCompleted<ResponseBody>() {
-                        override fun onSuccess(responseBody: ResponseBody) {
-                            followButton.revertAnimation { followButton.text = "Unfollow" }
-                        }
+                            override fun onError(message: String) {
+                                followButton.revertAnimation()
+                                Toast.makeText(context, "Error $message", Toast.LENGTH_SHORT).show()
+                            }
+                        })
+                    } else {
+                        MemeItUsers.followUser(uid!!).enqueue(object : OnCompleted<ResponseBody>() {
+                            override fun onSuccess(responseBody: ResponseBody) {
+                                followButton.revertAnimation { followButton.text = "Unfollow" }
+                            }
 
-                        override fun onError(message: String) {
-                            followButton.revertAnimation()
-                            Toast.makeText(context, "Error $message", Toast.LENGTH_SHORT).show()
-                        }
-                    })
+                            override fun onError(message: String) {
+                                followButton.revertAnimation()
+                                Toast.makeText(context, "Error $message", Toast.LENGTH_SHORT).show()
+                            }
+                        })
+                    }
                 }
-            }
+                followButton.typeface = tf
+            } else
+                followButton.visibility = View.GONE
+
             itemView.setOnClickListener {
-                val i = Intent(context, ProfileActivity::class.java)
-                i.putExtra("user", getItemAt(item_position))
-                context.startActivity(i)
+                onItemClicked?.invoke(getItemAt(item_position))
             }
-            followButton.typeface = tf
         }
 
-        override fun bind(user: User) {
-            followerName.text = user.name
-            followerDetail.text = "${user.postCount} posts"
-            followerImage.setText(user.name.prefix())
-            followerImage.loadImage(user.imageUrl)
-            if (isMe(user.uid)) {
-                followButton.visibility = View.GONE
-            } else {
-                followButton.visibility = View.VISIBLE
-                if (user.isFollowedByMe) {
-                    followButton.text = "Unfollow"
+        override fun bind(t: User) {
+            followerName.text = t.name
+            followerDetail.text = "${t.postCount} posts"
+            followerImage.setText(t.name.prefix())
+            followerImage.loadImage(t.imageUrl)
+            if (showFollow)
+                if (isMe(t.uid)) {
+                    followButton.visibility = View.GONE
                 } else {
-                    followButton.text = "Follow"
+                    followButton.visibility = View.VISIBLE
+                    if (t.isFollowedByMe) {
+                        followButton.text = "Unfollow"
+                    } else {
+                        followButton.text = "Follow"
+                    }
                 }
-            }
 
 
         }

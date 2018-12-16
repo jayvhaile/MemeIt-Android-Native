@@ -34,7 +34,7 @@
         app:srcCompat="@drawable/hashtag_black_996px" />
 
     <com.innov8.memeit.commons.views.FontTextView
-        android:id="@+id/tag_count"
+        android:id="@+id/post_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

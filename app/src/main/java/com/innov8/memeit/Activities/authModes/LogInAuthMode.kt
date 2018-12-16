@@ -39,7 +39,7 @@ class LogInAuthMode(private val authActivity: AuthActivity) : AuthMode {
 
     override fun updateElements() {
         authActivity.action_btn.text = "Log In"
-        authActivity.auth_question.text = "Doesn't have an account?"
+        authActivity.auth_question.text = "Don't have an account?"
         authActivity.auth_question_action.text = "Sign up"
         authActivity.username_field.editText!!.hint = "Username"
 

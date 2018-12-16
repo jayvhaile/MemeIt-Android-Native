@@ -33,33 +33,68 @@ import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.memeit.backend.models.User
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.loading_view_layout.*
 import kotlinx.android.synthetic.main.profile_content.*
 
 
 class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var userID: String
-
     private var userData: User? = null
 
+    private var username: String? = null
     private val isMe: Boolean
         get() = userID == MemeItClient.myUser?.id
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val myID = MemeItClient.myUser?.id
-        userID = arguments?.getString("uid", myID!!) ?: myID!!
-        userData = arguments?.getParcelable("user")
-        retainInstance=true
+        username = arguments?.getString("username")
+        if (username == null) {
+            userID = arguments?.getString("uid", myID!!) ?: myID!!
+            userData = arguments?.getParcelable("user")
+        }
+        loadData()
+        retainInstance = true
+    }
+
+    private fun loadData() {
+        val onLoaded = { user: User ->
+            userData = user
+            updateView(user)
+        }
+        val onError: (String) -> Unit = { context?.toast("Failed to load User Data:- $it") }
+        if (username != null)
+            MemeItUsers.getUserById(username!!).call({
+                loader_view?.setLoaded()
+                initPager()
+                onLoaded(it)
+            }, {
+                loader_view?.setError("Couldn't load user profile")
+            })
+        else if (isMe)
+            MemeItUsers.getMyUser(onLoaded, onError)
+        else
+            MemeItUsers.getUserById(userID).call(onLoaded, onError)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        return inflater.inflate(R.layout.loading_view_layout, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = ViewPagerAdapter(childFragmentManager)
-        profile_viewpager.adapter = adapter
+
+        loader_view.setContentView(R.layout.fragment_profile)
+        loader_view.setErrorText("Failed to load user profile")
+        loader_view.onRetry = { loadData() }
+
+
+        if (username == null || userData != null) {
+            loader_view.setLoaded()
+            initPager()
+        }
+
+
         initTab()
         initListeners()
         toolbar.inflateMenu(R.menu.profile_page_menu)
@@ -69,6 +104,13 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         else if (userData != null) updateView(userData!!)
 
         loadData()
+    }
+
+    private var pagerInit = false
+    private fun initPager() {
+        if (pagerInit) return
+        profile_viewpager.adapter = ViewPagerAdapter(childFragmentManager)
+        pagerInit = true
     }
 
     private fun initTab() {
@@ -130,29 +172,19 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         })
     }
 
-    private fun loadData() {
-        val onLoaded = { user: User ->
-            userData = user
-            updateView(user)
-        }
-        val onError: (String) -> Unit = { context?.toast("Failed to load User Data:- $it") }
-        if (isMe)
-            MemeItUsers.getMyUser(onLoaded, onError)
-        else
-            MemeItUsers.getUserById(userID).call(onLoaded, onError)
-
-    }
 
     private fun updateView(user: User) {
-        profile_name?.text = user.name
-        profile_username?.text = user.username
-        profile_bio?.text = user.bio
-        profile_image?.setText(user.name.prefix())
-        profile_image?.loadImage(user.imageUrl)
-        profile_followers_count?.text = CustomMethods.formatNumber(user.followerCount)
-        profile_followings_count?.text = CustomMethods.formatNumber(user.followingCount)
-        profile_meme_count?.text = CustomMethods.formatNumber(user!!.postCount)
-        profile_follow_btn?.text = if (user.isFollowedByMe == true) "Unfollow" else "Follow"
+        context?.run {
+            profile_name?.text = user.name
+            profile_username?.text = user.username
+            profile_bio?.text = user.bio
+            profile_image?.setText(user.name.prefix())
+            profile_image?.loadImage(user.imageUrl)
+            profile_followers_count?.text = CustomMethods.formatNumber(user.followerCount)
+            profile_followings_count?.text = CustomMethods.formatNumber(user.followingCount)
+            profile_meme_count?.text = CustomMethods.formatNumber(user.postCount)
+            profile_follow_btn?.text = if (user.isFollowedByMe) "Unfollow" else "Follow"
+        }
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -201,7 +233,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
     companion object {
 
-        fun newInstance(uid: String): ProfileFragment {
+        fun byID(uid: String): ProfileFragment {
             val pf = ProfileFragment()
             val bundle = Bundle()
             bundle.putString("uid", uid)
@@ -209,7 +241,15 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
             return pf
         }
 
-        fun newInstance(user: User): ProfileFragment {
+        fun byUsername(username: String): ProfileFragment {
+            val pf = ProfileFragment()
+            val bundle = Bundle()
+            bundle.putString("username", username)
+            pf.arguments = bundle
+            return pf
+        }
+
+        fun byUser(user: User): ProfileFragment {
             val pf = ProfileFragment()
             val bundle = Bundle()
             bundle.putParcelable("user", user)
