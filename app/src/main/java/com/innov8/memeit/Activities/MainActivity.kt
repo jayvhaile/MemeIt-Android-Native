@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.menu_invite).setOnClickListener {
             val intent = AppInviteInvitation.IntentBuilder("MemeIt")
-                    .setMessage("the world of meme")
+                    .setMessage("Try out MemeIt, the meme social network that includes a meme maker!")
                     .setDeepLink(Uri.parse("meme"))
                     .setCallToActionText("download")
                     .build()

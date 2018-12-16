@@ -90,8 +90,8 @@ class MemePosterActivity : AppCompatActivity() {
             Meme.MemeType.GIF -> handleGifUpload()
         }
         MaterialDialog.Builder(this).title("Your meme is getting uploaded")
-                .content("We will let you know when the upload is completed")
-                .positiveText("Browse Meme")
+                .content("You will be notified when its done.")
+                .positiveText("Browse Memes")
                 .negativeText("Make Another Meme")
                 .onPositive { _, _ ->
                     finish()

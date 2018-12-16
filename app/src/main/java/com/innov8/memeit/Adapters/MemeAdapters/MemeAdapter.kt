@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.ybq.android.spinkit.style.CubeGrid
+import com.github.ybq.android.spinkit.style.Wave
 import com.innov8.memeit.Activities.MemeChooser
 import com.innov8.memeit.Adapters.ELEListAdapter
 import com.innov8.memeit.Adapters.MemeAdapters.ViewHolders.MemeViewHolder
@@ -22,7 +23,7 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
     override var errorDescription: String = "Couldn't load Memes"
     override var emptyActionText: String? = ""
     override var errorActionText: String? = "Try Again"
-    override val loadingDrawable = CubeGrid().apply {
+    override val loadingDrawable = Wave().apply {
         color = Color.rgb(255, 100, 0)
     }
 

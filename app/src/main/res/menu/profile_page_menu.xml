@@ -11,7 +11,8 @@
         />
     <item
         android:id="@+id/menu_profile_id"
-        android:icon="@drawable/ic_edit"
-        android:title="Edit"
+        android:icon="@drawable/user_icon"
+        android:iconTint="#fff"
+        android:title="Profile"
         app:showAsAction="ifRoom" />
 </menu>

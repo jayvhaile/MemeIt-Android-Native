@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.imagepipeline.request.ImageRequest
 import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.CustomClasses.SharedPrefs
@@ -123,7 +124,9 @@ class ProfileSettingsActivity : AppCompatActivity() {
     }
 
     private fun onSave() {
-        settings_pp.snack("Updating Profile", duration = Snackbar.LENGTH_LONG)
+        var dialog = MaterialDialog.Builder(this).title("Updating profile")
+                .progress(true,100)
+                .show()
         val muser = MemeItClient.myUser!!
         val newName = settings_name.text
         val newBio = settings_bio.text
@@ -141,10 +144,19 @@ class ProfileSettingsActivity : AppCompatActivity() {
             }
             if (changed)
                 MemeItUsers.updateMyUser(user, {
-                    toast("Profile Updated")
+                    dialog.hide()
+                    onBackPressed()
                 }) { _ ->
                     settings_name.snack("Error updating profile", "Retry", { onSave() })
+                    MaterialDialog.Builder(context).title("Error")
+                            .content("An error has occured while updating your profile.")
+                            .positiveText("Retry")
+                            .negativeText("Cancel")
+                            .onPositive { _, _ ->
+                                onSave()
+                            }
+
+                    }
                 }
         }
     }
-}

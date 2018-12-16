@@ -23,9 +23,10 @@
     <string name="pref_image_quality_def">Medium</string>
     <string name="intro_slide1_description">The world of memes.</string>
     <string name="intro_slide2_description">Use our powerful meme creator to make hilarious memes!</string>
-    <string name="intro_slide3_description">Grow your meme channel by gaining more followers</string>
+    <string name="intro_slide3_description">Grow your own meme channel by gaining more followers</string>
     <string name="intro_slide4_description">Your memes are your creations. Go ahead, show them off!</string>
     <string name="intro_slide5_description">Browse through the large collection of memes available from hundreds of memers.</string>
+    <string name="signup"><u>Signup</u></string>
 
     <string-array name="intro_slide_title">
         <item>MemeIt</item>

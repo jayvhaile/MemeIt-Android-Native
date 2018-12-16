@@ -5,47 +5,43 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/imageButton7"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/orange"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton8"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+    <ImageView
+        android:id="@+id/react_funny"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/react_button"
+        app:layout_constraintEnd_toEndOf="@+id/react_button"
+        app:layout_constraintStart_toStartOf="@+id/react_button"
+        app:layout_constraintTop_toTopOf="@+id/react_button"
+        app:srcCompat="@drawable/laughing" />
 
-    <ImageButton
-        android:id="@+id/imageButton8"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/orange"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton9"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageButton7" />
+    <ImageView
+        android:id="@+id/react_veryfunny"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/react_button"
+        app:layout_constraintEnd_toEndOf="@+id/react_button"
+        app:layout_constraintStart_toStartOf="@+id/react_button"
+        app:layout_constraintTop_toTopOf="@+id/react_button"
+        app:srcCompat="@drawable/rofl" />
 
-    <ImageButton
-        android:id="@+id/imageButton9"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/orange"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton10"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageButton8" />
+    <ImageView
+        android:id="@+id/react_stupid"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/react_button"
+        app:layout_constraintEnd_toEndOf="@+id/react_button"
+        app:layout_constraintStart_toStartOf="@+id/react_button"
+        app:layout_constraintTop_toTopOf="@+id/react_button"
+        app:srcCompat="@drawable/neutral" />
 
-    <ImageButton
-        android:id="@+id/imageButton10"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/orange"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageButton9" />
+    <ImageView
+        android:id="@+id/react_angry"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/react_button"
+        app:layout_constraintEnd_toEndOf="@+id/react_button"
+        app:layout_constraintStart_toStartOf="@+id/react_button"
+        app:layout_constraintTop_toTopOf="@+id/react_button"
+        app:srcCompat="@drawable/angry" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,7 +20,7 @@ class MemeTemplateSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : M
     init {
         list.makeLinear(RecyclerView.HORIZONTAL)
         list.adapter = adapter
-        title.text = "Meme Templates to Edit"
+        title.text = "Meme templates to try out"
         memeAdapter as HomeMemeAdapter
         list.setRecycledViewPool(memeAdapter.templatesPool)
 
