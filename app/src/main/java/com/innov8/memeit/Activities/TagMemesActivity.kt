@@ -15,8 +15,8 @@ import com.memeit.backend.call
 import kotlinx.android.synthetic.main.activity_tag_memes.*
 
 class TagMemesActivity : AppCompatActivity() {
-    val tag by lazy { intent.getStringExtra(PARAM_TAG) }
-    var isFollowed = false
+    private val tag: String by lazy { intent.getStringExtra(PARAM_TAG) }
+    private var isFollowed = false
         set(value) {
             field = value
             invalidateOptionsMenu()

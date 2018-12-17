@@ -128,12 +128,15 @@ fun Bitmap.addWaterMark(tf: Typeface): Bitmap {
                 val offset = (w - h) / 2
                 val av = (h + w) / 2
                 translate(0f, offset)
-                drawText("MemeItApp.com", offset + 10, h, Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply {
                     color = Color.parseColor("#ccffffff")
                     textSize = 0.045f * av
                     typeface = tf
-                    this.setShadowLayer(0.02f * av, 5f, 5f, Color.parseColor("#cc000000"))
-                })
+                    this.setShadowLayer(0.025f * av, 5f, 5f, Color.parseColor("#cc000000"))
+
+                }
+                val a=paint.fontMetrics.descent
+                drawText("MemeItApp.com", offset + 10, h-a,paint)
             }
         }
     }

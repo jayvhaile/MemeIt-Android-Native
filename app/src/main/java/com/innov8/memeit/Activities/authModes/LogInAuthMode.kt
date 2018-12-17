@@ -8,6 +8,7 @@ import com.innov8.memeit.Activities.AuthActivity
 import com.innov8.memeit.Activities.MainActivity
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.*
+import com.innov8.memeit.Workers.retrieveAndUploadFirebaseToken
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.User
 import com.memeit.backend.models.UsernameAuthRequest
@@ -49,13 +50,10 @@ class LogInAuthMode(private val authActivity: AuthActivity) : AuthMode {
 
     override fun onAction() {
         authActivity.setLoading(true)
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            val req = UsernameAuthRequest(authActivity.username_field.text, authActivity.password_field.text, ftoken = it.token)
-            MemeItClient.Auth.signInWithUsername(req, onSignedIn, authActivity.onError)
-        }.addOnFailureListener {
-            val req = UsernameAuthRequest(authActivity.username_field.text, authActivity.password_field.text)
-            MemeItClient.Auth.signInWithUsername(req, onSignedIn, authActivity.onError)
-        }
+        retrieveAndUploadFirebaseToken()
+
+        val req = UsernameAuthRequest(authActivity.username_field.text, authActivity.password_field.text)
+        MemeItClient.Auth.signInWithUsername(req, onSignedIn, authActivity.onError)
 
     }
 
@@ -63,7 +61,7 @@ class LogInAuthMode(private val authActivity: AuthActivity) : AuthMode {
 
 
     private val onSignedIn by lazy {
-        {_:User->
+        { _: User ->
             authActivity.setLoading(false)
             val i = Intent(authActivity, MainActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)

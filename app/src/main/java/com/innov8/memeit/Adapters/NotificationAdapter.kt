@@ -2,21 +2,18 @@ package com.innov8.memeit.Adapters
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
-import android.text.SpannableString
-import android.text.style.ImageSpan
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memeit.Activities.CommentsActivity
 import com.innov8.memeit.Activities.ProfileActivity
-import com.innov8.memeit.CustomViews.MemeDraweeView
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.*
 import com.innov8.memeit.commons.views.ProfileDraweeView
@@ -54,12 +51,12 @@ class NotificationAdapter(context: Context) : ELEListAdapter<Notification, Notif
             }
 
             Notification.REACTION_TYPE -> {
-                val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif_meme, parent, false)
+                val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif_reaction, parent, false)
                 ReactionNotifHolder(this, v)
             }
 
             Notification.COMMENT_TYPE -> {
-                val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif_meme, parent, false)
+                val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif_comment, parent, false)
                 CommentNotifHolder(this, v)
             }
 
@@ -95,11 +92,12 @@ open class NotificationViewHolder(val notifAdapter: NotificationAdapter, itemVie
     val title: TextView = itemView.findViewById(R.id.notif_title)
     val message: TextView? = itemView.findViewById(R.id.notif_message)
     val context = notifAdapter.context
-    val d: Drawable = VectorDrawableCompat.create(context.resources, R.drawable.circle, null)!!
+    val d: GradientDrawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle, null) as GradientDrawable
+
     var itemPosition: Int = 0
     open fun bind(notif: Notification) {
+        d.setColor(notifAdapter.colors[notif.type])
         back.setBackgroundColor(if (notif.seen) Color.WHITE else Color.rgb(248, 248, 250))
-        d.setColorFilter(notifAdapter.colors[notif.type], PorterDuff.Mode.SRC)
         dot.background = d
         date.text = notif.date.formateAsDate()
         title.text = notif.title
@@ -154,11 +152,10 @@ class MentionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : No
 }
 
 class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
-    val memeImage: MemeDraweeView = itemView.findViewById(R.id.meme_image)
+    private val reactionImage: ImageView = itemView.findViewById(R.id.notif_reaction_image)
 
     init {
         itemView.setOnClickListener { goToComment() }
-        memeImage.onClick = { goToComment() }
         icon.setOnClickListener {
             val user = User(currentItem.reactorId, currentItem.reactorName, imageUrl = currentItem.reactorPic)
             ProfileActivity.startWithUser(notifAdapter.context, user)
@@ -166,8 +163,7 @@ class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : N
     }
 
     private fun goToComment() {
-        val n = currentItem
-        CommentsActivity.startWithMeme(notifAdapter.context, Meme(n.memeId, imageId = n.memePic))
+        CommentsActivity.startWithMemeId(notifAdapter.context, currentItem.memeId)
     }
 
     private val currentItem: ReactionNotification
@@ -179,22 +175,15 @@ class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : N
         icon as ProfileDraweeView
         icon.setText(notif.reactorName.prefix())
         icon.loadImage(notif.reactorPic)
-        memeImage.loadMeme(notif.getMeme())
-        val span = ImageSpan(notif.getReaction().getDrawable())
-        val s = SpannableString(" ")
-        s.setSpan(span, 0, 1, 0)
-        message?.text = s
-
+        reactionImage.setImageDrawable(notif.getReaction().getDrawable())
     }
 
 }
 
 class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
-    private val memeImage: MemeDraweeView = itemView.findViewById(R.id.meme_image)
 
     init {
         itemView.setOnClickListener { goToComment() }
-        memeImage.onClick = { goToComment() }
         icon.setOnClickListener {
             val user = User(currentItem.commentorId, currentItem.commenterName, imageUrl = currentItem.commenterPic)
             ProfileActivity.startWithUser(notifAdapter.context, user)
@@ -202,8 +191,7 @@ class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : No
     }
 
     private fun goToComment() {
-        val n = currentItem
-        CommentsActivity.startWithMeme(notifAdapter.context, Meme(n.memeId, imageId = n.memePic))
+        CommentsActivity.startWithMemeId(notifAdapter.context, currentItem.memeId)
     }
 
 
@@ -216,7 +204,6 @@ class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : No
         icon as ProfileDraweeView
         icon.setText(notif.commenterName.prefix())
         icon.loadImage(notif.commenterPic)
-        memeImage.loadMeme(notif.getMeme())
     }
 
 }

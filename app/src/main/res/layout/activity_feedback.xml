@@ -11,30 +11,30 @@
         android:id="@+id/app_icon"
         android:layout_width="80dp"
         android:layout_height="0dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="28dp"
         app:layout_constraintDimensionRatio="h,1:1"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/icon" />
 
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="center_horizontal"
-        android:text="Give us your feedback for a better App!"
+        android:text="Send us your feedback and help make MemeIt Better"
+        android:textColor="#313131"
         android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/app_icon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_icon" />
+        app:layout_constraintStart_toEndOf="@+id/app_icon"
+        app:layout_constraintTop_toTopOf="@+id/app_icon" />
 
     <com.innov8.memeit.commons.views.FontEditText
         android:id="@+id/feedback_message"
@@ -47,8 +47,9 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/edittextlogin"
-        android:gravity="center"
         android:hint="Write your feedback here"
+        android:imeOptions="actionDone"
+        android:inputType="textMultiLine"
         android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@+id/frameLayout2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,10 +60,11 @@
         android:id="@+id/frameLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
             android:id="@+id/feedback_submit"

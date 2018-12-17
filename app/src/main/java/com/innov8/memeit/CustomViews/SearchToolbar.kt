@@ -163,7 +163,6 @@ class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
             } else
                 false
         }
-
     }
 
     fun x(s: String) {

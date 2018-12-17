@@ -8,7 +8,7 @@ import com.memeit.backend.models.Meme
 
 class SearchMemeLoader() : MemeLoader<Meme> {
     override var skip: Int = 0
-    var search: String = ""
+    var search: String? = null
     var tags: Array<String> = arrayOf()
 
     constructor(parcel: Parcel) : this() {

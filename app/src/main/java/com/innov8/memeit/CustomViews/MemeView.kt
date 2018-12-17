@@ -1,10 +1,16 @@
 package com.innov8.memeit.CustomViews
 
+import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
 import android.util.AttributeSet
@@ -20,6 +26,9 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ShareCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
@@ -52,6 +61,8 @@ import com.memeit.backend.models.Report
 import com.varunest.sparkbutton.SparkButton
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
+import java.io.File
+import java.io.FileOutputStream
 
 class MemeView : FrameLayout {
     private lateinit var constraintSetDefault: ConstraintSet
@@ -183,10 +194,10 @@ class MemeView : FrameLayout {
         memeDescription.setAutoLinkOnClickListener { autoLinkMode, matchedText ->
             when (autoLinkMode) {
                 AutoLinkMode.MODE_HASHTAG -> {
-                    TagMemesActivity.startWithTag(context,matchedText.substring(1))
+                    TagMemesActivity.startWithTag(context, matchedText.trim().substring(1))
                 }
                 AutoLinkMode.MODE_MENTION -> {
-                    ProfileActivity.startWithUsername(context,matchedText.substring(1))
+                    ProfileActivity.startWithUsername(context, matchedText.trim().substring(1))
                 }
             }
         }
@@ -240,7 +251,7 @@ class MemeView : FrameLayout {
             reactionArray.mapIndexed { index, i ->
                 ChangeBounds().apply {
                     addTarget(i)
-                    startDelay = index * 60L
+                    startDelay = index * 40L
                     interpolator = AccelerateDecelerateInterpolator()
                 }
             }.forEach { addTransition(it) }
@@ -250,7 +261,7 @@ class MemeView : FrameLayout {
             addTransition(Fade(Fade.OUT).apply {
                 addTarget(R.id.tint)
             })
-            duration = 300L
+            duration = 160L
         }
     }
 
@@ -289,18 +300,93 @@ class MemeView : FrameLayout {
             val res = withContext(Dispatchers.Default) { Fresco.getImagePipeline().fetchDecodedImage(req, context).result }
             if (res != null && res.get() is CloseableBitmap) {
                 val tf = MyTypeFace.byName("Ubuntu")!!.getTypeFace(context)
-                val bitmap = withContext(Dispatchers.Default) { (res.get() as CloseableBitmap).underlyingBitmap.addWaterMark(tf) }
-                val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "memeit", "memeit")
-                val url = Uri.parse(path)
-                ShareCompat.IntentBuilder.from(context as Activity)
-                        .setText(ll.toString())
-                        .setStream(url)
+                val bitmap = withContext(Dispatchers.Default) {
+                    (res.get() as CloseableBitmap)
+                            .underlyingBitmap
+                            .addWaterMark(tf)
+                }
+
+                val dir = File(context.cacheDir, "/share")
+                val file = File(dir, "${meme.id}.jpg")
+                if (!file.exists()) {
+                    dir.mkdirs()
+                    file.createNewFile()
+                    withContext(Dispatchers.Default) {
+                        val fos = FileOutputStream(file)
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos)
+                        fos.flush()
+                        fos.close()
+                    }
+                }
+                val fileUri = FileProvider.getUriForFile(
+                        context,
+                        "com.innov8.memeit.fileprovider",
+                        file)
+                val intent = ShareCompat.IntentBuilder.from(context as Activity)
+                        .setSubject(ll.toString())
+                        .setStream(fileUri)
                         .setType("image/*")
-                        .startChooser()
+                        .createChooserIntent()
+                        .apply {
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        }
+                context.startActivity(intent)
             } else {
                 context.toast("Image not downloaded yet")
             }
         }
+
+    }
+
+    private fun saveToGallery() {
+        val req = ImageRequestBuilder.newBuilderWithSource(Uri.parse(meme.generateUrl()))
+                .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE)
+                .build()
+
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            val res = withContext(Dispatchers.Default) { Fresco.getImagePipeline().fetchDecodedImage(req, context).result }
+            if (res != null && res.get() is CloseableBitmap) {
+                val tf = MyTypeFace.byName("Ubuntu")!!.getTypeFace(context)
+                val bitmap = withContext(Dispatchers.Default) {
+                    (res.get() as CloseableBitmap)
+                            .underlyingBitmap
+                            .addWaterMark(tf)
+                }
+                val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MemeIt")
+                dir.mkdirs()
+                val file = File(dir, "${meme.id}.jpg")
+                if (!file.exists()) {
+                    dir.mkdirs()
+                    file.createNewFile()
+                    withContext(Dispatchers.Default) {
+                        val fos = FileOutputStream(file)
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos)
+                        fos.flush()
+                        fos.close()
+                    }
+                    context?.addFileToMediaStore(file)
+                }
+                context.toast("Image saved to Gallery!")
+
+            } else {
+                context.toast("Image not downloaded yet")
+            }
+        }
+    }
+
+
+
+    private val reqCode = 154
+    private fun onSave() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val wes = ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+
+            if (wes) {
+                saveToGallery()
+            } else {
+                (context as Activity).requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), reqCode)
+            }
+        } else saveToGallery()
 
     }
 
@@ -357,6 +443,7 @@ class MemeView : FrameLayout {
                 R.id.menu_edit_meme -> {
                     MemeUpdateActivity.startWithMeme(context, meme)
                 }
+                R.id.menu_save_meme -> onSave()
                 R.id.menu_report_meme -> {
                     val rt = Report.ReportTypes.values()
                     MaterialDialog.Builder(context)

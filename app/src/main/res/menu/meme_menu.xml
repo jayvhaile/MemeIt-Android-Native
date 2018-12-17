@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:id="@+id/mine">
-    <item
-        android:id="@+id/menu_delete_meme"
-        android:title="Delete" />
     <item
         android:id="@+id/menu_edit_meme"
         android:title="Edit" />
-    </group>
-    <group android:id="@+id/others">
-        <item
-            android:id="@+id/menu_report_meme"
-            android:title="Report" />
 
-    </group>
-
+    <item
+        android:id="@+id/menu_save_meme"
+        android:title="Save to gallery" />
+    <item
+        android:id="@+id/menu_delete_meme"
+        android:title="Delete" />
 </menu>

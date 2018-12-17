@@ -36,13 +36,15 @@
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/list_comment"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="57dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/list_name"
-        app:layout_constraintTop_toBottomOf="@+id/list_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/comment_poster_pp"
         tools:text="Lorem ipsum dor amet voic isfa mptna elcampreo matine fa mptna elcampreo matine fa mptna elcampreo matine fa mptna elcampreo matine" />
 
     <com.innov8.memeit.commons.views.FontTextView
@@ -60,14 +62,13 @@
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:drawableLeft="@drawable/ic_thumb_up_black_24dp"
         android:drawablePadding="8dp"
         android:drawableTint="@color/like_bg"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/dislike_comment"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toStartOf="@+id/list_comment"
         app:layout_constraintTop_toBottomOf="@+id/list_comment"
         tools:text="24k" />
 
@@ -76,28 +77,13 @@
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:drawableLeft="@drawable/ic_thumb_down_black_24dp"
         android:drawablePadding="8dp"
         android:drawableTint="#99000000"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/share_comment"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/like_comment"
-        app:layout_constraintTop_toBottomOf="@+id/list_comment"
-        tools:text="24k" />
-
-    <com.innov8.memeit.commons.views.FontTextView
-        android:id="@+id/share_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="16dp"
-        android:layout_marginTop="8dp"
-        android:drawableLeft="@drawable/ic_share_black_16dp"
-        android:drawablePadding="8dp"
-        android:drawableTint="#99000000"
-        android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/edit"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/dislike_comment"
         app:layout_constraintTop_toBottomOf="@+id/list_comment"
         tools:text="24k" />
 
@@ -106,10 +92,10 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:tint="#99000000"
         app:layout_constraintEnd_toStartOf="@+id/delete"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/share_comment"
         app:layout_constraintTop_toBottomOf="@+id/list_comment"
         app:srcCompat="@drawable/ic_mode_edit_black_24dp" />
 
@@ -122,8 +108,6 @@
         android:layout_marginRight="16dp"
         android:tint="#99000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/edit"
         app:layout_constraintTop_toBottomOf="@+id/list_comment"
         app:srcCompat="@drawable/ic_delete_black_24dp" />
 
@@ -131,7 +115,6 @@
         android:id="@+id/own_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:constraint_referenced_ids="edit,delete"
         tools:ignore="MissingConstraints" />
 

@@ -39,18 +39,18 @@ class SearchActivity : AppCompatActivity() {
         search_tabs.addOnTabSelected {
             when (it.position) {
                 0 -> {
-                    search_view.hint = "Search Memes, Use #tag to search by tag"
+                    search_view.hint = "Search Memes"
                 }
                 1 -> {
-                    search_view.hint = "Search People, Use @user to search by username"
+                    search_view.hint = "Search People"
                 }
                 2 -> {
                     search_view.hint = "Search Tags"
                 }
             }
         }
-        search_pager.adapter=pagerAdapter
-        search_pager.offscreenPageLimit=2
+        search_pager.adapter = pagerAdapter
+        search_pager.offscreenPageLimit = 2
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -58,10 +58,29 @@ class SearchActivity : AppCompatActivity() {
         return true
     }
 
-    private fun searchMemes(search: String) {
+    private fun searchMemes(text: String) {
         val f = pagerAdapter.getFragmentAt(0) as MemeListFragment
-        (f.memeLoader as SearchMemeLoader).search = search
+        (f.memeLoader as SearchMemeLoader).apply {
+            search = getSearchText(text)
+            tags = getSearchTags(text)
+        }
         f.loaderAdapterHandler.refresh(true)
+    }
+
+    private fun getSearchText(text: String): String {
+        return text.split(" ")
+                .filter { !it.startsWith('#') }
+                .joinToString(" ")
+    }
+
+    private fun getSearchTags(text: String): Array<String> {
+        val tokens = text.split(" ")
+        return if (tokens.size == 1)
+            arrayOf(tokens[0])
+        else
+            tokens.filter { it.startsWith('#') && it.length > 1 }
+                    .map { it.substring(1) }
+                    .toTypedArray()
     }
 
     private fun searchUsers(search: String) {

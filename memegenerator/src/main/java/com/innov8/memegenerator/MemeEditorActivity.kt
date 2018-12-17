@@ -33,7 +33,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.*
 
-class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
+class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface{
+
 
 
     private val constraintSet1 = ConstraintSet()
@@ -81,7 +82,6 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             (closeableFragments["paint"]?.bottomFragment as? PaintOptionsFragment)?.updateUndoState()
         }
         onEditorStateChangedListeners.add(memeEditorView)
-
         layout.setOnClickListener {
             open("layout")
         }
@@ -459,15 +459,15 @@ class EditorHandler(val memeEditorView: MemeEditorView) :
     }
 
     override fun onApplyAll(textStyleProperty: TextStyleProperty, applySize: Boolean) {
-        (memeEditorView.focusedItem as MemeTextView?)?.applyTextStyleProperty(textStyleProperty, applySize)
+        (memeEditorView.focusedItem as? MemeTextView)?.applyTextStyleProperty(textStyleProperty, applySize)
     }
 
     override fun onTextColorChanged(color: Int) {
-        (memeEditorView.focusedItem as MemeTextView?)?.setTextColor(color)
+        (memeEditorView.focusedItem as? MemeTextView)?.setTextColor(color)
     }
 
     override fun onTextFontChanged(typeface: MyTypeFace) {
-        (memeEditorView.focusedItem as MemeTextView?)?.setTypeface(typeface)
+        (memeEditorView.focusedItem as? MemeTextView)?.setTypeface(typeface)
     }
 
     override fun onTextSetBold(bold: Boolean) {

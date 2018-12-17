@@ -1,8 +1,14 @@
 package com.innov8.memeit.Activities
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.Animatable
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.os.Environment.DIRECTORY_PICTURES
+import android.os.Environment.getExternalStoragePublicDirectory as externalStorage
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -18,8 +24,15 @@ import com.memeit.backend.models.Meme
 import java.io.File
 import java.util.*
 import com.innov8.memeit.R
+import com.innov8.memeit.Utils.addFileToMediaStore
 import com.innov8.memeit.Workers.MemeImageUploadWorker
+import com.innov8.memeit.commons.toast
 import kotlinx.android.synthetic.main.meme_poster_3.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.nio.channels.FileChannel
 
 
 class MemePosterActivity : AppCompatActivity() {
@@ -43,8 +56,27 @@ class MemePosterActivity : AppCompatActivity() {
             startActivityForResult(Intent(this, SearchUserActivity::class.java), SearchUserActivity.REQUEST_CODE)
         }
 
+        save_to_gallery.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked && !hasWritePermission) {
+                requestWritePermission()
+            }
 
+        }
         handleIntent()
+    }
+
+    private val hasWritePermission: Boolean
+        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+
+    private val permRequest = 256
+    private fun requestWritePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), permRequest)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -90,9 +122,19 @@ class MemePosterActivity : AppCompatActivity() {
 
 
     private fun upload() {
-        val id = when (memeType) {
-            Meme.MemeType.IMAGE -> handleImageUpload()
-            Meme.MemeType.GIF -> handleGifUpload()
+        when (memeType) {
+            Meme.MemeType.IMAGE -> {
+                if (save_to_gallery.isChecked && hasWritePermission) {
+                    copyFile(image!!, "${externalStorage(DIRECTORY_PICTURES)}${File.separator}MemeIt")
+                }
+                handleImageUpload()
+            }
+            Meme.MemeType.GIF -> {
+                if (save_to_gallery.isChecked && hasWritePermission) {
+                    copyFile(gif!!, "${externalStorage(DIRECTORY_PICTURES)}${File.separator}MemeIt", "image/gif")
+                }
+                handleGifUpload()
+            }
         }
         MaterialDialog.Builder(this).title("Your meme is getting uploaded")
                 .content("We will let you know when the upload is completed")
@@ -108,11 +150,40 @@ class MemePosterActivity : AppCompatActivity() {
                     finish()
                 }
                 .show()
+    }
 
+    private fun copyFile(src: String, dest: String, mimeType: String = "image/jpeg") {
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            val saved = withContext(Dispatchers.Default) {
+                var channelIn: FileChannel? = null
+                var channelOut: FileChannel? = null
+                var status: Boolean
+                try {
+                    val destDir = File(dest).apply {
+                        mkdirs()
+                    }
+                    val destFile = File(destDir, "${UUID.randomUUID()}.jpg")
+                    channelIn = FileInputStream(src).channel
+                    channelOut = FileOutputStream(destFile).channel
+                    channelIn.transferTo(0, channelIn.size(), channelOut)
 
+                    addFileToMediaStore(destFile, mimeType)
+                    status = true
+                } catch (e: Exception) {
+                    status = false
+                } finally {
+                    channelIn?.close()
+                    channelOut?.close()
+                }
+                status
+            }
+
+            toast(if (saved) "Saved To Gallery" else "Failed to save to gallery")
+        }
     }
 
     private fun handleImageUpload(): UUID {
+
         return enqueueMemeUpload(File(image), rat)
     }
 
@@ -161,9 +232,21 @@ class MemePosterActivity : AppCompatActivity() {
                 }
             }
             SearchUserActivity.REQUEST_CODE -> {
-                if (resultCode == SearchUserActivity.RESULT_CODE_SELECTED){
+                if (resultCode == SearchUserActivity.RESULT_CODE_SELECTED) {
                     description.append(" @")
                     description.append(data?.getStringExtra(SearchUserActivity.PARAM_SELECTED_USERNAME))
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            permRequest -> {
+                if (!hasWritePermission) {
+                    toast("Sorry,We couldn't save the image to gallery without the permission")
+                    save_to_gallery.isChecked = false
                 }
             }
         }

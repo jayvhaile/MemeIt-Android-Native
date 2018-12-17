@@ -8,6 +8,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.innov8.memeit.Activities.AuthActivity
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.*
+import com.innov8.memeit.Workers.retrieveAndUploadFirebaseToken
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.UsernameAuthRequest
 import kotlinx.android.synthetic.main.activity_auth.*
@@ -57,27 +58,15 @@ class SignUpAuthMode(private val authActivity: AuthActivity) : AuthMode {
 
     override fun onAction() {
         authActivity.setLoading(true)
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            val req = UsernameAuthRequest(authActivity.username_field.text,
-                    authActivity.password_field.text,
-                    authActivity.email_field.text,
-                    it.token)
-            MemeItClient.Auth.signUpWithUsername(req, {
-                authActivity.setLoading(false) {
-                    authActivity.setMode(authActivity.personalizeMode)
-                }
-            }, authActivity.onError)
-        }.addOnFailureListener {
-            val req = UsernameAuthRequest(authActivity.username_field.text,
-                    authActivity.password_field.text,
-                    authActivity.email_field.text)
-            MemeItClient.Auth.signUpWithUsername(req, {
-                authActivity.setLoading(false) {
-                    authActivity.setMode(authActivity.personalizeMode)
-                }
-            }, authActivity.onError)
-        }
-
+        val req = UsernameAuthRequest(authActivity.username_field.text,
+                authActivity.password_field.text,
+                authActivity.email_field.text)
+        MemeItClient.Auth.signUpWithUsername(req, {
+            authActivity.setLoading(false) {
+                authActivity.setMode(authActivity.personalizeMode)
+            }
+        }, authActivity.onError)
+        retrieveAndUploadFirebaseToken()
     }
 
     override fun onFacebook() {

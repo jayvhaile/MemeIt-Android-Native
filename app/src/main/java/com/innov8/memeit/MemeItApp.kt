@@ -28,12 +28,12 @@ class MemeItApp : MultiDexApplication() {
         lateinit var instance: Application
         private const val apiVersion = 1
         const val SERVER_URL = "https://memeitapp.com/api/v$apiVersion/"
-        const val STORAGE_URL="https://storage.googleapis.com/meme-store/"
+        const val STORAGE_URL = "https://storage.googleapis.com/meme-store/"
 
         private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/v$apiVersion/"
         private const val STRICT_MODE = false
         private const val USE_LOCAL_SERVER = false
-        const val FACEBOOK_AD_PLACEMENT_ID="262717847755102_262724637754423"
+        const val FACEBOOK_AD_PLACEMENT_ID = "262717847755102_262724637754423"
 //        const val FACEBOOK_AD_PLACEMENT_ID="126436314944426_126436834944374"
 
     }
@@ -73,7 +73,6 @@ class MemeItApp : MultiDexApplication() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         initNotificationChannel()
 //        initUser()
-
     }
 
     private fun initNotificationChannel() {
@@ -88,7 +87,9 @@ class MemeItApp : MultiDexApplication() {
             notifManager.createNotificationChannel(channel)
         }
     }
-    private fun initUser(){
+
+    private fun initUser() {
+        if (MemeItClient.myUser != null) return
         MyUser.save(PreferenceManager.getDefaultSharedPreferences(this),
                 "123",
                 SignInMethod.USERNAME,

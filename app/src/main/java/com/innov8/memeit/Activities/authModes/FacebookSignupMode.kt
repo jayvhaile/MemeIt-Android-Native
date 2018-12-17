@@ -16,20 +16,15 @@ class FacebookSignupMode(private val authActivity: AuthActivity) : RequestUserna
 
     override fun onAction() {
         authActivity.setLoading(true)
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            val freq = fbinfo.toSignUpReq(authActivity.username_field.text, it.token)
-            MemeItClient.Auth.signUpWithFacebook(freq, { _ ->
-                val name = "${fbinfo.firstName} ${fbinfo.lastName}"
-                val b = Bundle()
-                b.putString("name", name)
-                b.putString("image", fbinfo.imageUrl)
-                authActivity.setLoading(false) {
-                    authActivity.setMode(authActivity.personalizeMode, b)
-                }
-            }, authActivity.onError)
-        }.addOnFailureListener {
-            authActivity.onError(it.message!!)
-        }
-
+        val freq = fbinfo.toSignUpReq(authActivity.username_field.text)
+        MemeItClient.Auth.signUpWithFacebook(freq, { _ ->
+            val name = "${fbinfo.firstName} ${fbinfo.lastName}"
+            val b = Bundle()
+            b.putString("name", name)
+            b.putString("image", fbinfo.imageUrl)
+            authActivity.setLoading(false) {
+                authActivity.setMode(authActivity.personalizeMode, b)
+            }
+        }, authActivity.onError)
     }
 }

@@ -1,5 +1,6 @@
 package com.innov8.memeit.Activities
 
+import android.accounts.Account
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -12,6 +13,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.inappmessaging.FirebaseInAppMessaging
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomViews.DrawableBadge
@@ -81,9 +83,11 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.menu_invite).setOnClickListener {
             val intent = AppInviteInvitation.IntentBuilder("MemeIt")
-                    .setMessage("the world of meme")
-                    .setDeepLink(Uri.parse("meme"))
-                    .setCallToActionText("download")
+                    .setMessage("Hey , It's ${MemeItClient.myUser!!.name},let make and share memes on MemeIt!" +
+                            "download it here ")
+                    .setDeepLink(Uri.parse("https://memeitapp.com"))
+                    .setCallToActionText("Download")
+                    .setEmailHtmlContent("")
                     .build()
             startActivityForResult(intent, 101)
             rootNav.closeMenu(false)

@@ -39,6 +39,7 @@ class TagSearchAdapter(context: Context) : ELEFilterableListAdapter<Tag, TagSear
     }
 
     override fun onBindHolder(holder: TagViewHolder, position: Int) {
+        holder.item_position=position
         holder.bind(getItemAt(position))
     }
 
@@ -73,8 +74,8 @@ class TagSearchAdapter(context: Context) : ELEFilterableListAdapter<Tag, TagSear
             val i = s.indexOf(filterWord)
 
             if (i >= 0) {
-                span[i..filterWord.length] = ForegroundColorSpan(R.color.colorAccent.color())
-                span[i..filterWord.length] = StyleSpan(Typeface.BOLD)
+                span[i..i+filterWord.length] = ForegroundColorSpan(R.color.colorAccent.color())
+                span[i..i+filterWord.length] = StyleSpan(Typeface.BOLD)
             }
             tagV.text = span
             tagCountV.text = "${t.count.formatNumber()} posts"

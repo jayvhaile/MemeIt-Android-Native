@@ -17,6 +17,7 @@ import com.innov8.memeit.R
 import com.innov8.memeit.Utils.color
 import com.innov8.memeit.Utils.formatNumber
 import com.innov8.memeit.Utils.loadImage
+import com.innov8.memeit.Utils.prefix
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.memeit.backend.models.Tag
 import com.memeit.backend.models.User
@@ -45,6 +46,7 @@ class UserSearchAdapter(context: Context) : ELEFilterableListAdapter<User, UserS
     }
 
     override fun onBindHolder(holder: UserViewHolder, position: Int) {
+        holder.item_position=position
         holder.bind(getItemAt(position))
     }
 
@@ -68,18 +70,21 @@ class UserSearchAdapter(context: Context) : ELEFilterableListAdapter<User, UserS
         private val nameV: TextView = itemView.findViewById(R.id.profile_name)
         private val usernameV: TextView = itemView.findViewById(R.id.profile_username)
         private val postCountV: TextView = itemView.findViewById(R.id.post_count)
+
         init {
             itemView.setOnClickListener { onItemClicked?.invoke(getItemAt(item_position)) }
         }
+
         @SuppressLint("SetTextI18n")
         override fun bind(t: User) {
+            profileV.setText(t.name!!.prefix())
             profileV.loadImage(t.imageUrl)
             t.name?.let {
                 val span = it.toSpannable()
                 val i = it.toLowerCase().indexOf(filterWord.toLowerCase())
                 if (i >= 0) {
-                    span[i..filterWord.length] = ForegroundColorSpan(R.color.colorAccent.color())
-                    span[i..filterWord.length] = StyleSpan(Typeface.BOLD)
+                    span[i..i + filterWord.length] = ForegroundColorSpan(R.color.colorAccent.color())
+                    span[i..i + filterWord.length] = StyleSpan(Typeface.BOLD)
                 }
                 nameV.text = span
             }
@@ -87,8 +92,8 @@ class UserSearchAdapter(context: Context) : ELEFilterableListAdapter<User, UserS
                 val span = "@$it".toSpannable()
                 val i = "@$it".toLowerCase().indexOf(filterWord.toLowerCase())
                 if (i >= 0) {
-                    span[i..filterWord.length] = ForegroundColorSpan(R.color.colorAccent.color())
-                    span[i..filterWord.length] = StyleSpan(Typeface.BOLD)
+                    span[i..i + filterWord.length] = ForegroundColorSpan(R.color.colorAccent.color())
+                    span[i..i + filterWord.length] = StyleSpan(Typeface.BOLD)
                 }
                 usernameV.text = span
             }

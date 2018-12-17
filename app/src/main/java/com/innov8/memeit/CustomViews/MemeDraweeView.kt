@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.drawable.Animatable
 import android.net.Uri
+import android.os.Build
 import android.util.AttributeSet
 import com.amulyakhare.textdrawable.TextDrawable
 import com.facebook.common.executors.CallerThreadExecutor
@@ -77,24 +78,27 @@ class MemeDraweeView : SimpleDraweeView {
     var autoPlayGif = true
 
     init {
-        val textDrawable = TextDrawable
-                .builder()
-                .beginConfig()
-                .bold()
-                .textColor(Color.GRAY)
-                .fontSize(14.sp)
-                .endConfig()
-        val r = "Loading Meme Failed. Tap to Retry"
-        val f = "Loading Meme Failed"
-        val retry = textDrawable.buildRect(r, Color.TRANSPARENT)
-        val failed = textDrawable.buildRect(f, Color.TRANSPARENT)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            val textDrawable = TextDrawable
+                    .builder()
+                    .beginConfig()
+                    .bold()
+                    .textColor(Color.GRAY)
+                    .fontSize(14.sp)
+                    .endConfig()
+            val r = "Loading Meme Failed. Tap to Retry"
+            val f = "Loading Meme Failed"
+            val retry = textDrawable.buildRect(r, Color.TRANSPARENT)
+            val failed = textDrawable.buildRect(f, Color.TRANSPARENT)
 
 
-        controller = Fresco.newDraweeControllerBuilder()
-                .setTapToRetryEnabled(true)
-                .build()
-        hierarchy.setRetryImage(retry)
-        hierarchy.setFailureImage(failed)
+            controller = Fresco.newDraweeControllerBuilder()
+                    .setTapToRetryEnabled(true)
+                    .build()
+            hierarchy.setRetryImage(retry)
+            hierarchy.setFailureImage(failed)
+        }
+
         hierarchy.setProgressBarImage(LoadingDrawable(context))
         setOnClickListener {
             when (state) {
@@ -202,7 +206,7 @@ class MemeDraweeView : SimpleDraweeView {
                 .setPostprocessor(IterativeBoxBlurPostProcessor(2))
                 .build()
 
-        var req = ImageRequest.fromUri(getImageMemeUrl(imageId, ratio,fac,quality))
+        var req = ImageRequest.fromUri(getImageMemeUrl(imageId, ratio, fac, quality))
         if (resizeWidth > 0 && resizeHeight > 0)
             req = ImageRequestBuilder.fromRequest(req)
                     .setResizeOptions(ResizeOptions.forDimensions(resizeWidth, resizeHeight))
@@ -225,7 +229,7 @@ class MemeDraweeView : SimpleDraweeView {
     }
 
     private fun loadGifMeme() {
-        val gifUrl = getGifMemeUrl(imageId, ratio,fac,quality)
+        val gifUrl = getGifMemeUrl(imageId, ratio, fac, quality)
         val gifDownloaded = Fresco.getImagePipeline().isInBitmapMemoryCache(Uri.parse(gifUrl))
         //checking if gif is in memory cache
         if (gifDownloaded) {
@@ -239,9 +243,9 @@ class MemeDraweeView : SimpleDraweeView {
             setReq(makeLowResGifReq(getLowResGifMemeUrl(imageId)))
 
             //checking in disk cache
-            Fresco.getImagePipeline().isInDiskCache(Uri.parse(gifUrl)).subscribe(Subscriber{
+            Fresco.getImagePipeline().isInDiskCache(Uri.parse(gifUrl)).subscribe(Subscriber {
                 //load the meme if eithr
-                if(it.result==true || autoLoadGif){
+                if (it.result == true || autoLoadGif) {
                     GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                         state = STATE_LOADING
                         loadGifWithThumb(gifUrl)
@@ -252,7 +256,7 @@ class MemeDraweeView : SimpleDraweeView {
         }
     }
 
-    private fun loadGifWithThumb(gifUrl: String = getGifMemeUrl(imageId, ratio,fac,quality)) {
+    private fun loadGifWithThumb(gifUrl: String = getGifMemeUrl(imageId, ratio, fac, quality)) {
         controller = Fresco.newDraweeControllerBuilder()
                 .setLowResImageRequest(makeLowResGifReq(getLowResGifMemeUrl(imageId)))
                 .setImageRequest(makeHighResGifReq(gifUrl, resizeWidth, resizeHeight))
@@ -263,6 +267,7 @@ class MemeDraweeView : SimpleDraweeView {
 
     private fun getLowResGifMemeUrl(id: String): String =
             "https://res.cloudinary.com/innov8/image/fetch/f_jpg,c_fit,e_blur:$blurSize,h_$lowSize,q_$lowQuality,w_$lowSize/${id.full}"
+
     private fun getLowResImageMemeUrl(id: String): String =
             "https://res.cloudinary.com/innov8/image/fetch/c_fit,e_blur:$blurSize,h_$lowSize,q_$lowQuality,w_$lowSize/${id.full}"
 
@@ -283,7 +288,7 @@ class MemeDraweeView : SimpleDraweeView {
     }
 }
 
-class Subscriber(val onResult:(dataSource: DataSource<Boolean?>)->Unit):DataSubscriber<Boolean?>{
+class Subscriber(val onResult: (dataSource: DataSource<Boolean?>) -> Unit) : DataSubscriber<Boolean?> {
     override fun onFailure(dataSource: DataSource<Boolean?>?) {
     }
 

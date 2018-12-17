@@ -112,8 +112,7 @@ abstract class Frag : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             load()
         } else if (!inPermission) {
             inPermission = true
-            requestPermissions(arrayOf(READ_EXTERNAL_STORAGE),
-                    REQUEST_PERMS)
+            requestPermissions(arrayOf(READ_EXTERNAL_STORAGE),REQUEST_PERMS)
         }
     }
 

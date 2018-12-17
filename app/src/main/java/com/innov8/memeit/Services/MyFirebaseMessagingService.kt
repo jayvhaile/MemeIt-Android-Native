@@ -13,11 +13,12 @@ import com.memeit.backend.models.MyUser
 import com.memeit.backend.models.Notification
 import com.innov8.memeit.commons.*
 import com.innov8.memeit.R
+import com.innov8.memeit.Workers.uploadFirebaseToken
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(s: String) {
         super.onNewToken(s)
-        MemeItUsers.updateUserToken(s).call { }
+        uploadFirebaseToken(s)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -33,7 +34,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             Notification.COMMENT_TYPE -> SettingsActivity.isCommentNotifEnabled(this)
             else -> SettingsActivity.isNotifEnabled(this)
         }
-        if (enabled) sendUserNotification(NotifData(n.title, n.message,R.mipmap.icon, Intent(context, NotificationActivity::class.java).apply {
+        if (enabled) sendUserNotification(NotifData(n.title, n.message, R.mipmap.icon, Intent(context, NotificationActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }), 542)
     }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceActivity
 import android.preference.PreferenceManager
+import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.MyUser
@@ -18,9 +19,17 @@ class SettingsActivity : PreferenceActivity() {
         user = MemeItClient.myUser!!
         addPreferencesFromResource(R.xml.main_pref)
         preferenceScreen.findPreference(PREF_KEY_LOGOUT).setOnPreferenceClickListener {
-            MemeItClient.Auth.signOut()
-            startActivity(Intent(this, AuthActivity::class.java))
-            finish()
+            MaterialDialog.Builder(this)
+                    .title("Are you sure you want to logout?")
+                    .content("All ongoing uploads will be cancelled")
+                    .positiveText("Logout")
+                    .negativeText("Cancel")
+                    .onPositive { _, _ ->
+                        MemeItClient.Auth.signOut()
+                        startActivity(Intent(this, AuthActivity::class.java))
+                        finish()
+                    }.show()
+
             true
         }
     }

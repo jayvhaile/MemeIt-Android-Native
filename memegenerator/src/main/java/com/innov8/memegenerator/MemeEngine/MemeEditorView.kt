@@ -31,12 +31,38 @@ import com.innov8.memeit.commons.models.TextProperty
 
 class MemeEditorView : ViewGroup, EditorStateChangedListener {
     override fun onEditorOpened(tag: String, cf: CloseableFragment) {
-        val en=enablePaint
         enablePaint = tag == "paint"
-        if(en!=enablePaint)
-            forEach {
-                isEnabled=!enablePaint
+
+        when (tag) {
+            "text" -> {
+                if (focusedItem !is MemeTextView) {
+                    var selected = false
+                    for (i in 0 until childCount) {
+                        val it = getChildAt(i)
+                        if (it is MemeTextView) {
+                            it.requestFocus()
+                            selected = true
+                            break
+                        }
+                    }
+                    if (!selected) requestFocus()
+                }
             }
+            "sticker" -> {
+                if (focusedItem !is MemeStickerView) {
+                    var selected = false
+                    for (i in 0 until childCount) {
+                        val it = getChildAt(i)
+                        if (it is MemeStickerView) {
+                            it.requestFocus()
+                            selected = true
+                            break
+                        }
+                    }
+                    if (!selected) requestFocus()
+                }
+            }
+        }
     }
 
     override fun onEditorClosed() {

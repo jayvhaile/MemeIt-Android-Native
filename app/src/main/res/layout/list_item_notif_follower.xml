@@ -62,6 +62,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:text="X started following you."
+                android:textColor="#313131"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/notif_icon"
                 app:layout_constraintEnd_toEndOf="parent"

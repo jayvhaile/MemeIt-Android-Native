@@ -54,7 +54,7 @@ class TextEditorFragment : Fragment() {
         seekbarView = IndicatorSeekBar.with(context!!)
                 .min(5f)
                 .max(100f)
-                .tickCount(20)
+                .tickCount(40)
                 .build()
 
 

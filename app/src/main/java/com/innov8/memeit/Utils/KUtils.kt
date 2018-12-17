@@ -3,10 +3,13 @@ package com.innov8.memeit.Utils
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.content.ContentValues
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.provider.MediaStore
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
@@ -21,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewConfiguration
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.set
 import androidx.core.text.toSpannable
 import androidx.core.text.toSpanned
@@ -47,6 +51,7 @@ import com.memeit.backend.models.Meme.MemeType.GIF
 import com.memeit.backend.models.Meme.MemeType.IMAGE
 import com.memeit.backend.models.Reaction
 import com.stfalcon.frescoimageviewer.ImageViewer
+import java.io.File
 import java.net.ServerSocket
 import java.sql.Time
 import java.text.SimpleDateFormat
@@ -159,9 +164,7 @@ fun ProfileDraweeView.loadImage(url: String?, width: Int = R.dimen.profile_image
 }
 
 fun Reaction.getDrawable(active: Boolean = true): Drawable {
-    val activeRID = intArrayOf(R.drawable.laughing, R.drawable.rofl, R.drawable.neutral, R.drawable.angry)
-    val inactiveRID = intArrayOf(R.drawable.laughing_inactive_light, R.drawable.rofl_inactive, R.drawable.neutral_inactive, R.drawable.angry_inactive)
-    return VectorDrawableCompat.create(it.resources, if (active) activeRID[getType().ordinal] else inactiveRID[getType().ordinal], null)!!
+    return ResourcesCompat.getDrawable(it.resources, getDrawableID(active), null)!!
 }
 
 fun Reaction.getDrawableID(active: Boolean = true): Int {
@@ -359,32 +362,6 @@ fun Pair<TextInputLayout, TextInputLayout>.validateMatch(tag: String): Boolean {
     } ?: return true
 }
 
-fun makeDescSpan(s: String): Spanned {
-    return s.toSpannable().apply {
-        val sa = s.split(" ")
-        val linkColor = Color.BLUE
-        sa.forEach {
-            if (it.startsWith("@") && it.length > 1) {
-                val i = s.indexOf(it)
-                this[i..i + it.length] = ForegroundColorSpan(Color.CYAN)
-                this[i..i + it.length] = object : ClickableSpan() {
-                    override fun onClick(widget: View) {
-                        widget.context.toast("Goto user profile ${it.substring(1)}")
-                    }
-                }
-            } else if (it.startsWith("#") && it.length > 1) {
-                val i = s.indexOf(it)
-                this[i..i + it.length] = ForegroundColorSpan(linkColor)
-                this[i..i + it.length] = object : ClickableSpan() {
-                    override fun onClick(widget: View) {
-                        widget.context.toast("Search Tag ${it.substring(1)}")
-                    }
-                }
-            }
-        }
-    }.toSpanned()
-}
-
 fun enqueueProfileImageUpload(imageUrl: String) {
     val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -420,4 +397,12 @@ fun TabLayout.addOnTabSelected(listener: (TabLayout.Tab) -> Unit) {
             listener(tab!!)
         }
     })
+}
+
+fun Context.addFileToMediaStore(file: File, mimeType: String = "image/jpeg") {
+    contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            ContentValues().apply {
+                put(MediaStore.Images.Media.DATA, file.absolutePath)
+                put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+            })
 }

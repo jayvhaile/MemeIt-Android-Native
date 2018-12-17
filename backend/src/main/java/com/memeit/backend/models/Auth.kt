@@ -11,8 +11,7 @@ interface AuthRequest {
 
 data class UsernameAuthRequest(var username: String,
                                var password: String,
-                               var email: String? = null,
-                               val ftoken:String?=null) : AuthRequest {
+                               var email: String? = null) : AuthRequest {
     init {
         username = username.trim()
         email = if (email.isNullOrEmpty()) null else email
@@ -37,8 +36,7 @@ data class UsernameAuthRequest(var username: String,
 data class GoogleAuthSignUpRequest(val username: String,
                                    val email: String,
                                    @SerializedName("gid") val googleID: String,
-                                   val token: String,
-                                   val ftoken: String) : AuthRequest {
+                                   val token: String) : AuthRequest {
     override fun validate(): List<String> {
         return listOf()
     }
@@ -61,7 +59,7 @@ data class GoogleInfo(val name: String, val imageUrl: String?, val email: String
             parcel.readString()!!)
 
     fun toSignInReq() = GoogleAuthSignInRequest(gid, token)
-    fun toSignUpReq(username: String, ftoken: String) = GoogleAuthSignUpRequest(username, email, gid, token, ftoken)
+    fun toSignUpReq(username: String) = GoogleAuthSignUpRequest(username, email, gid, token)
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
         parcel.writeString(imageUrl)
@@ -98,7 +96,7 @@ data class FacebookInfo(val id: String, val token: String, val firstName: String
             parcel.readString())
 
     fun toSignInReq() = FacebookAuthSignInRequest(id, token)
-    fun toSignUpReq(username: String, ftoken: String) = FacebookAuthSignUpRequest(username, id, token, email, ftoken)
+    fun toSignUpReq(username: String) = FacebookAuthSignUpRequest(username, id, token, email)
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
         parcel.writeString(token)
@@ -127,8 +125,7 @@ data class FacebookInfo(val id: String, val token: String, val firstName: String
 data class FacebookAuthSignUpRequest(val username: String,
                                      @SerializedName("fid") val facebookID: String,
                                      val token: String,
-                                     val email: String?,
-                                     val ftoken: String) : AuthRequest {
+                                     val email: String?) : AuthRequest {
     override fun validate(): List<String> {
         return listOf()
     }
