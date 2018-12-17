@@ -56,6 +56,9 @@ interface MemeItService {
     @GET("user/{id}/")
     fun getUserById(@Path("id") uid: String): Call<User>
 
+    @GET("user/username/{username}/")
+    fun getUserByUserName(@Path("username") username: String): Call<User>
+
 
     @GET("user/me/followers")
     fun getMyFollowersList(@Query("skip") skip: Int, @Query("limit") limit: Int): Call<List<User>>

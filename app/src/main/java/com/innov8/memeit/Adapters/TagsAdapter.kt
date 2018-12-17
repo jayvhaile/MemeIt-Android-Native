@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.github.ybq.android.spinkit.style.CubeGrid
+import com.github.ybq.android.spinkit.style.Wave
 import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memeit.CustomClasses.CustomMethods
 import com.innov8.memeit.R
@@ -23,7 +24,7 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
     override var errorDescription: String = "Failed to load tags"
     override var emptyActionText: String? = "Reload"
     override var errorActionText: String? = "Try Again"
-    override val loadingDrawable = CubeGrid().apply {
+    override val loadingDrawable = Wave().apply {
         color = Color.rgb(255, 100, 0)
 
     }
@@ -60,21 +61,26 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
                 }
             tagFollowV.setOnClickListener { _ ->
                 val t = getItemAt(item_position)
-                if (tagFollowV.text == "Unfollow")
+                if (tagFollowV.text == "Unfollow") {
+                    tagFollowV.text = "Unfollowing..."
                     MemeItUsers.unfollowTag(t.tag).call({
-                        context?.toast("Unfollowed")
                         tagFollowV.text = "Follow"
                     }, {
                         context?.toast("Failed to Unfollow:- $it")
+                        tagFollowV.text = "Unfollow"
 
                     })
-                else
+                }
+                else{
+                    tagFollowV.text = "Following..."
                     MemeItUsers.followTags(arrayOf(t.tag)).call({
-                        context?.toast("Followed")
                         tagFollowV.text = "Unfollow"
                     }, {
                         context?.toast("Failed to Follow:- $it")
+                        tagFollowV.text = "Follow"
                     })
+                }
+
             }
         }
 

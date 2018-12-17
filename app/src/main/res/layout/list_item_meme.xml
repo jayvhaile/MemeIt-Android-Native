@@ -87,7 +87,9 @@
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/meme_image" />
+
     <!--react buttons-->
+
     <ImageView
         android:id="@+id/react_funny"
         android:layout_width="1dp"

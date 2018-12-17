@@ -77,9 +77,9 @@
             android:layout_height="10dp"
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="2dp"
             android:layout_marginRight="5dp"
-            android:alpha="0.8"
+            android:alpha="0.7"
             android:background="@drawable/dot" />
 
         <com.innov8.memeit.commons.views.FontTextView
@@ -102,9 +102,9 @@
             android:layout_height="10dp"
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="2dp"
             android:layout_marginRight="5dp"
-            android:alpha="0.8"
+            android:alpha="0.7"
             android:background="@drawable/dot" />
 
         <com.innov8.memeit.commons.views.FontTextView
@@ -119,7 +119,7 @@
             android:id="@+id/profile_followings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" Followings"
+            android:text=" Following"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -133,6 +133,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:ellipsize="end"
+        android:textColor="#313131"
         android:text="jvhaile"
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -152,6 +153,7 @@
         android:gravity="center_horizontal"
         android:maxHeight="56dp"
         android:text="the best"
+        android:textColor="#313131"
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

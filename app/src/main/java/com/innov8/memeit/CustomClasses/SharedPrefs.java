@@ -21,6 +21,9 @@ public class SharedPrefs {
     public enum CachePreset {
         LOW, MEDIUM, HIGH
     }
+    public enum ColorPreset{
+        RED, ORANGE, BLUE, GREEN, BLACK, PURPLE, GOLDEN, PINK
+    }
     public enum QualityPreset {
         VERY_LOW(10),LOW(25), MEDIUM(50), HIGH(75),VERY_HIGH(100);
         final int quality;
@@ -167,4 +170,24 @@ public class SharedPrefs {
     public void setContext(Context context) {
         this.context = context;
     }
+
+    public void setCoverColor(ColorPreset colorPreset){
+        int color;
+        switch (colorPreset){
+//            case RED: color = context.getResources().getColor(R.color.red);
+//            case BLUE:color = context.getResources().getColor(R.color.blue);
+//            case PINK:color = context.getResources().getColor(R.color.pink);
+//            case BLACK:color = context.getResources().getColor(R.color.black);
+//            case GREEN:color = context.getResources().getColor(R.color.greeny);
+//            case ORANGE:color = context.getResources().getColor(R.color.orange);
+//            case PURPLE:color = context.getResources().getColor(R.color.purple);
+//            case GOLDEN:color = context.getResources().getColor(R.color.golden);
+//            default: color = context.getResources().getColor(R.color.orange);
+        }
+//        editor.putInt("color",color);
+        editor.apply();
+    }
+//    public int getCoverColor(){
+//        return preferences.getInt("color",context.getResources().getColor(R.color.orange));
+//    }
 }

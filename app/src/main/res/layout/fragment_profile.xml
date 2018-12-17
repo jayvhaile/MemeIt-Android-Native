@@ -9,7 +9,7 @@
         android:id="@+id/cover"
         android:layout_width="match_parent"
         android:layout_height="@dimen/profile_cover_expanded_height"
-        android:background="@drawable/bb"
+        android:background="@color/red"
         app:layout_behavior="com.innov8.memeit.CustomClasses.CoverBehaviour" />
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/main.appbar"

@@ -6,13 +6,18 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.imagepipeline.request.ImageRequest
 import com.google.android.material.snackbar.Snackbar
+import com.innov8.memeit.CustomClasses.SharedPrefs
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.*
 import com.innov8.memeit.commons.toast
 import com.memeit.backend.MemeItClient
+import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.models.UserReq
 import com.theartofdev.edmodo.cropper.CropImage
@@ -37,6 +42,53 @@ class ProfileSettingsActivity : AppCompatActivity() {
                     .setCropShape(CropImageView.CropShape.OVAL)
                     .start(this)
         }
+        val sharedPrefs = SharedPrefs(this,null);
+        val colorListener:View.OnClickListener = View.OnClickListener {
+            var color = "";
+            when(it){
+                red->{
+                    color = "red";
+                }
+                pink-> {
+                    color = "pink";
+                }
+                blue-> {
+                    color = "blue";
+                }
+                purple-> {
+                    color = "purple";
+                }
+                black-> {
+                    color = "black";
+                }
+                green-> {
+                    color = "green";
+                }
+                orange-> {
+                    color = "orange";
+                }
+                golden-> {
+                    color = "golden";
+                }
+                else->{
+                    color = "orange";
+                };
+            }
+            MemeItUsers.updateMyUser(UserReq(coverImageUrl = color),{
+                context.toast(color + " is selected.",Toast.LENGTH_SHORT)
+            },{
+                context.toast("An error has occurred.",Toast.LENGTH_SHORT)
+
+            });
+        }
+        red.setOnClickListener(colorListener)
+        green.setOnClickListener(colorListener)
+        blue.setOnClickListener(colorListener)
+        purple.setOnClickListener(colorListener)
+        golden.setOnClickListener(colorListener)
+        orange.setOnClickListener(colorListener)
+        pink.setOnClickListener(colorListener)
+        black.setOnClickListener(colorListener)
         settings_name.editText?.text?.append(user.name)
         settings_bio.editText?.text?.append(user.bio ?: "")
         setSupportActionBar(toolbar_profile_settings)
@@ -72,7 +124,9 @@ class ProfileSettingsActivity : AppCompatActivity() {
     }
 
     private fun onSave() {
-        settings_pp.snack("Updating Profile", duration = Snackbar.LENGTH_LONG)
+        var dialog = MaterialDialog.Builder(this).title("Updating profile")
+                .progress(true,100)
+                .show()
         val muser = MemeItClient.myUser!!
         val newName = settings_name.text
         val newBio = settings_bio.text
@@ -90,10 +144,19 @@ class ProfileSettingsActivity : AppCompatActivity() {
             }
             if (changed)
                 MemeItUsers.updateMyUser(user, {
-                    toast("Profile Updated")
+                    dialog.hide()
+                    onBackPressed()
                 }) { _ ->
                     settings_name.snack("Error updating profile", "Retry", { onSave() })
+                    MaterialDialog.Builder(context).title("Error")
+                            .content("An error has occured while updating your profile.")
+                            .positiveText("Retry")
+                            .negativeText("Cancel")
+                            .onPositive { _, _ ->
+                                onSave()
+                            }
+
+                    }
                 }
         }
     }
-}
