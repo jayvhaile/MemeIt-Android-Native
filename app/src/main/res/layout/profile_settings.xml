@@ -6,10 +6,13 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_profile_settings"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_nav_back"
-        android:minHeight="?attr/actionBarSize" />
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.innov8.memeit.commons.views.ProfileDraweeView
         android:id="@+id/settings_pp"
@@ -66,117 +69,5 @@
             android:maxLength="70"
             android:theme="@style/EditTextStyle" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <com.innov8.memeit.commons.views.FontTextView
-        android:id="@+id/fontTextView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Profile theme"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_bio" />
-
-    <ImageButton
-        android:id="@+id/orange"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/orange"
-        app:layout_constraintEnd_toStartOf="@+id/red"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fontTextView2" />
-
-    <ImageButton
-        android:id="@+id/red"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/red"
-        app:layout_constraintEnd_toStartOf="@+id/blue"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/orange"
-        app:layout_constraintTop_toTopOf="@+id/orange" />
-
-    <ImageButton
-        android:id="@+id/blue"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/blue"
-        app:layout_constraintEnd_toStartOf="@+id/purple"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/red"
-        app:layout_constraintTop_toTopOf="@+id/orange" />
-
-    <ImageButton
-        android:id="@+id/purple"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/purple"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/blue"
-        app:layout_constraintTop_toTopOf="@+id/orange" />
-
-    <ImageButton
-        android:id="@+id/green"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/greeny"
-        app:layout_constraintEnd_toStartOf="@+id/golden"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/orange" />
-
-    <ImageButton
-        android:id="@+id/golden"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/golden"
-        app:layout_constraintEnd_toStartOf="@+id/black"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/green"
-        app:layout_constraintTop_toBottomOf="@+id/orange" />
-
-    <ImageButton
-        android:id="@+id/black"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/black"
-        app:layout_constraintEnd_toStartOf="@+id/pink"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/golden"
-        app:layout_constraintTop_toBottomOf="@+id/orange" />
-
-    <ImageButton
-        android:id="@+id/pink"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:background="#00000000"
-        android:src="@drawable/circle"
-        android:tint="@color/pink"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/black"
-        app:layout_constraintTop_toBottomOf="@+id/orange" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

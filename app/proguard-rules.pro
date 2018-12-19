@@ -124,4 +124,6 @@
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {*;}
 
 -dontwarn com.google.android.gms.**
+-keep class com.memeit.backend.** { *; }
+-keep class com.memeit.backend.models.** { *; }
 

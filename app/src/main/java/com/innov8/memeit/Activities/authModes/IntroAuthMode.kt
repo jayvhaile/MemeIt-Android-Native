@@ -73,7 +73,7 @@ class IntroAuthMode(private val authActivity: AuthActivity) : AuthMode {
         authActivity.intro_pager.adapter = pager
         authActivity.intro_pager.setPageTransformer(false, transformer)
         authActivity.action_btn.text = "Create Account"
-        authActivity.auth_question.text = "Already has an account?"
+        authActivity.auth_question.text = "Already have an account?"
         authActivity.auth_question_action.text = "Login"
     }
 

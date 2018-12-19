@@ -29,6 +29,8 @@ import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
 import kotlinx.android.synthetic.main.activity_main.*
+import android.view.WindowManager
+import android.graphics.Color
 
 
 class MainActivity : AppCompatActivity() {
@@ -92,6 +94,7 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, 101)
             rootNav.closeMenu(false)
         }
+        changeStatColor()
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -114,12 +117,15 @@ class MainActivity : AppCompatActivity() {
                     setTitle(0)
                     main_viewpager.setCurrentItem(0, false)
                     supportActionBar!!.show()
+                    changeStatColor()
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.menu_trending -> {
                     setTitle(1)
                     main_viewpager.setCurrentItem(1, false)
                     supportActionBar!!.show()
+                    changeStatColor()
+
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.menu_create -> {
@@ -128,11 +134,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.menu_favorites -> {
                     setTitle(2)
+                    changeStatColor()
                     supportActionBar!!.show()
                     main_viewpager.setCurrentItem(2, false)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.menu_me -> {
+                    changeStatColor(true)
+
                     supportActionBar!!.hide()
                     main_viewpager.setCurrentItem(3, false)
                     return@OnNavigationItemSelectedListener true
@@ -140,6 +149,12 @@ class MainActivity : AppCompatActivity() {
             }
             false
         })
+    }
+
+    fun changeStatColor(profile: Boolean = false) {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = if (profile) Color.RED else Color.parseColor("#eeeeee")
     }
 
     override fun setTitle(index: Int) {
