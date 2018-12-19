@@ -289,7 +289,7 @@ class MemeView : FrameLayout {
         val ap = DynamicLink.AndroidParameters.Builder("com.innov8.memeit").build()
         val ll = FirebaseDynamicLinks.getInstance()
                 .createDynamicLink()
-                .setDomainUriPrefix("memeit.page.link")
+                .setDomainUriPrefix("memeitapp.page.link")
                 .setLink(Uri.parse("${MemeItApp.SERVER_URL}meme/${meme.id}"))
                 .setAndroidParameters(ap)
                 .buildDynamicLink().uri
@@ -323,7 +323,7 @@ class MemeView : FrameLayout {
                         "com.innov8.memeit.fileprovider",
                         file)
                 val intent = ShareCompat.IntentBuilder.from(context as Activity)
-                        .setSubject(ll.toString())
+                        .setSubject( "${MemeItApp.SERVER_DOMAIN}/share/${meme.id}")
                         .setStream(fileUri)
                         .setType("image/*")
                         .createChooserIntent()
@@ -373,7 +373,6 @@ class MemeView : FrameLayout {
             }
         }
     }
-
 
 
     private val reqCode = 154

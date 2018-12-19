@@ -26,11 +26,14 @@ class UserListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_list)
-
         supportFragmentManager.beginTransaction()
-                .add(R.id.holder,UserListFragment.newInstance(intent.getParcelableExtra("loader")))
+                .add(R.id.holder, UserListFragment.newInstance(intent.getParcelableExtra("loader")))
                 .commit()
+    }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     companion object {

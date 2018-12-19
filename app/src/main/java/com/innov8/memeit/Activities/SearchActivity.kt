@@ -74,13 +74,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun getSearchTags(text: String): Array<String> {
-        val tokens = text.split(" ")
-        return if (tokens.size == 1)
-            arrayOf(tokens[0])
-        else
-            tokens.filter { it.startsWith('#') && it.length > 1 }
-                    .map { it.substring(1) }
-                    .toTypedArray()
+        return text.split(" ")
+                .filter { it.startsWith('#') && it.length > 1 }
+                .map { it.substring(1) }
+                .toTypedArray()
     }
 
     private fun searchUsers(search: String) {

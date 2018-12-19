@@ -42,53 +42,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
                     .setCropShape(CropImageView.CropShape.OVAL)
                     .start(this)
         }
-        val sharedPrefs = SharedPrefs(this,null);
-        val colorListener:View.OnClickListener = View.OnClickListener {
-            var color = "";
-            when(it){
-                red->{
-                    color = "red";
-                }
-                pink-> {
-                    color = "pink";
-                }
-                blue-> {
-                    color = "blue";
-                }
-                purple-> {
-                    color = "purple";
-                }
-                black-> {
-                    color = "black";
-                }
-                green-> {
-                    color = "green";
-                }
-                orange-> {
-                    color = "orange";
-                }
-                golden-> {
-                    color = "golden";
-                }
-                else->{
-                    color = "orange";
-                };
-            }
-            MemeItUsers.updateMyUser(UserReq(coverImageUrl = color),{
-                context.toast(color + " is selected.",Toast.LENGTH_SHORT)
-            },{
-                context.toast("An error has occurred.",Toast.LENGTH_SHORT)
 
-            });
-        }
-        red.setOnClickListener(colorListener)
-        green.setOnClickListener(colorListener)
-        blue.setOnClickListener(colorListener)
-        purple.setOnClickListener(colorListener)
-        golden.setOnClickListener(colorListener)
-        orange.setOnClickListener(colorListener)
-        pink.setOnClickListener(colorListener)
-        black.setOnClickListener(colorListener)
         settings_name.editText?.text?.append(user.name)
         settings_bio.editText?.text?.append(user.bio ?: "")
         setSupportActionBar(toolbar_profile_settings)
@@ -124,8 +78,8 @@ class ProfileSettingsActivity : AppCompatActivity() {
     }
 
     private fun onSave() {
-        var dialog = MaterialDialog.Builder(this).title("Updating profile")
-                .progress(true,100)
+        val dialog = MaterialDialog.Builder(this).title("Updating profile")
+                .progress(true, 100)
                 .show()
         val muser = MemeItClient.myUser!!
         val newName = settings_name.text
@@ -145,18 +99,12 @@ class ProfileSettingsActivity : AppCompatActivity() {
             if (changed)
                 MemeItUsers.updateMyUser(user, {
                     dialog.hide()
+                    toast("Profile Updated")
                     onBackPressed()
-                }) { _ ->
+                }) {
+                    dialog.hide()
                     settings_name.snack("Error updating profile", "Retry", { onSave() })
-                    MaterialDialog.Builder(context).title("Error")
-                            .content("An error has occured while updating your profile.")
-                            .positiveText("Retry")
-                            .negativeText("Cancel")
-                            .onPositive { _, _ ->
-                                onSave()
-                            }
-
-                    }
                 }
         }
     }
+}

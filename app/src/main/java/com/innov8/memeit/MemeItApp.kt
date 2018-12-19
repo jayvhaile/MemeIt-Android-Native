@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.StrictMode
 import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.multidex.MultiDexApplication
 import com.cloudinary.android.MediaManager
 import com.crashlytics.android.Crashlytics
@@ -27,7 +28,8 @@ class MemeItApp : MultiDexApplication() {
     companion object {
         lateinit var instance: Application
         private const val apiVersion = 1
-        const val SERVER_URL = "https://memeitapp.com/api/v$apiVersion/"
+        const val SERVER_DOMAIN = "https://memeitapp.com"
+        const val SERVER_URL = "$SERVER_DOMAIN/api/v$apiVersion/"
         const val STORAGE_URL = "https://storage.googleapis.com/meme-store/"
 
         private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/v$apiVersion/"

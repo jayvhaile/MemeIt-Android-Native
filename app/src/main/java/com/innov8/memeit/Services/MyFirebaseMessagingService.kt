@@ -18,6 +18,7 @@ import com.innov8.memeit.Workers.uploadFirebaseToken
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(s: String) {
         super.onNewToken(s)
+        MyUser.get(PreferenceManager.getDefaultSharedPreferences(context)) ?: return
         uploadFirebaseToken(s)
     }
 

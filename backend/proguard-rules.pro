@@ -20,6 +20,18 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+
+
+
+
+
+
+
+#memeit backend
+-keep class com.memeit.backend.models.** { *; }
+
+
+
 -keep class com.cloudinary.android.*Strategy
 -keep class com.cloudinary.android.demo.data.model.** { *; }
 

@@ -50,7 +50,6 @@ class LogInAuthMode(private val authActivity: AuthActivity) : AuthMode {
 
     override fun onAction() {
         authActivity.setLoading(true)
-        retrieveAndUploadFirebaseToken()
 
         val req = UsernameAuthRequest(authActivity.username_field.text, authActivity.password_field.text)
         MemeItClient.Auth.signInWithUsername(req, onSignedIn, authActivity.onError)
@@ -66,6 +65,8 @@ class LogInAuthMode(private val authActivity: AuthActivity) : AuthMode {
             val i = Intent(authActivity, MainActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             authActivity.startActivity(i)
+            retrieveAndUploadFirebaseToken()
+
         }
     }
 

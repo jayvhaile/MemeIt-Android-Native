@@ -280,8 +280,8 @@ interface MemeItService {
     @GET("others/signedUrl")
     fun getSignedUrl(@Query("filename") filename: String, @Query("contentType") contentType: String): Call<MemeItClient.SignedUrl>
 
-    @PUT("/auth/token/{ftoken}")
-    fun updateUserToken(@Path("ftoken") token: String): Call<ResponseBody>
+    @POST("/auth/ftoken")
+    fun updateUserToken(@Body token: FirebaseToken): Call<ResponseBody>
 
     @POST("user/report")
     fun reportUser(@Body report: Report.UserReport): Call<ResponseBody>

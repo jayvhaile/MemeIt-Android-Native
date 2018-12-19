@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.google.firebase.iid.FirebaseInstanceId
 import com.innov8.memeit.Activities.AuthActivity
 import com.innov8.memeit.Utils.text
+import com.innov8.memeit.Workers.retrieveAndUploadFirebaseToken
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.FacebookInfo
 import kotlinx.android.synthetic.main.activity_auth.*
@@ -25,6 +26,7 @@ class FacebookSignupMode(private val authActivity: AuthActivity) : RequestUserna
             authActivity.setLoading(false) {
                 authActivity.setMode(authActivity.personalizeMode, b)
             }
+            retrieveAndUploadFirebaseToken()
         }, authActivity.onError)
     }
 }

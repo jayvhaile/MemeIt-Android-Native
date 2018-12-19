@@ -25,8 +25,9 @@ class GoogleSignupMode(private val authActivity: AuthActivity) : RequestUsername
             authActivity.setLoading(false) {
                 authActivity.setMode(authActivity.personalizeMode, b)
             }
+            retrieveAndUploadFirebaseToken()
+
         }, authActivity.onError)
-        retrieveAndUploadFirebaseToken()
 
     }
 }

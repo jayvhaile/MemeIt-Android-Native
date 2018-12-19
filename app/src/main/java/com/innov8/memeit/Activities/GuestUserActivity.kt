@@ -28,23 +28,37 @@ class GuestUserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.loading_view_layout)
         loader_view.setContentView(R.layout.activity_guest_user)
+
+
         FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnSuccessListener {
-            val memeid = it.link.lastPathSegment
-            if (MemeItClient.myUser != null) {
-                if (memeid == null)
-                    startActivity(Intent(this, MainActivity::class.java))
-                else
-                    CommentsActivity.startWithMemeId(this, memeid)
-            } else {
-                if (memeid == null)
-                    startActivity(Intent(this, AuthActivity::class.java))
-                else {
-                    loader_view.onRetry = { init(memeid) }
-                    init(memeid)
-                }
-            }
+            if(it==null){
+                intent?.data?.lastPathSegment?.let { uri ->
+                    x(uri)
+                }?:finish()
+
+            }else
+            x(it.link.lastPathSegment)
         }.addOnFailureListener {
-            loader_view.setError("ff")
+            intent?.data?.lastPathSegment?.let { uri ->
+                x(uri)
+            } ?: loader_view.setError("failed to get invitation id")
+
+        }
+    }
+
+    private fun x(memeid: String?) {
+        if (MemeItClient.myUser != null) {
+            if (memeid == null)
+                startActivity(Intent(this, MainActivity::class.java))
+            else
+                CommentsActivity.startWithMemeId(this, memeid)
+        } else {
+            if (memeid == null)
+                startActivity(Intent(this, AuthActivity::class.java))
+            else {
+                loader_view.onRetry = { init(memeid) }
+                init(memeid)
+            }
         }
     }
 
@@ -62,7 +76,7 @@ class GuestUserActivity : AppCompatActivity() {
         guest_meme_list.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         guest_meme_list.adapter = adapter
         guest_sign_up.setOnClickListener {
-            startActivity(Intent(this,AuthActivity::class.java))
+            startActivity(Intent(this, AuthActivity::class.java))
         }
     }
 
@@ -71,7 +85,7 @@ class GuestUserActivity : AppCompatActivity() {
             if (viewType != HomeElement.MEME_TYPE)
                 throw IllegalStateException("View Type must only be MEME_TYPE in GuestMemeAdapter")
 
-            return GuestMemeViewHolder(inflater.inflate(R.layout.list_item_guest_meme,parent,false))
+            return GuestMemeViewHolder(inflater.inflate(R.layout.list_item_guest_meme, parent, false))
         }
 
         inner class GuestMemeViewHolder(itemView: View) : MemeViewHolder(itemView, this) {

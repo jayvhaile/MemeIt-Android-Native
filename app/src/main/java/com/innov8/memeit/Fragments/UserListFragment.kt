@@ -98,6 +98,7 @@ class UserListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_user_list, container, false)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         swipe_to_refresh.setOnRefreshListener { loaderAdapter.refresh() }

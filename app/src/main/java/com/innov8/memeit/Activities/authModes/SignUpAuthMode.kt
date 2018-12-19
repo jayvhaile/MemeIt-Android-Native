@@ -65,8 +65,9 @@ class SignUpAuthMode(private val authActivity: AuthActivity) : AuthMode {
             authActivity.setLoading(false) {
                 authActivity.setMode(authActivity.personalizeMode)
             }
+            retrieveAndUploadFirebaseToken()
+
         }, authActivity.onError)
-        retrieveAndUploadFirebaseToken()
     }
 
     override fun onFacebook() {

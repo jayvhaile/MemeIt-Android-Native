@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.SettableFuture
 import com.google.firebase.iid.FirebaseInstanceId
 import com.memeit.backend.MemeItUsers
+import com.memeit.backend.models.FirebaseToken
 import java.io.IOException
 import java.lang.RuntimeException
 import java.util.concurrent.TimeUnit
@@ -74,7 +75,7 @@ class FirebaseTokenUploadWorker(context: Context, params: WorkerParameters) : Wo
     override fun doWork(): Result {
         val token = inputData.getString("token")!!
         return try {
-            val response = MemeItUsers.updateUserToken(token).execute()
+            val response = MemeItUsers.updateUserToken(FirebaseToken(token)).execute()
             if (response.isSuccessful)
                 Result.SUCCESS
             else
