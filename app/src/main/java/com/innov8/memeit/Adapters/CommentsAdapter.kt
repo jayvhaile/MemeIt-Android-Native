@@ -30,9 +30,9 @@ class CommentsAdapter(context: Context) : SimpleELEListAdapter<Comment>(context,
     }
 
 
-    override var emptyDrawableId: Int = R.drawable.ic_comment
+    override var emptyDrawableId: Int = R.drawable.no_comments
     override var errorDrawableId: Int = R.drawable.ic_no_internet
-    override var emptyDescription: String = ""
+    override var emptyDescription: String = "No comments yet."
     override var errorDescription: String = "Couldn't load comments"
     override var emptyActionText: String? = ""
     override var errorActionText: String? = "Try Again"
