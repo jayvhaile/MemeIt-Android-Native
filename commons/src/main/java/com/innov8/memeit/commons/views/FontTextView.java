@@ -24,6 +24,6 @@ public class FontTextView extends androidx.appcompat.widget.AppCompatTextView {
         setCustomFont(context, asset);
     }
     public void setCustomFont(Context c, String asset){
-        this.setTypeface(MyTypeFace.CREATOR.byName("Avenir",getContext()).getTypeFace(getContext()));
+//        this.setTypeface(MyTypeFace.CREATOR.byName("Avenir",getContext()).getTypeFace(getContext()));
     }
 }

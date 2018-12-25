@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -59,6 +60,7 @@ import com.memeit.backend.models.Meme
 import com.memeit.backend.models.Reaction
 import com.memeit.backend.models.Report
 import com.varunest.sparkbutton.SparkButton
+import kotlinx.android.synthetic.main.list_item_meme.view.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
 import java.io.File
@@ -105,7 +107,7 @@ class MemeView : FrameLayout {
     private val reactionCountV: TextView = itemView.findViewById(R.id.meme_reactions)
     private val commentCountV: TextView = itemView.findViewById(R.id.meme_comment_count)
     private val memeMenu: ImageButton = itemView.findViewById(R.id.meme_options)
-    private val memeShare: ImageButton = itemView.findViewById(R.id.meme_share)
+    private val memeShare: ImageView = itemView.findViewById(R.id.meme_share)
     private val reactButton: SparkButton = itemView.findViewById(R.id.react_button)
     private val favButton: SparkButton = itemView.findViewById(R.id.fav_button)
     private val reactTint: View = itemView.findViewById(R.id.tint)
@@ -403,7 +405,7 @@ class MemeView : FrameLayout {
 
             if (m.myReaction == null) {
                 m.reactionCount++
-                if (m == meme) reactionCountV.text = String.format("%d people reacted", m.reactionCount)
+                if (m == meme) reactionCountV.text = String.format("%d reactions", m.reactionCount)
 
             }
             m.myReaction = reactionType.create()
@@ -476,7 +478,7 @@ class MemeView : FrameLayout {
         }
         posterNameV.text = meme.poster?.name
         posterPicV.setText(meme.poster?.name.prefix())
-        reactionCountV.text = String.format("%d people reacted", meme.reactionCount)
+        reactionCountV.text = String.format("%d reactions", meme.reactionCount)
         commentCountV.text = meme.commentCount.toString()
         posterPicV.loadImage(meme.poster?.profileUrl)
         memeDateV.text = meme.date?.formateAsDate()

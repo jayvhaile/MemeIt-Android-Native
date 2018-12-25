@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="Mention User"
+        android:text="Mention person"
         android:background="?attr/selectableItemBackground"
         android:textAllCaps="false"
         android:textColor="@color/colorAccent"

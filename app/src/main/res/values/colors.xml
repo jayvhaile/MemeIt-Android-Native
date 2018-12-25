@@ -24,6 +24,8 @@
     <color name="black">#181818</color>
     <color name="pink">#fb1fff</color>
     <color name="red">#ff2626</color>
+    <color name = "notif_black">#4f000000</color>
+    <color name = "notif_transparent">#00000000</color>
 
 
     <color name="like_bg">#99000000</color>

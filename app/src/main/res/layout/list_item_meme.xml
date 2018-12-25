@@ -25,8 +25,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="5dp"
         android:text="MemeFactory"
+        android:textStyle="bold"
         android:textColor="#313131"
         android:textSize="16sp"
         app:layout_constraintLeft_toRightOf="@+id/notif_icon"
@@ -43,18 +44,6 @@
         app:layout_constraintTop_toBottomOf="@+id/meme_poster_name"
         tools:text="2 hours ago" />
 
-    <ImageButton
-        android:id="@+id/meme_share"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="#0000"
-        android:tint="#000"
-        app:layout_constraintBottom_toTopOf="@+id/guideline12"
-        app:layout_constraintEnd_toStartOf="@+id/meme_options"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_share_black_24dp" />
 
     <ImageButton
         android:id="@+id/meme_options"
@@ -181,12 +170,25 @@
         android:layout_marginLeft="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description"
+        app:layout_constraintTop_toBottomOf="@+id/meme_tags"
         app:sparkbutton_activeImage="@drawable/laughing"
-        app:sparkbutton_iconSize="28dp"
+        app:sparkbutton_iconSize="30dp"
         app:sparkbutton_inActiveImage="@drawable/laughing_inactive_light"
         app:sparkbutton_primaryColor="@color/spark_primary_emoji"
         app:sparkbutton_secondaryColor="@color/spark_secondary" />
+
+
+    <com.innov8.memeit.commons.views.FontTextView
+        android:id="@+id/meme_tags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:textColor="#1384fd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description"
+        tools:text="#programming #java" />
 
 
     <com.luseen.autolinklibrary.AutoLinkTextView
@@ -198,11 +200,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:textColor="#313131"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meme_image"
-        tools:text="This meme is killing me" />
+        app:layout_constraintTop_toBottomOf="@+id/meme_image" />
 
     <com.innov8.memeit.commons.views.FontTextView
         android:id="@+id/meme_reactions"
@@ -213,7 +213,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/react_button"
         app:layout_constraintStart_toEndOf="@+id/react_button"
         app:layout_constraintTop_toTopOf="@+id/react_button"
-        tools:text="30 reactions" />
+        tools:text="30 people reacted" />
 
     <com.varunest.sparkbutton.SparkButton
         android:id="@+id/fav_button"
@@ -248,11 +248,28 @@
         android:id="@+id/meme_comment_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="0"
         app:layout_constraintBottom_toBottomOf="@+id/meme_comment"
+        app:layout_constraintEnd_toStartOf="@+id/meme_share"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/meme_comment" />
+
+    <ImageView
+        android:id="@+id/meme_share"
+        android:layout_width="48dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="#0000"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:src="@drawable/share_outline"
+        android:tint="#000"
+        app:layout_constraintBottom_toBottomOf="@+id/fav_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fav_button" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline12"
@@ -288,4 +305,23 @@
         app:layout_constraintStart_toStartOf="@id/meme_image"
         app:layout_constraintTop_toTopOf="@+id/meme_image"
         app:srcCompat="@drawable/ic_file_download_white_36dp" />
+
+    <com.innov8.memeit.commons.views.FontTextView
+        android:layout_width="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:minWidth="80dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:id="@+id/meme_follow_btn"
+        android:text="Follow"
+        android:textColor="#313131"
+        app:layout_constraintBottom_toTopOf="@+id/guideline12"
+        app:layout_constraintEnd_toStartOf="@+id/meme_options"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
