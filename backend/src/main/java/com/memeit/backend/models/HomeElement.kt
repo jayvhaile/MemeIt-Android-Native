@@ -1,7 +1,5 @@
 package com.memeit.backend.models
 
-import com.innov8.memeit.commons.models.MemeTemplate
-
 
 interface HomeElement{
     companion object {

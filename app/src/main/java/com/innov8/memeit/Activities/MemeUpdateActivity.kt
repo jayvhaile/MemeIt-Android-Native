@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.toast
-import com.innov8.memeit.Utils.loadImage
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
 import com.memeit.backend.models.Meme
@@ -48,7 +47,7 @@ class MemeUpdateActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.menu_save -> {
-                updateMeme(tags, caption_field.text.toString())
+                updateMeme(description.text.toString())
                 true
             }
             else -> false
@@ -56,23 +55,26 @@ class MemeUpdateActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        poster_pp.loadImage(meme.poster?.profileUrl)
-        caption_field.text?.append(meme.description)
+        description.text?.append(meme.description)
         meme_image_view.loadMeme(meme)
-        tags_field.text?.append(meme.tags.map { "#$it" }.joinToString(" "))
-
-
         setSupportActionBar(toolbar)
-        supportActionBar?.title="Edit Meme"
+        supportActionBar?.title = "Edit Meme"
+
+        btn_add_tag.setOnClickListener {
+            startActivityForResult(Intent(this, SearchTagActivity::class.java), SearchTagActivity.REQUEST_CODE)
+        }
+        btn_mention_user.setOnClickListener {
+            startActivityForResult(Intent(this, SearchUserActivity::class.java), SearchUserActivity.REQUEST_CODE)
+        }
     }
 
-    private fun updateMeme(tags: List<String> = meme.tags, desc: String? = meme.description) {
+    private fun updateMeme(desc: String? = meme.description) {
         val p = MaterialDialog.Builder(this)
                 .title("Updating Meme")
                 .progress(true, 100)
                 .build()
         p.show()
-        MemeItMemes.updateMeme(Meme(id = meme.id, tags = tags.toMutableList(), description = desc)).call({
+        MemeItMemes.updateMeme(Meme(id = meme.id, description = desc)).call({
             p.dismiss()
             toast("Meme Updated Successfully")
             finish()
@@ -82,11 +84,22 @@ class MemeUpdateActivity : AppCompatActivity() {
         }
     }
 
-    private val tags
-        get() = tags_field.text.split(" ")
-                .asSequence()
-                .filter { it.startsWith("#") && it.length > 1 }
-                .map { it.substring(1) }
-                .toList()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            SearchTagActivity.REQUEST_CODE -> {
+                if (resultCode == SearchTagActivity.RESULT_CODE_SELECTED) {
+                    description.append(" #")
+                    description.append(data?.getStringExtra(SearchTagActivity.PARAM_SELECTED_TAG))
+                }
+            }
+            SearchUserActivity.REQUEST_CODE -> {
+                if (resultCode == SearchUserActivity.RESULT_CODE_SELECTED) {
+                    description.append(" @")
+                    description.append(data?.getStringExtra(SearchUserActivity.PARAM_SELECTED_USERNAME))
+                }
+            }
+        }
+    }
 }
 

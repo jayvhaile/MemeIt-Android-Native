@@ -1,5 +1,6 @@
 package com.innov8.memegenerator.MemeEngine
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -9,21 +10,96 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import com.memeit.backend.models.MemeItemProperty
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.utils.contains
 import com.innov8.memegenerator.utils.enlarge
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.loadBitmap
-import com.innov8.memeit.commons.log
 
 
-open class MemeItemView : View {
+abstract class MemeItemView : View {
     protected val isInMemeEditor: Boolean
+
+    var controlsSize = 20f.dp(context)
+    val leftResizeRectF by lazy { RectF() }
+    val topResizeRectF by lazy { RectF() }
+    val rightResizeRectF by lazy { RectF() }
+    val bottomResizeRectF by lazy { RectF() }
+    val deleteRect by lazy { RectF() }
+    val rotateRect by lazy { RectF() }
+    val copyRect by lazy { RectF() }
+    val resizeRect by lazy { RectF() }
+    val innerRect by lazy { RectF() }
+
+
+    private val deleteB = context.loadBitmap(R.drawable.icon_delete, controlsSize.toInt())
+    private val rotateB = context.loadBitmap(R.drawable.icon_rotate, controlsSize.toInt())
+    private val copyB = context.loadBitmap(R.drawable.icon_copy, controlsSize.toInt())
+    private val resizeB = context.loadBitmap(R.drawable.icon_resize, controlsSize.toInt())
+
+
+    private val gestureDetector: GestureDetector by lazy { GestureDetector(context, GestureListener()) }
+    private val paint: Paint by lazy {
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            strokeWidth = 1f.dp(context)
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.BUTT
+            color = Color.WHITE
+        }
+    }
+
+    var itemWidth: Int = 0
+    var itemHeight: Int = 0
+
+
+    var onClickListener: ((MemeItemView) -> Unit)? = null
+    var onCopyListener: ((MemeItemView) -> Unit)? = null
+    var onRemoveListener: ((MemeItemView) -> Unit)? = null
+    protected var onResize: ((width: Int, height: Int) -> Unit)? = null
+    private var resizeOffset = 0
+    private var topOffset = 0
+    private val resizeRectSize = 8.dp(context)
+
+    var maxWidth = 0
+    var maxHeight = 0
+
+    /*open fun onMaxWidthChanged(old: Int, new: Int) {
+        if (old == 0 || new == 0) {
+            requestLayout()
+            return
+        }
+        itemWidth = (itemWidth * (new.toFloat() / old)).toInt()
+        requestLayout()
+    }
+
+    open fun onMaxHeightChanged(old: Int, new: Int) {
+        if (old == 0 || new == 0) {
+            requestLayout()
+            return
+        }
+        itemHeight = (itemHeight * (new.toFloat() / old)).toInt()
+        requestLayout()
+    }*/
+
+    val itemX: Float
+        get() = controlsSize / 2f
+
+    val itemY: Float
+        get() = controlsSize / 2f
+
 
     constructor(context: Context, memeItemWidth: Int, memeItemHeight: Int) : super(context) {
         isInMemeEditor = true
-        this.requiredWidth = memeItemWidth
-        this.requiredHeight = memeItemHeight
+        this.itemWidth = memeItemWidth
+        this.itemHeight = memeItemHeight
+        init()
+    }
+
+    constructor(context: Context, memeItemProperty: MemeItemProperty) : super(context) {
+        isInMemeEditor = true
+        applyProperty(memeItemProperty)
         init()
     }
 
@@ -37,68 +113,54 @@ open class MemeItemView : View {
         init()
     }
 
-    lateinit var mDetector: GestureDetector
-    lateinit var upaint: Paint
 
-    var requiredWidth: Int = 0
-    var requiredHeight: Int = 0
-
-
-    var onClickListener: ((MemeItemView) -> Unit)? = null
-    var onCopyListener: ((MemeItemView) -> Unit)? = null
-    var onRemoveListener: ((MemeItemView) -> Unit)? = null
-    protected var onResize: ((width: Int, height: Int) -> Unit)? = null
-    private var resizeOffset = 0
-    private var topOffeset = 0
-    val resizeRectSize = 8.dp(context)
     private fun init() {
         isFocusable = isInMemeEditor
         isFocusableInTouchMode = isFocusable
-        upaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        upaint.style = Paint.Style.STROKE
-        upaint.strokeWidth = 1f.dp(context)
-        upaint.strokeJoin = Paint.Join.ROUND
-        upaint.strokeCap = Paint.Cap.BUTT
-        upaint.color = Color.WHITE
         minimumWidth = 50f.dp(context).toInt()
         minimumHeight = 50f.dp(context).toInt()
-        mDetector = GestureDetector(context, MyListener())
         resizeOffset = 28f.dp(context).toInt()
-        topOffeset = (24f).dp(context).toInt()
+        topOffset = (24f).dp(context).toInt()
     }
 
-
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        return if (isEnabled) mDetector.onTouchEvent(event) else false
-    }
-
-    open fun copy(): MemeItemView? = null
-
-    protected fun doRRR(){
-
-    }
-
-    override fun onDraw(canvas: Canvas?) {
-        if (isInMemeEditor && isFocused) {
-            upaint.style = Paint.Style.STROKE
-
-            canvas?.drawRect(innerRect, upaint)
-            upaint.style = Paint.Style.FILL
-
-            canvas?.drawRect(leftResizeRectF, upaint)
-            canvas?.drawRect(topResizeRectF, upaint)
-            canvas?.drawRect(rightResizeRectF, upaint)
-            canvas?.drawRect(bottomResizeRectF, upaint)
-
-            canvas?.drawBitmap(deleteB, null, deleteRect, null)
-            canvas?.drawBitmap(rotateB, null, rotateRect, null)
-            canvas?.drawBitmap(copyB, null, copyRect, null)
-            canvas?.drawBitmap(resizeB, null, resizeRect, null)
+    private var tempProperty: MemeItemProperty? = null
+    fun applyProperty(memeItemProperty: MemeItemProperty) {
+        if (maxWidth == 0 || maxHeight == 0)
+            tempProperty = memeItemProperty
+        else {
+            this.x = memeItemProperty.x * maxWidth
+            this.y = memeItemProperty.y * maxHeight
+            this.rotation = memeItemProperty.r
+            this.itemWidth = (memeItemProperty.w * maxWidth).toInt()
+            this.itemHeight = (memeItemProperty.h * maxHeight).toInt()
+            tempProperty = null
         }
     }
 
-    var maxWidth = 0
-    var maxHeight = 0
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        return if (isEnabled) gestureDetector.onTouchEvent(event) else false
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        if (isInMemeEditor && isFocused) {
+            paint.style = Paint.Style.STROKE
+
+            canvas.drawRect(innerRect, paint)
+            paint.style = Paint.Style.FILL
+            canvas.apply {
+                drawRect(leftResizeRectF, paint)
+                drawRect(topResizeRectF, paint)
+                drawRect(rightResizeRectF, paint)
+                drawRect(bottomResizeRectF, paint)
+                drawBitmap(deleteB, null, deleteRect, null)
+                drawBitmap(rotateB, null, rotateRect, null)
+                drawBitmap(copyB, null, copyRect, null)
+                drawBitmap(resizeB, null, resizeRect, null)
+            }
+        }
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var w = MeasureSpec.getSize(widthMeasureSpec)
         var h = MeasureSpec.getSize(heightMeasureSpec)
@@ -107,90 +169,53 @@ open class MemeItemView : View {
 
         maxWidth = w
         maxHeight = h
+
+        tempProperty?.let {
+            applyProperty(it)
+        }
+
         val hPadding = paddingLeft + paddingRight
         val vPadding = paddingTop + paddingBottom
         if (wSpecMode == MeasureSpec.EXACTLY) {
-            requiredWidth = (w - controlsSize - hPadding).toInt()
+            itemWidth = (w - controlsSize - hPadding).toInt()
         } else {
-            w = (requiredWidth + controlsSize + paddingLeft + paddingRight).toInt()
+            w = (itemWidth + controlsSize + paddingLeft + paddingRight).toInt()
         }
         if (hSpecMode == MeasureSpec.EXACTLY) {
-            requiredHeight = (h - controlsSize - vPadding).toInt()
+            itemHeight = (h - controlsSize - vPadding).toInt()
         } else {
-            h = (requiredHeight + controlsSize + vPadding).toInt()
+            h = (itemHeight + controlsSize + vPadding).toInt()
         }
         setMeasuredDimension(w, h)
     }
 
-    val itemX: Float
-        get() = controlsSize / 2f
-
-    val itemY: Float
-        get() = controlsSize / 2f
-
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         update()
-
     }
 
-    var controlsSize = 20f.dp(context)
-    var leftResizeRectF = RectF()
-    var topResizeRectF = RectF()
-    var rightResizeRectF = RectF()
-    var bottomResizeRectF = RectF()
-    var deleteRect = RectF()
-    var rotateRect = RectF()
-    var copyRect = RectF()
-    var resizeRect = RectF()
-    var innerRect = RectF()
 
+    open fun copy(): MemeItemView? = null
 
-    private val deleteB = context.loadBitmap(R.drawable.icon_delete, controlsSize.toInt())
-    private val rotateB = context.loadBitmap(R.drawable.icon_rotate, controlsSize.toInt())
-    private val copyB = context.loadBitmap(R.drawable.icon_copy, controlsSize.toInt())
-    private val resizeB = context.loadBitmap(R.drawable.icon_resize, controlsSize.toInt())
 
     private fun update() {
         val rsh = (resizeRectSize) / 2f
-
-
-        deleteRect = RectF(0f, 0f, controlsSize, controlsSize)
-        rotateRect = RectF(width - controlsSize, 0f, width.toFloat(), controlsSize)
-        copyRect = RectF(0f, height - controlsSize, controlsSize, height.toFloat())
-        resizeRect = RectF(width - controlsSize, height - controlsSize, width.toFloat(), height.toFloat())
-
-        innerRect = RectF(itemX, itemY, width - itemX, height - itemY)
-
-        leftResizeRectF = RectF(itemX - rsh, height / 2 - rsh, itemX + rsh, height / 2 + rsh)
-        topResizeRectF = RectF(width / 2f - rsh, itemY - rsh, width / 2 + rsh, itemY + rsh)
-        rightResizeRectF = RectF(width - itemX - rsh, height / 2 - rsh, width - itemX + rsh, height / 2 + rsh)
-        bottomResizeRectF = RectF(width / 2f - rsh, height - itemY - rsh, width / 2 + rsh, height - itemY + rsh)
+        deleteRect.set(0f, 0f, controlsSize, controlsSize)
+        rotateRect.set(width - controlsSize, 0f, width.toFloat(), controlsSize)
+        copyRect.set(0f, height - controlsSize, controlsSize, height.toFloat())
+        resizeRect.set(width - controlsSize, height - controlsSize, width.toFloat(), height.toFloat())
+        innerRect.set(itemX, itemY, width - itemX, height - itemY)
+        leftResizeRectF.set(itemX - rsh, height / 2 - rsh, itemX + rsh, height / 2 + rsh)
+        topResizeRectF.set(width / 2f - rsh, itemY - rsh, width / 2 + rsh, itemY + rsh)
+        rightResizeRectF.set(width - itemX - rsh, height / 2 - rsh, width - itemX + rsh, height / 2 + rsh)
+        bottomResizeRectF.set(width / 2f - rsh, height - itemY - rsh, width / 2 + rsh, height - itemY + rsh)
         invalidate()
     }
 
 
-    private val absWidth: Float
-        get() = width * scaleX
+    abstract fun generateProperty(): MemeItemProperty
 
-    private val absHeight: Float
-        get() = height * scaleY
-
-    private fun sqr(x: Float, y: Float): Float = Math.sqrt(((x * x) + (y * y)).toDouble()).toFloat()
-
-    companion object {
-        const val TYPE_DRAG = 0
-        const val TYPE_LEFT_RESIZE = 1
-        const val TYPE_TOP_RESIZE = 2
-        const val TYPE_RIGHT_RESIZE = 3
-        const val TYPE_BOTTOM_RESIZE = 4
-        const val TYPE_ROTATE = 5
-        const val TYPE_RESIZE = 6
-    }
-
-    internal inner class MyListener : GestureDetector.SimpleOnGestureListener() {
-
-
+    internal inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
         private var dx = 0f
         private var dy = 0f
         private var r1 = 0.0
@@ -200,15 +225,15 @@ open class MemeItemView : View {
         override fun onDown(event: MotionEvent): Boolean {
             selectedBefore = isFocused
             requestFocus()
-            return when {
-                event in rotateRect -> {
+            return when (event) {
+                in rotateRect -> {
                     dx = pivotX + x
                     dy = pivotY + y + 56.dp(context)//todo change 56 to the top margin of the memeEditorView
                     r1 = Math.toDegrees(Math.atan2((event.rawY - dy).toDouble(), (event.rawX - dx).toDouble())) + 180
                     type = TYPE_ROTATE
                     true
                 }
-                event in resizeRect -> {
+                in resizeRect -> {
                     type = TYPE_RESIZE
                     dx = event.rawX
                     dy = event.rawY
@@ -262,14 +287,6 @@ open class MemeItemView : View {
         }
 
         override fun onDoubleTap(e: MotionEvent?): Boolean {
-            log("xdxd", "===============================")
-            log("xdxd", "rotation ${rotation}")
-            log("xdxd", "x        ${x}")
-            log("xdxd", "y        ${y}")
-            log("xdxd", "width    ${width}")
-            log("xdxd", "height   ${height}")
-            log("xdxd", "===============================")
-
             return super.onDoubleTap(e)
         }
 
@@ -306,32 +323,31 @@ open class MemeItemView : View {
             if (type == TYPE_RESIZE) {
 
 
-                requiredWidth += x1
-                requiredHeight += y1
+                itemWidth += x1
+                itemHeight += y1
                 requestLayout()
 
             } else {
                 when (type) {
                     TYPE_LEFT_RESIZE -> {
-                        requiredWidth -= x1
+                        itemWidth -= x1
                         x += x1
                     }
                     TYPE_TOP_RESIZE -> {
-                        requiredHeight -= y1
+                        itemHeight -= y1
                         y += y1
                     }
                     TYPE_RIGHT_RESIZE -> {
-                        requiredWidth += x1
+                        itemWidth += x1
                         requestLayout()
                     }
                     TYPE_BOTTOM_RESIZE -> {
-                        requiredHeight += y1
+                        itemHeight += y1
                         requestLayout()
                     }
 
                 }
             }
-            onResize?.invoke(requiredWidth, requiredHeight)
             dx = event.rawX
             dy = event.rawY
             requestLayout()
@@ -350,4 +366,15 @@ open class MemeItemView : View {
             y = ny
         }
     }
+
+    companion object {
+        const val TYPE_DRAG = 0
+        const val TYPE_LEFT_RESIZE = 1
+        const val TYPE_TOP_RESIZE = 2
+        const val TYPE_RIGHT_RESIZE = 3
+        const val TYPE_BOTTOM_RESIZE = 4
+        const val TYPE_ROTATE = 5
+        const val TYPE_RESIZE = 6
+    }
+
 }

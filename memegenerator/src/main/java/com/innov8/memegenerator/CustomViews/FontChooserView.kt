@@ -9,7 +9,7 @@ import android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.innov8.memeit.commons.models.MyTypeFace
+import com.innov8.memeit.commons.models.TypefaceHandler
 import com.innov8.memeit.commons.dp
 
 class FontChooser : HorizontalScrollView {
@@ -31,8 +31,8 @@ class FontChooser : HorizontalScrollView {
 
     private val choosedColor = Color.RED
     private val unchoosedColor = Color.WHITE
-    var onFontChoosed: ((MyTypeFace) -> Unit)? = null
-    private val typefaces = MyTypeFace.typefaceFiles
+    var onFontChoosed: ((TypefaceHandler) -> Unit)? = null
+    private val typefaces = TypefaceHandler.typefaceFiles
 
     var choosedTypeface = Typeface.DEFAULT
         private set
@@ -46,7 +46,7 @@ class FontChooser : HorizontalScrollView {
         val onClick: (View) -> Unit = {
             it as TextView
             if (choosedTypeface != it.typeface) {
-                val mtf = typefaces.find { v->v.getTypeFace()==it.typeface}!!
+                val mtf = typefaces.find { v -> v.getTypeFace() == it.typeface }!!
                 choose(mtf)
                 choosedTypeface = it.typeface
                 onFontChoosed?.invoke(mtf)
@@ -66,8 +66,13 @@ class FontChooser : HorizontalScrollView {
         addView(linearLayout)
     }
 
-    fun choose(typeface: MyTypeFace, addIfNone: Boolean = false) {
+    fun choose(typeface: TypefaceHandler, addIfNone: Boolean = false) {
         val index = typefaces.indexOf(typeface)
+        if (index != -1) choose(index)
+    }
+
+    fun choose(fontName: String) {
+        val index = typefaces.indexOf(typefaces.find { it.name == fontName })
         if (index != -1) choose(index)
     }
 

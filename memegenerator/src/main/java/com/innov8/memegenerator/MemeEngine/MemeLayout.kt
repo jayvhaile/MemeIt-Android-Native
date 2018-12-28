@@ -3,64 +3,51 @@ package com.innov8.memegenerator.MemeEngine
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.RectF
-import android.os.Parcel
-import android.os.Parcelable
-import com.innov8.memeit.commons.dp
-
-abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: List<Bitmap>) {
-
-
-    class LayoutInfo(var type: Int, var span: Int = 2, var orientation: Int = 0) : Parcelable {
+import com.memeit.backend.models.GridImageLayoutProperty
+import com.memeit.backend.models.LayoutProperty
+import com.memeit.backend.models.LinearImageLayoutProperty
+import com.memeit.backend.models.SingleImageLayoutProperty
 
 
-        constructor(parcel: Parcel) : this(
-                parcel.readInt(),
-                parcel.readInt(),
-                parcel.readInt())
-
-        fun create(maxWidth: Int, maxHeight: Int, images: List<Bitmap>): MemeLayout {
-            return when (type) {
-                TYPE_SINGLE -> SingleImageLayout(maxWidth, maxHeight, images[0])
-                TYPE_LINEAR -> LinearImageLayout(orientation, maxWidth, maxHeight, images)
-                TYPE_GRID -> GridImageLayout(span, orientation, maxWidth, maxHeight, images)
-                else -> throw IllegalStateException("illegal meme layout type")
-            }
-
-        }
-
-        companion object CREATOR : Parcelable.Creator<LayoutInfo> {
-            const val TYPE_SINGLE: Int = 0
-            const val TYPE_LINEAR: Int = 1
-            const val TYPE_GRID: Int = 2
-            override fun createFromParcel(parcel: Parcel): LayoutInfo {
-                return LayoutInfo(parcel)
-            }
-
-            override fun newArray(size: Int): Array<LayoutInfo?> {
-                return arrayOfNulls(size)
+abstract class MemeLayout(val images: List<Bitmap>) {
+    companion object {
+        fun fromProperty(images: List<Bitmap>, layoutProperty: LayoutProperty): MemeLayout {
+            return when (layoutProperty) {
+                is SingleImageLayoutProperty -> SingleImageLayout(images[0], layoutProperty)
+                is LinearImageLayoutProperty -> LinearImageLayout(images, layoutProperty)
+                is GridImageLayoutProperty -> GridImageLayout(images, layoutProperty)
             }
         }
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeInt(type)
-            parcel.writeInt(span)
-            parcel.writeInt(orientation)
-        }
-
-        override fun describeContents(): Int {
-            return 0
-        }
-
     }
 
-    var invalidate: (() -> Unit)? = null
-    var drawingRect: RectF = RectF(0f, 0f, 0f, 0f)
+    var maxWidth: Int = 0
+        set(value) {
+            field = value
+            update()
+        }
+    var maxHeight: Int = 0
+        set(value) {
+            field = value
+            update()
+        }
 
-    var lock = false
-    fun updateSize(w: Int, h: Int) {
-        maxWidth = w
-        maxHeight = h
+
+    var invalidate: (() -> Unit)? = null
+    val drawingRect: RectF by lazy { RectF(0f, 0f, 0f, 0f) }
+
+    protected var lock = false
+    protected inline fun withLock(block: () -> Unit) {
+        lock = true
+        block()
+        lock = false
         update()
+    }
+
+    fun updateSize(w: Int, h: Int) {
+        withLock {
+            maxWidth = w
+            maxHeight = h
+        }
     }
 
     var leftMargin: Int = 0
@@ -104,17 +91,16 @@ abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: Lis
         }
 
     fun setMargin(left: Int, top: Int = left, right: Int = left, bottom: Int = left) {
-        lock = true
-        leftMargin = left
-        topMargin = top
-        rightMargin = right
-        bottomMargin = bottom
-        lock = false
-        update()
+        withLock {
+            leftMargin = left
+            topMargin = top
+            rightMargin = right
+            bottomMargin = bottom
+        }
     }
 
 
-    internal fun update() {
+    protected fun update() {
         if (lock) return
         if (maxWidth == 0 || maxHeight == 0) return
         val iw = innerWidth().toFloat()
@@ -122,7 +108,7 @@ abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: Lis
 
         val ww = iw + ((iw * (horizontalMargin)) / 100f)
         val hh = ih + ((ih * (verticalMargin)) / 100f)
-        drawingRect = (ww to hh).fitCenter(maxWidth.toFloat(), maxHeight.toFloat())
+        drawingRect.set((ww to hh).fitCenter(maxWidth.toFloat(), maxHeight.toFloat()))
         hr = drawingRect.width() / ww
         vr = drawingRect.height() / hh
         invalidate?.invoke()
@@ -143,9 +129,14 @@ abstract class MemeLayout(var maxWidth: Int, var maxHeight: Int, val images: Lis
 
     abstract fun loadPresets(): Map<String, MemeLayout>
     abstract fun copy(): MemeLayout
+    abstract fun generateProperty(): LayoutProperty
 }
 
-class ImageLessLayout(maxWidth: Int, maxHeight: Int) : MemeLayout(maxWidth, maxHeight, listOf()) {
+class ImageLessLayout() : MemeLayout(listOf()) {
+    override fun generateProperty(): LayoutProperty {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun copy(): MemeLayout {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -160,40 +151,55 @@ class ImageLessLayout(maxWidth: Int, maxHeight: Int) : MemeLayout(maxWidth, maxH
 
 }
 
-class SingleImageLayout(maxWidth: Int, maxHeight: Int, bitmap: Bitmap) : MemeLayout(maxWidth, maxHeight, listOf(bitmap)) {
+class SingleImageLayout(bitmap: Bitmap) : MemeLayout(listOf(bitmap)) {
+    constructor(bitmap: Bitmap, lp: SingleImageLayoutProperty) : this(bitmap) {
+        withLock {
+            leftMargin = lp.leftMargin
+            rightMargin = lp.rightMargin
+            topMargin = lp.topMargin
+            bottomMargin = lp.bottomMargin
+            backgroudColor = lp.bgColor
+        }
+    }
+
     override fun loadPresets(): Map<String, MemeLayout> {
         return mapOf(
-                "Classic" to SingleImageLayout(maxWidth, maxHeight, images[0]),
-                "Modern" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
+                "Classic" to SingleImageLayout(images[0]),
+                "Modern" to SingleImageLayout(images[0]).apply {
                     leftMargin = 2; rightMargin = 2; topMargin = 25; bottomMargin = 2
                 },
-                "Top Bottom" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
-                    topMargin=25
-                    bottomMargin=25
+                "Top Bottom" to SingleImageLayout(images[0]).apply {
+                    topMargin = 25
+                    bottomMargin = 25
                 },
-                "Left" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
+                "Left" to SingleImageLayout(images[0]).apply {
                     leftMargin = 100
                 },
-                "Top" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
+                "Top" to SingleImageLayout(images[0]).apply {
                     topMargin = 100
                 },
-                "Right" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
+                "Right" to SingleImageLayout(images[0]).apply {
                     rightMargin = 100
                 },
-                "Bottom" to SingleImageLayout(maxWidth, maxHeight, images[0]).apply {
+                "Bottom" to SingleImageLayout(images[0]).apply {
                     bottomMargin = 100
                 }
         )
     }
 
     override fun copy(): MemeLayout {
-        return SingleImageLayout(maxWidth,maxHeight,images[0]).apply {
-            leftMargin=this@SingleImageLayout.leftMargin
-            rightMargin=this@SingleImageLayout.rightMargin
-            topMargin=this@SingleImageLayout.topMargin
-            bottomMargin=this@SingleImageLayout.bottomMargin
+        return SingleImageLayout(images[0]).apply {
+            leftMargin = this@SingleImageLayout.leftMargin
+            rightMargin = this@SingleImageLayout.rightMargin
+            topMargin = this@SingleImageLayout.topMargin
+            bottomMargin = this@SingleImageLayout.bottomMargin
         }
     }
+
+    override fun generateProperty(): LayoutProperty {
+        return SingleImageLayoutProperty(leftMargin, rightMargin, topMargin, bottomMargin, backgroudColor)
+    }
+
     init {
         update()
     }
@@ -225,43 +231,19 @@ class SingleImageLayout(maxWidth: Int, maxHeight: Int, bitmap: Bitmap) : MemeLay
     }
 }
 
-class LinearImageLayout(orien: Int, maxWidth: Int, maxHeight: Int, images: List<Bitmap>) : MemeLayout(maxWidth, maxHeight, images) {
-    override fun loadPresets(): Map<String, MemeLayout> {
-        return mapOf(
-                "Horizontal" to LinearImageLayout(HORIZONTAL, maxWidth, maxHeight, images).apply {
-                    spacing = 2
-                },
-                "Vertical" to LinearImageLayout(VERTICAL, maxWidth, maxHeight, images).apply {
-                    spacing = 2
-                },
-                "Horizontal Top" to LinearImageLayout(HORIZONTAL, maxWidth, maxHeight, images).apply {
-                    spacing = 2
-                    topMargin = 100
-                },
-                "Horizontal Bottom" to LinearImageLayout(HORIZONTAL, maxWidth, maxHeight, images).apply {
-                    spacing = 2
-                    bottomMargin = 100
-                },
-                "Vertical Left" to LinearImageLayout(VERTICAL, maxWidth, maxHeight, images).apply {
-                    spacing = 2
-                    leftMargin = 100
-                },
-                "Vertical Right" to LinearImageLayout(VERTICAL, maxWidth, maxHeight, images).apply {
-                    spacing = 2
-                    rightMargin = 100
-                }
-        )
-    }
+class LinearImageLayout(orien: Int, images: List<Bitmap>) : MemeLayout(images) {
 
-    override fun copy(): MemeLayout {
-        return LinearImageLayout(orientation,maxWidth,maxHeight,images).apply {
-            leftMargin=this@LinearImageLayout.leftMargin
-            rightMargin=this@LinearImageLayout.rightMargin
-            topMargin=this@LinearImageLayout.topMargin
-            bottomMargin=this@LinearImageLayout.bottomMargin
-            spacing=this@LinearImageLayout.spacing
+    constructor(images: List<Bitmap>, lp: LinearImageLayoutProperty) : this(lp.orientation, images) {
+        withLock {
+            leftMargin = lp.leftMargin
+            rightMargin = lp.rightMargin
+            topMargin = lp.topMargin
+            bottomMargin = lp.bottomMargin
+            backgroudColor = lp.bgColor
+            spacing = lp.spacing
         }
     }
+
     companion object {
         const val HORIZONTAL = 0
         const val VERTICAL = 1
@@ -386,37 +368,91 @@ class LinearImageLayout(orien: Int, maxWidth: Int, maxHeight: Int, images: List<
         }
         return RectF()
     }
+
+    override fun loadPresets(): Map<String, MemeLayout> {
+        return mapOf(
+                "Horizontal" to LinearImageLayout(HORIZONTAL, images).apply {
+                    spacing = 2
+                },
+                "Vertical" to LinearImageLayout(VERTICAL, images).apply {
+                    spacing = 2
+                },
+                "Horizontal Top" to LinearImageLayout(HORIZONTAL, images).apply {
+                    spacing = 2
+                    topMargin = 100
+                },
+                "Horizontal Bottom" to LinearImageLayout(HORIZONTAL, images).apply {
+                    spacing = 2
+                    bottomMargin = 100
+                },
+                "Vertical Left" to LinearImageLayout(VERTICAL, images).apply {
+                    spacing = 2
+                    leftMargin = 100
+                },
+                "Vertical Right" to LinearImageLayout(VERTICAL, images).apply {
+                    spacing = 2
+                    rightMargin = 100
+                }
+        )
+    }
+
+    override fun copy(): MemeLayout {
+        return LinearImageLayout(orientation, images).apply {
+            leftMargin = this@LinearImageLayout.leftMargin
+            rightMargin = this@LinearImageLayout.rightMargin
+            topMargin = this@LinearImageLayout.topMargin
+            bottomMargin = this@LinearImageLayout.bottomMargin
+            spacing = this@LinearImageLayout.spacing
+        }
+    }
+
+    override fun generateProperty(): LayoutProperty {
+        return LinearImageLayoutProperty(leftMargin, rightMargin, topMargin, bottomMargin, backgroudColor, orientation, spacing)
+    }
+
 }
 
-class GridImageLayout(var span: Int, orientation: Int, maxWidth: Int, maxHeight: Int, images: List<Bitmap>) : MemeLayout(maxWidth, maxHeight, images) {
+class GridImageLayout(var span: Int, orientation: Int, images: List<Bitmap>) : MemeLayout(images) {
+    constructor(images: List<Bitmap>, lp: GridImageLayoutProperty) : this(lp.span, lp.orientation, images) {
+        withLock {
+            leftMargin = lp.leftMargin
+            rightMargin = lp.rightMargin
+            topMargin = lp.topMargin
+            bottomMargin = lp.bottomMargin
+            backgroudColor = lp.bgColor
+            hSpacing = lp.hSpacing
+            vSpacing = lp.vSpacing
+        }
+    }
+
     override fun loadPresets(): Map<String, MemeLayout> {
         return mapOf(
 
-                "Normal " to GridImageLayout(span, orientation, maxWidth, maxHeight, images),
-                "Normal Spaced" to GridImageLayout(span, orientation, maxWidth, maxHeight, images).apply {
+                "Normal " to GridImageLayout(span, orientation, images),
+                "Normal Spaced" to GridImageLayout(span, orientation, images).apply {
                     hSpacing = 2
                     vSpacing = 2
-                    leftMargin=2
-                    rightMargin=2
-                    topMargin=2
-                    bottomMargin=2
+                    leftMargin = 2
+                    rightMargin = 2
+                    topMargin = 2
+                    bottomMargin = 2
                 },
-                "Left" to GridImageLayout(span, orientation, maxWidth, maxHeight, images).apply {
+                "Left" to GridImageLayout(span, orientation, images).apply {
                     hSpacing = 2
                     vSpacing = 2
                     leftMargin = 100 / columnCount
                 },
-                "Top" to GridImageLayout(span, orientation, maxWidth, maxHeight, images).apply {
+                "Top" to GridImageLayout(span, orientation, images).apply {
                     hSpacing = 2
                     vSpacing = 2
                     topMargin = 100 / rowCount
                 },
-                "Right" to GridImageLayout(span, orientation, maxWidth, maxHeight, images).apply {
+                "Right" to GridImageLayout(span, orientation, images).apply {
                     hSpacing = 2
                     vSpacing = 2
                     rightMargin = 100 / columnCount
                 },
-                "Bottom" to GridImageLayout(span, orientation, maxWidth, maxHeight, images).apply {
+                "Bottom" to GridImageLayout(span, orientation, images).apply {
                     hSpacing = 2
                     vSpacing = 2
                     bottomMargin = 100 / rowCount
@@ -426,15 +462,21 @@ class GridImageLayout(var span: Int, orientation: Int, maxWidth: Int, maxHeight:
     }
 
     override fun copy(): MemeLayout {
-        return GridImageLayout(span,orientation,maxWidth,maxHeight,images).apply {
-            leftMargin=this@GridImageLayout.leftMargin
-            rightMargin=this@GridImageLayout.rightMargin
-            topMargin=this@GridImageLayout.topMargin
-            bottomMargin=this@GridImageLayout.bottomMargin
-            hSpacing=this@GridImageLayout.hSpacing
-            vSpacing=this@GridImageLayout.vSpacing
+        return GridImageLayout(span, orientation, images).apply {
+            leftMargin = this@GridImageLayout.leftMargin
+            rightMargin = this@GridImageLayout.rightMargin
+            topMargin = this@GridImageLayout.topMargin
+            bottomMargin = this@GridImageLayout.bottomMargin
+            hSpacing = this@GridImageLayout.hSpacing
+            vSpacing = this@GridImageLayout.vSpacing
         }
     }
+
+    override fun generateProperty(): LayoutProperty {
+        return GridImageLayoutProperty(leftMargin, rightMargin, topMargin, bottomMargin,
+                backgroudColor, orientation, span, hSpacing, vSpacing)
+    }
+
     companion object {
         const val HORIZONTAL = 0
         const val VERTICAL = 1
@@ -456,9 +498,9 @@ class GridImageLayout(var span: Int, orientation: Int, maxWidth: Int, maxHeight:
         }
     // ((leftMargin * innerWidth() / 100) * hr).toInt()
 
-    val hSpacingCalc: Int
+    private val hSpacingCalc: Int
         get() = ((hSpacing * innerWidth() / 100) * hr).toInt()
-    val vSpacingCalc: Int
+    private val vSpacingCalc: Int
         get() = ((vSpacing * innerHeight() / 100) * vr).toInt()
     var orientation = orientation
         set(value) {

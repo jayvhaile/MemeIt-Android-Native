@@ -5,11 +5,14 @@ import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.database.Cursor
 import android.os.Bundle
+import android.os.FileObserver
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -23,82 +26,188 @@ import androidx.loader.content.Loader
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.ChangeBounds
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import androidx.work.WorkManager
-import com.google.gson.Gson
 import com.innov8.memegenerator.MemeEditorActivity
+import com.innov8.memeit.Adapters.DraftsAdapter
 import com.innov8.memeit.Adapters.GifAdapter
-import com.innov8.memeit.Adapters.MemeTemplatesListAdapter
 import com.innov8.memeit.Adapters.MemeUploadTaskAdapter
 import com.innov8.memeit.Adapters.VideoAdapter
+import com.innov8.memeit.CustomViews.DrawableBadge
+import com.innov8.memeit.Fragments.MemeTemplateHolderFragment
 import com.innov8.memeit.Fragments.PhotosChooserFragment
+import com.innov8.memeit.Loaders.DraftLoader
 import com.innov8.memeit.R
-import com.innov8.memeit.commons.models.MemeTemplate
+import com.innov8.memeit.Utils.LoaderAdapterHandler
+import com.innov8.memeit.Utils.makeLinear
+import com.innov8.memeit.commons.dp
+import com.memeit.backend.models.MemeTemplate
 import kotlinx.android.synthetic.main.activity_meme_chooser.*
 import kotlinx.android.synthetic.main.fragment_meme_templates.*
 import kotlinx.android.synthetic.main.fragment_ongoing_upload.*
 
-
 class MemeChooserActivity : AppCompatActivity() {
-    private lateinit var adapter: MemeChooserPagerAdapter
+    private lateinit var pagerAdapter: MemeChooserPagerAdapter
+    private lateinit var fileObserver: FileObserver
+    private lateinit var closedSet: ConstraintSet
+    var opened = false
+    private val openedSet by lazy {
+        ConstraintSet().apply {
+            clone(closedSet)
+            setVisibility(R.id.overlay, View.VISIBLE)
+            constrainHeight(R.id.draft_list, 128.dp(this@MemeChooserActivity))
+        }
+    }
+
+    private val loader by lazy {
+        DraftLoader()
+    }
+    private val adapter by lazy {
+        DraftsAdapter(this)
+    }
+    private val handler by lazy {
+        LoaderAdapterHandler(adapter, loader).apply {
+            onLoaded = {
+                onDraftChanged(MemeTemplate.getDraftsJsonDir(this@MemeChooserActivity).listFiles().size)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meme_chooser)
-        adapter = MemeChooserPagerAdapter(supportFragmentManager)
-        pager.adapter = adapter
+        pagerAdapter = MemeChooserPagerAdapter(supportFragmentManager)
+        pager.adapter = pagerAdapter
         tabs.setupWithViewPager(pager)
+        closedSet = ConstraintSet().apply {
+            clone(root)
+        }
+        draft_list.apply {
+            makeLinear(RecyclerView.HORIZONTAL)
+            adapter = this@MemeChooserActivity.adapter
+        }
+
+
+        fileObserver = object : FileObserver(MemeTemplate.getDraftsJsonDir(this).absolutePath) {
+            override fun onEvent(event: Int, path: String) {
+                when (event) {
+                    FileObserver.CREATE,
+                    FileObserver.MODIFY,
+                    FileObserver.DELETE,
+                    FileObserver.DELETE_SELF -> {
+                        handler.refresh()
+                    }
+                }
+
+            }
+        }
+        draft_btn.setOnClickListener {
+            toggle()
+        }
+        handler.load()
+        fileObserver.startWatching()
+    }
+
+    private fun makeTransitioon(): TransitionSet {
+        return TransitionSet().apply {
+            addTransition(Fade(Fade.IN).apply {
+                addTarget(R.id.overlay)
+            })
+            addTransition(Fade(Fade.OUT).apply {
+                addTarget(R.id.overlay)
+            })
+            addTransition(ChangeBounds().apply {
+                addTarget(R.id.draft_list)
+                interpolator = AccelerateDecelerateInterpolator()
+            })
+        }
+    }
+
+    private fun toggle() {
+        if (opened) close()
+        else open()
+    }
+
+
+    private fun open() {
+        if (!opened) {
+            TransitionManager.beginDelayedTransition(root, makeTransitioon())
+            openedSet.applyTo(root)
+            opened = true
+        }
+    }
+
+    private fun close() {
+        if (opened) {
+            TransitionManager.beginDelayedTransition(root, makeTransitioon())
+            closedSet.applyTo(root)
+            opened = false
+        }
+    }
+
+    override fun onBackPressed() {
+        if (opened) {
+            close()
+        } else super.onBackPressed()
+    }
+
+    override fun onStart() {
+        super.onStart()
+//        fileObserver.startWatching()
+    }
+
+    override fun onStop() {
+//        fileObserver.stopWatching()
+        super.onStop()
+    }
+
+    private fun onDraftChanged(count: Int) {
+        if (count > 0) {
+            draft_btn.apply {
+                visibility = View.VISIBLE
+                setImageDrawable(DrawableBadge.Builder(this@MemeChooserActivity)
+                        .drawableResId(R.drawable.ic_mode_edit_black_24dp)
+                        .maximumCounter(99)
+                        .build()
+                        .get(count)
+                )
+            }
+        } else draft_btn.visibility = View.GONE
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MemeEditorActivity.REQUEST_CODE && resultCode == MemeEditorActivity.RESULT_CODE_SUCCESS) {
-            startActivity(Intent(this, MemePosterActivity::class.java).apply {
-                putExtras(data!!)
-            })
-        }
-    }
-}
-
-class MemeChooserPagerAdapter(mgr: FragmentManager) : FragmentPagerAdapter(mgr) {
-    private val titles = listOf("Templates", "Photos", "Gifs","Videos")
-    override fun getCount(): Int = titles.size
-    override fun getItem(position: Int): Fragment =
-            when (position) {
-                0 -> TemplateFragment()
-                1 -> PhotosChooserFragment()
-                2 -> GifChooserFragment()
-                3 -> VideoChooserFragment()
-                else -> OngoingUploadFragment()
-            }
-
-    override fun getPageTitle(position: Int): String = titles[position]
-}
-
-class TemplateFragment : Fragment() {
-    private lateinit var memeTemplatesListAdapter: MemeTemplatesListAdapter
-    private lateinit var gson: Gson
-    override fun onCreate(state: Bundle?) {
-        super.onCreate(state)
-        memeTemplatesListAdapter = MemeTemplatesListAdapter(context!!)
-        gson = Gson()
-        MemeTemplate.loadLocalTemplates(context!!) {
-            memeTemplatesListAdapter.addAll(it)
-        }
-        memeTemplatesListAdapter.onItemClicked = {
-            MemeEditorActivity.startWithMemeTemplate(activity!!, it)
+        if (requestCode == MemeEditorActivity.REQUEST_CODE) {
+            if (resultCode == MemeEditorActivity.RESULT_CODE_SUCCESS_MEME)
+                startActivity(Intent(this, MemePosterActivity::class.java).apply {
+                    putExtras(data!!)
+                })
+            else if (resultCode == MemeEditorActivity.RESULT_CODE_SUCCESS_TEMPLATE)
+                startActivity(Intent(this, MemeTemplatePosterActivity::class.java).apply {
+                    putExtras(data!!)
+                })
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_meme_templates, container, false)
-    }
+    class MemeChooserPagerAdapter(mgr: FragmentManager) : FragmentPagerAdapter(mgr) {
+        private val titles = listOf("Templates", "Photos", "Gifs", "Videos")
+        override fun getCount(): Int = titles.size
+        override fun getItem(position: Int): Fragment =
+                when (position) {
+                    0 -> MemeTemplateHolderFragment()
+                    1 -> PhotosChooserFragment()
+                    2 -> GifChooserFragment()
+                    3 -> VideoChooserFragment()
+                    else -> OngoingUploadFragment()
+                }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        meme_template_list.layoutManager = GridLayoutManager(context, 3)
-        meme_template_list.adapter = memeTemplatesListAdapter
-        meme_template_list.itemAnimator = null
+        override fun getPageTitle(position: Int): String = titles[position]
     }
-
 }
+
 
 private const val REQUEST_PERMS = 120
 
@@ -112,7 +221,7 @@ abstract class Frag : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             load()
         } else if (!inPermission) {
             inPermission = true
-            requestPermissions(arrayOf(READ_EXTERNAL_STORAGE),REQUEST_PERMS)
+            requestPermissions(arrayOf(READ_EXTERNAL_STORAGE), REQUEST_PERMS)
         }
     }
 

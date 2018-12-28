@@ -1,6 +1,7 @@
 package com.innov8.memeit.Loaders
 
 import android.os.Parcelable
+import com.memeit.backend.models.MemeTemplate
 import com.memeit.backend.models.*
 
 interface Loader<T> {
@@ -24,7 +25,8 @@ interface MemeLoader<T : HomeElement> : Loader<T>, Parcelable
 interface UserListLoader : Loader<User>, Parcelable
 
 
-interface TagLoader :Loader<Tag>, Parcelable {
+
+interface TagLoader : Loader<Tag>, Parcelable {
     companion object {
         val loaders = listOf(MyTagLoader, PopularTagLoader, TrendingTagLoader)
     }

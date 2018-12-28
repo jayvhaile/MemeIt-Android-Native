@@ -1,8 +1,7 @@
 package com.innov8.memegenerator.interfaces
 
-import com.innov8.memeit.commons.models.TextStyleProperty
+import com.memeit.backend.models.MemeTextStyleProperty
 
 interface ItemSelectedInterface {
-
-    fun onTextItemSelected(textStyleProperty: TextStyleProperty){}
+    fun onTextItemSelected(textStyleProperty: MemeTextStyleProperty){}
 }

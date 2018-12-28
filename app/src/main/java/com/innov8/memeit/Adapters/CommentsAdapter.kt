@@ -24,7 +24,7 @@ import com.memeit.backend.models.Comment
  * Created by Jv on 7/5/2018.
  */
 
-class CommentsAdapter(context: Context) : SimpleELEListAdapter<Comment>(context, R.layout.list_item_comment) {
+class  CommentsAdapter(context: Context) : SimpleELEListAdapter<Comment>(context, R.layout.list_item_comment) {
     override fun createViewHolder(view: View): MyViewHolder<Comment> {
         return CommentViewHolder(view)
     }

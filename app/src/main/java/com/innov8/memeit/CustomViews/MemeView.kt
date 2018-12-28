@@ -2,7 +2,6 @@ package com.innov8.memeit.CustomViews
 
 import android.Manifest
 import android.app.Activity
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -12,7 +11,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.os.Handler
-import android.provider.MediaStore
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +26,6 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.fragment.app.Fragment
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
@@ -38,8 +35,6 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
-import com.google.firebase.dynamiclinks.DynamicLink
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.innov8.memegenerator.utils.addWaterMark
 import com.innov8.memeit.Activities.*
 import com.innov8.memeit.Adapters.MemeAdapters.MemeListAdapter
@@ -47,11 +42,11 @@ import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.*
 import com.innov8.memeit.commons.dp
-import com.innov8.memeit.commons.models.MyTypeFace
+import com.innov8.memeit.commons.models.TypefaceHandler
+import com.innov8.memeit.commons.models.TypefaceManager
 import com.innov8.memeit.commons.toast
+import com.innov8.memeit.commons.views.MemeItTextView
 import com.innov8.memeit.commons.views.ProfileDraweeView
-import com.luseen.autolinklibrary.AutoLinkMode
-import com.luseen.autolinklibrary.AutoLinkTextView
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
@@ -109,7 +104,7 @@ class MemeView : FrameLayout {
     private val reactButton: SparkButton = itemView.findViewById(R.id.react_button)
     private val favButton: SparkButton = itemView.findViewById(R.id.fav_button)
     private val reactTint: View = itemView.findViewById(R.id.tint)
-    private val memeDescription: AutoLinkTextView = itemView.findViewById(R.id.description)
+    private val memeDescription: MemeItTextView = itemView.findViewById(R.id.description)
     private val reactionCountFunny: TextView = itemView.findViewById(R.id.reacation_count_funny)
     private val reactionCountVeryFunny: TextView = itemView.findViewById(R.id.reacation_count_veryfunny)
     private val reactionCountAngry: TextView = itemView.findViewById(R.id.reacation_count_angry)
@@ -186,19 +181,12 @@ class MemeView : FrameLayout {
 
         memeShare.setOnClickListener { onShare() }
 
-        memeDescription.addAutoLinkMode(AutoLinkMode.MODE_HASHTAG, AutoLinkMode.MODE_MENTION)
-
-        memeDescription.setMentionModeColor(Color.parseColor("#1384fd"))
-        memeDescription.setHashtagModeColor(Color.parseColor("#1384fd"))
-        memeDescription.typeface = MyTypeFace.byName("Avenir")!!.getTypeFace(context)
-        memeDescription.setAutoLinkOnClickListener { autoLinkMode, matchedText ->
-            when (autoLinkMode) {
-                AutoLinkMode.MODE_HASHTAG -> {
-                    TagMemesActivity.startWithTag(context, matchedText.trim().substring(1))
-                }
-                AutoLinkMode.MODE_MENTION -> {
-                    ProfileActivity.startWithUsername(context, matchedText.trim().substring(1))
-                }
+        memeDescription.apply {
+            onTagClicked = {
+                TagMemesActivity.startWithTag(context, it.trim().substring(1))
+            }
+            onUsernameClicked = {
+                ProfileActivity.startWithUsername(context, it.trim().substring(1))
             }
         }
     }
@@ -251,7 +239,7 @@ class MemeView : FrameLayout {
             reactionArray.mapIndexed { index, i ->
                 ChangeBounds().apply {
                     addTarget(i)
-                    startDelay = index * 40L
+                    startDelay = index * 50L
                     interpolator = AccelerateDecelerateInterpolator()
                 }
             }.forEach { addTransition(it) }
@@ -261,7 +249,7 @@ class MemeView : FrameLayout {
             addTransition(Fade(Fade.OUT).apply {
                 addTarget(R.id.tint)
             })
-            duration = 160L
+            duration = 200L
         }
     }
 
@@ -286,20 +274,13 @@ class MemeView : FrameLayout {
     }
 
     private fun onShare() {
-        val ap = DynamicLink.AndroidParameters.Builder("com.innov8.memeit").build()
-        val ll = FirebaseDynamicLinks.getInstance()
-                .createDynamicLink()
-                .setDomainUriPrefix("memeitapp.page.link")
-                .setLink(Uri.parse("${MemeItApp.SERVER_URL}meme/${meme.id}"))
-                .setAndroidParameters(ap)
-                .buildDynamicLink().uri
         val req = ImageRequestBuilder.newBuilderWithSource(Uri.parse(meme.generateUrl()))
                 .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.BITMAP_MEMORY_CACHE)
                 .build()
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             val res = withContext(Dispatchers.Default) { Fresco.getImagePipeline().fetchDecodedImage(req, context).result }
             if (res != null && res.get() is CloseableBitmap) {
-                val tf = MyTypeFace.byName("Ubuntu")!!.getTypeFace(context)
+                val tf = TypefaceManager.byName("Ubuntu")
                 val bitmap = withContext(Dispatchers.Default) {
                     (res.get() as CloseableBitmap)
                             .underlyingBitmap
@@ -323,7 +304,7 @@ class MemeView : FrameLayout {
                         "com.innov8.memeit.fileprovider",
                         file)
                 val intent = ShareCompat.IntentBuilder.from(context as Activity)
-                        .setSubject( "${MemeItApp.SERVER_DOMAIN}/share/${meme.id}")
+                        .setSubject("${MemeItApp.SERVER_DOMAIN}/share/${meme.id}")
                         .setStream(fileUri)
                         .setType("image/*")
                         .createChooserIntent()
@@ -346,7 +327,7 @@ class MemeView : FrameLayout {
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             val res = withContext(Dispatchers.Default) { Fresco.getImagePipeline().fetchDecodedImage(req, context).result }
             if (res != null && res.get() is CloseableBitmap) {
-                val tf = MyTypeFace.byName("Ubuntu")!!.getTypeFace(context)
+                val tf = TypefaceManager.byName("Ubuntu")
                 val bitmap = withContext(Dispatchers.Default) {
                     (res.get() as CloseableBitmap)
                             .underlyingBitmap
@@ -497,7 +478,7 @@ class MemeView : FrameLayout {
         applyVisible(R.id.description, if (meme.description.isNullOrBlank()) View.GONE else View.VISIBLE)
         constraintSetDefault.applyTo(itemView)
         if (!meme.description.isNullOrBlank()) {
-            memeDescription.setAutoLinkText(meme.description!!)
+            memeDescription.text = meme.description!!
 
         }
         memeImageV.loadMeme(meme)

@@ -1,6 +1,5 @@
 package com.innov8.memeit.Activities
 
-import android.accounts.Account
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -13,7 +12,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.inappmessaging.FirebaseInAppMessaging
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.CustomViews.DrawableBadge
@@ -213,7 +211,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MemeEditorActivity.REQUEST_CODE && resultCode == MemeEditorActivity.RESULT_CODE_SUCCESS) {
+        if (requestCode == MemeEditorActivity.REQUEST_CODE && resultCode == MemeEditorActivity.RESULT_CODE_SUCCESS_MEME) {
             startActivity(Intent(context, MemePosterActivity::class.java).apply {
                 putExtras(data!!.extras!!)
             })

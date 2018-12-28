@@ -2,6 +2,7 @@ package com.innov8.memeit.Fragments
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.innov8.memegenerator.MemeEditorActivity
-import com.innov8.memegenerator.MemeEngine.MemeLayout.LayoutInfo
+import com.memeit.backend.models.GridImageLayoutProperty
+import com.memeit.backend.models.LayoutProperty
+import com.memeit.backend.models.LinearImageLayoutProperty
 import com.innov8.memeit.Adapters.PhotosAdapterList
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.snack
@@ -21,16 +24,17 @@ import kotlinx.android.synthetic.main.fragment_photo_chooser.*
 
 class MultiChooserDialogFragment : BottomSheetDialogFragment() {
 
-    lateinit var photoListAdapter: PhotosAdapterList
+    private val photoListAdapter by lazy {
+        PhotosAdapterList(context!!).apply {
+            onCropListener = {
+                currentCrop = it
+                CropImage.activity(Uri.parse(it)).start(context!!, this@MultiChooserDialogFragment)
+            }
+        }
+    }
     private var currentCrop: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        photoListAdapter = PhotosAdapterList(context!!)
-        photoListAdapter.onCropListener = {
-            currentCrop = it
-            CropImage.activity(Uri.parse(it))
-                    .start(context!!, this)
-        }
         arguments?.getStringArray("photos")?.let {
             photoListAdapter.addAll(it.toList())
         }
@@ -57,17 +61,14 @@ class MultiChooserDialogFragment : BottomSheetDialogFragment() {
             }
         }
         mcd_finish.setOnClickListener {
-            MemeEditorActivity.startWithImages(context as Activity, photoListAdapter.items, extractInfo())
+            MemeEditorActivity.startWithImages(context as Activity, photoListAdapter.items, extractProperty())
         }
         mcd_grid_span.max = photoListAdapter.itemCount.toFloat()
 
     }
 
 
-    fun extractInfo(): LayoutInfo {
-        val type = if (mcd_type_group.checkedRadioButtonId == R.id.mcd_type_grid) LayoutInfo.TYPE_GRID
-        else LayoutInfo.TYPE_LINEAR
-
+    private fun extractProperty(): LayoutProperty {
         val orientation = if (mcd_type_group.checkedRadioButtonId == R.id.mcd_type_grid) {
             when (mcd_orientation_group.checkedRadioButtonId) {
                 R.id.mcd_orientation_vertical -> 1
@@ -81,7 +82,11 @@ class MultiChooserDialogFragment : BottomSheetDialogFragment() {
         }
         val span = mcd_grid_span.progress
 
-        return LayoutInfo(type, span, orientation)
+        return if (mcd_type_group.checkedRadioButtonId == R.id.mcd_type_grid)
+            GridImageLayoutProperty(0, 0, 0, 0, Color.WHITE, orientation, span, 0, 0)
+        else
+            LinearImageLayoutProperty(0, 0, 0, 0, Color.WHITE, orientation, 0)
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

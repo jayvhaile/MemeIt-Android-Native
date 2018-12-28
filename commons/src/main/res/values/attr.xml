@@ -3,4 +3,11 @@
     <declare-styleable name="ProfileDraweeView">
         <attr name="hasBorder" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="MemeItTextView">
+        <attr name="mfont" format="string" />
+        <attr name="mentionColor" format="color" />
+        <attr name="selectedColor" format="color" />
+        <attr name="tagColor" format="color" />
+    </declare-styleable>
 </resources>

@@ -51,7 +51,6 @@ class MemeUploadWorker(context: Context, params: WorkerParameters) : Worker(cont
         const val IMAGE_RATIO="ratio"
         const val DESCRIPTION="desc"
         const val TEXTS="texts"
-        const val TAGS="tags"
         const val TYPE="type"
 
     }
@@ -77,7 +76,6 @@ class MemeUploadWorker(context: Context, params: WorkerParameters) : Worker(cont
         val ratio = inputData.getFloat(IMAGE_RATIO, 1f)
         val description = inputData.getString(DESCRIPTION)
         val texts = inputData.getStringArray(TEXTS)
-        val tags = inputData.getStringArray(TAGS)
         val type = inputData.getString(TYPE) ?: "IMAGE"
 
         return MemeItMemes.postMeme(Meme(imageId = name,

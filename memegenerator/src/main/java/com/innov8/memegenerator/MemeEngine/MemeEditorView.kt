@@ -6,24 +6,21 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.os.Handler
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.children
-import androidx.core.view.forEach
 import com.innov8.memegenerator.CustomViews.CheckerBoardDrawable
+import com.memeit.backend.models.MemeStickerItemProperty
+import com.memeit.backend.models.LoadedImageMemeTemplateProperty
+import com.memeit.backend.models.LoadedMemeTemplateProperty
+import com.memeit.backend.models.MemeTextItemProperty
 import com.innov8.memegenerator.interfaces.EditorStateChangedListener
 import com.innov8.memegenerator.interfaces.ItemSelectedInterface
 import com.innov8.memegenerator.utils.CloseableFragment
 import com.innov8.memegenerator.utils.capture
 import com.innov8.memegenerator.utils.toRect
 import com.innov8.memeit.commons.dp
-import com.innov8.memeit.commons.getDrawableIdByName
-import com.innov8.memeit.commons.loadBitmap
-import com.innov8.memeit.commons.models.MemeTemplate
-import com.innov8.memeit.commons.models.TextProperty
 
 /**
  * Created by Haile on 5/19/2018.
@@ -114,24 +111,25 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
     }
 
 
-    fun setLayout(memeLayout: MemeLayout) {
+    fun setLayout(memeLayout: MemeLayout?) {
         this.memeLayout = memeLayout
+        this.memeLayout?.updateSize(width, height)
         this.memeLayout?.invalidate = {
             paint.color = this.memeLayout?.backgroudColor ?: Color.WHITE
             invalidate()
         }
-        this.memeLayout?.invalidate?.invoke()
+        this.memeLayout?.invalidate?.invoke() ?: invalidate()
+
     }
 
     override fun onDraw(canvas: Canvas) {
         background.draw(canvas)
-        if (memeLayout != null) {
-            val ml = memeLayout!!
-            canvas.drawRect(ml.drawingRect, paint)
-            for (i in 0 until ml.count) {
-                canvas.drawBitmap(ml.images[i],
+        memeLayout?.let {
+            canvas.drawRect(it.drawingRect, paint)
+            for (i in 0 until it.count) {
+                canvas.drawBitmap(it.images[i],
                         null,
-                        ml.getDrawingRectAt(i),
+                        it.getDrawingRectAt(i),
                         null)
             }
             paintHandler.draw(canvas)
@@ -177,26 +175,16 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
     }
 
     fun clearMemeItems() = removeAllViews()
-    fun generateAllTextProperty(): List<TextProperty> {
-        val list = mutableListOf<TextProperty>()
-        for (index in 0 until childCount) {
-            val v = super.getChildAt(index)
-            if (v is MemeTextView) {
-                list.add(v.generateTextProperty(width.toFloat(), height.toFloat()))
-            }
-        }
-        return list
-    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         memeLayout?.updateSize(w, h)
     }
 
-    fun loadMemeTemplate(memeTemplate: MemeTemplate) {
+    /*fun loadMemeTemplate(memeTemplate: MemeTemplate) {
         clearMemeItems()
         val image = context.loadBitmap(context.getDrawableIdByName(memeTemplate.imageURL), 1f)
-        val memeLayout = SingleImageLayout(width, height, image)
+        val memeLayout = SingleImageLayout(image).apply { updateSize(width, height) }
         setLayout(memeLayout)
         Handler().postDelayed({
             val rect = memeLayout.drawingRect
@@ -208,13 +196,12 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
             }
         }, 300)
 
-    }
+    }*/
 
 
     fun loadBitmab(bitmap: Bitmap) {
         clearMemeItems()
-        val memeLayout = SingleImageLayout(width, height, bitmap)
-        setLayout(memeLayout)
+        setLayout(SingleImageLayout(bitmap))
     }
 
     fun loadImageByLayout(memeLayout: MemeLayout) {
@@ -235,23 +222,17 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
         val tempFocus = focusedItem
         val tempBack = background
         val tempLayout = memeLayout
-
         val rect = memeLayout?.drawingRect?.toRect()
         focusedItem?.clearFocus()
         setBackgroundColor(Color.TRANSPARENT)
         memeLayout = null
-
         invalidate()
         val b = capture(rect)
-
         memeLayout = tempLayout
         background = tempBack
         tempFocus?.requestFocus()
-
         invalidate()
-
         return b
-
 
     }
 
@@ -265,6 +246,29 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
             }
         }
         return texts
+    }
+
+    fun generateProperty(): LoadedMemeTemplateProperty {
+        return LoadedImageMemeTemplateProperty(
+                memeLayout!!.generateProperty(),
+                List(childCount) { getChildAt(it) }
+                        .map { it as MemeItemView }
+                        .map { it.generateProperty() },
+                memeLayout!!.images,
+                captureMeme()
+        )
+    }
+
+    fun applyProperty(memeTemplateProperty: LoadedMemeTemplateProperty) {
+        clearMemeItems()
+        setLayout(MemeLayout.fromProperty(memeTemplateProperty.images, memeTemplateProperty.layoutProperty))
+
+        memeTemplateProperty.memeItemsProperty.forEach {
+            addMemeItemView(when (it) {
+                is MemeTextItemProperty -> MemeTextView(context, it)
+                is MemeStickerItemProperty -> MemeStickerView(context, it)
+            })
+        }
     }
 }
 

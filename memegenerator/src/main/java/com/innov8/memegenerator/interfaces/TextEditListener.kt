@@ -4,21 +4,21 @@ import com.innov8.memegenerator.MemeEngine.MemeLayout
 import com.innov8.memegenerator.MemeEngine.MemeStickerView
 import com.innov8.memegenerator.MemeEngine.MemeTextView
 import com.innov8.memegenerator.MemeEngine.PaintHandler
-import com.innov8.memeit.commons.models.MyTypeFace
-import com.innov8.memeit.commons.models.TextStyleProperty
+import com.memeit.backend.models.MemeTextStyleProperty
+import com.innov8.memeit.commons.models.TypefaceHandler
 
 interface TextEditListener {
     fun onAddText(memeTextView: MemeTextView)
     fun onTextSizeChanged(size: Float)
     fun onTextColorChanged(color: Int)
-    fun onTextFontChanged(typeface: MyTypeFace)
+    fun onTextFontChanged(typeface: TypefaceHandler)
     fun onTextSetBold(bold: Boolean)
     fun onTextSetItalic(italic: Boolean)
     fun onTextSetAllCap(allCap: Boolean)
     fun onTextSetStroked(stroked: Boolean)
     fun onTextStrokeChanged(strokeSize: Float)
     fun onTextStrokrColorChanged(strokeColor: Int)
-    fun onApplyAll(textStyleProperty: TextStyleProperty, applySize: Boolean = true)
+    fun onApplyAll(textStyleProperty: MemeTextStyleProperty, applySize: Boolean = true)
 }
 
 interface LayoutEditInterface {

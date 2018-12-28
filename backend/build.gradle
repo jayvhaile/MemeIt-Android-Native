@@ -9,11 +9,15 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.support.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
+        debug {
+            minifyEnabled enableProguardDebug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+        }
         release {
-            minifyEnabled false
+            minifyEnabled enableProguardRelease
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -22,7 +26,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'com.google.android.gms:play-services-auth:16.0.0'
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.cloudinary:cloudinary-android:1.24.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
@@ -33,18 +37,17 @@ dependencies {
     implementation 'com.facebook.android:facebook-login:4.37.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.27.0-eap13'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.27.0-eap13'
-    implementation project(':commons')
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.19.0'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
-    implementation 'androidx.core:core-ktx:1.0.0'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation 'androidx.core:core-ktx:1.0.1'
 
     def work_version = "1.0.0-alpha11"
     implementation("android.arch.work:work-runtime:$work_version") {
         exclude group: 'com.google.guava', module: 'listenablefuture'
     }
-    def room_version = "2.1.0-alpha02"
+    def room_version = "2.1.0-alpha03"
     implementation "androidx.room:room-runtime:$room_version"
 }
 repositories {

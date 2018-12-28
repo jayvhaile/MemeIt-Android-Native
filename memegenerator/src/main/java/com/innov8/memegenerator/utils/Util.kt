@@ -1,6 +1,5 @@
 package com.innov8.memegenerator.utils
 
-import android.content.Context
 import android.graphics.*
 import android.graphics.Bitmap.CompressFormat.PNG
 import android.view.MotionEvent
@@ -8,12 +7,12 @@ import android.view.View
 import android.widget.SeekBar
 import androidx.core.graphics.withRotation
 import androidx.recyclerview.widget.RecyclerView
-import com.facebook.imageutils.BitmapUtil
 import com.google.android.material.tabs.TabLayout
-import com.innov8.memegenerator.R
-import com.innov8.memeit.commons.loadBitmap
-import com.innov8.memeit.commons.models.MyTypeFace
-import com.innov8.memeit.commons.sp
+import com.memeit.backend.models.GridImageLayoutProperty
+import com.memeit.backend.models.LayoutProperty
+import com.memeit.backend.models.LinearImageLayoutProperty
+import com.memeit.backend.models.SingleImageLayoutProperty
+import com.memeit.backend.utils.RuntimeTypeAdapterFactory
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
@@ -157,3 +156,21 @@ infix fun Pair<Float, Float>.maxBy(max: Float): Pair<Float, Float> {
 }
 
 fun RectF.scale(x: Float, y: Float) = RectF(left * x, top * y, right * x, bottom * y)
+
+fun calcReqSize(lp: LayoutProperty, count:Int): Pair<Int, Int> {
+    val maxW = 400
+    val maxH = 800
+
+    val w = when (lp) {
+        is SingleImageLayoutProperty -> maxW
+        is LinearImageLayoutProperty -> if (lp.orientation == 0) maxW / count else maxW / 2
+        is GridImageLayoutProperty -> if (lp.orientation == 0) maxW / lp.span else maxW / (count / lp.span)
+    }
+    val h = when (lp) {
+        is SingleImageLayoutProperty -> maxH
+        is LinearImageLayoutProperty -> if (lp.orientation == 0) maxH / 2 else maxH / count
+        is GridImageLayoutProperty -> if (lp.orientation == 0) maxH / (count / lp.span) else maxH / lp.span
+    }
+
+    return w to h
+}

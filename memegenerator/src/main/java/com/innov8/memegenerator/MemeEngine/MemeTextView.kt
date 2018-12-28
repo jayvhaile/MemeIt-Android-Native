@@ -10,106 +10,55 @@ import android.text.InputType
 import android.text.Layout
 import android.text.TextPaint
 import android.util.AttributeSet
+import androidx.core.graphics.withTranslation
 import com.afollestad.materialdialogs.MaterialDialog
+import com.memeit.backend.models.MemeItemProperty
+import com.memeit.backend.models.MemeTextItemProperty
+import com.memeit.backend.models.MemeTextStyleProperty
 import com.innov8.memeit.commons.dp
-import com.innov8.memeit.commons.models.MyTypeFace
-import com.innov8.memeit.commons.models.TextProperty
-import com.innov8.memeit.commons.models.TextStyleProperty
+import com.innov8.memeit.commons.models.TypefaceHandler
 import com.innov8.memeit.commons.sp
 import com.innov8.memeit.commons.toSP
 
 class MemeTextView : MemeItemView {
-    constructor(context: Context, requiredWidth: Int=100, requiredHeight: Int=100) : super(context, requiredWidth, requiredHeight) {
-        init()
+    constructor(context: Context, requiredWidth: Int = 100, requiredHeight: Int = 100) : super(context, requiredWidth, requiredHeight) {
+        initDefaultDynamicLayout()
     }
 
+    constructor(context: Context, tp: MemeTextItemProperty) : super(context, tp) {
+        tp.tsp?.let {
+            dynamicLayout = DynamicLayout(text, TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+                typeface = TypefaceHandler.byName(it.font, context).getTypeFace()
+                color = it.textColor
+                textSize = it.textSize.sp(context)
+                style = Paint.Style.FILL
+                strokeWidth = it.strokeWidth.sp(context)
+            }, itemWidth, Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
+            color = it.textColor
+            font = it.font
+            bold = it.bold
+            italic = it.italic
+            allCaps = it.allCap
+            stroke = it.stroked
+            strokeColor = it.strokeColor
+
+        } ?: initDefaultDynamicLayout()
+        text = tp.text
+    }
+
+
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init()
+        initDefaultDynamicLayout()
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init()
+        initDefaultDynamicLayout()
     }
 
 
-    lateinit var dl: DynamicLayout
-
-    var text: String = ""
-        set(value) {
-            field = value
-            resizeToWrapText(true)
-        }
-    private var myTypeface: MyTypeFace = MyTypeFace.DEFAULT
-    fun setTypeface(value: MyTypeFace) {
-        myTypeface=value
-        dl.paint.typeface = value.getTypeFace(context)
-        resizeToWrapText()
-    }
-
-    fun setTextSize(value: Float) {
-        dl.paint.textSize = value
-        resizeToWrapText(true)
-    }
-
-
-
-
-    private var bold: Boolean = false
-
-    fun setBold(value: Boolean) {
-        bold = value
-        invalidate()
-    }
-
-    private var italic: Boolean = false
-    fun setItalic(value: Boolean) {
-        italic = value
-        invalidate()
-    }
-
-    private var allCaps: Boolean = false
-    fun setAllCaps(value: Boolean) {
-        allCaps = value
-        resetDL()
-        invalidate()
-    }
-
-    private var stroke: Boolean = true
-    fun setStroke(value: Boolean) {
-        stroke = value
-        invalidate()
-    }
-
-    fun setStrokeWidth(value: Float) {
-        dl.paint.strokeWidth = value
-        invalidate()
-    }
-
-    private var strokeColor: Int = Color.BLACK
-    fun setStrokeColor(value: Int) {
-        strokeColor = value
-        invalidate()
-    }
-
-    private var color: Int = Color.BLACK
-    fun setTextColor(value: Int) {
-        color = value
-        dl.paint.color = value
-        invalidate()
-    }
-
-
-    private fun init() {
-        val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
-        with(textPaint) {
-            typeface = Typeface.DEFAULT
-            color = Color.BLACK
-            textSize = 20f.sp(context)
-            style = Paint.Style.FILL
-        }
+    init {
         minimumWidth = 10.dp(context)
         minimumHeight = 10.dp(context)
-        dl = DynamicLayout(text, textPaint, requiredWidth, Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
         if (isInMemeEditor)
             onClickListener = {
                 MaterialDialog.Builder(context)
@@ -121,96 +70,171 @@ class MemeTextView : MemeItemView {
                         }
                         .show()
             }
-        onResize = { _, _ ->
-            resetDL()
-        }
     }
 
-    fun resetDL() {
+    private fun initDefaultDynamicLayout() {
+        dynamicLayout = DynamicLayout(text, TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+            typeface = Typeface.DEFAULT
+            color = Color.BLACK
+            textSize = 20f.sp(context)
+            style = Paint.Style.FILL
+        }, itemWidth, Layout.Alignment.ALIGN_CENTER, 1f, 0f, false)
+    }
+
+    lateinit var dynamicLayout: DynamicLayout
+
+    var text: String = ""
+        set(value) {
+            field = value
+            resizeToWrapText(true)
+        }
+    private var font = "Default"
+    private var bold: Boolean = false
+    private var italic: Boolean = false
+    private var allCaps: Boolean = false
+    private var stroke: Boolean = true
+    private var strokeColor: Int = Color.WHITE
+    private var color: Int = Color.BLACK
+
+    fun setTypeface(value: TypefaceHandler) {
+        font = value.name
+        dynamicLayout.paint.typeface = value.getTypeFace(context)
+        resizeToWrapText()
+    }
+
+    fun setTextSize(value: Float) {
+        dynamicLayout.paint.textSize = value
+        resizeToWrapText(true)
+    }
+
+    fun setBold(value: Boolean) {
+        bold = value
+        invalidate()
+    }
+
+    fun setItalic(value: Boolean) {
+        italic = value
+        invalidate()
+    }
+
+    fun setAllCaps(value: Boolean) {
+        allCaps = value
+        recreateDynamicLayout()
+        invalidate()
+    }
+
+    fun setStroke(value: Boolean) {
+        stroke = value
+        invalidate()
+    }
+
+    fun setStrokeWidth(value: Float) {
+        dynamicLayout.paint.strokeWidth = value
+        invalidate()
+    }
+
+    fun setStrokeColor(value: Int) {
+        strokeColor = value
+        invalidate()
+    }
+
+    fun setTextColor(value: Int) {
+        color = value
+        dynamicLayout.paint.color = value
+        invalidate()
+    }
+
+
+    private fun recreateDynamicLayout() {
         val tx = if (allCaps) text.toUpperCase() else text
-        dl = DynamicLayout(tx, dl.paint, requiredWidth, Layout.Alignment.ALIGN_CENTER, 0.8f, 0f, false)
+        dynamicLayout = DynamicLayout(tx, dynamicLayout.paint, itemWidth, Layout.Alignment.ALIGN_CENTER, 0.8f, 0f, false)
     }
 
     private fun resizeToWrapText(reset: Boolean = false) {
-        if (reset) resetDL()
-        if (isInMemeEditor && requiredHeight < dl.height)
-            requiredHeight = dl.height
+        if (reset) recreateDynamicLayout()
+        if (isInMemeEditor && itemHeight < dynamicLayout.height)
+            itemHeight = dynamicLayout.height
         invalidate()
         requestLayout()
     }
 
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        if (!isInMemeEditor) resetDL()
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        recreateDynamicLayout()
+    }
+
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas?.save()
-        var a = requiredHeight - dl.height
+        var a = itemHeight - dynamicLayout.height
         a = if (a > 0) a / 2 else 0
-        canvas?.translate(itemX + paddingLeft, itemY + paddingTop + a)
-        if (stroke) {
-            dl.paint.style = Paint.Style.STROKE
-            dl.paint.color = strokeColor
-            dl.draw(canvas)
+        canvas.withTranslation(itemX + paddingLeft, itemY + paddingTop + a) {
+            if (stroke) {
+                dynamicLayout.paint.style = Paint.Style.STROKE
+                dynamicLayout.paint.color = strokeColor
+                dynamicLayout.draw(this)
 
-            dl.paint.style = Paint.Style.FILL
+                dynamicLayout.paint.style = Paint.Style.FILL
+            }
+            dynamicLayout.paint.color = color
+            dynamicLayout.draw(this)
         }
-        dl.paint.color = color
-        dl.draw(canvas)
-        canvas?.restore()
-        super.onDraw(canvas)
-
     }
 
-    fun generateTextProperty(totalW: Float, totalH: Float): TextProperty {
-        return TextProperty(x / totalW,
-                y / totalH,
-                requiredWidth / totalW,
-                requiredHeight / totalH,
-                generateTextStyleProperty())
+
+    fun applyTextProperty(tp: MemeTextItemProperty) {
+        applyProperty(tp)
+        tp.tsp?.let {
+            applyTextStyleProperty(it, text = "text")
+        }
     }
 
-    fun generateTextStyleProperty(): TextStyleProperty {
-        return TextStyleProperty(dl.paint.textSize.toSP(context), color, myTypeface,
-                bold, italic, allCaps,
-                stroke, strokeColor, dl.paint.strokeWidth
-        )
-    }
 
-    fun applyTextProperty(tp: TextProperty, totalW: Float, totalH: Float, xoff: Float = 0f, yOff: Float = 0f) {
-        x = totalW * tp.xP + xoff
-        y = totalH * tp.yP + yOff
-        requiredWidth = (totalW * tp.widthP).toInt()
-        requiredHeight = (totalH * tp.heightP).toInt()
-        applyTextStyleProperty(tp.textStyleProperty, text = "text")
-    }
-
-    fun applyTextStyleProperty(tp: TextStyleProperty, applySize: Boolean = true, text: String = "") {
+    fun applyTextStyleProperty(tp: MemeTextStyleProperty, applySize: Boolean = true, text: String = "") {
         color = tp.textColor
-        if (applySize) dl.paint.textSize = tp.textSize.sp(context)
-
-        myTypeface = tp.myTypeFace
-        dl.paint.typeface = tp.myTypeFace.getTypeFace(context)
+        if (applySize) dynamicLayout.paint.textSize = tp.textSize.sp(context)
+        font = tp.font
+        dynamicLayout.paint.typeface = TypefaceHandler.byName(tp.font, context).getTypeFace()
         bold = tp.bold
         italic = tp.italic
         allCaps = tp.allCap
         stroke = tp.stroked
         strokeColor = tp.strokeColor
-        dl.paint.strokeWidth = tp.strokeWidth
+        dynamicLayout.paint.strokeWidth = tp.strokeWidth
         this.text = if (text.isEmpty()) this.text else text
     }
 
     override fun copy(): MemeTextView {
-        val tp = generateTextProperty(maxWidth.toFloat(), maxHeight.toFloat())
-        val nt = MemeTextView(context, width, height)
-        nt.applyTextProperty(tp, maxWidth.toFloat(), maxHeight.toFloat())
+        val nt = MemeTextView(context, generateProperty() as MemeTextItemProperty)
         nt.x += 10.dp(context)
         nt.y += 10.dp(context)
-        nt.rotation=this.rotation
         nt.text = text
         return nt
     }
+
+    override fun generateProperty(): MemeItemProperty {
+        return MemeTextItemProperty(
+                x / maxWidth,
+                y / maxHeight,
+                itemWidth.toFloat() / maxWidth,
+                itemHeight.toFloat() / maxHeight,
+                rotation,
+                text,
+                generateTextStyleProperty()
+        )
+    }
+
+    fun generateTextStyleProperty() = MemeTextStyleProperty(
+            dynamicLayout.paint.textSize.toSP(context),
+            color,
+            font,
+            bold, italic, allCaps,
+            stroke, strokeColor, dynamicLayout.paint.strokeWidth.toSP(context)
+    )
+
 
 }

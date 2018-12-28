@@ -189,7 +189,7 @@
         app:sparkbutton_secondaryColor="@color/spark_secondary" />
 
 
-    <com.luseen.autolinklibrary.AutoLinkTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.innov8.memeit">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -16,16 +17,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
+        <activity android:name=".Activities.MemeTemplatePosterActivity"></activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.innov8.memeit.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
-        <activity android:name=".Activities.TagMemesActivity"></activity>
+
+        <activity android:name=".Activities.TagMemesActivity" />
         <activity
             android:name=".Activities.SearchUserActivity"
             android:parentActivityName=".Activities.MemePosterActivity" />
@@ -68,8 +72,10 @@
         <activity android:name=".Activities.GuestUserActivity">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="memeitapp.com"
                     android:pathPrefix="/api/v1/meme"
@@ -81,8 +87,10 @@
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="memeitapp.com"
                     android:pathPrefix="/share"
@@ -92,7 +100,6 @@
                     android:pathPrefix="/share"
                     android:scheme="http" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".Activities.ProfileSettingsActivity"
@@ -108,6 +115,7 @@
         <activity
             android:name=".Activities.SearchTagActivity"
             android:parentActivityName=".Activities.MemePosterActivity" />
+        <activity android:name=".Activities.MemePosterActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

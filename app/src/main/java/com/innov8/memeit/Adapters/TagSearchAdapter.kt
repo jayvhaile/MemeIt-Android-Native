@@ -44,12 +44,7 @@ class TagSearchAdapter(context: Context) : ELEFilterableListAdapter<Tag, TagSear
     }
 
     override fun getItemType(position: Int): Int = 0
-    var filterWord: String = ""
-        set(value) {
-            field = value
-            filter()
-            filterable = !field.isBlank()
-        }
+
 
     fun updateFilter(value: String) {
         filterWord = value

@@ -5,10 +5,10 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.memeit.backend.models.MemeTextStyleProperty
 import com.innov8.memegenerator.interfaces.TextEditListener
 import com.innov8.memegenerator.R
 import com.innov8.memeit.commons.dp
-import com.innov8.memeit.commons.models.TextStyleProperty
 
 
 class TextStyleView : LinearLayout {
@@ -58,7 +58,7 @@ class TextStyleView : LinearLayout {
 
 
 
-    fun setProperty(textStyleProperty: TextStyleProperty) {
+    fun setProperty(textStyleProperty: MemeTextStyleProperty) {
         (getChildAt(0) as ToggleImageButton).setChecked(textStyleProperty.bold)
         (getChildAt(1) as ToggleImageButton).setChecked(textStyleProperty.italic)
         (getChildAt(2) as ToggleImageButton).setChecked(textStyleProperty.allCap)

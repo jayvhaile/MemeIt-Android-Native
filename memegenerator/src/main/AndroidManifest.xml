@@ -8,8 +8,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
         <activity android:name=".VideoToGifActivity"></activity>
-        <activity android:name=".MemeTemplateMaker" />
-        <activity android:name="com.innov8.memeit.Activities.MemePosterActivity" />
         <activity
             android:name=".MemeEditorActivity"
             android:exported="true" />

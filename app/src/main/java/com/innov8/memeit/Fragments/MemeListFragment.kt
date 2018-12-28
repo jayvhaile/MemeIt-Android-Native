@@ -13,6 +13,7 @@ import com.innov8.memeit.Loaders.UserMemePostsLoader
 import com.innov8.memeit.Utils.LoaderAdapterHandler
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.snack
+import com.innov8.memeit.commons.toast
 import com.memeit.backend.models.HomeElement
 import kotlinx.android.synthetic.main.fragment_meme_list.*
 
@@ -31,7 +32,7 @@ class MemeListFragment : Fragment() {
         LoaderAdapterHandler(memeAdapter, memeLoader).apply {
             onLoaded = { swipe_to_refresh?.isRefreshing = false }
             onLoadFailed = {
-                view?.snack(it)
+                context?.toast(it)
                 swipe_to_refresh?.isRefreshing = false
             }
         }
@@ -58,9 +59,6 @@ class MemeListFragment : Fragment() {
         meme_recycler_view.adapter = memeAdapter
 
     }
-
-
-
 
 
     companion object {

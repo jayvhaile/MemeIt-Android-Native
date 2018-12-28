@@ -2,8 +2,9 @@ package com.memeit.backend.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.cloudinary.android.Utils
 import com.google.gson.annotations.SerializedName
-import com.memeit.backend.Utils
+import com.memeit.backend.utils.isEmailValidOptional
 
 interface AuthRequest {
     fun validate(): List<String>
@@ -22,7 +23,7 @@ data class UsernameAuthRequest(var username: String,
         if (username.trim().length < 2) {
             errors.add("Username should at least be 4 in length!")
         }
-        if (!Utils.isEmailValidOptional(email)) {
+        if (!isEmailValidOptional(email)) {
             errors.add("Invalid Email!")
 
         }

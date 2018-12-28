@@ -2,7 +2,9 @@ package com.innov8.memeit.Activities
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.view.WindowManager
 
 import com.innov8.memeit.Fragments.ProfileFragment
 import com.innov8.memeit.R
@@ -14,6 +16,9 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = Color.RED
         setContentView(R.layout.activity_profile)
         val uid = intent.getStringExtra(PARAM_USER_ID)
         val user = intent.getParcelableExtra<User>(PARAM_USER)
@@ -39,6 +44,7 @@ class ProfileActivity : AppCompatActivity() {
                 putExtra(PARAM_USER_ID, uid)
             })
         }
+
         fun startWithUsername(context: Context, username: String) {
             context.startActivity(Intent(context, ProfileActivity::class.java).apply {
                 putExtra(PARAM_USERNAME, username)

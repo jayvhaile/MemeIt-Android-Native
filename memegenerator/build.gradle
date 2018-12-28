@@ -12,8 +12,12 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
+        debug {
+            minifyEnabled enableProguardDebug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
-            minifyEnabled false
+            minifyEnabled enableProguardRelease
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -50,7 +54,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.27.0-eap13'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.27.0-eap13'
     implementation project(':commons')
-    implementation 'androidx.core:core-ktx:1.0.0'
+    implementation 'androidx.core:core-ktx:1.0.1'
 
     def work_version = "1.0.0-alpha11"
     implementation("android.arch.work:work-runtime:$work_version") {

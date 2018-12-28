@@ -15,6 +15,7 @@ import com.innov8.memeit.CustomViews.MemeDraweeView
 import com.innov8.memeit.Loaders.GuestMemeLoader
 import com.innov8.memeit.Utils.LoaderAdapterHandler
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.toast
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
@@ -29,36 +30,18 @@ class GuestUserActivity : AppCompatActivity() {
         setContentView(R.layout.loading_view_layout)
         loader_view.setContentView(R.layout.activity_guest_user)
 
-
-        FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnSuccessListener {
-            if(it==null){
-                intent?.data?.lastPathSegment?.let { uri ->
-                    x(uri)
-                }?:finish()
-
-            }else
-            x(it.link.lastPathSegment)
-        }.addOnFailureListener {
-            intent?.data?.lastPathSegment?.let { uri ->
-                x(uri)
-            } ?: loader_view.setError("failed to get invitation id")
-
-        }
-    }
-
-    private fun x(memeid: String?) {
-        if (MemeItClient.myUser != null) {
-            if (memeid == null)
-                startActivity(Intent(this, MainActivity::class.java))
-            else
-                CommentsActivity.startWithMemeId(this, memeid)
-        } else {
-            if (memeid == null)
-                startActivity(Intent(this, AuthActivity::class.java))
-            else {
-                loader_view.onRetry = { init(memeid) }
-                init(memeid)
+        intent?.data?.lastPathSegment?.let {
+            if (MemeItClient.myUser != null) {
+                CommentsActivity.startWithMemeId(this, it)
+                finish()
+            } else {
+                loader_view.onRetry = { init(it) }
+                init(it)
             }
+        } ?: let {
+            toast("Meme not found.")
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 

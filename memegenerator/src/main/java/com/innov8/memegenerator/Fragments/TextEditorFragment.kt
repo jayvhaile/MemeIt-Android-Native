@@ -11,11 +11,11 @@ import com.innov8.memegenerator.CustomViews.ColorChooser
 import com.innov8.memegenerator.CustomViews.FontChooser
 import com.innov8.memegenerator.CustomViews.TextStyleView
 import com.innov8.memegenerator.MemeEngine.MemeTextView
-import com.innov8.memegenerator.interfaces.TextEditListener
+import com.memeit.backend.models.MemeTextStyleProperty
 import com.innov8.memegenerator.R
+import com.innov8.memegenerator.interfaces.TextEditListener
 import com.innov8.memegenerator.utils.Listener
 import com.innov8.memegenerator.utils.ViewAdapter
-import com.innov8.memeit.commons.models.TextStyleProperty
 import com.innov8.memeit.commons.sp
 import com.warkiz.widget.IndicatorSeekBar
 import kotlinx.android.synthetic.main.bottom_tab.*
@@ -23,24 +23,23 @@ import kotlinx.android.synthetic.main.text_pager.*
 
 class TextEditorFragment : Fragment() {
 
-
     var textEditListener: TextEditListener? = null
-    var textStyleProperty: TextStyleProperty? = null
+    var textStyleProperty: MemeTextStyleProperty? = null
         set(value) {
             field = value
             applyTextProperty()
         }
 
-    lateinit var colorChooser: ColorChooser
-    lateinit var fontChooser: FontChooser
-    lateinit var textStyleView: TextStyleView
-    lateinit var seekbarView: IndicatorSeekBar
-    lateinit var strokeView: View
-    lateinit var strokeEnable: Switch
-    lateinit var strokeSize: IndicatorSeekBar
-    lateinit var strokeColorChooser: ColorChooser
+    private lateinit var colorChooser: ColorChooser
+    private lateinit var fontChooser: FontChooser
+    private lateinit var textStyleView: TextStyleView
+    private lateinit var seekBarView: IndicatorSeekBar
+    private lateinit var strokeView: View
+    private lateinit var strokeEnable: Switch
+    private lateinit var strokeSize: IndicatorSeekBar
+    private lateinit var strokeColorChooser: ColorChooser
 
-    fun createViews() {
+    private fun createViews() {
         colorChooser = ColorChooser(context!!).apply {
             onColorChoosed = { textEditListener?.onTextColorChanged(it) }
 
@@ -51,14 +50,14 @@ class TextEditorFragment : Fragment() {
         textStyleView = TextStyleView(context!!).apply {
             textEditListener = this@TextEditorFragment.textEditListener
         }
-        seekbarView = IndicatorSeekBar.with(context!!)
+        seekBarView = IndicatorSeekBar.with(context!!)
                 .min(5f)
                 .max(100f)
                 .tickCount(40)
                 .build()
 
 
-        seekbarView.onSeekChangeListener = Listener(onSeek = {
+        seekBarView.onSeekChangeListener = Listener(onSeek = {
             textEditListener?.onTextSizeChanged(it.progressFloat.sp(context!!))
         })
         strokeEnable = strokeView.findViewById(R.id.enable_stroke)
@@ -104,9 +103,9 @@ class TextEditorFragment : Fragment() {
         val tempListener = textEditListener
         textEditListener = null
         colorChooser.chooseColor(tp.textColor)
-        fontChooser.choose(tp.myTypeFace)
+        fontChooser.choose(tp.font)
         textStyleView.setProperty(tp)
-        seekbarView.setProgress(tp.textSize)
+        seekBarView.setProgress(tp.textSize)
         strokeEnable.isChecked = tp.stroked
         strokeSize.setProgress(tp.strokeWidth)
         strokeColorChooser.chooseColor(tp.strokeColor)
@@ -117,7 +116,7 @@ class TextEditorFragment : Fragment() {
 
     inner class Adapter(context: Context) : ViewAdapter(context) {
         private var titles = listOf("Color", "Size", "Font", "Style", "Stroke", "Background")
-        private var views = listOf(colorChooser, seekbarView, fontChooser, textStyleView, strokeView, ColorChooser(context))
+        private var views = listOf(colorChooser, seekBarView, fontChooser, textStyleView, strokeView, ColorChooser(context))
 
 
         override fun getItem(position: Int): View = views[position]

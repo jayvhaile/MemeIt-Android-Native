@@ -9,9 +9,9 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.Adapters.ListAdapter
 import com.innov8.memegenerator.Adapters.MyViewHolder
-import com.innov8.memeit.commons.models.MemeTemplate
 import com.innov8.memeit.commons.getDrawableIdByName
-
+import com.memeit.backend.models.MemeTemplate
+//todo fix this stupid class
 class MemeTemplatesListAdapter (context: Context): ListAdapter<MemeTemplate>(context,R.layout.list_item_meme_template) {
     override fun createViewHolder(view: View): MyViewHolder<MemeTemplate> {
         return MemeTemplateViewHolder(view)
@@ -26,15 +26,11 @@ class MemeTemplatesListAdapter (context: Context): ListAdapter<MemeTemplate>(con
         }
         override fun bind(t: MemeTemplate) {
 
-            if (t.dataSource == MemeTemplate.LOCAL_DATA_SOURCE) {
-                memeTemplateImageV.setImageRequest(
+               /* memeTemplateImageV.setImageRequest(
                         ImageRequestBuilder.newBuilderWithResourceId(context.getDrawableIdByName(t.imageURL))
                                 .build()
-                )
-            }else{
-                memeTemplateImageV.setImageRequest(ImageRequest.fromUri(t.imageURL))
+                )*/
 
-            }
             memeTemplateLabelV.text = t.label
         }
 

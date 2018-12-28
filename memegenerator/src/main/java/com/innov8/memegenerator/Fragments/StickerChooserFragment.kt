@@ -22,8 +22,8 @@ import kotlinx.coroutines.android.Main
 class StickerChooserFragment : Fragment() {
     private lateinit var stickersAdapter: StickersAdapter
     private var stickers: List<StickerPack>? = null
-    var loaded = false
-    var load = false
+    private var loaded = false
+    private var load = false
     var stickerEditInterface: StickerEditInterface? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +39,7 @@ class StickerChooserFragment : Fragment() {
                 val bitmap = withContext(Dispatchers.Default) {
                     BitmapFactory.decodeStream(context!!.assets.open(url.substring(9)))
                 }
-                stickerEditInterface?.onAddSticker(MemeStickerView(context!!, bitmap))
+                stickerEditInterface?.onAddSticker(MemeStickerView(context!!, bitmap, url))
             }
         }
     }
@@ -54,8 +54,8 @@ class StickerChooserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         sticker_list.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
         sticker_list.adapter = stickersAdapter
-        pager_tab.onTabSelected {
-            stickersAdapter.setAll(stickers!![it.position].urls)
+        pager_tab.onTabSelected { tab ->
+            stickersAdapter.setAll(stickers!![tab.position].urls.map { it.path })
         }
         load()
     }

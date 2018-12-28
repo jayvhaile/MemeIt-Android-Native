@@ -7,7 +7,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.innov8.memeit.CustomClasses.AdElement
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.Utils.*
-import com.innov8.memeit.commons.models.MemeTemplate
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.models.*
@@ -73,7 +72,7 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
             val memes = withContext(Dispatchers.Default) { MemeItMemes.getHomeMemes(skip, limit).execSafe() }
             val users = async(Dispatchers.Default) { MemeItUsers.getUserSuggestions().execSafe() }
             val tags = async(Dispatchers.Default) { MemeItMemes.getSuggestedTags(0, 300).execSafe() }
-            val templates = async(Dispatchers.Default) { MemeTemplate.loadLocalTemplates(MemeItApp.instance) }
+            val templates = async(Dispatchers.Default) { listOf<MemeTemplate>() }
 
             if (!memes.isSuccessful) {
                 onError(memes.error)

@@ -17,8 +17,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled enableProguardDebug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+        }
         release {
-            minifyEnabled false
+            minifyEnabled enableProguardRelease
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -42,5 +47,5 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.19.0'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
-    implementation 'androidx.core:core-ktx:1.0.0'
+    implementation 'androidx.core:core-ktx:1.0.1'
 }

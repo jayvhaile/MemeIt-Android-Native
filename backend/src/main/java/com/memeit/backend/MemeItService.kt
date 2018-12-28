@@ -1,7 +1,6 @@
 package com.memeit.backend
 
 import com.memeit.backend.models.*
-import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -101,10 +100,10 @@ interface MemeItService {
 
     @GET("user/search")
     fun searchUser(@Query("name") name: String? = null,
-                    @Query("username") username: String? = null,
-                    @Query("and") and: Boolean = false,
-                    @Query("skip") skip: Int,
-                    @Query("limit") limit: Int): Call<List<User>>
+                   @Query("username") username: String? = null,
+                   @Query("and") and: Boolean = false,
+                   @Query("skip") skip: Int,
+                   @Query("limit") limit: Int): Call<List<User>>
 
 
     /**
@@ -280,7 +279,7 @@ interface MemeItService {
     @GET("others/signedUrl")
     fun getSignedUrl(@Query("filename") filename: String, @Query("contentType") contentType: String): Call<MemeItClient.SignedUrl>
 
-    @POST("/auth/ftoken")
+    @POST("auth/ftoken")
     fun updateUserToken(@Body token: FirebaseToken): Call<ResponseBody>
 
     @POST("user/report")
@@ -289,8 +288,19 @@ interface MemeItService {
     @POST("meme/report")
     fun reportMeme(@Body report: Report.MemeReport): Call<ResponseBody>
 
+    @GET("template")
+    fun getTemplates(
+            @Query("skip") skip: Int,
+            @Query("limit") limit: Int,
+            @Query("type") type: String? = null,
+            @Query("category") category: String? = null,
+            @Query("search") search: String? = null,
+            @Query("mine") mine: Boolean = false,
+            @Query("sort") sort: String = "POPULAR"
+    ): Call<List<MemeTemplate>>
 
-    @Multipart
-    @PUT()
-    fun uploadImage(@Url url: String, @Part image: MultipartBody.Part): Call<ResponseBody>
+    @POST("template")
+    fun postTemplate(
+            @Body memeTemplate: MemeTemplate
+    ): Call<ResponseBody>
 }

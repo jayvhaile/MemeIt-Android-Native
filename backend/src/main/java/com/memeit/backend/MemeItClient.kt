@@ -58,15 +58,18 @@ object MemeItClient {
 
     data class SignedUrl(val message: String)
 
-    interface Uploader {
+    interface FileService {
         @Multipart
         @POST("o")
         fun uploadObject(@Query("uploadType") uploadType: String = "multipart",
                          @Part("json") desc: RequestBody,
                          @Part image: MultipartBody.Part): Call<ResponseBody>
+
+        @GET
+        fun downloadObject(@Url url: String): Call<ResponseBody>
     }
 
-    fun makeUploader(): Uploader {
+    val fileService by lazy {
         val builder = OkHttpClient.Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(3, TimeUnit.MINUTES)
@@ -76,18 +79,18 @@ object MemeItClient {
                 .client(builder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-        return retrofit.create(Uploader::class.java)
+        retrofit.create(FileService::class.java)
     }
 
     data class UploadInfo(val name: String)
 
-    fun uploadFile(file: File,  generateUniqueName: Boolean = false, onSuccess: ((String) -> Unit), onError: ((String) -> Unit)) {
+    fun uploadFile(file: File, generateUniqueName: Boolean = false, onSuccess: ((String) -> Unit), onError: ((String) -> Unit)) {
         val ext = file.extension
         val body = MultipartBody.Part.create(RequestBody.create(MediaType.get("image/$ext"), file))
         val uniqueName = if (generateUniqueName) "${UUID.randomUUID()}_${file.name}" else file.name
         val json = Gson().toJson(UploadInfo(uniqueName))
         val desc = RequestBody.create(MediaType.parse("application/json"), json)
-        makeUploader().uploadObject(desc = desc, image = body).call({ onSuccess(uniqueName) }, onError)
+        fileService.uploadObject(desc = desc, image = body).call({ onSuccess(uniqueName) }, onError)
     }
 
     fun uploadFile(file: File, generateUniqueName: Boolean = false): Pair<Response<ResponseBody>, String> {
@@ -96,7 +99,7 @@ object MemeItClient {
         val uniqueName = if (generateUniqueName) "${UUID.randomUUID()}_${file.name}" else file.name
         val json = Gson().toJson(UploadInfo(uniqueName))
         val desc = RequestBody.create(MediaType.parse("application/json"), json)
-        return makeUploader().uploadObject(desc = desc, image = body).execute() to uniqueName
+        return fileService.uploadObject(desc = desc, image = body).execute() to uniqueName
     }
 
 
@@ -105,7 +108,7 @@ object MemeItClient {
         val uniqueName = "${UUID.randomUUID()}.$ext"
         val json = Gson().toJson(UploadInfo(uniqueName))
         val desc = RequestBody.create(MediaType.parse("application/json"), json)
-        makeUploader().uploadObject(desc = desc, image = body).call({ onSuccess(uniqueName) }, onError)
+        fileService.uploadObject(desc = desc, image = body).call({ onSuccess(uniqueName) }, onError)
     }
 
     fun init(context: Context, baseUrl: String) {
@@ -167,7 +170,7 @@ object MemeItClient {
         val retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(builder.build())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(buildGson())) //build gson is for working with the memetemplate classes
                 .build()
         memeItService = retrofit.create(MemeItService::class.java)
         isInitialized = true

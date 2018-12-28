@@ -17,6 +17,7 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.innov8.memeit.commons.models.TypefaceManager
 import com.innov8.memeit.commons.notidChannelName
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.MyUser
@@ -75,6 +76,7 @@ class MemeItApp : MultiDexApplication() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         initNotificationChannel()
 //        initUser()
+        TypefaceManager.init(this)
     }
 
     private fun initNotificationChannel() {
@@ -98,7 +100,7 @@ class MemeItApp : MultiDexApplication() {
                 "1234",
                 "jayv",
                 "Jv",
-                "Hey, i am jayv, i am going to release funny ethiopians meme, make sure to follow me and get entertained!",
+                "!",
                 "aaa")
     }
 }

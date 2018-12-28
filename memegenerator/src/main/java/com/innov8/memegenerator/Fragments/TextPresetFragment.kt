@@ -12,11 +12,11 @@ import com.innov8.memegenerator.R
 import com.innov8.memegenerator.Adapters.TextPresetsAdapter
 import com.innov8.memegenerator.interfaces.TextEditListener
 import com.innov8.memegenerator.Models.TextPreset
-import com.innov8.memeit.commons.models.TextStyleProperty
+import com.memeit.backend.models.MemeTextStyleProperty
 
 class TextPresetFragment : Fragment() {
     var textEditListener: TextEditListener? = null
-    var textStyleProperty: TextStyleProperty? = null
+    var textStyleProperty: MemeTextStyleProperty? = null
     private lateinit var textPresetsAdapter: TextPresetsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {

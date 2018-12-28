@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import com.innov8.memeit.commons.getDrawableIdByName
 
 data class Badge(val id: String,
                  val label: String = "label",
@@ -27,7 +26,7 @@ data class Badge(val id: String,
         return 0
     }
 
-    fun getDrawableId(context: Context) = context.getDrawableIdByName(id)
+    fun getDrawableId(context: Context) = context.resources.getIdentifier(id, "drawable", context.packageName)
     override fun equals(other: Any?): Boolean {
         return (other as? Badge)?.id == id
     }

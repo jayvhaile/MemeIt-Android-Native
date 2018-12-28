@@ -13,12 +13,12 @@ import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressB
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.getDrawableIdByName
-import com.innov8.memeit.commons.models.MemeTemplate
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.Utils.loadImage
 import com.innov8.memeit.Utils.prefix
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
+import com.memeit.backend.models.MemeTemplate
 import com.memeit.backend.models.User
 
 class UserSugAdapter(context: Context) : ListAdapter<User>(context, R.layout.list_item_user_sug) {
@@ -51,6 +51,7 @@ class UserSugAdapter(context: Context) : ListAdapter<User>(context, R.layout.lis
     }
 }
 
+//todo fix this class
 class TemplateSugAdapter(context: Context) : ListAdapter<MemeTemplate>(context, R.layout.list_item_template_sug) {
     override fun createViewHolder(view: View): MyViewHolder<MemeTemplate> = TemplateSugViewHolder(view)
     inner class TemplateSugViewHolder(itemView: View) : MyViewHolder<MemeTemplate>(itemView) {
@@ -59,13 +60,13 @@ class TemplateSugAdapter(context: Context) : ListAdapter<MemeTemplate>(context, 
 
         init {
             editBtn.setOnClickListener {
-                MemeEditorActivity.startWithMemeTemplate(context as Activity, getItemAt(item_position))
+//                MemeEditorActivity.startWithMemeTemplate(context as Activity, getItemAt(item_position))
             }
         }
 
         override fun bind(t: MemeTemplate) {
-            val u = UriUtil.getUriForResourceId(MemeItApp.instance.getDrawableIdByName(t.imageURL)).toString()
-            templateV.setImageURI(u)
+//            val u = UriUtil.getUriForResourceId(MemeItApp.instance.getDrawableIdByName(t.imageURL)).toString()
+//            templateV.setImageURI(u)
         }
     }
 }

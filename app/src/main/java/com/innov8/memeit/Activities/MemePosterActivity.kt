@@ -36,7 +36,7 @@ import java.nio.channels.FileChannel
 
 
 class MemePosterActivity : AppCompatActivity() {
-    var texts: Array<String>? = null
+    private var texts: Array<String>? = null
     private lateinit var memeType: Meme.MemeType
     private var gif: String? = null
     private var image: String? = null
@@ -45,8 +45,6 @@ class MemePosterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.meme_poster_3)
         setSupportActionBar(toolbar)
-        val muser = MemeItClient.myUser!!
-//        poster_pp.setText(muser.name?.prefix() ?: "")
 
 
         btn_add_tag.setOnClickListener {
@@ -195,7 +193,6 @@ class MemePosterActivity : AppCompatActivity() {
                 .putString(MemeUploadWorker.DESCRIPTION, description.text?.toString())
                 .putString(MemeUploadWorker.TYPE, memeType.name)
                 .putStringArray(MemeUploadWorker.TEXTS, texts ?: arrayOf())
-                .putStringArray(MemeUploadWorker.TAGS, tags.toTypedArray())
                 .build()
         val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -219,8 +216,6 @@ class MemePosterActivity : AppCompatActivity() {
         return postWork.id
     }
 
-    private val tags
-        get() = listOf<String>()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
