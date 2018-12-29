@@ -1,9 +1,9 @@
 package com.innov8.memegenerator.interfaces
 
-import com.innov8.memegenerator.MemeEngine.MemeLayout
-import com.innov8.memegenerator.MemeEngine.MemeStickerView
-import com.innov8.memegenerator.MemeEngine.MemeTextView
-import com.innov8.memegenerator.MemeEngine.PaintHandler
+import com.innov8.memegenerator.memeEngine.MemeLayout
+import com.innov8.memegenerator.memeEngine.MemeStickerView
+import com.innov8.memegenerator.memeEngine.MemeTextView
+import com.innov8.memegenerator.memeEngine.PaintHandler
 import com.memeit.backend.models.MemeTextStyleProperty
 
 interface TextEditListener {

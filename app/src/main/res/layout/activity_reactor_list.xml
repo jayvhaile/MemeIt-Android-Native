@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Activities.ReactorListActivity">
+        tools:context=".activities.ReactorListActivity">
 
         <TextView
             android:id="@+id/reactor_count"

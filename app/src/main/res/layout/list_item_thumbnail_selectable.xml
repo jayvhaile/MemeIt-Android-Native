@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.innov8.memeit.CustomViews.CountView
+    <com.innov8.memeit.customViews.CountView
         android:id="@+id/count_view"
         android:layout_width="32dp"
         android:layout_height="32dp"

@@ -15,9 +15,9 @@ import androidx.transition.TransitionManager
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.afollestad.materialdialogs.MaterialDialog
-import com.innov8.memegenerator.Fragments.*
-import com.innov8.memegenerator.MemeEngine.*
-import com.innov8.memegenerator.Workers.startTemplateDownloadWork
+import com.innov8.memegenerator.fragments.*
+import com.innov8.memegenerator.memeEngine.*
+import com.innov8.memegenerator.workers.startTemplateDownloadWork
 import com.innov8.memegenerator.interfaces.*
 import com.innov8.memegenerator.utils.*
 import com.innov8.memeit.commons.dp

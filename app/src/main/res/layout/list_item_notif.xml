@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent" />
     <ImageView
         android:id="@+id/notif_dot"
-        android:src="@drawable/ic_notifications_black_24dp"
+        android:srcCompat="@drawable/ic_notifications_black_24dp"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="10dp"

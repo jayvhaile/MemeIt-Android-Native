@@ -67,7 +67,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_more_vert_black_24dp" />
     <!--===================================================THE MIDDLE PARTS======================-->
-    <com.innov8.memeit.CustomViews.MemeDraweeView
+    <com.innov8.memeit.customViews.MemeDraweeView
         android:id="@+id/meme_image"
         android:layout_width="match_parent"
         android:layout_height="205dp"

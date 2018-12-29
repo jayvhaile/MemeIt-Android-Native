@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:padding="2dp">
 
-    <com.innov8.memeit.CustomViews.MemeDraweeView
+    <com.innov8.memeit.customViews.MemeDraweeView
         android:id="@+id/meme_image"
         android:layout_width="100dp"
         android:layout_height="100dp"

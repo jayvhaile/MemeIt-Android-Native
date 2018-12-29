@@ -11,29 +11,29 @@
     <application
         android:name=".MemeItApp"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/icon"
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup">
-        <activity android:name=".Activities.MemeTemplatePosterActivity"/>
-        <activity android:name=".Activities.TagsActivity" />
-        <activity android:name=".Activities.MemeChooserActivity" />
-        <activity android:name=".Activities.ReactorListActivity" />
-        <activity android:name=".Activities.UserTagActivity" />
-        <activity android:name=".Activities.TagsChooserActivity" />
-        <activity android:name=".Activities.FeedbackActivity" />
-        <activity android:name=".Activities.MemeUpdateActivity" />
-        <activity android:name=".Activities.UserListActivity" />
-        <activity android:name=".Activities.TestActivity" />
-        <activity android:name=".Activities.MemePosterActivity" />
-        <activity android:name=".Activities.TagMemesActivity" />
-        <activity android:name=".Activities.SearchActivity" />
-        <activity android:name=".Activities.AuthActivity" />
-        <activity android:name=".Activities.CommentsActivity" />
-        <activity android:name=".Activities.AboutActivity" />
-        <activity android:name=".Activities.SettingsActivity" />
-        <activity android:name=".Activities.GuestUserActivity">
+        android:theme="@style/AppTheme">
+        <activity android:name=".activities.MemeTemplatePosterActivity" />
+        <activity android:name=".activities.TagsActivity" />
+        <activity android:name=".activities.MemeChooserActivity" />
+        <activity android:name=".activities.ReactorListActivity" />
+        <activity android:name=".activities.UserTagActivity" />
+        <activity android:name=".activities.TagsChooserActivity" />
+        <activity android:name=".activities.FeedbackActivity" />
+        <activity android:name=".activities.MemeUpdateActivity" />
+        <activity android:name=".activities.UserListActivity" />
+        <activity android:name=".activities.TestActivity" />
+        <activity android:name=".activities.MemePosterActivity" />
+        <activity android:name=".activities.TagMemesActivity" />
+        <activity android:name=".activities.SearchActivity" />
+        <activity android:name=".activities.AuthActivity" />
+        <activity android:name=".activities.CommentsActivity" />
+        <activity android:name=".activities.AboutActivity" />
+        <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.GuestUserActivity">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -65,7 +65,7 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.ProfileActivity">
+        <activity android:name=".activities.ProfileActivity">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -99,27 +99,25 @@
 
         </activity>
         <activity
-            android:name=".Activities.SearchTagActivity"
-            android:parentActivityName=".Activities.MemePosterActivity" />
+            android:name=".activities.SearchTagActivity"
+            android:parentActivityName=".activities.MemePosterActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"
             tools:replace="android:theme" />
         <activity
-            android:name=".Activities.SearchUserActivity"
-            android:parentActivityName=".Activities.MemePosterActivity" />
+            android:name=".activities.SearchUserActivity"
+            android:parentActivityName=".activities.MemePosterActivity" />
+        <activity android:name=".activities.NotificationActivity" />
         <activity
-            android:name=".Activities.NotificationActivity"
-            android:parentActivityName=".Activities.MainActivity" />
+            android:name=".activities.ProfileSettingsActivity"
+            android:parentActivityName=".activities.SettingsActivity" />
         <activity
-            android:name=".Activities.ProfileSettingsActivity"
-            android:parentActivityName=".Activities.SettingsActivity" />
+            android:name=".activities.PasswordSettingsActivity"
+            android:parentActivityName=".activities.SettingsActivity" />
         <activity
-            android:name=".Activities.PasswordSettingsActivity"
-            android:parentActivityName=".Activities.SettingsActivity" />
-        <activity
-            android:name=".Activities.UsernameSettingsActivity"
-            android:parentActivityName=".Activities.SettingsActivity" />
+            android:name=".activities.UsernameSettingsActivity"
+            android:parentActivityName=".activities.SettingsActivity" />
 
 
         <provider
@@ -132,7 +130,7 @@
                 android:resource="@xml/filepaths" />
         </provider>
         <service
-            android:name=".Services.MyFirebaseMessagingService"
+            android:name=".services.MyFirebaseMessagingService"
             android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

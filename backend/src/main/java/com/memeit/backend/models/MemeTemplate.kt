@@ -85,7 +85,9 @@ data class MemeTemplate(
                 jw.close()
             }
         }
-
+        fun getTemplatesDir(context: Context): File {
+            return File(context.filesDir, "templates/").apply { this.mkdirs() }
+        }
         fun getDraftsDir(context: Context): File {
             return File(context.filesDir, "templates/drafts/").apply { this.mkdirs() }
         }

@@ -7,7 +7,7 @@
     tools:background="#000">
 
 
-    <com.innov8.memegenerator.CustomViews.BrushSizeChooserView
+    <com.innov8.memegenerator.customViews.BrushSizeChooserView
         android:id="@+id/brush_size"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

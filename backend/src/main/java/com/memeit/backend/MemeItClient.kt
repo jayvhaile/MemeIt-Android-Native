@@ -32,7 +32,6 @@ import java.util.concurrent.TimeUnit
 @SuppressLint("StaticFieldLeak")
 object MemeItClient {
 
-    private const val TAG = "memeitclient"
     private const val HEADER_PRAGMA = "Pragma"
     private const val HEADER_CACHE_CONTROL = "Cache-Control"
 
@@ -86,14 +85,7 @@ object MemeItClient {
 
     data class UploadInfo(val name: String)
 
-    fun uploadFile(file: File, generateUniqueName: Boolean = false, onSuccess: ((String) -> Unit), onError: ((String) -> Unit)) {
-        val ext = file.extension
-        val body = MultipartBody.Part.create(RequestBody.create(MediaType.get("image/$ext"), file))
-        val uniqueName = if (generateUniqueName) "${UUID.randomUUID()}_${file.name}" else file.name
-        val json = Gson().toJson(UploadInfo(uniqueName))
-        val desc = RequestBody.create(MediaType.parse("application/json"), json)
-        fileService.uploadObject(desc = desc, image = body).call({ onSuccess(uniqueName) }, onError)
-    }
+
 
     fun uploadFile(file: File, generateUniqueName: Boolean = false): Pair<Response<ResponseBody>, String> {
         val ext = file.extension
@@ -102,15 +94,6 @@ object MemeItClient {
         val json = Gson().toJson(UploadInfo(uniqueName))
         val desc = RequestBody.create(MediaType.parse("application/json"), json)
         return fileService.uploadObject(desc = desc, image = body).execute() to uniqueName
-    }
-
-
-    fun uploadByteArray(byteArray: ByteArray, ext: String, onSuccess: ((String) -> Unit), onError: ((String) -> Unit)) {
-        val body = MultipartBody.Part.create(RequestBody.create(MediaType.get("image/$ext"), byteArray))
-        val uniqueName = "${UUID.randomUUID()}.$ext"
-        val json = Gson().toJson(UploadInfo(uniqueName))
-        val desc = RequestBody.create(MediaType.parse("application/json"), json)
-        fileService.uploadObject(desc = desc, image = body).call({ onSuccess(uniqueName) }, onError)
     }
 
     fun init(context: Context, baseUrl: String) {
@@ -175,9 +158,6 @@ object MemeItClient {
                 .addConverterFactory(GsonConverterFactory.create(buildGson())) //build gson is for working with the memetemplate classes
                 .build()
 
-        val a:TypeAdapter<MemeTemplate>
-
-
         memeItService = retrofit.create(MemeItService::class.java)
         isInitialized = true
     }
@@ -190,17 +170,10 @@ object MemeItClient {
                 isConnected = ni != null && ni.isConnected
             }
         }
-        val x: ConnectivityManager
-
         context.registerReceiver(connectionReceiver,
                 IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
     }
 
-
-    fun clearCache() {
-        cache.evictAll()
-
-    }
 
     val calls = mutableListOf<Call<out Any>>()
 
@@ -389,11 +362,14 @@ object MemeItClient {
         }
 
 
-        fun signOut() {
+        fun signOut(context: Context) {
+            LoginManager.getInstance().logOut()
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+            GoogleSignIn.getClient(context, gso).signOut()
             WorkManager.getInstance().cancelAllWork()
             MyUser.delete(context)
-            clearCache()
-
+            cache.evictAll()
+            MemeTemplate.getTemplatesDir(context).delete()
         }
     }
 

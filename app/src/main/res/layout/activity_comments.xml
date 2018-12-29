@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         app:elevation="0dp">
 
-        <com.innov8.memeit.CustomViews.MemeView
+        <com.innov8.memeit.customViews.MemeView
             android:id="@+id/comment_meme_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fafafa"
-    tools:context=".Activities.NotificationActivity">
+    tools:context=".activities.NotificationActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/notf_toolbar"

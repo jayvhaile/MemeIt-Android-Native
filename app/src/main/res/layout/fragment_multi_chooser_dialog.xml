@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:gravity="right"
     android:orientation="vertical"
-    tools:context=".Fragments.MultiChooserDialogFragment"
+    tools:context=".fragments.MultiChooserDialogFragment"
     tools:layout_editor_absoluteY="25dp">
 
     <androidx.cardview.widget.CardView
