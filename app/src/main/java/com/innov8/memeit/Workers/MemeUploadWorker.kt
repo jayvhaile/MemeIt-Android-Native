@@ -20,6 +20,7 @@ class MemeImageUploadWorker(context: Context, params: WorkerParameters) : Worker
         const val FILE_PATH = "path"
         const val STATUS = "status"
     }
+
     override fun doWork(): Result {
         val file = File(inputData.getString(FILE_PATH))
         return if (file.exists()) {
@@ -48,12 +49,14 @@ class MemeUploadWorker(context: Context, params: WorkerParameters) : Worker(cont
     companion object {
         const val UPLOADED_MEME_NAME = "uploaded_meme_name"
         const val STATUS = "status"
-        const val IMAGE_RATIO="ratio"
-        const val DESCRIPTION="desc"
-        const val TEXTS="texts"
-        const val TYPE="type"
+        const val IMAGE_RATIO = "ratio"
+        const val DESCRIPTION = "desc"
+        const val TEXTS = "texts"
+        const val TYPE = "type"
+        const val TEMPLATE_ID = "tid"
 
     }
+
     override fun doWork(): Result {
         val name = inputData.getString(UPLOADED_MEME_NAME)!!
         return try {
@@ -77,13 +80,14 @@ class MemeUploadWorker(context: Context, params: WorkerParameters) : Worker(cont
         val description = inputData.getString(DESCRIPTION)
         val texts = inputData.getStringArray(TEXTS)
         val type = inputData.getString(TYPE) ?: "IMAGE"
+        val templateID = inputData.getString(TEMPLATE_ID)
 
         return MemeItMemes.postMeme(Meme(imageId = name,
                 imageRatio = ratio.toDouble(),
                 type = type,
                 description = description,
                 texts = texts?.toList() ?: listOf(),
-                tags = tags?.toMutableList() ?: mutableListOf()
+                tid = templateID
         )).execute()
     }
 

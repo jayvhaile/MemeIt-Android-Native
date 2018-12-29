@@ -6,14 +6,14 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.adroitandroid.chipcloud.ChipCloud
+import com.adroitandroid.chipcloud.ChipListener
 import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.request.ImageRequest
-import com.google.android.material.chip.Chip
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.text
 import com.innov8.memeit.Workers.startTemplateUploadWork
-import com.innov8.memeit.commons.models.TypefaceHandler
+import com.innov8.memeit.commons.models.TypefaceManager
 import com.memeit.backend.models.MemeTemplate
 import com.memeit.backend.models.SavedGifMemeTemplateProperty
 import com.memeit.backend.models.SavedImageMemeTemplateProperty
@@ -31,26 +31,28 @@ class MemeTemplatePosterActivity : AppCompatActivity() {
         SavedMemeTemplateProperty.readFromString(intent.getStringExtra(PARAM_TEMPLATE_JSON)!!)
     }
 
+    private var selectedIndex = chipCategories.lastIndex
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meme_template_poster)
         setSupportActionBar(toolbar)
         handleIntent()
         category_chips.addChips(chipCategories)
-        category_chips.setTypeface(TypefaceHandler.byName("Avenir", this).getTypeFace(this))
+        category_chips.setTypeface(TypefaceManager.byName("Avenir"))
         category_chips.setSelectedChip(chipCategories.lastIndex)
         category_chips.setMode(ChipCloud.Mode.REQUIRED)
 
+        category_chips.setChipListener(object : ChipListener {
+            override fun chipDeselected(p0: Int) {
 
+            }
+
+            override fun chipSelected(p0: Int) {
+                selectedIndex = p0
+            }
+        })
     }
 
-    fun getSelectedChip(): String {
-        for (i in 0 until chipCategories.size) {
-            if (category_chips.isSelected(i))
-                return chipCategories[i]
-        }
-        return chipCategories[chipCategories.lastIndex]
-    }
 
     private fun handleIntent() {
 
@@ -86,15 +88,11 @@ class MemeTemplatePosterActivity : AppCompatActivity() {
 
     private fun upload() {
         val template = MemeTemplate(
-                null,
-                null,
-                template_label_field.text,
-                getSelectedChip(),
-                templateProperty.getType().name,
-                0,
-                0,
-                description.text.toString().split(" ")
-                , templateProperty
+                label = template_label_field.text,
+                category = chipCategories[selectedIndex],
+                memeType = templateProperty.getType().name,
+                tags = description.text.toString().split(" ")
+                , memeTemplateProperty = templateProperty
         )
 
         startTemplateUploadWork(this, template)

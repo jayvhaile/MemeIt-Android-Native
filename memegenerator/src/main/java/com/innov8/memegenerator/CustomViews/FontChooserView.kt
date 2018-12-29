@@ -2,15 +2,14 @@ package com.innov8.memegenerator.CustomViews
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.innov8.memeit.commons.models.TypefaceHandler
 import com.innov8.memeit.commons.dp
+import com.innov8.memeit.commons.models.TypefaceManager
 
 class FontChooser : HorizontalScrollView {
 
@@ -31,10 +30,10 @@ class FontChooser : HorizontalScrollView {
 
     private val choosedColor = Color.RED
     private val unchoosedColor = Color.WHITE
-    var onFontChoosed: ((TypefaceHandler) -> Unit)? = null
-    private val typefaces = TypefaceHandler.typefaceFiles
+    var onFontChoosed: ((String) -> Unit)? = null
+    private val typefaces = TypefaceManager.fonts
 
-    var choosedTypeface = Typeface.DEFAULT
+    var choosedFont = "Default"
         private set
 
     private fun init() {
@@ -45,20 +44,20 @@ class FontChooser : HorizontalScrollView {
 
         val onClick: (View) -> Unit = {
             it as TextView
-            if (choosedTypeface != it.typeface) {
-                val mtf = typefaces.find { v -> v.getTypeFace() == it.typeface }!!
-                choose(mtf)
-                choosedTypeface = it.typeface
-                onFontChoosed?.invoke(mtf)
+            val font = it.text.toString()
+            if (choosedFont != font) {
+                choose(font)
+                choosedFont = font
+                onFontChoosed?.invoke(font)
             }
         }
 
         typefaces.forEach {
             val t = TextView(context)
-            t.text = it.name
+            t.text = it
             t.textSize = 18f
             t.setTextColor(unchoosedColor)
-            t.typeface = it.getTypeFace(context)
+            t.typeface = TypefaceManager.byName(it)
             t.setPadding(paddingH, paddingV, paddingH, paddingV)
             t.setOnClickListener(onClick)
             linearLayout.addView(t, childParams)
@@ -66,13 +65,8 @@ class FontChooser : HorizontalScrollView {
         addView(linearLayout)
     }
 
-    fun choose(typeface: TypefaceHandler, addIfNone: Boolean = false) {
-        val index = typefaces.indexOf(typeface)
-        if (index != -1) choose(index)
-    }
-
-    fun choose(fontName: String) {
-        val index = typefaces.indexOf(typefaces.find { it.name == fontName })
+    fun choose(font: String) {
+        val index = typefaces.indexOf(font)
         if (index != -1) choose(index)
     }
 
@@ -80,7 +74,6 @@ class FontChooser : HorizontalScrollView {
         for (i in 0 until linearLayout.childCount) {
             val tv = linearLayout.getChildAt(i) as TextView
             tv.setTextColor(if (i == index) choosedColor else unchoosedColor)
-
         }
     }
 }

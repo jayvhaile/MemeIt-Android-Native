@@ -13,7 +13,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
-import android.widget.TableLayout
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import java.io.ByteArrayInputStream
@@ -159,6 +158,8 @@ fun EditText.addOnTextChanged(listener: (String) -> Unit) {
     })
 }
 
+infix fun Long.min(min: Long) = if (this < min) min else this
+infix fun Long.max(max: Long) = if (this > max) max else this
 const val notidChannelName = "MemeIt Events Notification"
 fun Context.sendUserNotification(data: NotifData, notifyID: Int) {
 
@@ -178,6 +179,7 @@ fun Context.sendUserNotification(data: NotifData, notifyID: Int) {
 
     manager.notify(notifyID, builder.build())
 }
+
 data class NotifData(val title: String,
                      val message: String,
                      val icon: Int,

@@ -12,7 +12,7 @@ import com.innov8.memegenerator.Adapters.MyViewHolder
 import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
 import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.R
-import com.innov8.memeit.commons.views.FontTextView
+import com.innov8.memeit.commons.views.MemeItTextView
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.Utils.loadImage
 import com.innov8.memeit.Utils.prefix
@@ -32,7 +32,6 @@ class UserListAdapter(mContext: Context, override var emptyDescription: String, 
     override val loadingDrawable = CubeGrid().apply {
         color = Color.rgb(255, 100, 0)
     }
-    private val tf: Typeface = Typeface.createFromAsset(mContext.assets, FontTextView.asset)
     private val myUser: MyUser? = MemeItClient.myUser
 
     init {
@@ -89,7 +88,7 @@ class UserListAdapter(mContext: Context, override var emptyDescription: String, 
                         })
                     }
                 }
-                followButton.typeface = tf
+//                followButton.typeface = tf
             } else
                 followButton.visibility = View.GONE
 

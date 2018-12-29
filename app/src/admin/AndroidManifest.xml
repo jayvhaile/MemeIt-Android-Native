@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:label="MemeIt Admin"
+        android:icon="@mipmap/icon_admin"
+        tools:replace="android:label,android:icon">
+
+        <activity android:name="com.innov8.memeit.admin.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.innov8.memeit.admin.AdminMainActivity"></activity>
+        <activity android:name="com.innov8.memeit.admin.TemplateManagerActivity" />
+    </application>
+
+</manifest>

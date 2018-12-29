@@ -10,8 +10,12 @@ data class Draft(val filePath: String, val savedMemeTemplateProperty: SavedMemeT
     fun delete() {
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             withContext(Dispatchers.Default) {
-                savedMemeTemplateProperty.images.forEach { path ->
-                    File(path).takeIf { it.exists() }?.delete()
+                savedMemeTemplateProperty.images.mapNotNull { File(it).takeIf { f -> f.exists() } }
+                        .forEach { file ->
+                            file.delete()
+                        }
+                savedMemeTemplateProperty.previewImageUrl.run {
+                    File(this).takeIf { it.exists() }?.delete()
                 }
                 File(filePath).takeIf { it.exists() }?.delete()
             }

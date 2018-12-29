@@ -10,22 +10,31 @@ import com.google.gson.GsonBuilder
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
 import com.memeit.backend.utils.generateFactory
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
 data class MemeTemplate(
-        val id: String? = null,
+        val _id: String? = null,
         val pid: String? = null,
         val label: String,
         val category: String,
         val memeType: String,
-        val usageCount: Long,
-        val createdDate: Long,
+        val usageCount: Long? = null,
+        val createdDate: Long? = null,
         val tags: List<String>,
         val memeTemplateProperty: SavedMemeTemplateProperty
 ) : HomeElement {
     override val itemType: Int = HomeElement.MEME_TEMPLATE_SUGGESTION_TYPE
+
+    override fun equals(other: Any?): Boolean {
+        return (other as? MemeTemplate)?._id?.let {
+            it == _id
+        } ?: false
+    }
+
     fun saveToFile(file: File) {
         val jw = JsonWriter(FileWriter(file))
         buildGson()
@@ -37,7 +46,31 @@ data class MemeTemplate(
         jw.close()
     }
 
+    fun saveToString(): String =
+            buildGson().toJson(this, MemeTemplate::class.java)
+
+
     companion object {
+        fun readFromString(json: String): MemeTemplate {
+            return buildGson()
+                    .fromJson<MemeTemplate>(
+                            json,
+                            MemeTemplate::class.java
+                    )
+        }
+
+        fun isSaved(id: String, context: Context, onResult: (Boolean) -> Unit) {
+            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                withContext(Dispatchers.Default) {
+                    try {
+                        getSavedJsonDir(context).list { _, name -> name.startsWith(id) }
+                    } catch (e: Exception) {
+                        null
+                    }
+                }?.let { r -> onResult(r.isNotEmpty()) } ?: onResult(false)
+            }
+        }
+
         fun readFromFile(file: File): MemeTemplate? {
             val jw = JsonReader(FileReader(file))
             return try {
@@ -76,6 +109,7 @@ data class MemeTemplate(
         fun getTempUploadJsonDir(context: Context): File {
             return File(context.filesDir, "templates/temp/upload/json/").apply { this.mkdirs() }
         }
+
         fun getTempDownloadDir(context: Context): File {
             return File(context.filesDir, "templates/temp/download/").apply { this.mkdirs() }
         }
@@ -98,7 +132,7 @@ sealed class LoadedMemeTemplateProperty(
         layoutProperty: LayoutProperty,
         memeItemsProperty: List<MemeItemProperty>,
         val images: List<Bitmap> = listOf(),
-        val previewImageBitmap: Bitmap
+        val previewImageBitmap: Bitmap? = null
 ) : MemeTemplateProperty(layoutProperty, memeItemsProperty)
 
 enum class SavedState {
@@ -170,7 +204,7 @@ class LoadedImageMemeTemplateProperty(
         layoutProperty: LayoutProperty,
         memeItemsProperty: List<MemeItemProperty>,
         images: List<Bitmap> = listOf(),
-        previewImageBitmap: Bitmap
+        previewImageBitmap: Bitmap? = null
 ) : LoadedMemeTemplateProperty(layoutProperty, memeItemsProperty, images, previewImageBitmap)
 
 class LoadedGifMemeTemplateProperty(
@@ -178,7 +212,7 @@ class LoadedGifMemeTemplateProperty(
         memeItemsProperty: List<MemeItemProperty>,
         image: Bitmap,
         val originalPath: String,
-        previewImageBitmap: Bitmap
+        previewImageBitmap: Bitmap? = null
 ) : LoadedMemeTemplateProperty(layoutProperty, memeItemsProperty, listOf(image), previewImageBitmap)
 
 

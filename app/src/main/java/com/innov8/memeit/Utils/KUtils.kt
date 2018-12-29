@@ -5,10 +5,12 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.provider.MediaStore
 import android.text.Spannable
 import android.text.SpannableString
@@ -37,7 +39,9 @@ import com.facebook.imagepipeline.request.ImageRequest
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
+import com.innov8.memeit.Activities.ProfileActivity
 import com.innov8.memeit.Activities.SettingsActivity
+import com.innov8.memeit.Activities.TagMemesActivity
 import com.innov8.memeit.CustomClasses.LoadingDrawable
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
@@ -45,10 +49,13 @@ import com.innov8.memeit.Workers.ProfileImageUploadWorker
 import com.innov8.memeit.Workers.ProfileUploadWorker
 import com.innov8.memeit.commons.log
 import com.innov8.memeit.commons.toast
+import com.innov8.memeit.commons.views.MemeItTextView
 import com.innov8.memeit.commons.views.ProfileDraweeView
+import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.models.Meme
 import com.memeit.backend.models.Meme.MemeType.GIF
 import com.memeit.backend.models.Meme.MemeType.IMAGE
+import com.memeit.backend.models.MemeTemplate
 import com.memeit.backend.models.Reaction
 import com.stfalcon.frescoimageviewer.ImageViewer
 import java.io.File
@@ -136,7 +143,14 @@ fun getGifMemeUrl(id: String, ratio: Float = 1f, fac: Float, quality: Int): Stri
             .trim(200.dp, screenHeightOriented - 200.dp) * fac) step 50
 
     return "https://res.cloudinary.com/innov8/image/fetch/c_fit,h_$h,q_$quality,w_$w/${id.full}"
+}
 
+fun MemeTemplate.generatePreviewUrl(): String {
+    val level = SettingsActivity.getImageQualityLevel(MemeItApp.instance)
+    val quality = SettingsActivity.quality[level]
+    val fac = SettingsActivity.factor[level]
+//    return "http://localhost:8080/img/bg-cta.jpg"
+    return getImageMemeUrl(memeTemplateProperty.previewImageUrl,1f, fac, quality)
 }
 
 fun Meme.generateUrl(): String {
@@ -405,4 +419,22 @@ fun Context.addFileToMediaStore(file: File, mimeType: String = "image/jpeg") {
                 put(MediaStore.Images.Media.DATA, file.absolutePath)
                 put(MediaStore.Images.Media.MIME_TYPE, mimeType)
             })
+}
+
+fun generateTextLinkActions(context: Context) = { mode: MemeItTextView.LinkMode, text: String ->
+    when (mode) {
+        MemeItTextView.LinkMode.PHONE -> context.startActivity(Intent(Intent.ACTION_DIAL).apply {
+            data = Uri.parse("tel:${text.trim()}")
+        })
+        MemeItTextView.LinkMode.EMAIL -> context.startActivity(Intent(Intent.ACTION_SENDTO).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_EMAIL, text.trim())
+            putExtra(Intent.EXTRA_SUBJECT, "From MemeIt")
+        })
+        MemeItTextView.LinkMode.HASHTAG -> TagMemesActivity.startWithTag(context, text.trim().substring(1))
+        MemeItTextView.LinkMode.MENTION -> ProfileActivity.startWithUsername(context, text.trim().substring(1))
+        MemeItTextView.LinkMode.URL -> context.startActivity(Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse(text.trim())
+        })
+    }
 }

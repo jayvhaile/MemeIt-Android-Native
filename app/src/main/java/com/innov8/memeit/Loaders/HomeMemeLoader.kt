@@ -45,7 +45,7 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
     private var usersLoaded = false
     private var tagsLoaded = false
     private var templateLoaded = false
-    var index = 0
+    private var index = 0
     var type = 0
     private var usersIndex = 0
     private var tagsIndex = 0
@@ -71,8 +71,8 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             val memes = withContext(Dispatchers.Default) { MemeItMemes.getHomeMemes(skip, limit).execSafe() }
             val users = async(Dispatchers.Default) { MemeItUsers.getUserSuggestions().execSafe() }
-            val tags = async(Dispatchers.Default) { MemeItMemes.getSuggestedTags(0, 300).execSafe() }
-            val templates = async(Dispatchers.Default) { listOf<MemeTemplate>() }
+            val tags = async(Dispatchers.Default) { MemeItMemes.getSuggestedTags(0, 100).execSafe() }
+            val templates = async(Dispatchers.Default) { MemeItMemes.getTemplates(0, 100,sort = Sorter.RECENT.name).execSafe() }
 
             if (!memes.isSuccessful) {
                 onError(memes.error)
@@ -92,8 +92,11 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
                     }
                 }
                 if (!templateLoaded) {
-                    memeTemplates = templates.await()
-                    templateLoaded = true
+                    val r = templates.await()
+                    if (r.isSuccessful) {
+                        memeTemplates = r.body
+                        templateLoaded = true
+                    }
                 }
                 onSuccess(withContext(Dispatchers.Default) {
                     val homeElements = mutableListOf<HomeElement>()

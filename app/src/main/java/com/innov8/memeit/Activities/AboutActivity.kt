@@ -1,24 +1,19 @@
 package com.innov8.memeit.Activities
 
-import androidx.appcompat.app.AppCompatActivity
-import mehdi.sakout.aboutpage.AboutPage
-import mehdi.sakout.aboutpage.Element
-
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.innov8.memeit.BuildConfig
-
 import com.innov8.memeit.R
+import mehdi.sakout.aboutpage.AboutPage
+import mehdi.sakout.aboutpage.Element
 
 class AboutActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val aboutPage = AboutPage(this)
                 .addEmail("innovapp.ethio@gmail.com")
                 .addFacebook("")

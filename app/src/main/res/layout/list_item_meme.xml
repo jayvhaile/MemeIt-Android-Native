@@ -20,7 +20,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/meme_poster_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         app:layout_constraintLeft_toRightOf="@+id/notif_icon"
         app:layout_constraintTop_toTopOf="@+id/notif_icon" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/meme_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,9 +73,9 @@
         android:layout_height="205dp"
         app:actualImageScaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline12"
-        tools:background="@drawable/meme_10" />
+        app:layout_constraintTop_toTopOf="@+id/guideline12" />
 
     <View
         android:id="@+id/tint"
@@ -130,7 +130,7 @@
         app:layout_constraintTop_toTopOf="@+id/react_button"
         app:srcCompat="@drawable/angry" />
     <!--react counts-->
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/reacation_count_funny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
         app:layout_constraintStart_toStartOf="@+id/react_funny"
         app:layout_constraintTop_toBottomOf="@+id/react_funny" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/reacation_count_veryfunny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
         app:layout_constraintStart_toStartOf="@+id/react_veryfunny"
         app:layout_constraintTop_toBottomOf="@+id/react_veryfunny" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/reacation_count_stupid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
         app:layout_constraintStart_toStartOf="@+id/react_stupid"
         app:layout_constraintTop_toBottomOf="@+id/react_stupid" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/reacation_count_angry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -202,9 +202,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/meme_image"
+        app:linkModes="hashtag,mention"
         tools:text="This meme is killing me" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/meme_reactions"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
@@ -261,7 +262,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="60dp" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/meme_gif"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -288,4 +289,22 @@
         app:layout_constraintStart_toStartOf="@id/meme_image"
         app:layout_constraintTop_toTopOf="@+id/meme_image"
         app:srcCompat="@drawable/ic_file_download_white_36dp" />
+
+    <com.innov8.memeit.commons.views.MemeItTextView
+        android:id="@+id/memeItTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="Follow"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintBaseline_toBaselineOf="@+id/meme_poster_name"
+        app:layout_constraintStart_toEndOf="@+id/meme_poster_name" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="right"
+        app:constraint_referenced_ids="meme_time,meme_poster_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

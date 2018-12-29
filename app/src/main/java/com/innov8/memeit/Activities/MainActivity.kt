@@ -1,12 +1,14 @@
 package com.innov8.memeit.Activities
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -27,18 +29,14 @@ import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
 import kotlinx.android.synthetic.main.activity_main.*
-import android.view.WindowManager
-import android.graphics.Color
 
-
-class MainActivity : AppCompatActivity() {
+abstract class MainActivity : AppCompatActivity() {
     private val titles = arrayOf("MemeIt", "Trending", "Favorites")
     private var searchItem: MenuItem? = null
     private var notifItem: MenuItem? = null
     private val pagerAdapter by lazy {
         MyPagerAdapter(supportFragmentManager)
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!MemeItClient.Auth.isSignedIn()) {
@@ -64,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                 .withContentClickableWhenMenuOpened(false)
                 .withRootViewElevationPx(5)
                 .withRootViewScale(0.65f)
-                .withMenuLayout(R.layout.drawer_main2)
+                .withMenuLayout(R.layout.drawer_menu_main)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             sbd.withToolbarMenuToggle(toolbar2)
         }
@@ -78,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             rootNav.closeMenu(false)
         }
         findViewById<View>(R.id.menu_feedback).setOnClickListener {
-            startActivity(Intent(this@MainActivity, FeedbackActivity::class.java))
+            onFeedbackMenu()
             rootNav.closeMenu(false)
         }
         findViewById<View>(R.id.menu_invite).setOnClickListener {
@@ -94,6 +92,8 @@ class MainActivity : AppCompatActivity() {
         }
         changeStatColor()
     }
+
+    abstract fun onFeedbackMenu()
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
@@ -149,10 +149,13 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun changeStatColor(profile: Boolean = false) {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = if (profile) Color.RED else Color.parseColor("#eeeeee")
+    private fun changeStatColor(profile: Boolean = false) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = if (profile) Color.RED else Color.parseColor("#eeeeee")
+
+        }
     }
 
     override fun setTitle(index: Int) {

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.view.View
-import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.request.ImageRequest
 import com.github.ybq.android.spinkit.style.CubeGrid
@@ -27,6 +26,8 @@ class DraftsAdapter(context: Context) : SimpleELEListAdapter<Draft>(context, R.l
         color = Color.rgb(255, 100, 0)
     }
 
+    var onDelete: ((Int) -> Unit)? = null
+
 
     inner class DraftViewHolder(itemView: View) : MyViewHolder<Draft>(itemView) {
         private val draftImageV: SimpleDraweeView = itemView.findViewById(R.id.draft_image)
@@ -37,10 +38,11 @@ class DraftsAdapter(context: Context) : SimpleELEListAdapter<Draft>(context, R.l
                 getItemAt(item_position).let { draft ->
                     draft.delete()
                     remove(draft)
+                    onDelete?.invoke(getCount())
                 }
             }
             draftImageV.setOnClickListener {
-                MemeEditorActivity.startWithMemeTemplate(context as Activity, getItemAt(item_position).filePath)
+                MemeEditorActivity.startWithDraft(context as Activity, getItemAt(item_position).filePath)
             }
         }
 

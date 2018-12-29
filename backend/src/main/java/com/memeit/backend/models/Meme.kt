@@ -5,7 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 data class Meme(@SerializedName("mid") val id: String? = null,
-                @SerializedName("poster") val poster: Poster? = null,
+                @SerializedName("poster") val poster: User? = null,
                 @SerializedName("desc") var description: String? = null,
                 @SerializedName("mr") var myReaction: Reaction? = null,
                 @SerializedName("img_url") val imageId: String? = null,
@@ -17,24 +17,25 @@ data class Meme(@SerializedName("mid") val id: String? = null,
                 @SerializedName("commentCount") var commentCount: Long = 0L,
                 @SerializedName("point") var point: Double = 0.0,
                 @SerializedName("type") val type: String = "image",
-                @SerializedName("fav") var isMyFavourite: Boolean = false) : Parcelable, HomeElement {
+                @SerializedName("fav") var isMyFavourite: Boolean = false,
+                @SerializedName("tid") val tid: String? = null) : Parcelable, HomeElement {
     override val itemType: Int
         get() = HomeElement.MEME_TYPE
 
 
     constructor(parcel: Parcel) : this(
             parcel.readString(),
-            parcel.readParcelable(Poster::class.java.classLoader),
+            parcel.readParcelable(User::class.java.classLoader),
             parcel.readString(),
             parcel.readParcelable(Reaction::class.java.classLoader),
             parcel.readString(),
             parcel.readValue(Double::class.java.classLoader) as? Double ?: 1.0,
             parcel.createStringArrayList() ?: mutableListOf(),
             parcel.createStringArrayList() ?: listOf(),
-            parcel.readValue(Long::class.java.classLoader) as? Long?:0L,
-            parcel.readValue(Long::class.java.classLoader) as? Long?:0L,
-            parcel.readValue(Long::class.java.classLoader) as? Long?:0L,
-            parcel.readValue(Double::class.java.classLoader) as? Double?:0.0,
+            parcel.readValue(Long::class.java.classLoader) as? Long ?: 0L,
+            parcel.readValue(Long::class.java.classLoader) as? Long ?: 0L,
+            parcel.readValue(Long::class.java.classLoader) as? Long ?: 0L,
+            parcel.readValue(Double::class.java.classLoader) as? Double ?: 0.0,
             parcel.readString() ?: "image",
             parcel.readByte() != 0.toByte())
 

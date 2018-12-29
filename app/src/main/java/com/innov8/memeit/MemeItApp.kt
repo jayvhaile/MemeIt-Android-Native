@@ -7,16 +7,12 @@ import android.content.Context
 import android.os.Build
 import android.os.StrictMode
 import android.preference.PreferenceManager
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.multidex.MultiDexApplication
 import com.cloudinary.android.MediaManager
 import com.crashlytics.android.Crashlytics
-import com.facebook.ads.AudienceNetworkActivity
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.google.firebase.FirebaseApp
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.innov8.memeit.commons.models.TypefaceManager
 import com.innov8.memeit.commons.notidChannelName
 import com.memeit.backend.MemeItClient
@@ -33,9 +29,9 @@ class MemeItApp : MultiDexApplication() {
         const val SERVER_URL = "$SERVER_DOMAIN/api/v$apiVersion/"
         const val STORAGE_URL = "https://storage.googleapis.com/meme-store/"
 
-        private const val LOCAL_SERVER_URL = "http://127.0.0.1:5000/api/v$apiVersion/"
+        private const val LOCAL_SERVER_URL = "http://127.0.0.1:8080/api/v$apiVersion/"
         private const val STRICT_MODE = false
-        private const val USE_LOCAL_SERVER = false
+        const val USE_LOCAL_SERVER = false
         const val FACEBOOK_AD_PLACEMENT_ID = "262717847755102_262724637754423"
 //        const val FACEBOOK_AD_PLACEMENT_ID="126436314944426_126436834944374"
 

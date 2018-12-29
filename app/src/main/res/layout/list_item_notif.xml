@@ -7,51 +7,42 @@
     android:orientation="vertical">
 
     <View
+        android:layout_width="match_parent"
+        android:layout_height="00dp"
+        android:id="@+id/notif_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
         android:id="@+id/notif_dot"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
+        android:src="@drawable/ic_notifications_black_24dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="27dp"
+        android:padding="5dp"
+        android:tint="#fff"
         android:background="@drawable/circle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="4dp"
-        app:cardElevation="1dp"
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/notif_icon"
+        android:layout_width="@dimen/profile_mini_size"
+        android:layout_height="@dimen/profile_mini_size"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toEndOf="@+id/notif_dot"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="?attr/selectableItemBackground">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/notif_back"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/notif_icon"
-                android:layout_width="@dimen/profile_mini_size"
-                android:layout_height="@dimen/profile_mini_size"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:padding="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:placeholderImage="@drawable/circle"
-                app:roundAsCircle="true" />
+        app:layout_constraintVertical_bias="0.0"
+        app:placeholderImage="@drawable/circle"
+        app:roundAsCircle="true" />
 
             <TextView
                 android:id="@+id/notif_title"
@@ -61,10 +52,10 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
+                android:textSize="14sp"
                 android:layout_marginRight="8dp"
                 android:text="Update Available"
                 android:textColor="#313131"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/notif_icon"
                 app:layout_constraintTop_toTopOf="@+id/notif_icon" />
@@ -76,6 +67,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="4dp"
+                tools:text = "New update is awesome!"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
@@ -92,8 +84,8 @@
                 android:id="@+id/notif_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_marginBottom="8dp"
                 android:text="30 Minutes Ago"
                 android:textColor="#bbb"
@@ -102,5 +94,3 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-</androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,12 +47,6 @@ class MemeTemplateHolderFragment : Fragment() {
             }
             true
         }
-        /*search_view.addOnTextChanged {
-            currentFrag.search(it)
-        }
-        template_tabs.addOnTabSelected {
-            currentFrag.search(search_view.text.toString())
-        }*/
 
     }
 

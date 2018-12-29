@@ -10,13 +10,13 @@ import com.google.gson.annotations.SerializedName
 data class Reaction(private var type: Int = 0,
                     @SerializedName("mid") var memeID: String? = null,
                     @SerializedName("rid") val reactorID: String? = null,
-                    val poster: Poster? = null) : Parcelable {
+                    val poster: User? = null) : Parcelable {
 
 
     enum class ReactionType(val score: Float) {
         FUNNY(2f), VERY_FUNNY(3f), STUPID(-1f), ANGERING(-2f);
 
-        fun create(mid: String?=null, rid: String? = null, poster: Poster? = null) =
+        fun create(mid: String?=null, rid: String? = null, poster: User? = null) =
                 Reaction(ordinal, mid, rid, poster)
     }
 
@@ -24,7 +24,7 @@ data class Reaction(private var type: Int = 0,
             parcel.readInt(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readParcelable(Poster::class.java.classLoader))
+            parcel.readParcelable(User::class.java.classLoader))
 
     fun getType(): ReactionType {
         return ReactionType.values()[type]

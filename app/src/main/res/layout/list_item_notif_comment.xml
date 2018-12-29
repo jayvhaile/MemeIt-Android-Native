@@ -5,51 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-
     <View
+        android:layout_width="match_parent"
+        android:layout_height="00dp"
+        android:id="@+id/notif_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
         android:id="@+id/notif_dot"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_mode_comment_white_24dp"
+        android:padding="5dp"
         android:background="@drawable/circle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="4dp"
-        app:cardElevation="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+
+    <com.innov8.memeit.commons.views.ProfileDraweeView
+        android:id="@+id/notif_icon"
+        android:layout_width="@dimen/profile_mini_size"
+        android:layout_height="@dimen/profile_mini_size"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:padding="4dp"
+        app:hasBorder="false"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toEndOf="@+id/notif_dot"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="?attr/selectableItemBackground">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/notif_back"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.innov8.memeit.commons.views.ProfileDraweeView
-                android:id="@+id/notif_icon"
-                android:layout_width="@dimen/profile_mini_size"
-                android:layout_height="@dimen/profile_mini_size"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="16dp"
-                android:padding="4dp"
-                app:hasBorder="false"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:placeholderImage="@drawable/circle"
-                app:roundAsCircle="true" />
+        app:placeholderImage="@drawable/circle"
+        app:roundAsCircle="true" />
 
             <TextView
                 android:id="@+id/notif_title"
@@ -57,29 +46,46 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:textColor="#313131"
-                android:textStyle="bold"
+                android:text="Meri Reacted to yor post"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/notif_icon"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Meri commented to your post" />
+                app:layout_constraintTop_toTopOf="@+id/notif_icon" />
 
             <TextView
                 android:id="@+id/notif_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
                 android:text="30 Minutes Ago"
                 android:textColor="#bbb"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.innov8.memeit.CustomViews.MemeDraweeView
+        android:id="@+id/meme_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="#eee"
+        app:actualImageScaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/notif_date"
+        app:layout_constraintDimensionRatio="w,16:9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/notif_icon"
+        app:layout_constraintTop_toBottomOf="@+id/barrier2" />
 
             <TextView
                 android:id="@+id/notif_message"
@@ -90,14 +96,17 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/notif_date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/notif_icon"
-                app:layout_constraintTop_toBottomOf="@+id/notif_title"
-                tools:text="tests comment " />
+                app:layout_constraintTop_toBottomOf="@+id/notif_title" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="notif_icon,notif_message"
+                tools:ignore="MissingConstraints" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-</androidx.constraintlayout.widget.ConstraintLayout>

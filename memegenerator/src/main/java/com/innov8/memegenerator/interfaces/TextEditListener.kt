@@ -5,13 +5,12 @@ import com.innov8.memegenerator.MemeEngine.MemeStickerView
 import com.innov8.memegenerator.MemeEngine.MemeTextView
 import com.innov8.memegenerator.MemeEngine.PaintHandler
 import com.memeit.backend.models.MemeTextStyleProperty
-import com.innov8.memeit.commons.models.TypefaceHandler
 
 interface TextEditListener {
     fun onAddText(memeTextView: MemeTextView)
     fun onTextSizeChanged(size: Float)
     fun onTextColorChanged(color: Int)
-    fun onTextFontChanged(typeface: TypefaceHandler)
+    fun onTextFontChanged(font: String)
     fun onTextSetBold(bold: Boolean)
     fun onTextSetItalic(italic: Boolean)
     fun onTextSetAllCap(allCap: Boolean)

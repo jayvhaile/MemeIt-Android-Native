@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -42,11 +43,12 @@ import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.*
 import com.innov8.memeit.commons.dp
-import com.innov8.memeit.commons.models.TypefaceHandler
 import com.innov8.memeit.commons.models.TypefaceManager
 import com.innov8.memeit.commons.toast
 import com.innov8.memeit.commons.views.MemeItTextView
+import com.innov8.memeit.commons.views.MemeItTextView.LinkMode.*
 import com.innov8.memeit.commons.views.ProfileDraweeView
+import com.luseen.autolinklibrary.AutoLinkTextView
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
@@ -100,7 +102,7 @@ class MemeView : FrameLayout {
     private val reactionCountV: TextView = itemView.findViewById(R.id.meme_reactions)
     private val commentCountV: TextView = itemView.findViewById(R.id.meme_comment_count)
     private val memeMenu: ImageButton = itemView.findViewById(R.id.meme_options)
-    private val memeShare: ImageButton = itemView.findViewById(R.id.meme_share)
+    private val memeShare: ImageView = itemView.findViewById(R.id.meme_share)
     private val reactButton: SparkButton = itemView.findViewById(R.id.react_button)
     private val favButton: SparkButton = itemView.findViewById(R.id.fav_button)
     private val reactTint: View = itemView.findViewById(R.id.tint)
@@ -131,7 +133,7 @@ class MemeView : FrameLayout {
         }
         posterPicV.setOnClickListener {
             val i = Intent(context, ProfileActivity::class.java)
-            i.putExtra("user", meme.poster?.toUser())
+            i.putExtra("user", meme.poster)
             context.startActivity(i)
         }
         reactionCountV.setOnClickListener {
@@ -182,12 +184,7 @@ class MemeView : FrameLayout {
         memeShare.setOnClickListener { onShare() }
 
         memeDescription.apply {
-            onTagClicked = {
-                TagMemesActivity.startWithTag(context, it.trim().substring(1))
-            }
-            onUsernameClicked = {
-                ProfileActivity.startWithUsername(context, it.trim().substring(1))
-            }
+            onLinkClicked = generateTextLinkActions(context)
         }
     }
 
@@ -384,7 +381,7 @@ class MemeView : FrameLayout {
 
             if (m.myReaction == null) {
                 m.reactionCount++
-                if (m == meme) reactionCountV.text = String.format("%d people reacted", m.reactionCount)
+                if (m == meme) reactionCountV.text = String.format("%d reactions", m.reactionCount)
 
             }
             m.myReaction = reactionType.create()
@@ -405,7 +402,7 @@ class MemeView : FrameLayout {
 
     private fun showMemeMenu() {
         val menu = PopupMenu(context, memeMenu)
-        if (MemeItClient.myUser?.id == meme.poster!!.id)
+        if (MemeItClient.myUser?.id == meme.poster!!.uid)
             menu.menuInflater.inflate(R.menu.meme_menu, menu.menu)
         else
             menu.menuInflater.inflate(R.menu.meme_menu_not_own, menu.menu)
@@ -457,9 +454,9 @@ class MemeView : FrameLayout {
         }
         posterNameV.text = meme.poster?.name
         posterPicV.setText(meme.poster?.name.prefix())
-        reactionCountV.text = String.format("%d people reacted", meme.reactionCount)
+        reactionCountV.text = String.format("%d reactions", meme.reactionCount)
         commentCountV.text = meme.commentCount.toString()
-        posterPicV.loadImage(meme.poster?.profileUrl)
+        posterPicV.loadImage(meme.poster?.imageUrl)
         memeDateV.text = meme.date?.formateAsDate()
 
         if (meme.myReaction !== null) {

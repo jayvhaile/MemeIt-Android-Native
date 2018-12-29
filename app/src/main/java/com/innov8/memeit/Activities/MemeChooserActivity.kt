@@ -66,12 +66,19 @@ class MemeChooserActivity : AppCompatActivity() {
         DraftLoader()
     }
     private val adapter by lazy {
-        DraftsAdapter(this)
+        DraftsAdapter(this).apply {
+            onDelete = {
+                if (it == 0) close()
+            }
+
+        }
     }
     private val handler by lazy {
         LoaderAdapterHandler(adapter, loader).apply {
             onLoaded = {
-                onDraftChanged(MemeTemplate.getDraftsJsonDir(this@MemeChooserActivity).listFiles().size)
+                val size = MemeTemplate.getDraftsJsonDir(this@MemeChooserActivity).listFiles().size
+                onDraftChanged(size)
+                if (size == 0) close()
             }
         }
     }
@@ -107,7 +114,6 @@ class MemeChooserActivity : AppCompatActivity() {
         draft_btn.setOnClickListener {
             toggle()
         }
-        handler.load()
         fileObserver.startWatching()
     }
 
@@ -156,11 +162,12 @@ class MemeChooserActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-//        fileObserver.startWatching()
+        handler.refresh()
+        fileObserver.startWatching()
     }
 
     override fun onStop() {
-//        fileObserver.stopWatching()
+        fileObserver.stopWatching()
         super.onStop()
     }
 

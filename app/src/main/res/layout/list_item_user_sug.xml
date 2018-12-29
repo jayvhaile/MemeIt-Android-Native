@@ -42,7 +42,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_sug_name" />
 
-        <com.innov8.memeit.commons.views.FontTextView
+        <com.innov8.memeit.commons.views.MemeItTextView
             android:id="@+id/user_sug_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

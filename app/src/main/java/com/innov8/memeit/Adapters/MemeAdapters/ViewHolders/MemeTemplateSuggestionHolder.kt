@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memeit.Adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.Adapters.MemeAdapters.HomeMemeAdapter
+import com.innov8.memeit.Adapters.TemplateAdapter
 import com.innov8.memeit.Adapters.TemplateSugAdapter
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.makeLinear
@@ -15,7 +16,9 @@ class MemeTemplateSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : M
     val list: RecyclerView = itemView.findViewById(R.id.list_recyc)
     val title: TextView = itemView.findViewById(R.id.list_title)
 
-    private val adapter: TemplateSugAdapter = TemplateSugAdapter(memeAdapter.context)
+    private val adapter by lazy {
+        TemplateAdapter(memeAdapter.context)
+    }
 
     init {
         list.makeLinear(RecyclerView.HORIZONTAL)

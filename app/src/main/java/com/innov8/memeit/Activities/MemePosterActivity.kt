@@ -12,6 +12,7 @@ import android.os.Environment.getExternalStoragePublicDirectory as externalStora
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.media.session.MediaButtonReceiver.handleIntent
 import androidx.work.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -40,6 +41,7 @@ class MemePosterActivity : AppCompatActivity() {
     private lateinit var memeType: Meme.MemeType
     private var gif: String? = null
     private var image: String? = null
+    private var templateID: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +63,37 @@ class MemePosterActivity : AppCompatActivity() {
 
         }
         handleIntent()
+    }
+
+    private fun handleIntent() {
+        gif = intent?.getStringExtra("gif")
+        image = intent?.getStringExtra("image")
+        texts = intent?.getStringArrayExtra("texts")
+        templateID = intent?.getStringExtra("tid")
+        when {
+            gif != null -> {
+                memeType = Meme.MemeType.GIF
+                val file = File(gif)
+                meme_image_view.controller = Fresco.newDraweeControllerBuilder()
+                        .setImageRequest(ImageRequest.fromFile(file))
+                        .setAutoPlayAnimations(true)
+                        .setControllerListener(MyControllerListener())
+                        .build()
+            }
+            image != null -> {
+                memeType = Meme.MemeType.IMAGE
+                meme_image_view.controller = Fresco.newDraweeControllerBuilder()
+                        .setImageRequest(ImageRequest.fromFile(File(image)))
+                        .setAutoPlayAnimations(true)
+                        .setControllerListener(MyControllerListener())
+                        .build()
+            }
+            else -> {
+                finish()
+                return
+            }
+        }
+
     }
 
     private val hasWritePermission: Boolean
@@ -87,35 +120,6 @@ class MemePosterActivity : AppCompatActivity() {
             R.id.menu_post -> upload()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun handleIntent() {
-        gif = intent?.getStringExtra("gif")
-        image = intent?.getStringExtra("image")
-        when {
-            gif != null -> {
-                memeType = Meme.MemeType.GIF
-                val file = File(gif)
-                meme_image_view.controller = Fresco.newDraweeControllerBuilder()
-                        .setImageRequest(ImageRequest.fromFile(file))
-                        .setAutoPlayAnimations(true)
-                        .setControllerListener(MyControllerListener())
-                        .build()
-            }
-            image != null -> {
-                memeType = Meme.MemeType.IMAGE
-                meme_image_view.controller = Fresco.newDraweeControllerBuilder()
-                        .setImageRequest(ImageRequest.fromFile(File(image)))
-                        .setAutoPlayAnimations(true)
-                        .setControllerListener(MyControllerListener())
-                        .build()
-            }
-            else -> {
-                finish()
-                return
-            }
-        }
-        texts = intent?.getStringArrayExtra("texts")
     }
 
 
@@ -192,6 +196,7 @@ class MemePosterActivity : AppCompatActivity() {
                 .putFloat(MemeUploadWorker.IMAGE_RATIO, ratio)
                 .putString(MemeUploadWorker.DESCRIPTION, description.text?.toString())
                 .putString(MemeUploadWorker.TYPE, memeType.name)
+                .putString(MemeUploadWorker.TEMPLATE_ID, templateID)
                 .putStringArray(MemeUploadWorker.TEXTS, texts ?: arrayOf())
                 .build()
         val constraints = Constraints.Builder()
@@ -228,7 +233,7 @@ class MemePosterActivity : AppCompatActivity() {
             }
             SearchUserActivity.REQUEST_CODE -> {
                 if (resultCode == SearchUserActivity.RESULT_CODE_SELECTED) {
-                    description.append(" @")
+                    description.append("@")
                     description.append(data?.getStringExtra(SearchUserActivity.PARAM_SELECTED_USERNAME))
                 }
             }
@@ -237,7 +242,7 @@ class MemePosterActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
+        when(requestCode) {
             permRequest -> {
                 if (!hasWritePermission) {
                     toast("Sorry,We couldn't save the image to gallery without the permission")

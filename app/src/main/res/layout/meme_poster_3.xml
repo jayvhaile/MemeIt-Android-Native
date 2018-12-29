@@ -26,8 +26,7 @@
         app:layout_constraintBottom_toTopOf="@+id/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        tools:background="@drawable/meme_04" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <com.innov8.memeit.commons.views.FontEditText
         android:id="@+id/description"
@@ -50,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/btn_add_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,13 +63,13 @@
         app:layout_constraintBottom_toTopOf="@+id/save_to_gallery"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/btn_mention_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="Mention User"
+        android:text="Mention person"
         android:background="?attr/selectableItemBackground"
         android:textAllCaps="false"
         android:textColor="@color/colorAccent"

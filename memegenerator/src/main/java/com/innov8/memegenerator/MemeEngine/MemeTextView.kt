@@ -16,7 +16,7 @@ import com.memeit.backend.models.MemeItemProperty
 import com.memeit.backend.models.MemeTextItemProperty
 import com.memeit.backend.models.MemeTextStyleProperty
 import com.innov8.memeit.commons.dp
-import com.innov8.memeit.commons.models.TypefaceHandler
+import com.innov8.memeit.commons.models.TypefaceManager
 import com.innov8.memeit.commons.sp
 import com.innov8.memeit.commons.toSP
 
@@ -28,7 +28,7 @@ class MemeTextView : MemeItemView {
     constructor(context: Context, tp: MemeTextItemProperty) : super(context, tp) {
         tp.tsp?.let {
             dynamicLayout = DynamicLayout(text, TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-                typeface = TypefaceHandler.byName(it.font, context).getTypeFace()
+                typeface = TypefaceManager.byName(it.font)
                 color = it.textColor
                 textSize = it.textSize.sp(context)
                 style = Paint.Style.FILL
@@ -96,9 +96,9 @@ class MemeTextView : MemeItemView {
     private var strokeColor: Int = Color.WHITE
     private var color: Int = Color.BLACK
 
-    fun setTypeface(value: TypefaceHandler) {
-        font = value.name
-        dynamicLayout.paint.typeface = value.getTypeFace(context)
+    fun setTypeface(font: String) {
+        this.font = font
+        dynamicLayout.paint.typeface = TypefaceManager.byName(font)
         resizeToWrapText()
     }
 
@@ -198,7 +198,7 @@ class MemeTextView : MemeItemView {
         color = tp.textColor
         if (applySize) dynamicLayout.paint.textSize = tp.textSize.sp(context)
         font = tp.font
-        dynamicLayout.paint.typeface = TypefaceHandler.byName(tp.font, context).getTypeFace()
+        dynamicLayout.paint.typeface = TypefaceManager.byName(tp.font)
         bold = tp.bold
         italic = tp.italic
         allCaps = tp.allCap

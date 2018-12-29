@@ -36,7 +36,7 @@
             android:paddingTop="16dp"
             android:paddingBottom="16dp">
 
-            <com.innov8.memeit.commons.views.FontTextView
+            <com.innov8.memeit.commons.views.MemeItTextView
                 android:id="@+id/fontTextView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                     android:text="Vertical" />
             </RadioGroup>
 
-            <com.innov8.memeit.commons.views.FontTextView
+            <com.innov8.memeit.commons.views.MemeItTextView
                 android:id="@+id/fontTextView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

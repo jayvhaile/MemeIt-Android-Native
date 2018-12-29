@@ -21,7 +21,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="208dp" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/profile_follow_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_bio">
 
-        <com.innov8.memeit.commons.views.FontTextView
+        <com.innov8.memeit.commons.views.MemeItTextView
             android:id="@+id/profile_meme_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
-        <com.innov8.memeit.commons.views.FontTextView
+        <com.innov8.memeit.commons.views.MemeItTextView
             android:id="@+id/profile_memes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             android:alpha="0.7"
             android:background="@drawable/dot" />
 
-        <com.innov8.memeit.commons.views.FontTextView
+        <com.innov8.memeit.commons.views.MemeItTextView
             android:id="@+id/profile_followers_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
-        <com.innov8.memeit.commons.views.FontTextView
+        <com.innov8.memeit.commons.views.MemeItTextView
             android:id="@+id/profile_followers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
             android:alpha="0.7"
             android:background="@drawable/dot" />
 
-        <com.innov8.memeit.commons.views.FontTextView
+        <com.innov8.memeit.commons.views.MemeItTextView
             android:id="@+id/profile_followings_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
-        <com.innov8.memeit.commons.views.FontTextView
+        <com.innov8.memeit.commons.views.MemeItTextView
             android:id="@+id/profile_followings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/profile_username"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
@@ -140,7 +140,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline4" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/profile_bio"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

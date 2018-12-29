@@ -5,22 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.WorkInfo
+import com.innov8.memegenerator.utils.initWithGrid
+import com.innov8.memeit.Adapters.ELEAdapter
+import com.innov8.memeit.Adapters.MemeAdapters.GridMemeAdapter
 import com.innov8.memeit.Adapters.TemplateAdapter
 import com.innov8.memeit.Loaders.Sorter
 import com.innov8.memeit.Loaders.TemplateLoader
 import com.innov8.memeit.R
 import com.innov8.memeit.Utils.FilterableLoaderAdapterHandler
-import com.innov8.memeit.Utils.makeLinear
 import com.innov8.memeit.commons.toast
-import com.memeit.backend.models.MemeTemplate
 import kotlinx.android.synthetic.main.fragment_meme_list.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.android.Main
-import java.io.File
 
 
 class MemeTemplateFragment : Fragment() {
@@ -33,7 +29,7 @@ class MemeTemplateFragment : Fragment() {
         when (templateLoader.sortBy) {
             Sorter.POPULAR -> TemplateAdapter(context!!)
             Sorter.RECENT -> TemplateAdapter(context!!, Comparator { o1, o2 ->
-                o2.createdDate.compareTo(o1.createdDate)
+                (o2.createdDate ?: 0).compareTo(o1.createdDate ?: 0)
             })
         }
     }
@@ -49,18 +45,6 @@ class MemeTemplateFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val vm = ViewModelProviders.of(activity!!).get(MemeTemplateViewModel::class.java)
-        vm.workinfos.observe(this, Observer {
-            adapter.workInfos = it
-        })
-        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-            adapter.saved = withContext(Dispatchers.Default) {
-                File(context!!.filesDir, "templates/json")
-                        .takeIf { it.exists() }
-                        ?.list()
-                        ?: arrayOf()
-            }
-        }
         handler.load()
     }
 
@@ -70,7 +54,18 @@ class MemeTemplateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        meme_recycler_view.makeLinear(RecyclerView.VERTICAL)
+
+        meme_recycler_view.layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (adapter.getItemViewType(position)) {
+                        ELEAdapter.TYPE_EMPTY, ELEAdapter.TYPE_ERROR,
+                        ELEAdapter.TYPE_LOADING, ELEAdapter.TYPE_LOAD_MORE -> 2
+                        else -> 1
+                    }
+                }
+            }
+        }
         meme_recycler_view.adapter = adapter
         swipe_to_refresh.setOnRefreshListener {
             handler.refresh(false)

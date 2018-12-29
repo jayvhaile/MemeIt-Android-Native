@@ -7,15 +7,14 @@ import com.google.gson.GsonBuilder
 import com.google.gson.stream.JsonReader
 import com.innov8.memeit.MemeItApp
 import com.memeit.backend.MemeItClient
-import com.memeit.backend.models.MemeTemplate
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
 import com.memeit.backend.models.LayoutProperty
 import com.memeit.backend.models.MemeItemProperty
+import com.memeit.backend.models.MemeTemplate
 import com.memeit.backend.models.SavedMemeTemplateProperty
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
-import java.io.File
 import java.io.FileReader
 
 enum class Sorter {
@@ -68,6 +67,33 @@ class ServerTemplateLoader() : TemplateLoader() {
     }
 }
 
+class UnapprovedTemplateLoader() : TemplateLoader() {
+    constructor(parcel: Parcel) : this()
+
+    override fun load(limit: Int, onSuccess: (List<MemeTemplate>) -> Unit, onError: (String) -> Unit) {
+        MemeItMemes.getUnapprovedTemplates(skip, limit).call(onSuccess, onError)
+    }
+
+
+    companion object CREATOR : Parcelable.Creator<UnapprovedTemplateLoader> {
+        override fun createFromParcel(parcel: Parcel): UnapprovedTemplateLoader {
+            return UnapprovedTemplateLoader(parcel)
+        }
+
+        override fun newArray(size: Int): Array<UnapprovedTemplateLoader?> {
+            return arrayOfNulls(size)
+        }
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        super.writeToParcel(parcel, flags)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+}
+
 class SavedTemplatesLoader() : TemplateLoader() {
     override var skip: Int = 0
 
@@ -89,10 +115,10 @@ class SavedTemplatesLoader() : TemplateLoader() {
                     .registerTypeAdapterFactory(MemeItemProperty.getRuntimeTypeAdapterFactory())
                     .create()
             val result = withContext(Dispatchers.Default) {
-                File(context.filesDir, "templates/json")
+                MemeTemplate.getSavedJsonDir(context)//todo skip limit
                         .takeIf { it.exists() }
                         ?.listFiles()
-                        ?.slice(skip..skip + limit)
+//                        ?.slice(skip..skip + limit)
                         ?.map {
                             val jr = JsonReader(FileReader(it))
                             val sp = gson.fromJson<MemeTemplate>(jr, MemeTemplate::class.java)

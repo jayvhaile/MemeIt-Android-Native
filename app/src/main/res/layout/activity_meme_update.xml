@@ -52,7 +52,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/btn_add_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/btn_mention_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

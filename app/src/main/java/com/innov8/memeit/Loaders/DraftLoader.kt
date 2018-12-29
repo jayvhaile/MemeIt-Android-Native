@@ -22,16 +22,14 @@ class DraftLoader : Loader<Draft> {
                 val files = MemeTemplate.getDraftsJsonDir(context)
                         .takeIf { it.exists() }
                         ?.listFiles()
-                        ?.takeIf { it.isNotEmpty()   }
+                        ?.takeIf { it.isNotEmpty() }
 
-                files
-//                        ?.slice(skip.coerceAtMost(files.lastIndex)..(skip + limit).coerceAtMost(files.lastIndex))
-                        ?.map {
-                            val jr = JsonReader(FileReader(it))
-                            val sp = buildGson().fromJson<SavedMemeTemplateProperty>(jr, SavedMemeTemplateProperty::class.java)
-                            jr.close()
-                            Draft(it.absolutePath, sp)
-                        } ?: listOf()
+                files?.mapNotNull {
+                    val jr = JsonReader(FileReader(it))
+                    val sp = buildGson().fromJson<SavedMemeTemplateProperty>(jr, SavedMemeTemplateProperty::class.java)
+                    jr.close()
+                    sp?.run { Draft(it.absolutePath, this) }
+                } ?: listOf()
             }
             onSuccess(result)
         }

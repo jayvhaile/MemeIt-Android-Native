@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinators"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#fff">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -30,7 +31,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/comments_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="#fff" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -90,7 +92,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="invisible" />
 
-        <com.innov8.memeit.commons.views.FontTextView
+        <com.innov8.memeit.commons.views.MemeItTextView
             android:id="@+id/signup"
             android:layout_width="280dp"
             android:layout_height="0dp"

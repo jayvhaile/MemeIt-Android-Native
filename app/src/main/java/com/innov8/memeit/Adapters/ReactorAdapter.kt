@@ -41,13 +41,13 @@ class ReactorAdapter(context: Context) : SimpleELEListAdapter<Reaction>(context,
         init {
             reactorPPV.setOnClickListener {
                 val i = Intent(context, ProfileActivity::class.java)
-                i.putExtra("user", getItemAt(item_position).poster!!.toUser())
+                i.putExtra("user", getItemAt(item_position).poster!!)
                 context.startActivity(i)
             }
         }
 
         override fun bind(t: Reaction) {
-            reactorPPV.loadImage(t.poster!!.profileUrl)
+            reactorPPV.loadImage(t.poster!!.imageUrl)
             reactorPPV.setText(t.poster!!.name.prefix())
             reactorNameV.text = t.poster!!.name
             reactorReactionV.setImageResource(t.getDrawableID())

@@ -7,7 +7,7 @@
     tools:context=".Fragments.BadgeFragment">
 
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/badge_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

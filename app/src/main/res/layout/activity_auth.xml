@@ -54,7 +54,7 @@
         app:layout_constraintLeft_toLeftOf="@id/intro_pager"
         app:layout_constraintRight_toRightOf="@id/intro_pager" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/setup_personalize"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -253,7 +253,7 @@
         app:layout_constraintStart_toEndOf="@+id/signup_google"
         app:layout_constraintTop_toTopOf="@+id/signup_google" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/auth_question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -271,7 +271,7 @@
         app:layout_constraintStart_toStartOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/signup_google" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/auth_question_action"
         android:layout_width="50dp"
         android:layout_height="wrap_content"

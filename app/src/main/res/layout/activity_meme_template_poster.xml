@@ -27,8 +27,7 @@
         app:layout_constraintBottom_toTopOf="@+id/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/template_label_field"
-        tools:background="@drawable/meme_04" />
+        app:layout_constraintTop_toBottomOf="@+id/template_label_field" />
 
     <com.innov8.memeit.commons.views.FontEditText
         android:id="@+id/description"

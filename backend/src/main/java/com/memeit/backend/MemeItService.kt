@@ -299,8 +299,23 @@ interface MemeItService {
             @Query("sort") sort: String = "POPULAR"
     ): Call<List<MemeTemplate>>
 
+    @GET("template/unapproved")
+    fun getUnapprovedTemplates(
+            @Query("skip") skip: Int,
+            @Query("limit") limit: Int
+    ): Call<List<MemeTemplate>>
+
     @POST("template")
     fun postTemplate(
             @Body memeTemplate: MemeTemplate
     ): Call<ResponseBody>
+
+    @GET("template/approve/{id}")
+    fun approveTemplate(@Path("id") tid: String): Call<ResponseBody>
+
+    @GET("template/decline/{id}")
+    fun declineTemplate(@Path("id") tid: String): Call<ResponseBody>
+
+    @DELETE("template/{id}")
+    fun deleteTemplate(@Path("id") tid: String): Call<ResponseBody>
 }

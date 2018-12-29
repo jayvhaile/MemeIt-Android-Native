@@ -16,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.gson.Gson
+import com.google.gson.TypeAdapter
 import com.memeit.backend.models.*
 import okhttp3.*
 import retrofit2.Call
@@ -41,6 +42,7 @@ object MemeItClient {
     private var isConnected: Boolean = false
     private var isInitialized: Boolean = false
     internal lateinit var sharedPref: SharedPreferences
+    const val STORAGE_URL = "https://storage.googleapis.com/meme-store/"
 
 
     var myUser: MyUser? = null
@@ -172,6 +174,10 @@ object MemeItClient {
                 .client(builder.build())
                 .addConverterFactory(GsonConverterFactory.create(buildGson())) //build gson is for working with the memetemplate classes
                 .build()
+
+        val a:TypeAdapter<MemeTemplate>
+
+
         memeItService = retrofit.create(MemeItService::class.java)
         isInitialized = true
     }

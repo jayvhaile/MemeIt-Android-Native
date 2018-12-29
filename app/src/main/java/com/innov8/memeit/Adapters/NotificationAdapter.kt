@@ -2,6 +2,7 @@ package com.innov8.memeit.Adapters
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.text.toSpannable
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
@@ -97,11 +99,12 @@ open class NotificationViewHolder(val notifAdapter: NotificationAdapter, itemVie
     var itemPosition: Int = 0
     open fun bind(notif: Notification) {
         d.setColor(notifAdapter.colors[notif.type])
-        back.setBackgroundColor(if (notif.seen) Color.WHITE else Color.rgb(248, 248, 250))
         dot.background = d
         date.text = notif.date.formateAsDate()
         title.text = notif.title
         message?.text = notif.message
+        title.setTextColor(if (!notif.seen)Color.parseColor("#313131") else Color.parseColor("#808080"))
+        title.setTypeface(title.typeface, if(!notif.seen)Typeface.BOLD else Typeface.NORMAL)
     }
 
 }
@@ -121,6 +124,7 @@ class FollowingNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : 
         super.bind(notif)
         notif as FollowingNotification
         icon as ProfileDraweeView
+        val spannableString = notif.title.toSpannable()
         icon.setText(notif.title.prefix())
         icon.loadImage(notif.followerPic)
     }

@@ -38,7 +38,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/username_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

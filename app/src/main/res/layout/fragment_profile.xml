@@ -57,7 +57,7 @@
         android:layout_width="@dimen/profile_image_expanded_size"
         android:layout_height="@dimen/profile_image_expanded_size"
         app:layout_behavior="com.innov8.memeit.CustomClasses.ProfileImageViewBehavior" />
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

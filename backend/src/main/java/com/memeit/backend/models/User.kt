@@ -35,7 +35,7 @@ data class User(var uid: String? = null,
             parcel.readByte() != 0.toByte(),
             parcel.readByte() != 0.toByte())
 
-    constructor(poster: Poster) : this(uid = poster.id, name = poster.name, imageUrl = poster.profileUrl)
+
     constructor(mu: MyUser) : this(
             mu.id,
             mu.name,

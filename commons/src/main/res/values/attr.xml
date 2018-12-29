@@ -6,8 +6,8 @@
 
     <declare-styleable name="MemeItTextView">
         <attr name="mfont" format="string" />
-        <attr name="mentionColor" format="color" />
+        <attr name="linkColor" format="color" />
         <attr name="selectedColor" format="color" />
-        <attr name="tagColor" format="color" />
+        <attr name="linkModes" format="string" />
     </declare-styleable>
 </resources>

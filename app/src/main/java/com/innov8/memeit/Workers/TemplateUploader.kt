@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.work.*
 import com.innov8.memeit.Activities.MemeChooserActivity
+import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.NotifData
 import com.innov8.memeit.commons.sendUserNotification
@@ -60,7 +61,7 @@ class TemplateUploader(context: Context, params: WorkerParameters) : Worker(cont
         val previewImage = inputData.getStringArray(TemplateImageUploader.OUTPUT_PREVIEW_IMAGE_NAME)!![0]
         val imageNames = inputData.getStringArray(TemplateImageUploader.OUTPUT_IMAGE_NAME)!!
         //template temp location
-        val temp = File(applicationContext.filesDir, "templates/temp/upload/$name.json")
+        val temp = File(MemeTemplate.getTempUploadJsonDir(applicationContext), "$name.json")
         return if (temp.exists()) {
             MemeTemplate.readFromFile(temp)?.run {
                 try {
@@ -132,16 +133,29 @@ fun startTemplateUploadWork(context: Context, template: MemeTemplate) {
 
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             withContext(Dispatchers.Default) {
-                val dir = File(context.filesDir, "template/temp/upload/")
-                dir.mkdirs()
-                val file = File(dir, "$name.json")
+                val file = File(MemeTemplate.getTempUploadJsonDir(context), "$name.json")
                 template.saveToFile(file)
             }
-            WorkManager.getInstance().beginWith(w)
-                    .then(s)
-                    .enqueue()
+            if (MemeItApp.USE_LOCAL_SERVER) {
+                val d = Data.Builder()
+                        .putString("name", name)
+                        .putString(TemplateImageUploader.OUTPUT_PREVIEW_IMAGE_NAME, "preview.jpg")
+                        .putString(TemplateImageUploader.OUTPUT_IMAGE_NAME, "image1.jpg")
+                        .build()
+                WorkManager.getInstance().enqueue(
+                        OneTimeWorkRequest.Builder(TemplateUploader::class.java)
+                                .addTag("template json upload")
+                                .addTag("template upload")
+                                .setInputData(d)
+                                .setInputMerger(ArrayCreatingInputMerger::class.java)
+                                .build()
+                )
+            } else {
+                WorkManager.getInstance().beginWith(w)
+                        .then(s)
+                        .enqueue()
+            }
         }
-
-
     }
 }
+//5c2623d2b2c55c00096a8571

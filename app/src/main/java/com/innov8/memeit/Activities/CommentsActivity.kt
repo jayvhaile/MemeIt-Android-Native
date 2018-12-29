@@ -84,7 +84,7 @@ class CommentsActivity : AppCompatActivity() {
         comment_button.setOnClickListener { _ ->
             val txt = comment_field.text.toString()
             if (isPostingComment || txt.isEmpty()) return@setOnClickListener
-            val comment = Comment.createComment(mid, txt)
+            val comment = Comment(memeID = mid, comment = txt)
             isPostingComment = true
             MemeItMemes.postComment(comment).call({
                 comment_field.setText("")

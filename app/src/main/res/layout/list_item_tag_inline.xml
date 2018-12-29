@@ -6,7 +6,7 @@
     android:layout_height="80dp"
     android:background="?attr/selectableItemBackground">
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/tag_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="@+id/tag_view"
         app:srcCompat="@drawable/hashtag_black_996px" />
 
-    <com.innov8.memeit.commons.views.FontTextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/post_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
