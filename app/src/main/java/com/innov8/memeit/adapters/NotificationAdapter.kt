@@ -184,6 +184,7 @@ class MemeMentionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) 
     override fun bind(notif: Notification) {
         super.bind(notif)
         notif as MemeMentionNotification
+        title.text = applySpan(notif.title, notif.mentionerName, "post")
         icon as ProfileDraweeView
         icon.setText(notif.title.prefix())
         icon.loadImage(notif.mentionerPic)
@@ -208,6 +209,8 @@ class CommentMentionNotifHolder(notifAdapter: NotificationAdapter, itemView: Vie
     override fun bind(notif: Notification) {
         super.bind(notif)
         notif as CommentMentionNotification
+        title.text = applySpan(notif.title, notif.mentionerName, "comment")
+
         icon as ProfileDraweeView
         icon.setText(notif.title.prefix())
         icon.loadImage(notif.mentionerPic)

@@ -31,7 +31,7 @@ class MemeItApp : MultiDexApplication() {
 
         private const val LOCAL_SERVER_URL = "http://127.0.0.1:8080/api/v$apiVersion/"
         private const val STRICT_MODE = false
-        const val USE_LOCAL_SERVER = false
+        const val USE_LOCAL_SERVER = true
         const val FACEBOOK_AD_PLACEMENT_ID = "262717847755102_262724637754423"
 //        const val FACEBOOK_AD_PLACEMENT_ID="126436314944426_126436834944374"
 

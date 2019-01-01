@@ -60,7 +60,28 @@ class TestNotificationLoader : Loader<Notification> {
                         "An update is available",
                         "Click here to update",
                         System.currentTimeMillis(),
-                        false)
+                        false),
+                MemeMentionNotification("a", "Jayv",
+                        "",
+                        "",
+                        "",
+                        System.currentTimeMillis(),
+                        false
+                ),
+                CommentMentionNotification("a", "Jayv",
+                        "",
+                        "",
+                        "",
+                        "@biruk you got to look at this",
+                        System.currentTimeMillis(),
+                        false
+                ),
+                AwardNotification(
+                        "asd",
+                        Badge.ofID("first_001"),
+                        System.currentTimeMillis(),
+                        false
+                )
 
 
         )
