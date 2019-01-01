@@ -61,9 +61,9 @@ class LogInAuthMode(private val authActivity: AuthActivity) : AuthMode {
     private val onSignedIn by lazy {
         { _: User ->
             authActivity.setLoading(false)
-            val i = Intent(authActivity, MainActivity::class.java)
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            authActivity.startActivity(i)
+            MainActivity.start(authActivity) {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
             retrieveAndUploadFirebaseToken()
 
         }

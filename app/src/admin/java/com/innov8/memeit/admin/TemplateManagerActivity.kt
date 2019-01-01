@@ -3,10 +3,10 @@ package com.innov8.memeit.admin
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.afollestad.materialdialogs.MaterialDialog
-import com.innov8.memeit.Loaders.UnapprovedTemplateLoader
+import com.innov8.memeit.loaders.UnapprovedTemplateLoader
 import com.innov8.memeit.R
-import com.innov8.memeit.Utils.LoaderAdapterHandler
-import com.innov8.memeit.Utils.makeLinear
+import com.innov8.memeit.utils.LoaderAdapterHandler
+import com.innov8.memeit.utils.makeLinear
 import com.innov8.memeit.admin.Adapters.TemplateManagerAdapter
 import com.innov8.memeit.commons.toast
 import com.memeit.backend.MemeItMemes

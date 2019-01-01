@@ -6,10 +6,10 @@ import android.view.View
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.request.ImageRequest
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memegenerator.Adapters.MyViewHolder
-import com.innov8.memeit.Adapters.SimpleELEListAdapter
+import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memeit.adapters.SimpleELEListAdapter
 import com.innov8.memeit.R
-import com.innov8.memeit.Utils.generatePreviewUrl
+import com.innov8.memeit.utils.generatePreviewUrl
 import com.innov8.memeit.commons.toast
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call

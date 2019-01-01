@@ -16,7 +16,7 @@ import com.innov8.memeit.utils.CustomMethods
 import com.innov8.memeit.utils.ScrollingImageDrawable
 import com.innov8.memeit.R
 import com.innov8.memeit.utils.*
-import com.innov8.memeit.authModes.*
+import com.innov8.memeit.activities.authModes.*
 import kotlinx.android.synthetic.main.activity_auth.*
 
 class AuthActivity : AppCompatActivity() {

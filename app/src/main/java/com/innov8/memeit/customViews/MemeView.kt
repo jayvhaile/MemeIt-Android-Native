@@ -475,8 +475,7 @@ class MemeView : FrameLayout {
         applyVisible(R.id.description, if (meme.description.isNullOrBlank()) View.GONE else View.VISIBLE)
         constraintSetDefault.applyTo(itemView)
         if (!meme.description.isNullOrBlank()) {
-            memeDescription.text = meme.description!!
-
+            memeDescription.text = meme.description!!.trim()
         }
         memeImageV.loadMeme(meme)
     }

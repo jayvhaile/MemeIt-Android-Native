@@ -6,7 +6,6 @@
     <color name="bottom_nav_items_gray">#aeaeae</color>
 
 
-
     <color name="color_button_default">#FFA000</color>
 
 
@@ -14,18 +13,19 @@
     <color name="spark_primary_emoji">#fd5</color>
     <color name="spark_secondary">#ff8888</color>
 
-    <color name="blue" >#2196F3</color>
-    <color name="dodger_blue" >#26C6DA</color>
+    <color name="blue">#2196F3</color>
+    <color name="dodger_blue">#26C6DA</color>
+    <color name="brown">#992233</color>
 
-    <color name="purple" >#9C27B0</color>
+    <color name="purple">#9C27B0</color>
     <color name="orange">#ff6c36</color>
     <color name="greeny">#31c240</color>
     <color name="golden">#FF9726</color>
     <color name="black">#181818</color>
     <color name="pink">#fb1fff</color>
     <color name="red">#ff2626</color>
-    <color name = "notif_black">#4f000000</color>
-    <color name = "notif_transparent">#00000000</color>
+    <color name="notif_black">#4f000000</color>
+    <color name="notif_transparent">#00000000</color>
 
 
     <color name="like_bg">#99000000</color>

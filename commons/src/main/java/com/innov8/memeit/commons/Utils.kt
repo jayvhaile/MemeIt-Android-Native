@@ -73,6 +73,16 @@ fun Context.loadBitmap(id: Int, reqWidth: Int, reqHeight: Int = reqWidth): Bitma
     return BitmapFactory.decodeResource(resources, id, opt)
 }
 
+fun Context.loadBitmapfromStream(stream: InputStream, quality: Float = 1f): Bitmap? {
+    val opt = BitmapFactory.Options()
+    val ba = stream.readBytes()
+    opt.inJustDecodeBounds = true
+    BitmapFactory.decodeStream(ByteArrayInputStream(ba), null, opt)
+    opt.inSampleSize = calcSampleSize(opt, quality)
+    opt.inJustDecodeBounds = false
+    return BitmapFactory.decodeStream(ByteArrayInputStream(ba), null, opt)
+}
+
 fun Context.loadBitmapfromStream(stream: InputStream, reqWidth: Int, reqHeight: Int = reqWidth): Bitmap? {
     val opt = BitmapFactory.Options()
     val ba = stream.readBytes()

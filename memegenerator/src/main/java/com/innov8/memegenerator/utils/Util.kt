@@ -127,15 +127,15 @@ fun Bitmap.addWaterMark(tf: Typeface): Bitmap {
                 val offset = (w - h) / 2
                 val av = (h + w) / 2
                 translate(0f, offset)
-                val paint=Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                     color = Color.parseColor("#ccffffff")
                     textSize = 0.045f * av
                     typeface = tf
                     this.setShadowLayer(0.025f * av, 5f, 5f, Color.parseColor("#cc000000"))
 
                 }
-                val a=paint.fontMetrics.descent
-                drawText("MemeItApp.com", offset + 10, h-a,paint)
+                val a = paint.fontMetrics.descent
+                drawText("MemeItApp.com", offset + 10, h - a, paint)
             }
         }
     }
@@ -157,7 +157,7 @@ infix fun Pair<Float, Float>.maxBy(max: Float): Pair<Float, Float> {
 
 fun RectF.scale(x: Float, y: Float) = RectF(left * x, top * y, right * x, bottom * y)
 
-fun calcReqSize(lp: LayoutProperty, count:Int): Pair<Int, Int> {
+fun calcReqSize(lp: LayoutProperty, count: Int): Pair<Int, Int> {
     val maxW = 400
     val maxH = 800
 
@@ -173,4 +173,40 @@ fun calcReqSize(lp: LayoutProperty, count:Int): Pair<Int, Int> {
     }
 
     return w to h
+}
+
+fun Pair<Int, Int>.fitCenter(w: Int, h: Int) = (first.toFloat() to second.toFloat()).fitCenter(RectF(0f, 0f, w.toFloat(), h.toFloat()))
+
+fun Pair<Float, Float>.fitCenter(w: Float, h: Float) = fitCenter(RectF(0f, 0f, w, h))
+fun Pair<Float, Float>.fitCenter(rect: RectF): RectF {
+    val w: Float
+    val h: Float
+    val x: Float
+    val y: Float
+    val cw = rect.width()
+    val ch = rect.height()
+    val ir = first / second
+    val cr = cw / ch
+    if (ir < cr) {  //fit the height and adjust the width
+        val hr = ch / second
+        w = first * hr
+        h = ch
+        x = rect.left + (cw / 2.0f) - (w / 2.0f)
+        y = rect.top
+    } else {//fit the width and adjust the height
+        val wr = cw / first
+        w = cw
+        h = second * wr
+        x = rect.left
+        y = rect.top + (ch / 2f) - (h / 2f)
+    }
+    return RectF(x, y, x + w, y + h)
+}
+
+fun RectF.padded(leftP: Float = 0f, topP: Float = 0f, rightP: Float = 0f, bottomP: Float = 0f): RectF {
+    return RectF(left + leftP, top + topP, right - rightP, bottom - bottomP)
+}
+
+fun RectF.margined(leftP: Float = 0f, topP: Float = 0f, rightP: Float = 0f, bottomP: Float = 0f): RectF {
+    return RectF(left - leftP, top - topP, right + rightP, bottom + bottomP)
 }

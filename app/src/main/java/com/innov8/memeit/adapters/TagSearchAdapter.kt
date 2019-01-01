@@ -19,7 +19,7 @@ import com.innov8.memeit.utils.formatNumber
 import com.memeit.backend.models.Tag
 import kotlin.Comparator
 
-class TagSearchAdapter(context: Context) : ELEFilterableListAdapter<Tag, TagSearchAdapter.TagViewHolder>(context) {
+class TagSearchAdapter(context: Context) : ELEWordFilterableListAdapter<Tag, TagSearchAdapter.TagViewHolder>(context) {
     override val filterer: (Tag) -> Boolean = { it.tag.toLowerCase().contains(filterWord.toLowerCase()) }
     override val sorter: Comparator<in Tag> = Comparator { tag1: Tag, tag2: Tag -> tag1.compareTo(tag2) }
     override var emptyDrawableId: Int = R.drawable.tag2

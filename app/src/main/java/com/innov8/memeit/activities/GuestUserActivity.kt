@@ -39,7 +39,7 @@ class GuestUserActivity : AppCompatActivity() {
             }
         } ?: let {
             toast("Meme not found.")
-            startActivity(Intent(this, MainActivity::class.java))
+            MainActivity.start(this)
             finish()
         }
     }

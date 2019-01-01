@@ -9,6 +9,7 @@ import com.github.ybq.android.spinkit.style.Wave
 import com.innov8.memegenerator.adapters.MyViewHolder
 import com.innov8.memeit.utils.CustomMethods
 import com.innov8.memeit.R
+import com.innov8.memeit.activities.TagMemesActivity
 import com.innov8.memeit.commons.toast
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
@@ -58,6 +59,9 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
                 itemView.layoutParams = itemView.layoutParams.apply {
                     width = ViewGroup.LayoutParams.WRAP_CONTENT
                 }
+            itemView.setOnClickListener {
+                TagMemesActivity.startWithTag(context, getItemAt(item_position).tag)
+            }
             tagFollowV.setOnClickListener { _ ->
                 val t = getItemAt(item_position)
                 if (tagFollowV.text == "Unfollow") {
@@ -69,8 +73,7 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
                         tagFollowV.text = "Unfollow"
 
                     })
-                }
-                else{
+                } else {
                     tagFollowV.text = "Following..."
                     MemeItUsers.followTags(arrayOf(t.tag)).call({
                         tagFollowV.text = "Unfollow"

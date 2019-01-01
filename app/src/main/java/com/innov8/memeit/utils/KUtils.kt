@@ -21,6 +21,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
+import com.adroitandroid.chipcloud.ChipCloud
+import com.adroitandroid.chipcloud.ChipListener
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.imagepipeline.request.ImageRequest
 import com.google.android.material.snackbar.Snackbar
@@ -127,7 +129,7 @@ fun MemeTemplate.generatePreviewUrl(): String {
     val quality = SettingsActivity.quality[level]
     val fac = SettingsActivity.factor[level]
 //    return "http://localhost:8080/img/bg-cta.jpg"
-    return getImageMemeUrl(memeTemplateProperty.previewImageUrl,1f, fac, quality)
+    return getImageMemeUrl(memeTemplateProperty.previewImageUrl, 1f, fac, quality)
 }
 
 fun Meme.generateUrl(): String {
@@ -398,7 +400,7 @@ fun Context.addFileToMediaStore(file: File, mimeType: String = "image/jpeg") {
             })
 }
 
-fun generateTextLinkActions(context: Context) = { mode: MemeItTextView.LinkMode, text: String ->
+fun generateTextLinkActions(context: Context): (MemeItTextView.LinkMode, String) -> Unit = { mode, text ->
     when (mode) {
         MemeItTextView.LinkMode.PHONE -> context.startActivity(Intent(Intent.ACTION_DIAL).apply {
             data = Uri.parse("tel:${text.trim()}")
@@ -414,4 +416,16 @@ fun generateTextLinkActions(context: Context) = { mode: MemeItTextView.LinkMode,
             data = Uri.parse(text.trim())
         })
     }
+}
+
+fun ChipCloud.onChipSelected(onChipSelected: (Int) -> Unit) {
+    setChipListener(object : ChipListener {
+        override fun chipDeselected(p0: Int) {
+
+        }
+
+        override fun chipSelected(p0: Int) {
+            onChipSelected(p0)
+        }
+    })
 }

@@ -15,6 +15,30 @@
         <item>Very High</item>
     </string-array>
 
+    <string-array name="meme_type">
+        <item>Any</item>
+        <item>Image</item>
+        <item>GIF</item>
+    </string-array>
+
+    <string-array name="template_categories_any">
+        <item>Any</item>
+        <item>Advice</item>
+        <item>Animal</item>
+        <item>Cartoon</item>
+        <item>Celebrity</item>
+        <item>Rage</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="template_categories">
+        <item>Advice</item>
+        <item>Animal</item>
+        <item>Cartoon</item>
+        <item>Celebrity</item>
+        <item>Rage</item>
+        <item>Other</item>
+    </string-array>
+
     <string name="intro_slide2_title">Create memes</string>
     <string name="intro_slide3_title">Grow an audience</string>
     <string name="intro_slide4_title">Share your memes</string>

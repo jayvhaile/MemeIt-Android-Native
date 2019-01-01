@@ -5,6 +5,8 @@ import android.media.MediaCodecInfo
 import android.media.MediaFormat
 import android.os.Build
 import java.io.ByteArrayOutputStream
+import com.innov8.memegenerator.webp.graphics.WebpBitmapEncoder
+import java.io.File
 
 
 fun encode() {
@@ -28,8 +30,6 @@ fun encode() {
 
 
     val inputBuffers = codec.inputBuffers
-
-
 
     val byteArrayOutputStream = ByteArrayOutputStream()
 //    image.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream) // image is the bitmap

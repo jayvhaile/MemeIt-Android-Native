@@ -34,7 +34,7 @@ class ProfileDraweeView : SimpleDraweeView {
     }
 
 
-    lateinit var textDrawable: TextDrawable
+    private lateinit var textDrawable: TextDrawable
     private var text: String = ""
     private var color: Int = Color.RED
 
@@ -46,6 +46,9 @@ class ProfileDraweeView : SimpleDraweeView {
     var hasBorder = true
 
     fun init() {
+        hierarchy.roundingParams = RoundingParams.asCircle().apply {
+            if (hasBorder) setBorder(Color.WHITE, 3f.dp(context))
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             textDrawable = TextDrawable
                     .builder()
@@ -53,9 +56,6 @@ class ProfileDraweeView : SimpleDraweeView {
                     .bold()
                     .endConfig()
                     .buildRound(text, color)
-            val rp = RoundingParams.asCircle()
-            if (hasBorder) rp.setBorder(Color.WHITE, 3f.dp(context))
-            hierarchy.roundingParams = rp
             hierarchy.setPlaceholderImage(textDrawable)
         } else {
             hierarchy.setPlaceholderImage(R.drawable.circle_user_color)

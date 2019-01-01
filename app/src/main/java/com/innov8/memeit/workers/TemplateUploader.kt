@@ -21,6 +21,7 @@ import java.util.*
 class TemplateImageUploader(context: Context, params: WorkerParameters) : Worker(context, params) {
     companion object {
         const val PARAM_FILE_PATH = "filepath"
+        const val PARAM_INDEX = "index"
         const val PARAM_IS_PREVIEW_IMAGE = "is preview"
         const val OUTPUT_IMAGE_NAME = "uploaded image name"
         const val OUTPUT_PREVIEW_IMAGE_NAME = "uploaded preview image name"
@@ -29,6 +30,7 @@ class TemplateImageUploader(context: Context, params: WorkerParameters) : Worker
 
     override fun doWork(): Result {
         val file = File(inputData.getString(PARAM_FILE_PATH))
+        val index = inputData.getInt(PARAM_INDEX, 0)
         val preview = inputData.getBoolean(PARAM_IS_PREVIEW_IMAGE, false)
         return if (file.exists()) {
             try {
@@ -39,7 +41,7 @@ class TemplateImageUploader(context: Context, params: WorkerParameters) : Worker
                     if (preview)
                         b.putString(OUTPUT_PREVIEW_IMAGE_NAME, name)
                     else
-                        b.putString(OUTPUT_IMAGE_NAME, name)
+                        b.putString(OUTPUT_IMAGE_NAME, "$index:$name")
 
                     this.outputData = b.build()
                     Result.SUCCESS
@@ -61,13 +63,22 @@ class TemplateUploader(context: Context, params: WorkerParameters) : Worker(cont
         val previewImage = inputData.getStringArray(TemplateImageUploader.OUTPUT_PREVIEW_IMAGE_NAME)!![0]
         val imageNames = inputData.getStringArray(TemplateImageUploader.OUTPUT_IMAGE_NAME)!!
         //template temp location
+
         val temp = File(MemeTemplate.getTempUploadJsonDir(applicationContext), "$name.json")
         return if (temp.exists()) {
             MemeTemplate.readFromFile(temp)?.run {
                 try {
                     this.memeTemplateProperty.apply {
                         images.clear()
-                        images.addAll(imageNames)
+                        images.addAll(
+                                imageNames
+                                        .map {
+                                            val s = it.split(":")
+                                            s[0] to s[1]
+                                        }
+                                        .sortedBy { it.first }
+                                        .map { it.second }
+                        )
                         previewImageUrl = previewImage
                     }
                     val response = MemeItMemes.postTemplate(this).execute()
@@ -101,12 +112,17 @@ fun startTemplateUploadWork(context: Context, template: MemeTemplate) {
         val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
-        val w = template.memeTemplateProperty.images.map {
+        val w = template.memeTemplateProperty.images.mapIndexed { i, it ->
             OneTimeWorkRequest.Builder(TemplateImageUploader::class.java)
                     .setConstraints(constraints)
                     .addTag("template image upload")
                     .addTag("template upload")
-                    .setInputData(Data.Builder().putString(TemplateImageUploader.PARAM_FILE_PATH, it).build())
+                    .setInputData(
+                            Data.Builder()
+                                    .putString(TemplateImageUploader.PARAM_FILE_PATH, it)
+                                    .putInt(TemplateImageUploader.PARAM_INDEX, i)
+                                    .build()
+                    )
                     .build()
         }.toMutableList().apply {
             add(

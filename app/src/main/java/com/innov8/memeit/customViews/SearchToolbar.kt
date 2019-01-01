@@ -3,44 +3,25 @@ package com.innov8.memeit.customViews
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.graphics.Color
-import android.os.Build
-import android.text.Editable
+import android.graphics.drawable.ColorDrawable
 import android.text.InputType
-import android.text.TextWatcher
 import android.util.AttributeSet
-import android.view.*
+import android.view.Gravity
+import android.view.MenuItem
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.PopupWindow
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.innov8.memeit.commons.dp
-import com.innov8.memeit.commons.log
-import com.innov8.memeit.commons.toast
-import com.innov8.memeit.adapters.TagSearchAdapter
-import com.innov8.memeit.utils.dp
 import com.innov8.memeit.R
-import com.memeit.backend.MemeItMemes
-import com.memeit.backend.call
+import com.innov8.memeit.commons.addOnTextChanged
+import com.innov8.memeit.commons.dp
 
 class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
-    override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-        editText.requestFocusFromTouch()
-        return true
-    }
-
-    override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-        editText.setText("")
-        return true
-    }
-
-    lateinit var editText: EditText
-    lateinit var clearButton: ImageButton
-    lateinit var popupWindow: PopupWindow
-    var OnSearch: ((String, Array<String>) -> Unit)? = null
+    private var expanded = false
+    var onSearch: ((String) -> Unit)? = null
+    var onSearchDone: ((String) -> Unit)? = null
 
     constructor(context: Context) : super(context) {
         init()
@@ -55,138 +36,59 @@ class SearchToolbar : LinearLayout, MenuItem.OnActionExpandListener {
         init()
     }
 
-    lateinit var adapter: TagSearchAdapter
-
-
     private fun init() {
-        val lpt = ViewGroup.LayoutParams(400.dp, LayoutParams.MATCH_PARENT)
-        layoutParams=lpt
-        val inflater = LayoutInflater.from(context);
-        editText = inflater.inflate(R.layout.search_edit, null) as EditText
-        //editText.inputType = InputType.TYPE_CLASS_TEXT
-        editText.maxLines = 1
-        adapter = TagSearchAdapter(context)
-
-        val v: View = inflater.inflate(R.layout.tag_suggestion, null)
-        val list: RecyclerView = v.findViewById(R.id.sug_list)
-        popupWindow = PopupWindow(v, 280.dp(context), 180.dp(context))
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            popupWindow.elevation = 2f.dp
-        }
-        list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        list.adapter = adapter
-
-        /*adapter.OnDataChange = {
-            if (it.isEmpty() && popupWindow.isShowing)
-                popupWindow.dismiss()
-            else if (it.isNotEmpty()) {
-                popupWindow.showAsDropDown(editText, (-32).dp(context), 0)
-            }
-
-        }*/
-        adapter.onItemClicked = {
-            val s = editText.text
-
-            val i = s.lastIndexOf('#')
-
-            s.replace(i + 1, s.length, it.tag.toLowerCase() + " ")
-        }
-
-
-
-
-        clearButton = ImageButton(context)
-        clearButton.setBackgroundColor(Color.TRANSPARENT)
-        clearButton.setImageResource(R.drawable.ic_clear_black_24dp)
-
-        clearButton.setOnClickListener {
-            editText.setText("")
-        }
+        layoutParams = ViewGroup.LayoutParams(500.dp(context), LayoutParams.MATCH_PARENT)
         gravity = Gravity.CENTER_VERTICAL
 
-        val lp = LayoutParams(200.dp(context), LayoutParams.MATCH_PARENT)
-        val lp2 = LayoutParams(56.dp(context), LayoutParams.MATCH_PARENT)
-        // layoutParams.width= ViewGroup.LayoutParams.MATCH_PARENT
+        addView(editText, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        addView(clearButton, LayoutParams(56.dp(context), LayoutParams.MATCH_PARENT))
+    }
 
-        addView(editText, lp)
-        addView(clearButton, lp2)
+    override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+        editText.requestFocusFromTouch()
+        expanded = true
+        return true
+    }
 
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                var hash = false
-                var hashSI = -1
-                if (!s.contains('#')) {
-                    x("")
-                } else {
+    override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+        editText.setText("")
+        expanded = false
+        return true
+    }
 
-                    for (i in 0 until s.length) {
-                        if (hash) {
-                            if (s[i] == ' ') {/*
-                                val span =  TextAppearanceSpan(context,android.R.style.TextAppearance_Small,ColorStateList.valueOf(0).)
+    private val editText by lazy {
 
-                            editText.text.setSpan(span, hashSI, i, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)*/
-                                hash = false
-                                hashTagDone()
-
-                            } else {
-                                x(s.subSequence(hashSI + 1, i + 1).toString())
-                            }
-                        } else if (s[i] == '#') {
-                            hash = true
-                            hashSI = i
-                        }
+        (EditText(context)).apply {
+            background = ColorDrawable(Color.TRANSPARENT)
+            hint = "Search Template"
+            setLines(1)
+            val dp16 = 16.dp(context)
+            setPadding(dp16, 0, dp16, 0)
+            imeOptions = EditorInfo.IME_ACTION_SEARCH
+            inputType = InputType.TYPE_CLASS_TEXT
+            addOnTextChanged {
+                if (expanded) onSearch?.invoke(it)
+            }
+            setOnEditorActionListener { view, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    if (expanded) onSearchDone?.invoke(view.text.toString())
+                    (context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).apply {
+                        hideSoftInputFromWindow(view.windowToken, 0)
                     }
-                }
+                    true
+                } else
+                    false
             }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-        })
-        editText.imeOptions = EditorInfo.IME_ACTION_SEARCH
-        editText.inputType = InputType.TYPE_CLASS_TEXT
-
-        editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val text = getSearchText()
-                val tags = getSearchTags()
-                context.toast(text + " " + tags.joinToString(" "))
-                OnSearch?.invoke(text, tags)
-                val mgr = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager;
-                mgr.hideSoftInputFromWindow(editText.windowToken, 0)
-                true
-            } else
-                false
         }
     }
-
-    fun x(s: String) {
-        log(s)
-        adapter.updateFilter(s)
-        MemeItMemes.getPopularTags(s, 0, 5).call {adapter.addAll(it)}
+    private val clearButton by lazy {
+        ImageButton(context).apply {
+            setBackgroundColor(Color.TRANSPARENT)
+            setImageResource(R.drawable.ic_clear_black_24dp)
+            setOnClickListener {
+                editText.setText("")
+            }
+        }
     }
-
-    fun hashTagDone() {
-        adapter.clear()
-    }
-
-    fun getSearchText(): String {
-        return editText.text.split(" ")
-                .filter { !it.startsWith('#') }
-                .joinToString(" ")
-    }
-
-    fun getSearchTags(): Array<String> {
-        return editText.text.split(" ")
-                .filter { it.startsWith('#') && it.length > 1 }
-                .map { it.substring(1) }
-                .toTypedArray()
-    }
-
 
 }

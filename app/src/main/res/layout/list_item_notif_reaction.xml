@@ -5,79 +5,104 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
     <View
+        android:id="@+id/notif_back"
         android:layout_width="match_parent"
         android:layout_height="00dp"
-        android:id="@+id/notif_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/notif_dot"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:src="@drawable/laughing_inactive"
-        android:tint="#fff"
-        android:padding="5dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="26dp"
         android:background="@drawable/circle"
+        android:padding="5dp"
+        android:tint="#fff"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/laughing_inactive" />
 
 
     <com.innov8.memeit.commons.views.ProfileDraweeView
         android:id="@+id/notif_icon"
-        android:layout_width="@dimen/profile_mini_size"
-        android:layout_height="@dimen/profile_mini_size"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:padding="4dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="16dp"
         app:hasBorder="false"
-        app:layout_constraintBottom_toBottomOf="@+id/notif_dot"
+        app:layout_constraintBottom_toTopOf="@+id/notif_date"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toEndOf="@+id/notif_dot"
-        app:layout_constraintTop_toTopOf="@+id/notif_dot"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:placeholderImage="@drawable/circle"
         app:roundAsCircle="true" />
 
-    <TextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/notif_title"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="Meri Reacted to yor post"
-        android:textColor="#313131"
+        android:text="X reacted on your meme"
+        android:textColor="#888"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/notif_icon"
-        app:layout_constraintTop_toTopOf="@+id/notif_icon" />
+        app:layout_constraintTop_toTopOf="@+id/notif_icon"
+        app:mfont="default" />
 
-            <TextView
-                android:id="@+id/notif_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="30 Minutes Ago"
-                android:textColor="#bbb"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+    <com.innov8.memeit.commons.views.MemeItTextView
+        android:id="@+id/notif_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="30 Minutes Ago"
+        android:textColor="#ccc"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="@+id/notif_title"
+        app:layout_constraintTop_toBottomOf="@id/notif_title"
+        app:mfont="default" />
+
+
+    <com.innov8.memeit.customViews.MemeDraweeView
+        android:id="@+id/meme_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="#eee"
+        app:actualImageScaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.41"
+        app:layout_constraintStart_toStartOf="@+id/notif_icon"
+        app:layout_constraintTop_toBottomOf="@+id/notif_reaction_image" />
+
 
     <ImageView
         android:id="@+id/notif_reaction_image"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/notif_title"
-        app:layout_constraintTop_toBottomOf="@+id/notif_title"
+        app:layout_constraintStart_toStartOf="@+id/notif_icon"
+        app:layout_constraintTop_toBottomOf="@+id/notif_icon"
         app:srcCompat="@drawable/laughing" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

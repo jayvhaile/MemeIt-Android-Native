@@ -66,13 +66,34 @@ class MemeTemplateFragment : Fragment() {
         }
         meme_recycler_view.adapter = adapter
         swipe_to_refresh.setOnRefreshListener {
-            handler.refresh(false)
+            handler.refresh()
         }
     }
 
-    fun search(search: String) {
+    fun setSearch(search: String, filter: Boolean = true, refresh: Boolean = true) {
         adapter.filterWord = search
-        handler.refresh()
+        templateLoader.search = search
+        if (filter) adapter.filter()
+        if (refresh) handler.refresh(true)
+    }
+
+    fun setType(type: String?, filter: Boolean = true, refresh: Boolean = true) {
+        adapter.type = type
+        templateLoader.type = type
+        if (filter) adapter.filter()
+        if (refresh) handler.refresh(true)
+    }
+
+    fun setCategory(category: String?, filter: Boolean = true, refresh: Boolean = true) {
+        adapter.category = category
+        templateLoader.category = category
+        if (filter) adapter.filter()
+        if (refresh) handler.refresh(true)
+    }
+
+    fun filter() {
+        handler.refresh(true)
+        adapter.filter()
     }
 
     companion object {

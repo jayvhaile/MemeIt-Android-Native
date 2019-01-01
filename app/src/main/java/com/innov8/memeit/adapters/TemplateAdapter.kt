@@ -14,6 +14,7 @@ import com.innov8.memegenerator.adapters.MyViewHolder
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.R
 import com.innov8.memeit.utils.generatePreviewUrl
+import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.MemeTemplate
 
 class TemplateAdapter(context: Context,
@@ -27,8 +28,21 @@ class TemplateAdapter(context: Context,
                           }
                       })
     : ELEFilterableListAdapter<MemeTemplate, TemplateAdapter.TemplateViewHolder>(context) {
+    var type: String? = null
+    var category: String? = null
+    var mine = false
+    var filterWord = ""
+    override val filterable: Boolean
+        get() = type != null ||
+                category != null ||
+                mine ||
+                filterWord.isNotBlank()
+
     override val filterer: (MemeTemplate) -> Boolean = {
-        it.label.contains(filterWord) || it.tags.any { w -> w.contains(filterWord) }
+        (filterWord.isBlank() || it.label.contains(filterWord) || it.tags.any { w -> w.toLowerCase().contains(filterWord.toLowerCase()) }) &&
+                (type == null || it.memeType == type) &&
+                (category == null || it.category == category) &&
+                (!mine || it.pid == MemeItClient.myUser!!.id)
     }
     override var emptyDrawableId: Int = R.drawable.tag2
     override var errorDrawableId: Int = R.drawable.ic_no_internet

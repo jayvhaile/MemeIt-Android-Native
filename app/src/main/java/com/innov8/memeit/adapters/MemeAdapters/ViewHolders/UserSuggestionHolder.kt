@@ -5,7 +5,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memeit.adapters.MemeAdapters.HomeMemeAdapter
 import com.innov8.memeit.adapters.MemeAdapters.MemeAdapter
-import com.innov8.memeit.adapters.UserSugAdapter
+import com.innov8.memeit.adapters.UserSuggestionAdapter
 import com.innov8.memeit.R
 import com.innov8.memeit.utils.makeLinear
 import com.memeit.backend.models.HomeElement
@@ -14,7 +14,7 @@ import com.memeit.backend.models.UserSuggestion
 class UserSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemView, memeAdapter) {
     val list: RecyclerView = itemView.findViewById(R.id.list_recyc)
     val title: TextView = itemView.findViewById(R.id.list_title)
-    private val adapter: UserSugAdapter = UserSugAdapter(memeAdapter.context)
+    private val adapter: UserSuggestionAdapter = UserSuggestionAdapter(memeAdapter.context)
 
     init {
         list.makeLinear(RecyclerView.HORIZONTAL)

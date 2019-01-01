@@ -22,7 +22,7 @@ import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.memeit.backend.models.User
 import kotlin.Comparator
 
-class UserSearchAdapter(context: Context) : ELEFilterableListAdapter<User, UserSearchAdapter.UserViewHolder>(context) {
+class UserSearchAdapter(context: Context) : ELEWordFilterableListAdapter<User, UserSearchAdapter.UserViewHolder>(context) {
     override val filterer: (User) -> Boolean = {
         if (filterWord.startsWith("@"))
             it.username?.toLowerCase()?.contains(filterWord.toLowerCase().substring(1)) ?: false

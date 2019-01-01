@@ -10,12 +10,12 @@
 
     <application
         android:name=".MemeItApp"
-        android:allowBackup="true"
-        android:fullBackupContent="@xml/backup_descriptor"
+        android:allowBackup="false"
         android:icon="@mipmap/icon"
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup">
         <activity android:name=".activities.MemeTemplatePosterActivity" />
         <activity android:name=".activities.TagsActivity" />
         <activity android:name=".activities.MemeChooserActivity" />

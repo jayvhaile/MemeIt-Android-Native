@@ -14,10 +14,12 @@ import java.util.*
 class TemplateImageDownloader(context: Context, params: WorkerParameters) : Worker(context, params) {
     companion object {
         const val PARAM_URL = "url"
+        const val PARAM_INDEX = "index"
     }
 
     override fun doWork(): Result {
         val name = inputData.getString(PARAM_URL)!!
+        val index = inputData.getInt(PARAM_INDEX, 0)
         val url = "${MemeItClient.STORAGE_URL}$name"
         return try {
             MemeItClient.fileService.downloadObject(url).execute().run {
@@ -26,7 +28,7 @@ class TemplateImageDownloader(context: Context, params: WorkerParameters) : Work
                     val file = File(MemeTemplate.getSavedDir(applicationContext), "${UUID.randomUUID()}.${File(url).extension}")
                     if (saveResponseBodyToFile(body()!!, file)) {
                         outputData = Data.Builder()
-                                .putString(TemplateSaver.PARAM_URLS, file.absolutePath)
+                                .putString(TemplateSaver.PARAM_URLS, "$index:${file.absolutePath}")
                                 .build()
                         Result.SUCCESS
                     } else Result.RETRY
@@ -74,12 +76,20 @@ class TemplateSaver(context: Context, params: WorkerParameters) : Worker(context
         val temp = File(MemeTemplate.getTempDownloadJsonDir(applicationContext), "$id.json")
 
         return if (temp.exists()) {
-            MemeTemplate.readFromFile(temp)?.let {
-                it.memeTemplateProperty.apply {
+            MemeTemplate.readFromFile(temp)?.let { mt ->
+                mt.memeTemplateProperty.apply {
                     images.clear()
-                    images.addAll(localUrls)
+                    images.addAll(
+                            localUrls
+                                    .map {
+                                        val s = it.split(":")
+                                        s[0] to s[1]
+                                    }
+                                    .sortedBy {it.first }
+                                    .map { it.second }
+                    )
                 }
-                it.saveToFile(File(MemeTemplate.getSavedJsonDir(applicationContext), "$id.json"))
+                mt.saveToFile(File(MemeTemplate.getSavedJsonDir(applicationContext), "$id.json"))
                 temp.delete()
                 Result.SUCCESS
             } ?: Result.FAILURE
@@ -93,13 +103,16 @@ fun startTemplateDownloadWork(template: MemeTemplate) {
     val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-    val w = template.memeTemplateProperty.images.map {
+    val w = template.memeTemplateProperty.images.mapIndexed { i, it ->
         OneTimeWorkRequest.Builder(TemplateImageDownloader::class.java)
                 .setConstraints(constraints)
                 .addTag("template image download")
                 .addTag("template download")
                 .addTag(id)
-                .setInputData(Data.Builder().putString(TemplateImageDownloader.PARAM_URL, it).build())
+                .setInputData(Data.Builder()
+                        .putString(TemplateImageDownloader.PARAM_URL, it)
+                        .putInt(TemplateImageDownloader.PARAM_INDEX, i)
+                        .build())
                 .build()
     }
     val s = OneTimeWorkRequest.Builder(TemplateSaver::class.java)

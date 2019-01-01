@@ -7,6 +7,7 @@ import com.innov8.memeit.adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.adapters.MemeAdapters.HomeMemeAdapter
 import com.innov8.memeit.adapters.TemplateAdapter
 import com.innov8.memeit.R
+import com.innov8.memeit.adapters.TemplateSuggestionAdapter
 import com.innov8.memeit.utils.makeLinear
 import com.memeit.backend.models.HomeElement
 import com.memeit.backend.models.MemeTemplateSuggestion
@@ -16,7 +17,7 @@ class MemeTemplateSuggestionHolder(itemView: View, memeAdapter: MemeAdapter) : M
     val title: TextView = itemView.findViewById(R.id.list_title)
 
     private val adapter by lazy {
-        TemplateAdapter(memeAdapter.context)
+        TemplateSuggestionAdapter(memeAdapter.context)
     }
 
     init {

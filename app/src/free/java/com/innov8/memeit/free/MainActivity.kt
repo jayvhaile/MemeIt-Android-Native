@@ -1,4 +1,4 @@
-package com.innov8.memeit
+package com.innov8.memeit.free
 
 import android.content.Intent
 import com.innov8.memeit.activities.FeedbackActivity

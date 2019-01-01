@@ -25,8 +25,8 @@ sealed class TemplateLoader : Loader<MemeTemplate>, Parcelable {
     override var skip: Int = 0
     var type: String? = null
     var category: String? = null
-    var search: String? = null
     var mine = false
+    var search: String? = null
     var sortBy: Sorter = Sorter.POPULAR
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

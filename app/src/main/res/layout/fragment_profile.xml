@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/profile_cover_expanded_height"
         android:background="@drawable/bb"
-        app:layout_behavior="com.innov8.memeit.CustomClasses.CoverBehaviour" />
+        app:layout_behavior="com.innov8.memeit.utils.CoverBehaviour" />
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/main.appbar"
         android:layout_width="match_parent"
@@ -56,12 +56,12 @@
         android:id="@+id/profile_image"
         android:layout_width="@dimen/profile_image_expanded_size"
         android:layout_height="@dimen/profile_image_expanded_size"
-        app:layout_behavior="com.innov8.memeit.CustomClasses.ProfileImageViewBehavior" />
+        app:layout_behavior="com.innov8.memeit.utils.ProfileImageViewBehavior" />
     <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Alicia"
         android:textSize="@dimen/profile_name_expanded_textsize"
-        app:layout_behavior="com.innov8.memeit.CustomClasses.ProfileNameViewBehavior" />
+        app:layout_behavior="com.innov8.memeit.utils.ProfileNameViewBehavior" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

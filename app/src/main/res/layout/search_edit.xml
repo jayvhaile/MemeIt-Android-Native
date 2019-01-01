@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:background="#0fff"
-    android:hint="Search Memes"
+    android:hint="Search Templates"
     android:textColorHint="#999"
     android:lines="1"
     android:paddingLeft="16dp"

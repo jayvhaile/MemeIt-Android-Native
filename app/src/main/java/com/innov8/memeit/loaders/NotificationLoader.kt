@@ -23,12 +23,48 @@ class TestNotificationLoader : Loader<Notification> {
         onSuccess(listOf(
                 FollowingNotification(
                         "45",
-                        "Bez",
+                        "Nathaniel",
                         "a",
                         "a",
+                        System.currentTimeMillis() - 1000 * 60 * 29,
+                        false
+                ),
+                CommentNotification(
+                        "asd",
+                        "Mikiyas",
+                        "aa",
+                        "afdd",
+                        "dsdf",
+                        "sdf",
+                        Meme.MemeType.IMAGE,
+                        "loll thats one funny meme, @jv you r killing it",
+                        1.0,
                         System.currentTimeMillis(),
                         false
                 ),
+                ReactionNotification(
+                        "asd",
+                        "Biruk",
+                        "aa",
+                        "afdd",
+                        "dsdf",
+                        "sdf",
+                        Meme.MemeType.IMAGE,
+                        1.0,
+                        0,
+                        System.currentTimeMillis(),
+                        false
+                ),
+                Notification(0,
+                        "asd",
+                        "An update is available",
+                        "Click here to update",
+                        System.currentTimeMillis(),
+                        false)
+
+
+        )
+                /*,
                 ReactionNotification(
                         "asd",
                         "Jv",
@@ -42,26 +78,13 @@ class TestNotificationLoader : Loader<Notification> {
                         System.currentTimeMillis(),
                         false
                 ),
-                CommentNotification(
-                        "asd",
-                        "Tenu",
-                        "aa",
-                        "afdd",
-                        "dsdf",
-                        "sdf",
-                        Meme.MemeType.IMAGE,
-                        "wow funny",
-                        1.0,
-                        System.currentTimeMillis(),
-                        false
-                ),
                 AwardNotification(
                         "asd",
                         Badge.ofID("first_001"),
                         System.currentTimeMillis(),
                         false
                 ),
-                MentionNotification(
+                MemeMentionNotification(
                         "asf",
                         "Biruk",
                         "afdf",
@@ -77,7 +100,13 @@ class TestNotificationLoader : Loader<Notification> {
                         System.currentTimeMillis(),
                         false)
 
-        ))
+        )*/)
 
     }
+}
+
+operator fun <T> List<T>.times(int: Int): List<T> {
+    return mutableListOf<T>().apply {
+        for (i in 0 until int) addAll(this)
+    }.shuffled()
 }

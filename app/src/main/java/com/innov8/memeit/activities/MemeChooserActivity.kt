@@ -53,7 +53,7 @@ class MemeChooserActivity : AppCompatActivity() {
     private lateinit var pagerAdapter: MemeChooserPagerAdapter
     private lateinit var fileObserver: FileObserver
     private lateinit var closedSet: ConstraintSet
-    var opened = false
+    private var opened = false
     private val openedSet by lazy {
         ConstraintSet().apply {
             clone(closedSet)
@@ -184,21 +184,6 @@ class MemeChooserActivity : AppCompatActivity() {
             }
         } else draft_btn.visibility = View.GONE
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MemeEditorActivity.REQUEST_CODE) {
-            if (resultCode == MemeEditorActivity.RESULT_CODE_SUCCESS_MEME)
-                startActivity(Intent(this, MemePosterActivity::class.java).apply {
-                    putExtras(data!!)
-                })
-            else if (resultCode == MemeEditorActivity.RESULT_CODE_SUCCESS_TEMPLATE)
-                startActivity(Intent(this, MemeTemplatePosterActivity::class.java).apply {
-                    putExtras(data!!)
-                })
-        }
-    }
-
     class MemeChooserPagerAdapter(mgr: FragmentManager) : FragmentPagerAdapter(mgr) {
         private val titles = listOf("Templates", "Photos", "Gifs", "Videos")
         override fun getCount(): Int = titles.size

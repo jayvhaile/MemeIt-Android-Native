@@ -17,10 +17,10 @@ import com.innov8.memeit.utils.prefix
 import com.memeit.backend.models.Reaction
 
 class ReactorAdapter(context: Context) : SimpleELEListAdapter<Reaction>(context, R.layout.list_item_reactors) {
-    override var emptyDrawableId: Int = R.drawable.ic_add
+    override var emptyDrawableId: Int = R.drawable.laughing_inactive_light
     override var errorDrawableId: Int = R.drawable.ic_no_internet
-    override var emptyDescription: String = "No Memes"
-    override var errorDescription: String = "Couldn't load Memes"
+    override var emptyDescription: String = "No Reactions yet"
+    override var errorDescription: String = "Couldn't load Reactions"
     override var emptyActionText: String? = ""
     override var errorActionText: String? = "Try Again"
     override val loadingDrawable = CubeGrid().apply {

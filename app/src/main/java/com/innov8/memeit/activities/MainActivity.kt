@@ -1,5 +1,6 @@
 package com.innov8.memeit.activities
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -14,7 +15,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.innov8.memegenerator.MemeEditorActivity
+import com.innov8.memeit.BuildConfig
+import com.innov8.memeit.R
 import com.innov8.memeit.adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.customViews.DrawableBadge
 import com.innov8.memeit.fragments.MemeListFragment
@@ -22,9 +24,7 @@ import com.innov8.memeit.fragments.ProfileFragment
 import com.innov8.memeit.loaders.FavoriteMemeLoader
 import com.innov8.memeit.loaders.HomeMemeLoader
 import com.innov8.memeit.loaders.TrendingMemeLoader
-import com.innov8.memeit.R
 import com.memeit.backend.MemeItClient
-import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
@@ -37,6 +37,16 @@ abstract class MainActivity : AppCompatActivity() {
     private val pagerAdapter by lazy {
         MyPagerAdapter(supportFragmentManager)
     }
+
+    companion object {
+        fun start(context: Context, apply: Intent.() -> Unit = {}) {
+            val name = "com.innov8.memeit.${BuildConfig.FLAVOR}.MainActivity"
+            context.startActivity(Intent(context, Class.forName(name)).apply {
+                this.apply()
+            })
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!MemeItClient.Auth.isSignedIn()) {
@@ -210,14 +220,5 @@ abstract class MainActivity : AppCompatActivity() {
         }
 
         override fun getCount() = 4
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == MemeEditorActivity.REQUEST_CODE && resultCode == MemeEditorActivity.RESULT_CODE_SUCCESS_MEME) {
-            startActivity(Intent(context, MemePosterActivity::class.java).apply {
-                putExtras(data!!.extras!!)
-            })
-        }
     }
 }

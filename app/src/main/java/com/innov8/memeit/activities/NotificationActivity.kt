@@ -6,6 +6,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.adapters.NotificationAdapter
 import com.innov8.memeit.loaders.MyNotificationLoader
 import com.innov8.memeit.R
+import com.innov8.memeit.loaders.TestNotificationLoader
 import com.innov8.memeit.utils.LoaderAdapterHandler
 import com.innov8.memeit.utils.makeLinear
 import com.memeit.backend.MemeItUsers
@@ -17,7 +18,7 @@ class NotificationActivity : AppCompatActivity() {
         NotificationAdapter(this)
     }
     private val loaderAdapter by lazy {
-        LoaderAdapterHandler(notificationAdapter, MyNotificationLoader()).apply {
+        LoaderAdapterHandler(notificationAdapter, TestNotificationLoader()).apply {
             onLoaded = {
                 swipe_refresh?.isRefreshing = false
                 MemeItUsers.markNotificationSeen().call {}

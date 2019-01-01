@@ -12,14 +12,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.transition.TransitionManager
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memegenerator.fragments.*
-import com.innov8.memegenerator.memeEngine.*
-import com.innov8.memegenerator.workers.startTemplateDownloadWork
 import com.innov8.memegenerator.interfaces.*
-import com.innov8.memegenerator.utils.*
+import com.innov8.memegenerator.memeEngine.*
+import com.innov8.memegenerator.utils.CloseableFragment
+import com.innov8.memegenerator.utils.calcReqSize
+import com.innov8.memegenerator.utils.loadImages
+import com.innov8.memegenerator.utils.saveImages
+import com.innov8.memegenerator.workers.startTemplateDownload
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.loadBitmapfromStream
 import com.innov8.memeit.commons.makeFullScreen
@@ -34,7 +35,6 @@ import java.io.FileOutputStream
 import java.util.*
 
 class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
-
 
     private val constraintSet1 = ConstraintSet()
     private val opened
@@ -115,7 +115,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             else -> false
         }
         if (!result) {
-            setResult(RESULT_CODE_ERROR)
+            toast("Image not found")
             finish()
         }
     }
@@ -123,47 +123,30 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
     private fun handleTemplateIntent(): Boolean {
         val json = intent.getStringExtra(PARAM_TEMPLATE)
         val mt = MemeTemplate.readFromString(json)
-        return mt._id?.let {
-            templateID = it
+        return mt._id?.let { id ->
+            templateID = id
             if (!loadSavedTemplate(mt._id!!)) {
                 val dialog = MaterialDialog.Builder(this)
                         .title("Downloading Template...")
                         .progress(true, 100)
                         .build()
                 dialog.show()
-                startTemplateDownloadWork(mt)
-                WorkManager.getInstance().getWorkInfosByTagLiveData(mt._id!!)
-                        .observe(this, androidx.lifecycle.Observer { w ->
-                            val states = w.map { s -> s.state }
-                            when {
-                                states.all { s -> s == WorkInfo.State.SUCCEEDED } -> {
-                                    dialog.dismiss()
-                                    if (!loadSavedTemplate(it)) {
-                                        toast("Failed to load template")
-                                        setResult(RESULT_CODE_ERROR)
-                                        finish()
-                                    }
-                                }
-                                states.all { s -> s == WorkInfo.State.FAILED || s == WorkInfo.State.CANCELLED } -> {
-                                    dialog.dismiss()
-                                    toast("Failed downloading template")
-                                    setResult(RESULT_CODE_ERROR)
-                                    finish()
-                                }
-                                states.all { s -> s == WorkInfo.State.BLOCKED } -> {
-                                    dialog.dismiss()
-                                    toast("Please Check your internet connection and try again")
-                                    setResult(RESULT_CODE_ERROR)
-                                    finish()
-                                }
-                                states.all { s -> s == WorkInfo.State.ENQUEUED } -> {
-                                    dialog.dismiss()
-                                    toast("Couldn't download template now,please try again")
-                                    setResult(RESULT_CODE_ERROR)
-                                    finish()
-                                }
+                startTemplateDownload(this, mt, { savedTemplate ->
+                    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                        savedTemplate.memeTemplateProperty.let {
+                            val loaded = withContext(Dispatchers.Default) {
+                                it.loadImages(this@MemeEditorActivity)
                             }
-                        })
+                            memeEditorView.applyProperty(loaded)
+                            dialog.dismiss()
+                        }
+                    }
+                }) {
+                    dialog.dismiss()
+                    toast(it)
+                    finish()
+                }
+
             }
             true
         } ?: false
@@ -186,7 +169,6 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             true
         } else false
     }
-
 
     private fun handleDraftIntent(): Boolean {
         val path = intent.getStringExtra(PARAM_DRAFT_PATH)
@@ -223,7 +205,6 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             true
         } else false
     }
-
 
     private fun handleImagesIntent(): Boolean {
         val paths = intent.getStringArrayExtra(PARAM_MULTI_PATH) ?: null
@@ -302,25 +283,23 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
 
     private fun onDone() {
         when (mode) {
-            MODE_TEMPLATE, MODE_SINGLE_IMAGE, MODE_MULTI_IMAGE -> {
+            MODE_DRAFT, MODE_TEMPLATE, MODE_SINGLE_IMAGE, MODE_MULTI_IMAGE -> {
                 val bitmap = memeEditorView.captureMeme()
                 val file = File(filesDir, "${UUID.randomUUID()}_meme.jpg")
                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                     withContext(Dispatchers.Default) {
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 90, FileOutputStream(file))
                     }
-                    setResult(RESULT_CODE_SUCCESS_MEME, Intent().apply {
+                    startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {
                         putExtra("image", file.absolutePath)
                         putExtra("texts", memeEditorView.getTexts().toTypedArray())
                         putExtra("tid", templateID)
                     })
-                    finish()
                 }
             }
             MODE_GIF_IMAGE -> {
                 val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
-                val gifInfo = GifInfo(intent.getStringExtra(PARAM_GIF_PATH), memeLayout.getDrawingRectRelAt(0))
-                val file = File(filesDir, "${UUID.randomUUID()}_meme.mp4")
+                val file = File(filesDir, "${UUID.randomUUID()}_meme.webp")
                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                     val pd = MaterialDialog.Builder(this@MemeEditorActivity)
                             .title("Please wait a while")
@@ -330,22 +309,22 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                     pd.show()
                     val overlay = memeEditorView.captureItems()
                     withContext(Dispatchers.Default) {
-                        compileGifMeme(gifInfo, overlay,
-                                memeLayout.drawingRect.origin(),
+                        gifToWebp(intent.getStringExtra(PARAM_GIF_PATH),
+                                overlay,
+                                memeLayout.getMarginRect(),
                                 memeEditorView.paint,
                                 file.absolutePath)
                     }
                     pd.dismiss()
-                    setResult(RESULT_CODE_SUCCESS_MEME, Intent().apply {
+                    startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {
                         putExtra("gif", file.absolutePath)
                         putExtra("texts", memeEditorView.getTexts().toTypedArray())
                     })
-                    finish()
                 }
             }
             MODE_VIDEO -> {
                 val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
-                val file = File(filesDir, "${UUID.randomUUID()}_meme.mp4")
+                val file = File(filesDir, "${UUID.randomUUID()}_meme.webp")
                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                     val pd = MaterialDialog.Builder(this@MemeEditorActivity)
                             .title("Please wait a while")
@@ -355,17 +334,16 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                     pd.show()
                     val overlay = memeEditorView.captureItems()
                     withContext(Dispatchers.Default) {
-                        compileGifFromVideo(intent.getStringExtra(PARAM_VIDEO_PATH), memeLayout.getDrawingRectRelAt(0), overlay,
-                                memeLayout.drawingRect.origin(),
+                        mp4ToWebp(intent.getStringExtra(PARAM_VIDEO_PATH), overlay,
+                                memeLayout.getMarginRect(),
                                 memeEditorView.paint,
                                 file.absolutePath)
                     }
                     pd.dismiss()
-                    setResult(RESULT_CODE_SUCCESS_MEME, Intent().apply {
+                    startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {
                         putExtra("gif", file.absolutePath)
                         putExtra("texts", memeEditorView.getTexts().toTypedArray())
                     })
-                    finish()
                 }
             }
         }
@@ -378,10 +356,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                 p.saveImages(MemeTemplate.getTempUploadDir(this@MemeEditorActivity))
                         .saveToString()
             }
-            setResult(RESULT_CODE_SUCCESS_TEMPLATE, Intent().apply {
+            startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemeTemplatePosterActivity")).apply {
                 putExtra("json", result)
             })
-            finish()
         }
 
     }
@@ -521,10 +498,6 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         private const val PARAM_MULTI_LAYOUT = "multi layout"
         private const val PARAM_GIF_PATH = "gif path"
         private const val PARAM_VIDEO_PATH = "video path"
-        const val REQUEST_CODE = 156
-        const val RESULT_CODE_SUCCESS_MEME = 84
-        const val RESULT_CODE_SUCCESS_TEMPLATE = 85
-        const val RESULT_CODE_ERROR = 86
 
         fun startWithTemplate(context: Activity, memeTemplate: MemeTemplate) {
             startThis(context) {
@@ -570,7 +543,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         }
 
         private inline fun startThis(context: Activity, applyToIntent: Intent.() -> Unit) =
-                context.startActivityForResult(Intent(context, MemeEditorActivity::class.java).apply(applyToIntent), REQUEST_CODE)
+                context.startActivity(Intent(context, MemeEditorActivity::class.java).apply(applyToIntent))
 
     }
 }

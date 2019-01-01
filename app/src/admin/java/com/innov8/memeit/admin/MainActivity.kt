@@ -1,7 +1,7 @@
 package com.innov8.memeit.admin
 
 import android.content.Intent
-import com.innov8.memeit.Activities.MainActivity
+import com.innov8.memeit.activities.MainActivity
 
 
 class MainActivity : MainActivity() {

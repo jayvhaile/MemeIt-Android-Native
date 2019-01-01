@@ -1,5 +1,7 @@
 package com.memeit.backend.models
 
+import androidx.core.text.toSpannable
+
 
 open class Notification(val type: Int = 0,
                         val id: String,
@@ -7,6 +9,7 @@ open class Notification(val type: Int = 0,
                         val message: String,
                         val date: Long,
                         val seen: Boolean = false) {
+    open fun spannedTitle() = title.toSpannable()
 
     companion object {
         const val GENERAL_TYPE = 0
@@ -14,7 +17,8 @@ open class Notification(val type: Int = 0,
         const val REACTION_TYPE = 2
         const val COMMENT_TYPE = 3
         const val AWARd_TYPE = 4
-        const val MENTION_TYPE = 5
+        const val MEME_MENTION_TYPE = 5
+        const val COMMENT_MENTION_TYPE = 6
 
         fun parseNotif(it: Map<String, Any>): Notification {
             val type: Int = (it["type"] as? Double ?: 0.0).toInt()
@@ -23,7 +27,8 @@ open class Notification(val type: Int = 0,
                 Notification.REACTION_TYPE -> parseReactionNotif(it)
                 Notification.COMMENT_TYPE -> parseCommentNotif(it)
                 Notification.AWARd_TYPE -> parseAwardNotif(it)
-                Notification.MENTION_TYPE -> parseMentionNotif(it)
+                Notification.MEME_MENTION_TYPE -> parseMemeMentionNotif(it)
+                Notification.COMMENT_MENTION_TYPE -> parseCommentMentionNotif(it)
                 else -> parseGeneralNotif(it)
             }
         }
@@ -35,7 +40,8 @@ open class Notification(val type: Int = 0,
                 Notification.REACTION_TYPE -> parseReactionNotifString(it)
                 Notification.COMMENT_TYPE -> parseCommentNotifString(it)
                 Notification.AWARd_TYPE -> parseAwardNotifString(it)
-                Notification.MENTION_TYPE -> parseMentionNotifString(it)
+                Notification.MEME_MENTION_TYPE -> parseMemeMentionNotifString(it)
+                Notification.COMMENT_MENTION_TYPE -> parseCommentMentionNotifString(it)
                 else -> parseGeneralNotifString(it)
             }
         }
@@ -160,8 +166,8 @@ open class Notification(val type: Int = 0,
                     (it["seen"] ?: "false").toBoolean())
         }
 
-        private fun parseMentionNotif(it: Map<String, Any>): MentionNotification {
-            return MentionNotification(
+        private fun parseMemeMentionNotif(it: Map<String, Any>): MemeMentionNotification {
+            return MemeMentionNotification(
                     it["nid"] as String? ?: "",
                     it["name"] as String? ?: "",
                     it["pic"] as String? ?: "",
@@ -172,13 +178,39 @@ open class Notification(val type: Int = 0,
             )
         }
 
-        private fun parseMentionNotifString(it: Map<String, String>): MentionNotification {
-            return MentionNotification(
+        private fun parseMemeMentionNotifString(it: Map<String, String>): MemeMentionNotification {
+            return MemeMentionNotification(
                     it["nid"] ?: "",
                     it["name"] ?: "",
                     it["pic"] ?: "",
                     it["uid"] ?: "",
                     it["mid"] ?: "",
+                    (it["date"] ?: "0").toLong(),
+                    (it["seen"] ?: "false").toBoolean()
+            )
+        }
+
+        private fun parseCommentMentionNotif(it: Map<String, Any>): CommentMentionNotification {
+            return CommentMentionNotification(
+                    it["nid"] as String? ?: "",
+                    it["name"] as String? ?: "",
+                    it["pic"] as String? ?: "",
+                    it["uid"] as String,
+                    it["mid"] as String,
+                    it["comment"] as String,
+                    (it["date"] as Double).toLong(),
+                    it["seen"] as Boolean
+            )
+        }
+
+        private fun parseCommentMentionNotifString(it: Map<String, String>): CommentMentionNotification {
+            return CommentMentionNotification(
+                    it["nid"] ?: "",
+                    it["name"] ?: "",
+                    it["pic"] ?: "",
+                    it["uid"] ?: "",
+                    it["mid"] ?: "",
+                    it["comment"] ?: "",
                     (it["date"] ?: "0").toLong(),
                     (it["seen"] ?: "false").toBoolean()
             )
@@ -192,7 +224,7 @@ class FollowingNotification(id: String,
                             val followerId: String,
                             date: Long,
                             seen: Boolean = false) : Notification
-(FOLLOWING_TYPE, id, "$followerName started following you", "", date, seen)
+(FOLLOWING_TYPE, id, "$followerName is now following you", "", date, seen)
 
 class ReactionNotification(id: String,
                            val reactorName: String,
@@ -233,14 +265,25 @@ class CommentNotification(id: String,
 
 }
 
-class MentionNotification(id: String,
-                          val mentionerName: String,
-                          val mentionerPic: String,
-                          val mentionerId: String,
-                          val memeId: String,
-                          date: Long,
-                          seen: Boolean = false) : Notification
-(MENTION_TYPE, id, "$mentionerName mentioned you on a post", "", date, seen)
+class MemeMentionNotification(id: String,
+                              val mentionerName: String,
+                              val mentionerPic: String,
+                              val mentionerId: String,
+                              val memeId: String,
+                              date: Long,
+                              seen: Boolean = false) : Notification
+(MEME_MENTION_TYPE, id, "$mentionerName mentioned you on a post", "", date, seen)
+
+class CommentMentionNotification(id: String,
+                                 val mentionerName: String,
+                                 val mentionerPic: String,
+                                 val mentionerId: String,
+                                 val memeId: String,
+                                 val comment: String,
+                                 date: Long,
+                                 seen: Boolean = false) : Notification
+(MEME_MENTION_TYPE, id, "$mentionerName mentioned you on a comment", comment, date, seen)
+
 
 class AwardNotification(id: String,
                         val badge: Badge,

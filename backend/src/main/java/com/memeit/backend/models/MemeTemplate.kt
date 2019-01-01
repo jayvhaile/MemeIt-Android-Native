@@ -35,6 +35,10 @@ data class MemeTemplate(
         } ?: false
     }
 
+    override fun hashCode(): Int {
+        return _id.hashCode()
+    }
+
     fun saveToFile(file: File) {
         val jw = JsonWriter(FileWriter(file))
         buildGson()
@@ -85,9 +89,11 @@ data class MemeTemplate(
                 jw.close()
             }
         }
+
         fun getTemplatesDir(context: Context): File {
             return File(context.filesDir, "templates/").apply { this.mkdirs() }
         }
+
         fun getDraftsDir(context: Context): File {
             return File(context.filesDir, "templates/drafts/").apply { this.mkdirs() }
         }

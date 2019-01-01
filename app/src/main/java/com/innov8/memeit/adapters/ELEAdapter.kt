@@ -253,10 +253,9 @@ abstract class ELEFilterableListAdapter<T, VH : RecyclerView.ViewHolder>(context
 
     abstract val filterer: (T) -> Boolean
     abstract val sorter: Comparator<in T>
-    private val filterable: Boolean
-        get() = filterWord.isNotBlank()
+    abstract val filterable: Boolean
 
-    protected fun filter() {
+    fun filter() {
         filteredItems.clear()
         if (filterable)
             items.filter(filterer)
@@ -306,6 +305,14 @@ abstract class ELEFilterableListAdapter<T, VH : RecyclerView.ViewHolder>(context
     fun getItemAt(index: Int): T {
         return filteredItems[index]
     }
+
+}
+
+abstract class ELEWordFilterableListAdapter<T, VH : RecyclerView.ViewHolder>(context: Context) : ELEFilterableListAdapter<T, VH>(context) {
+
+    override val filterable: Boolean
+        get() = filterWord.isNotBlank()
+
 
     var filterWord: String = ""
         set(value) {

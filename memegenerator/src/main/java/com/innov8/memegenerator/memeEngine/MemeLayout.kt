@@ -2,7 +2,10 @@ package com.innov8.memegenerator.memeEngine
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.RectF
+import androidx.core.graphics.toRectF
+import com.innov8.memegenerator.utils.fitCenter
 import com.memeit.backend.models.GridImageLayoutProperty
 import com.memeit.backend.models.LayoutProperty
 import com.memeit.backend.models.LinearImageLayoutProperty
@@ -74,6 +77,7 @@ abstract class MemeLayout(val images: List<Bitmap>) {
     var hr = 1f
     var vr = 1f
 
+    fun getMarginRect()= Rect(leftMargin,topMargin,rightMargin,bottomMargin).toRectF()
 
     var leftMarginCalc = 0
         get() = ((leftMargin * innerWidth() / 100) * hr).toInt()
@@ -611,36 +615,3 @@ class GridImageLayout(var span: Int, orientation: Int, images: List<Bitmap>) : M
     }
 }
 
-fun Pair<Float, Float>.fitCenter(w: Float, h: Float) = fitCenter(RectF(0f, 0f, w, h))
-fun Pair<Float, Float>.fitCenter(rect: RectF): RectF {
-    val w: Float
-    val h: Float
-    val x: Float
-    val y: Float
-    val cw = rect.width()
-    val ch = rect.height()
-    val ir = first / second
-    val cr = cw / ch
-    if (ir < cr) {  //fit the height and adjust the width
-        val hr = ch / second
-        w = first * hr
-        h = ch
-        x = rect.left + (cw / 2.0f) - (w / 2.0f)
-        y = rect.top
-    } else {//fit the width and adjust the height
-        val wr = cw / first
-        w = cw
-        h = second * wr
-        x = rect.left
-        y = rect.top + (ch / 2f) - (h / 2f)
-    }
-    return RectF(x, y, x + w, y + h)
-}
-
-fun RectF.padded(leftP: Float = 0f, topP: Float = 0f, rightP: Float = 0f, bottomP: Float = 0f): RectF {
-    return RectF(left + leftP, top + topP, right - rightP, bottom - bottomP)
-}
-
-fun RectF.margined(leftP: Float = 0f, topP: Float = 0f, rightP: Float = 0f, bottomP: Float = 0f): RectF {
-    return RectF(left - leftP, top - topP, right + rightP, bottom + bottomP)
-}

@@ -97,7 +97,10 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
             invalidate()
         }
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    val paintHandler = PaintHandler(this)
+    val paintHandler = PaintHandler(context).apply {
+        onInvalidate = { invalidate() }
+    }
+
     fun addMemeItemView(child: MemeItemView) {
         super.addView(child)
         child.onFocusChangeListener = onFocusChangeListener

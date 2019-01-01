@@ -17,17 +17,31 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <com.innov8.memeit.commons.views.FontEditText
+        android:id="@+id/label_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="Label (Required)"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/meme_image_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         app:actualImageScaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/template_label_field" />
+        app:layout_constraintTop_toBottomOf="@+id/label_field" />
 
     <com.innov8.memeit.commons.views.FontEditText
         android:id="@+id/description"
@@ -39,7 +53,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
         android:ems="10"
-        android:hint="add tags to make the template searchable"
+        android:hint="Add tags to make the template searchable"
         android:inputType="textMultiLine"
         android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@+id/textView"
@@ -47,56 +61,38 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/template_label_field"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Label" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-    <com.adroitandroid.chipcloud.ChipCloud
-        android:id="@+id/category_chips"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:selectedColor="@color/colorAccent"
-        app:selectedFontColor="#fff"
-        app:deselectedColor="#fff"
-        app:deselectedFontColor="#000"/>
-
-
-
-    <TextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:text="Category"
         app:layout_constraintBottom_toTopOf="@+id/category_chips"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <com.adroitandroid.chipcloud.ChipCloud
+        android:id="@+id/category_chips"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        app:deselectTransitionMS="10"
+        app:deselectedColor="#e5e5e5"
+        app:deselectedFontColor="#000000"
+        app:labels="@array/template_categories"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:selectMode="required"
+        app:selectTransitionMS="10"
+        app:selectedColor="@color/colorAccent"
+        app:selectedFontColor="#fff" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

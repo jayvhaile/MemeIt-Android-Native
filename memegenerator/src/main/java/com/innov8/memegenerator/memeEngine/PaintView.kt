@@ -1,14 +1,15 @@
 package com.innov8.memegenerator.memeEngine
 
+import android.content.Context
 import android.graphics.*
 import android.view.GestureDetector
 import android.view.MotionEvent
-import android.view.View
 import com.innov8.memegenerator.utils.Action
 import com.innov8.memegenerator.utils.ActionManager
 import com.innov8.memeit.commons.dp
 
-class PaintHandler(val view: View) {
+class PaintHandler(val context: Context) {
+
     enum class PaintMode {
         DOODLE {
             override fun makePaintable(paintProperty: PaintProperty): TouchPaintable = Doodle(paintProperty)
@@ -47,39 +48,39 @@ class PaintHandler(val view: View) {
     }
 
     val paintables = mutableListOf<TouchPaintable>()
-
+    var onInvalidate: (() -> Unit)? = null
 
     var paintMode = PaintMode.DOODLE
-    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        isDither = true
+        style = Paint.Style.STROKE
+        strokeJoin = Paint.Join.ROUND
+        strokeCap = Paint.Cap.ROUND
+        xfermode = null
+        alpha = 0xff
+    }
     //    val b = BlurMaskFilter(5f, BlurMaskFilter.Blur.NORMAL)
-    var paintProperty = PaintProperty(Color.BLACK, 4f.dp(view.context))
+    var paintProperty = PaintProperty(Color.BLACK, 4f.dp(context))
 
     var actionManager = ActionManager()
 
     init {
-        paint.isDither = true
-        paint.style = Paint.Style.STROKE
-        paint.strokeJoin = Paint.Join.ROUND
-        paint.strokeCap = Paint.Cap.ROUND
-        paint.xfermode = null
-        paint.alpha = 0xff
-        backgroundPaint.color = Color.BLACK
+
     }
 
     fun addPaintable(paintable: TouchPaintable, registerAction: Boolean = true) {
         paintables.add(paintable)
         if (registerAction) actionManager.pushAction(PaintAction(this, paintable))
-        view.invalidate()
+        onInvalidate?.invoke()
     }
 
     fun removePaintable(paintable: TouchPaintable) {
         paintables.remove(paintable)
-        view.invalidate()
+        onInvalidate?.invoke()
     }
 
 
-    private val detector = GestureDetector(view.context, object : GestureDetector.SimpleOnGestureListener() {
+    private val detector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
         lateinit var touchPaintable: TouchPaintable
         override fun onDown(e: MotionEvent): Boolean {
             touchPaintable = paintMode.makePaintable(paintProperty)
@@ -90,7 +91,7 @@ class PaintHandler(val view: View) {
 
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             touchPaintable.update(e2)
-            view.invalidate()
+            onInvalidate?.invoke()
             return true
         }
 

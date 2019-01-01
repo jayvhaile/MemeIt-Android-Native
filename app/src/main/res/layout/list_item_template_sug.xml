@@ -13,7 +13,7 @@
 
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/template_sug_pp"
+            android:id="@+id/template_image"
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_marginStart="8dp"
@@ -21,22 +21,23 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
+            app:actualImageScaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.innov8.memeit.commons.views.MemeItTextView
-            android:id="@+id/edit_btn"
+            android:id="@+id/template_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:text="Edit"
+            android:text="Label"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/template_sug_pp" />
+            app:layout_constraintTop_toBottomOf="@+id/template_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -141,9 +141,9 @@ class MemePosterActivity : AppCompatActivity() {
                 .negativeText("Make Another Meme")
                 .onPositive { _, _ ->
                     finish()
-                    startActivity(Intent(this, MainActivity::class.java).apply {
+                    MainActivity.start(this){
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    })
+                    }
                 }
                 .onNegative { _, _ ->
                     finish()
