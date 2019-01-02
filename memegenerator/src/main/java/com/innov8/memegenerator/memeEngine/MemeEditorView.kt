@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.toRect
 import com.innov8.memegenerator.customViews.CheckerBoardDrawable
 import com.memeit.backend.models.MemeStickerItemProperty
 import com.memeit.backend.models.LoadedImageMemeTemplateProperty
@@ -19,7 +20,6 @@ import com.innov8.memegenerator.interfaces.EditorStateChangedListener
 import com.innov8.memegenerator.interfaces.ItemSelectedInterface
 import com.innov8.memegenerator.utils.CloseableFragment
 import com.innov8.memegenerator.utils.capture
-import com.innov8.memegenerator.utils.toRect
 import com.innov8.memeit.commons.dp
 
 /**

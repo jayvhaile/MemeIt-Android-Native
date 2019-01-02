@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:paddingLeft="8dp"
             android:text="Select Multiple"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/select_done"

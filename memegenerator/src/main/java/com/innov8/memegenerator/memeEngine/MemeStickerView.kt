@@ -34,12 +34,12 @@ class MemeStickerView : MemeItemView {
 
     private lateinit var stickerId: String
 
-    constructor(context: Context, bitmap: Bitmap, id: String, width: Int = 100, height: Int = 100) : super(context, width, height) {
+    constructor(context: Context, bitmap: Bitmap, id: String, width: Int = 200, height: Int = 200) : super(context, width, height) {
         this.bitmap = bitmap
         this.stickerId = id
     }
 
-    constructor(context: Context, id: String, width: Int = 100, height: Int = 100) : super(context, width, height) {
+    constructor(context: Context, id: String, width: Int = 200, height: Int = 200) : super(context, width, height) {
         this.stickerId = id
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             bitmap = withContext(Dispatchers.Default) {

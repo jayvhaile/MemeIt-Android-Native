@@ -23,15 +23,23 @@ import kotlinx.android.synthetic.main.fragment_photo_chooser.*
 
 
 class PhotosChooserFragment : Frag() {
-    private lateinit var photosAdapter: PhotosAdapter
+    private val photosAdapter by lazy {
+        PhotosAdapter(context!!).apply {
+            onCropListener = {
+                CropImage.activity(Uri.parse(it))
+                        .start(context, this@PhotosChooserFragment)
+            }
+            onPhotoChoosed = {
+                this@PhotosChooserFragment.onPhotoChoosed?.invoke(it)
+            }
+        }
+    }
 
+    private var chooseMultiple = true
+    var onPhotoChoosed: ((String) -> Unit)? = null
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
-        photosAdapter = PhotosAdapter(context!!)
-        photosAdapter.onCropListener = {
-            CropImage.activity(Uri.parse(it))
-                    .start(context!!, this)
-        }
+        chooseMultiple = arguments?.getBoolean(ARG_MULTIPLE, true) ?: true
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -40,6 +48,7 @@ class PhotosChooserFragment : Frag() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (!chooseMultiple) toolbar2.visibility = View.GONE
         meme_template_list.layoutManager = GridLayoutManager(context, 3)
         meme_template_list.adapter = photosAdapter
         meme_template_list.itemAnimator = null
@@ -91,12 +100,24 @@ class PhotosChooserFragment : Frag() {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
             if (resultCode == Activity.RESULT_OK) {
-                MemeEditorActivity.startWithImage(activity!!, result.uri.toString())
+                onPhotoChoosed?.invoke(result.uri.toString())
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 meme_template_list?.snack(result.error.message ?: "Could not load Image")
             }
         } else
             super.onActivityResult(requestCode, resultCode, data)
 
+    }
+
+    companion object {
+        private const val ARG_MULTIPLE = "multiple"
+        fun newInstance(multiple: Boolean = true, onchoosed: (String) -> Unit): PhotosChooserFragment {
+            return PhotosChooserFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(ARG_MULTIPLE, multiple)
+                }
+                onPhotoChoosed = onchoosed
+            }
+        }
     }
 }

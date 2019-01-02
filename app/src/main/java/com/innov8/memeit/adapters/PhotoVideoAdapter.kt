@@ -23,7 +23,7 @@ import com.innov8.memeit.R
 class PhotosAdapter(context: Context) : CursorAdapter<String>(context, R.layout.list_item_thumbnail_selectable) {
     val screenWidth = context.resources.displayMetrics.widthPixels
 
-    var onSelectedItemChanged:((List<String>)->Unit)?=null
+    var onSelectedItemChanged: ((List<String>) -> Unit)? = null
     val selectedItems = mutableListOf<String>()
     var onCropListener: ((String) -> Unit)? = null
     var multiSelectMode = false
@@ -33,6 +33,8 @@ class PhotosAdapter(context: Context) : CursorAdapter<String>(context, R.layout.
             onSelectedItemChanged?.invoke(selectedItems)
             notifyDataSetChanged()
         }
+
+    var onPhotoChoosed: ((String) -> Unit)? = null
 
 
     override fun createViewHolder(view: View): MyViewHolder<String> = PhotoViewHolder(view)
@@ -49,10 +51,8 @@ class PhotosAdapter(context: Context) : CursorAdapter<String>(context, R.layout.
 
         init {
             thumbnailV.setOnClickListener {
-                if (multiSelectMode) {
-
-                } else
-                    MemeEditorActivity.startWithImage(context as Activity, getItem(item_position))
+                if (!multiSelectMode)
+                    onPhotoChoosed?.invoke(getItem(item_position))
             }
             cropView.setOnClickListener {
                 onCropListener?.invoke(getItem(item_position))
@@ -203,11 +203,11 @@ class VideoAdapter(context: Context) : CursorAdapter<VideoAdapter.Video>(context
         }
 
         override fun bind(t: Video) {
-          /*  ret.setDataSource(t.data)
-            val dur = ret.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
-            val b = ret.getFrameAtTime(1)
-            val sb = Bitmap.createScaledBitmap(b, screenWidth / 6, screenWidth / 6, false)
-            thumbnailV.setImageBitmap(sb)*/
+            /*  ret.setDataSource(t.data)
+              val dur = ret.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+              val b = ret.getFrameAtTime(1)
+              val sb = Bitmap.createScaledBitmap(b, screenWidth / 6, screenWidth / 6, false)
+              thumbnailV.setImageBitmap(sb)*/
 
             val r = ResizeOptions(screenWidth / 6, screenWidth / 6, 512f)
             val req = ImageRequestBuilder.fromRequest(ImageRequest.fromUri(t.uri))

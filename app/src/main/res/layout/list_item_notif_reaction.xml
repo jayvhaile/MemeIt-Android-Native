@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="8dp">
 
     <View
         android:id="@+id/notif_back"
@@ -85,6 +86,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
         android:background="#eee"
+        android:visibility="gone"
         app:actualImageScaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="16:9"

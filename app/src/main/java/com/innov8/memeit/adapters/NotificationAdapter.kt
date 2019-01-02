@@ -289,7 +289,6 @@ fun applySpan(text: String, vararg words: String): Spannable =
                 this[i..i + it.length] = StyleSpan(Typeface.BOLD)
                 this[i..i + it.length] = RelativeSizeSpan(1.05f)
             }
-
         }
 
 
@@ -297,6 +296,7 @@ class AwardNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : Noti
     override fun bind(notif: Notification) {
         super.bind(notif)
         notif as AwardNotification
+
         icon.setImageResource(notif.badge.getDrawableId(notifAdapter.context))
     }
 }

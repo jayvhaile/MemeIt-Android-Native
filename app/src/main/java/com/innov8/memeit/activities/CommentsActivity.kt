@@ -24,35 +24,52 @@ import kotlinx.android.synthetic.main.loading_view_layout.*
 
 class CommentsActivity : AppCompatActivity() {
     private var isPostingComment: Boolean = false
-    private lateinit var commentsAdapter: CommentsAdapter
+    private val commentsAdapter by lazy {
+        CommentsAdapter(this).apply {
+            showErrorAtTop = true
+        }
+    }
+    private val commentLoader by lazy {
+        CommentLoader(mid)
+    }
 
+
+    private val loaderAdapter by lazy {
+        LoaderAdapterHandler(commentsAdapter, commentLoader).apply {
+            onLoaded = { comment_srl?.isRefreshing = false }
+            onLoadFailed = { message ->
+                comment_srl?.snack(message)
+                comment_srl?.isRefreshing = false
+            }
+        }
+    }
     var myUser: MyUser = MemeItClient.myUser!!
-
-    lateinit var loaderAdapter: LoaderAdapterHandler<Comment>
-
+    lateinit var mid: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.loading_view_layout)
         loader_view.setContentView(R.layout.activity_comments)
         val m: Meme? = intent.getParcelableExtra(MEME_PARAM_KEY)
         if (m != null) {
-            initComments(m.id!!)
+            mid = m.id!!
+            initComments()
             initMeme(m)
             loader_view.setLoaded()
         } else {
-            val mid = intent.getStringExtra(MEMEID_PARAM_KEY)
-            if (mid == null) {
+            intent.getStringExtra(MEMEID_PARAM_KEY)?.let {
+                mid = it
+            } ?: let {
                 finish()
                 return
             }
-            initComments(mid)
-            loader_view.onRetry = { loadByID(mid) }
-            loadByID(mid)
+            initComments()
+            loader_view.onRetry = { loadByID() }
+            loadByID()
         }
 
     }
 
-    private fun loadByID(mid: String) {
+    private fun loadByID() {
         MemeItMemes.getMemeById(mid).call({
             initMeme(it)
             loader_view.setLoaded()
@@ -61,19 +78,7 @@ class CommentsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initComments(mid: String) {
-        commentsAdapter = CommentsAdapter(this).apply {
-            showErrorAtTop = true
-        }
-        val commentLoader = CommentLoader(mid)
-        loaderAdapter = LoaderAdapterHandler(commentsAdapter, commentLoader)
-
-        loaderAdapter.onLoaded = { comment_srl?.isRefreshing = false }
-        loaderAdapter.onLoadFailed = { message ->
-            comment_srl?.snack(message)
-            comment_srl?.isRefreshing = false
-        }
-
+    private fun initComments() {
         comment_srl.setOnRefreshListener { loaderAdapter.refresh() }
         comments_list.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         comments_list.itemAnimator = DefaultItemAnimator()

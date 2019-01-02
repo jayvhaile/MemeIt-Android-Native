@@ -4,122 +4,114 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="8dp">
+    android:orientation="vertical">
 
     <com.innov8.memeit.commons.views.ProfileDraweeView
         android:id="@+id/comment_poster_pp"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="@mipmap/icon" />
 
     <com.innov8.memeit.commons.views.MemeItTextView
-        android:id="@+id/list_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:maxLines="1"
-        android:textColor="#313131"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/comment_poster_pp"
-        app:layout_constraintEnd_toStartOf="@id/list_item_date"
-        app:layout_constraintStart_toEndOf="@+id/comment_poster_pp"
-        app:layout_constraintTop_toTopOf="@+id/comment_poster_pp"
-        tools:text="Benedict Cumberbatch" />
-
-    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/list_comment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:textColor="#313131"
-        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/list_name"
-        app:layout_constraintTop_toBottomOf="@+id/list_name"
+        app:layout_constraintStart_toEndOf="@+id/comment_poster_pp"
+        app:layout_constraintTop_toTopOf="@+id/comment_poster_pp"
         app:linkModes="all"
-        tools:text="haha" />
+        app:mfont="default"
+        tools:text="skjdfj sldnfslsjd fsldknsfsdjf kjsjdnf skjjfnsd fjkshdf kjsjhdf ksjndf kcxjnv kjcjvn xcj xckjv kxcv hs kzjcnv skhdf  skjdfh k nvsdh fsdf " />
 
     <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/list_item_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:textColor="#7000"
-        app:layout_constraintBottom_toBottomOf="@+id/list_name"
+        android:textColor="#999"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/list_comment"
+        app:mfont="default"
         tools:text="2 hours ago" />
 
-    <com.innov8.memeit.commons.views.MemeItTextView
-        android:id="@+id/like_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:drawableLeft="@drawable/ic_thumb_up_black_24dp"
-        android:drawablePadding="8dp"
-        android:drawableTint="@color/like_bg"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@+id/list_comment"
-        app:layout_constraintTop_toBottomOf="@+id/list_comment"
-        tools:text="24k" />
 
-    <com.innov8.memeit.commons.views.MemeItTextView
-        android:id="@+id/dislike_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="16dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="8dp"
-        android:drawableLeft="@drawable/ic_thumb_down_black_24dp"
-        android:drawablePadding="8dp"
-        android:drawableTint="#99000000"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/like_comment"
-        app:layout_constraintTop_toBottomOf="@+id/list_comment"
-        tools:text="24k" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/own_comment"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="edit,delete"
-        tools:ignore="MissingConstraints" />
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/list_comment"
+        app:layout_constraintTop_toBottomOf="@+id/list_comment">
 
-    <ImageView
-        android:id="@+id/delete"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="8dp"
-        android:tint="#777"
-        app:layout_constraintStart_toEndOf="@+id/edit"
-        app:layout_constraintTop_toBottomOf="@+id/list_comment"
-        app:srcCompat="@drawable/ic_delete_black_24dp" />
+        <ImageView
+            android:id="@+id/like"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:tint="#999"
+            app:srcCompat="@drawable/ic_thumb_up_black_24dp" />
 
-    <ImageView
-        android:id="@+id/edit"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="8dp"
-        android:tint="#777"
-        app:layout_constraintStart_toEndOf="@+id/dislike_comment"
-        app:layout_constraintTop_toBottomOf="@+id/list_comment"
-        app:srcCompat="@drawable/ic_mode_edit_black_24dp" />
+        <com.innov8.memeit.commons.views.MemeItTextView
+            android:id="@+id/like_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="16dp"
+            android:textColor="#999"
+            android:textSize="12sp"
+            tools:text="24k" />
+
+        <ImageView
+            android:id="@+id/dislike"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:tint="#999"
+            app:srcCompat="@drawable/ic_thumb_down_black_24dp" />
+
+        <com.innov8.memeit.commons.views.MemeItTextView
+            android:id="@+id/dislike_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="16dp"
+            android:textColor="#999"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/edit"
+            app:layout_constraintTop_toBottomOf="@+id/list_comment"
+            tools:text="24k" />
+
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginRight="16dp"
+            android:tint="#999"
+            app:srcCompat="@drawable/ic_delete_black_24dp" />
+
+        <ImageView
+            android:id="@+id/edit"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:tint="#999"
+            app:srcCompat="@drawable/ic_mode_edit_black_24dp" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,38 +5,38 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.innov8.memegenerator.customViews.CheckerBoardDrawable
+import androidx.core.graphics.toRect
+import com.innov8.memegenerator.interfaces.PaintEditInterface
 import com.innov8.memegenerator.memeEngine.PaintHandler
+import com.innov8.memegenerator.utils.capture
 import com.innov8.memegenerator.utils.fitCenter
-import com.innov8.memeit.commons.dp
 
 class BitmapEraserView : View {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
+    init {
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+    }
+
     var bitmap: Bitmap? = null
         set(value) {
-            field = value
+            field = value?.apply {
+                setHasAlpha(true)
+            }
             updateRect()
             invalidate()
         }
-    private val paintHandler by lazy {
+    val paintHandler by lazy {
         PaintHandler(context).apply {
             paint.apply {
-                xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-                color = Color.TRANSPARENT
-                alpha = 0
-                isAntiAlias = true
             }
-            paintProperty = paintProperty.copy(color = Color.TRANSPARENT, brushSize = 64f)
-            onInvalidate = { invalidate() }
+            onInvalidate = {
+                invalidate()
+            }
         }
-    }
 
-    init {
-        background = CheckerBoardDrawable(12f.dp(context), Color.LTGRAY, Color.GRAY)
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null)
     }
 
     private val destRect by lazy {
@@ -55,7 +55,6 @@ class BitmapEraserView : View {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         bitmap?.let {
-            canvas.drawColor(Color.TRANSPARENT)
             canvas.drawBitmap(it, null, destRect, null)
             paintHandler.draw(canvas)
         }
@@ -65,5 +64,8 @@ class BitmapEraserView : View {
         return paintHandler.onTouchEvent(event)
     }
 
+    fun getEditedBitmap(): Bitmap {
+        return capture(destRect.toRect())
+    }
 
 }

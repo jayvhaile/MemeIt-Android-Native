@@ -184,13 +184,16 @@ class MemeChooserActivity : AppCompatActivity() {
             }
         } else draft_btn.visibility = View.GONE
     }
-    class MemeChooserPagerAdapter(mgr: FragmentManager) : FragmentPagerAdapter(mgr) {
+
+    inner class MemeChooserPagerAdapter(mgr: FragmentManager) : FragmentPagerAdapter(mgr) {
         private val titles = listOf("Templates", "Photos", "Gifs", "Videos")
         override fun getCount(): Int = titles.size
         override fun getItem(position: Int): Fragment =
                 when (position) {
                     0 -> MemeTemplateHolderFragment()
-                    1 -> PhotosChooserFragment()
+                    1 -> PhotosChooserFragment.newInstance {
+                        MemeEditorActivity.startWithImage(this@MemeChooserActivity, it)
+                    }
                     2 -> GifChooserFragment()
                     3 -> VideoChooserFragment()
                     else -> OngoingUploadFragment()

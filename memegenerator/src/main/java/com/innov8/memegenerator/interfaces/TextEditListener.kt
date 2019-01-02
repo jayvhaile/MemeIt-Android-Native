@@ -1,5 +1,6 @@
 package com.innov8.memegenerator.interfaces
 
+import android.graphics.Xfermode
 import com.innov8.memegenerator.memeEngine.MemeLayout
 import com.innov8.memegenerator.memeEngine.MemeStickerView
 import com.innov8.memegenerator.memeEngine.MemeTextView
@@ -38,8 +39,13 @@ interface StickerEditInterface {
 
 interface PaintEditInterface {
     fun onBrushSizeChanged(size: Float)
+    fun onBrushSoftnessChanged(softness: Float) {}
+    fun onXferModeChanged(xfermode: Xfermode?) {}
     fun onBrushColorChanged(color: Int)
     fun onShapeChanged(paintMode: PaintHandler.PaintMode)
     fun onPaintUndo()
+    fun onPaintRedo() {}
     fun hasUndo(): Boolean
+    fun hasRedo(): Boolean = false
+
 }

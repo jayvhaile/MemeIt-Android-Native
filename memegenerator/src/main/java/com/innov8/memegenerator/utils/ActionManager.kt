@@ -74,12 +74,12 @@ class ActionManager {
             action.previousAction = head
             head = action
         }
-        if (`do`) `do`()
+        if (`do`) redo()
         onActionListChanged?.invoke()
 
     }
 
-    fun `do`(): Boolean = if (head != null && head!!.nextAction != null) {
+    fun redo(): Boolean = if (head != null && head!!.nextAction != null) {
         head = head!!.nextAction
         head!!.`do`()
         onActionListChanged?.invoke()

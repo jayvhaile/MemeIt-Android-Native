@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
+        <activity android:name=".activities.PhotoChooserActivity"></activity>
         <activity android:name=".activities.MemeTemplatePosterActivity" />
         <activity android:name=".activities.TagsActivity" />
         <activity android:name=".activities.MemeChooserActivity" />
@@ -96,7 +97,6 @@
                     android:pathPrefix="/user"
                     android:scheme="http" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".activities.SearchTagActivity"
@@ -119,7 +119,6 @@
             android:name=".activities.UsernameSettingsActivity"
             android:parentActivityName=".activities.SettingsActivity" />
 
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -129,6 +128,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
+
         <service
             android:name=".services.MyFirebaseMessagingService"
             android:stopWithTask="false">
@@ -136,6 +136,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="bcaff70c9ab33cd1ced5b526b485cad64f182f1b" />

@@ -4,35 +4,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f00"
+    android:background="#000"
     tools:context=".StickerEditorActivity">
 
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/bottom_nav_back"
-        app:layout_constraintEnd_toEndOf="parent"
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@id/bitmapEraserView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:srcCompat="@drawable/ic_arrow_back" />
+
+    <ImageView
+        android:id="@+id/done"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@id/bitmapEraserView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_left_menu_done" />
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/bitmapEraserView"
+        app:layout_constraintEnd_toEndOf="@id/bitmapEraserView"
+        app:layout_constraintStart_toStartOf="@id/bitmapEraserView"
+        app:layout_constraintTop_toTopOf="@+id/bitmapEraserView" />
 
     <com.innov8.memegenerator.BitmapEraserView
         android:id="@+id/bitmapEraserView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        android:layout_marginTop="56dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/paint_undo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintGuide_end="100dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/paint_undo"
@@ -40,43 +55,38 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         android:padding="6dp"
-        app:layout_constraintEnd_toStartOf="@+id/paint_redo"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toTopOf="@+id/color_seek_bar"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
         app:srcCompat="@drawable/ic_undo" />
 
     <ImageView
         android:id="@+id/paint_redo"
         android:layout_width="36dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="8dp"
         android:padding="6dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/paint_undo"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintBottom_toTopOf="@+id/color_seek_bar"
+        app:layout_constraintStart_toEndOf="@+id/paint_undo_text"
         app:srcCompat="@drawable/ic_redo_white_24dp" />
 
     <com.warkiz.widget.IndicatorSeekBar
-        android:id="@+id/indicatorSeekBar"
+        android:id="@+id/softness_seekbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="24dp"
-        app:isb_max="200"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        app:isb_max="80"
+        app:layout_constraintBottom_toTopOf="@+id/brush_size"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/textView" />
 
     <TextView
@@ -85,9 +95,83 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="Size"
+        android:text="Softness"
         android:textColor="#fff"
-        app:layout_constraintBottom_toBottomOf="@+id/indicatorSeekBar"
+        app:layout_constraintBottom_toBottomOf="@+id/softness_seekbar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/indicatorSeekBar" />
+        app:layout_constraintTop_toTopOf="@+id/softness_seekbar" />
+
+    <TextView
+        android:id="@+id/paint_undo_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Undo"
+        android:textColor="#fff"
+        app:layout_constraintBottom_toBottomOf="@+id/paint_undo"
+        app:layout_constraintStart_toEndOf="@+id/paint_undo"
+        app:layout_constraintTop_toTopOf="@+id/paint_undo" />
+
+    <TextView
+        android:id="@+id/paint_redo_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Redo"
+        android:textColor="#fff"
+        app:layout_constraintBottom_toBottomOf="@+id/paint_redo"
+        app:layout_constraintStart_toEndOf="@+id/paint_redo"
+        app:layout_constraintTop_toTopOf="@+id/paint_redo" />
+
+    <com.innov8.memegenerator.customViews.BrushSizeChooserView
+        android:id="@+id/brush_size"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <com.divyanshu.colorseekbar.ColorSeekBar
+        android:id="@+id/color_seek_bar"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/softness_seekbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:thumbBorderColor="#fff" />
+
+    <ImageView
+        android:id="@+id/paint_shape_chooser"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="8dp"
+        android:tint="#fff"
+        app:layout_constraintBottom_toTopOf="@+id/color_seek_bar"
+        app:layout_constraintEnd_toStartOf="@+id/paint_eraser"
+        app:srcCompat="@drawable/paint_shape_doodle" />
+
+    <ImageView
+        android:id="@+id/paint_eraser"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="4dp"
+        android:tint="#fff"
+        app:layout_constraintBottom_toTopOf="@+id/color_seek_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_eraser" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

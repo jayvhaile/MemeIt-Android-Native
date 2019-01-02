@@ -3,6 +3,7 @@ package com.innov8.memegenerator.models
 import android.content.Context
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
+import java.io.File
 
 class StickerPack(val name: String, val urls: List<Sticker>) {
     companion object {
@@ -23,6 +24,12 @@ class StickerPack(val name: String, val urls: List<Sticker>) {
                     list.add(StickerPack("My Stickers", listOf()))
                     list
                 })
+            }
+        }
+
+        fun myStickersDir(context: Context): File {
+            return File(context.filesDir, "stickers/mine/").apply {
+                mkdirs()
             }
         }
     }

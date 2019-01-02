@@ -24,9 +24,10 @@
         android:layout_marginTop="26dp"
         android:background="@drawable/circle"
         android:padding="5dp"
-        app:srcCompat="@drawable/user_icon"
+        android:tint="#fff"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/user_icon" />
 
 
     <com.innov8.memeit.commons.views.ProfileDraweeView

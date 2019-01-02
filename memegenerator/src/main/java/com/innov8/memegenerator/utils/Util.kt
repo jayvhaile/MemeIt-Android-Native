@@ -48,13 +48,7 @@ fun RectF.enlarge(x: Float, y: Float = x): RectF {
 
 fun RectF.origin(): RectF = RectF(0f, 0f, width(), height())
 operator fun RectF.contains(event: MotionEvent): Boolean = this.contains(event.x, event.y)
-fun RectF.toRect(): Rect {
-    return Rect(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
-}
 
-fun Rect.toRectF(): RectF {
-    return RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
-}
 
 fun View.capture(rect: Rect? = null): Bitmap {
     this.isDrawingCacheEnabled = true

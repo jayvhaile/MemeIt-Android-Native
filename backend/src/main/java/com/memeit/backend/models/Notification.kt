@@ -282,7 +282,7 @@ class CommentMentionNotification(id: String,
                                  val comment: String,
                                  date: Long,
                                  seen: Boolean = false) : Notification
-(MEME_MENTION_TYPE, id, "$mentionerName mentioned you on a comment", comment, date, seen)
+(COMMENT_MENTION_TYPE, id, "$mentionerName mentioned you on a comment", comment, date, seen)
 
 
 class AwardNotification(id: String,

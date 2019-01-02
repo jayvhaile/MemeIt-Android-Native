@@ -56,8 +56,7 @@ class PaintHandler(val context: Context) {
         style = Paint.Style.STROKE
         strokeJoin = Paint.Join.ROUND
         strokeCap = Paint.Cap.ROUND
-        xfermode = null
-        alpha = 0xff
+//        alpha = 0xff
     }
     //    val b = BlurMaskFilter(5f, BlurMaskFilter.Blur.NORMAL)
     var paintProperty = PaintProperty(Color.BLACK, 4f.dp(context))
@@ -122,11 +121,12 @@ interface TouchPaintable : Paintable {
 
 }
 
-data class PaintProperty(val color: Int, val brushSize: Float, val maskFilter: MaskFilter? = null) {
+data class PaintProperty(val color: Int, val brushSize: Float, val maskFilter: MaskFilter? = null, val xferMode: Xfermode? = null) {
     fun apply(paint: Paint) {
         paint.color = color
         paint.strokeWidth = brushSize
         paint.maskFilter = maskFilter
+        paint.xfermode = xferMode
     }
 }
 
@@ -144,6 +144,7 @@ class Doodle(override var paintProperty: PaintProperty) : TouchPaintable {
 
     override fun paint(canvas: Canvas, paint: Paint) {
         canvas.drawPath(path, paint)
+//        canvas.drawRect(0f, 0f, 300f, 300f, paint)
     }
 }
 
@@ -173,7 +174,7 @@ class Arrow(override var paintProperty: PaintProperty) : TouchPaintable {
     val start = PointF()
     val end = PointF()
 
-    val sweepAngle = 45.toRad()
+    private val sweepAngle = 45.toRad()
 
     override fun start(event: MotionEvent) {
         start.x = event.x

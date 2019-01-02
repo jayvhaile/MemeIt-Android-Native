@@ -298,6 +298,7 @@
         android:layout_marginLeft="8dp"
         android:text="Follow"
         android:textColor="@color/colorAccent"
+        android:visibility="gone"
         app:layout_constraintBaseline_toBaselineOf="@+id/meme_poster_name"
         app:layout_constraintStart_toEndOf="@+id/meme_poster_name" />
 

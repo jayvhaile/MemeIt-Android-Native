@@ -1,32 +1,28 @@
 package com.innov8.memegenerator.fragments
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.facebook.drawee.generic.RoundingParams
-import com.innov8.memegenerator.adapters.StickersAdapter
-import com.innov8.memegenerator.memeEngine.MemeStickerView
-import com.innov8.memegenerator.interfaces.StickerEditInterface
-import com.innov8.memegenerator.models.StickerPack
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.StickerEditorActivity
+import com.innov8.memegenerator.adapters.StickersAdapter
+import com.innov8.memegenerator.interfaces.StickerEditInterface
+import com.innov8.memegenerator.memeEngine.MemeStickerView
+import com.innov8.memegenerator.models.StickerPack
 import com.innov8.memegenerator.utils.onTabSelected
-import com.innov8.memeit.commons.toast
-import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.bottom_tab.*
 import kotlinx.android.synthetic.main.sticker_frag.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
+import java.io.File
+import java.io.FileInputStream
 
 class StickerChooserFragment : Fragment() {
     private lateinit var stickersAdapter: StickersAdapter
@@ -46,7 +42,10 @@ class StickerChooserFragment : Fragment() {
         stickersAdapter.onItemClick = { url ->
             GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                 val bitmap = withContext(Dispatchers.Default) {
-                    BitmapFactory.decodeStream(context!!.assets.open(url.substring(9)))
+                    if (pager_tab.selectedTabPosition == 3)
+                        BitmapFactory.decodeStream(FileInputStream(File(url.substring(5))))
+                    else
+                        BitmapFactory.decodeStream(context!!.assets.open(url.substring(9)))
                 }
                 stickerEditInterface?.onAddSticker(MemeStickerView(context!!, bitmap, url))
             }
@@ -64,28 +63,40 @@ class StickerChooserFragment : Fragment() {
         sticker_list.layoutManager = LinearLayoutManager(context!!, RecyclerView.HORIZONTAL, false)
         sticker_list.adapter = stickersAdapter
         pager_tab.onTabSelected { tab ->
+            if (tab.position == 3) {
+                stickersAdapter.clear()
+                loadMyStickers()
+            }
             stickersAdapter.setAll(stickers!![tab.position].urls.map { it.path })
             create_sticker.visibility = if (tab.position == 3) View.VISIBLE else View.GONE
         }
         create_sticker.setOnClickListener {
-            CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON)
-//                    .setAspectRatio(1, 1)
-//                    .setCropShape(CropImageView.CropShape.OVAL)
-                    .start(context!!, this)
+            startActivityForResult(Intent(context!!,
+                    Class.forName("com.innov8.memeit.activities.PhotoChooserActivity")),
+                    260)
         }
         load()
     }
 
+    private fun loadMyStickers() {
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            val result = withContext(Dispatchers.Default) {
+                StickerPack.myStickersDir(context!!).listFiles()
+                        .map { Uri.fromFile(it).toString() }
+                        .reversed()
+            }
+            stickersAdapter.setAll(result)
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            val result = CropImage.getActivityResult(data)
-            if (resultCode == Activity.RESULT_OK) {
-                StickerEditorActivity.startWithBitmapUri(context!!, result.uri.toFile().absolutePath)
-
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                context?.toast("Cant read Image File")
+        if (requestCode == 260 && resultCode == 265 && data != null) {
+            StickerEditorActivity.startWithBitmapUri(this, data.getStringExtra("url"))
+        } else if (requestCode == StickerEditorActivity.REQUEST_CODE &&
+                resultCode == StickerEditorActivity.RESULT_CODE) {
+            if (pager_tab.selectedTabPosition == 3) {
+                loadMyStickers()
             }
         }
     }

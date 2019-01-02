@@ -18,7 +18,7 @@ class NotificationActivity : AppCompatActivity() {
         NotificationAdapter(this)
     }
     private val loaderAdapter by lazy {
-        LoaderAdapterHandler(notificationAdapter, TestNotificationLoader()).apply {
+        LoaderAdapterHandler(notificationAdapter, MyNotificationLoader()).apply {
             onLoaded = {
                 swipe_refresh?.isRefreshing = false
                 MemeItUsers.markNotificationSeen().call {}

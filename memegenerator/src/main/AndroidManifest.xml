@@ -7,7 +7,7 @@
     <application
         android:label="@string/app_name"
         android:supportsRtl="true">
-        <activity android:name=".StickerEditorActivity"></activity>
+        <activity android:name=".StickerEditorActivity" />
         <activity android:name=".VideoToGifActivity" />
         <activity
             android:name=".MemeEditorActivity"
