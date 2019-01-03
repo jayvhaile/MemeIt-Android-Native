@@ -14,7 +14,7 @@ android {
     }
     buildTypes {
         debug {
-            minifyEnabled false
+            minifyEnabled project.enableProguardDebug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
         }
@@ -45,6 +45,7 @@ dependencies {
     implementation project(path: ':memegenerator')
     implementation project(':commons')
     implementation project(path: ':backend')
+
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
@@ -69,6 +70,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.4'
     implementation 'com.google.firebase:firebase-config:16.1.2'
     //    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+
     implementation 'com.yarolegovich:sliding-root-nav:1.1.0'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
     implementation 'com.github.varunest:sparkbutton:1.0.5'
@@ -80,6 +82,7 @@ dependencies {
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.0'
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:2.1.2'
     implementation 'com.github.adroitandroid:ChipCloud:2.2.1'
+
     implementation 'com.facebook.android:audience-network-sdk:5.0.0'
     implementation 'com.facebook.android:facebook-login:4.37.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.27.0-eap13'
@@ -94,7 +97,6 @@ dependencies {
     }
     def room_version = "2.1.0-alpha03"
     implementation "androidx.room:room-runtime:$room_version"
-    implementation 'com.github.armcha:AutoLinkTextView:0.3.0'
     /*
         implementation 'com.facebook.fresco:animated-webp:1.11.0'
         implementation 'com.facebook.fresco:webpsupport:1.11.0'*/

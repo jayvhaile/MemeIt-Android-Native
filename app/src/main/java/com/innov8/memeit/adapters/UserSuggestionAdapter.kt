@@ -17,6 +17,8 @@ import com.memeit.backend.models.User
 class UserSuggestionAdapter(context: Context) : ListAdapter<User>(context, R.layout.list_item_user_sug) {
     override fun createViewHolder(view: View): MyViewHolder<User> = UserSugViewHolder(view)
 
+    private fun getItemByID(id: String) = items.find { it.uid == id }
+
 
     inner class UserSugViewHolder(itemView: View) : MyViewHolder<User>(itemView) {
         private val profileV: ProfileDraweeView = itemView.findViewById(R.id.user_sug_pp)
@@ -25,11 +27,12 @@ class UserSuggestionAdapter(context: Context) : ListAdapter<User>(context, R.lay
 
         init {
             val uid = getItemAt(item_position).uid!!
-            followV.setOnClickListener { view ->
+            followV.setOnClickListener { _ ->
                 if (followV.text == "Unfollow") {
                     followV.text = "Unfollowing..."
                     MemeItUsers.unfollowUser(uid).call({
                         followV.text = "Follow"
+                        getItemByID(uid)?.isFollowedByMe = false
                     }, {
                         context.toast("Failed to Unfollow")
                         followV.text = "Unfollow"
@@ -38,8 +41,9 @@ class UserSuggestionAdapter(context: Context) : ListAdapter<User>(context, R.lay
                     followV.text = "Following..."
                     MemeItUsers.followUser(uid).call({
                         followV.text = "Unfollow"
+                        getItemByID(uid)?.isFollowedByMe = true
                     }, {
-                        context.toast("Failed to Follow:- $it")
+                        context.toast("Failed to Follow")
                         followV.text = "Follow"
                     })
                 }
@@ -51,6 +55,7 @@ class UserSuggestionAdapter(context: Context) : ListAdapter<User>(context, R.lay
             profileV.setText(t.name.prefix())
             profileV.loadImage(t.imageUrl)
             nameV.text = t.name
+            followV.text = if (t.isFollowedByMe) "Unfollow" else "Follow"
         }
     }
 }

@@ -59,7 +59,9 @@ class StickerEditorActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: IndicatorSeekBar) {
                 bitmapEraserView.paintHandler.apply {
-                    paintProperty = paintProperty.copy(maskFilter = BlurMaskFilter(seekBar.progressFloat, BlurMaskFilter.Blur.NORMAL))
+                    seekBar.progressFloat.let {
+                        paintProperty = paintProperty.copy(maskFilter = if (it < 1) null else BlurMaskFilter(it, BlurMaskFilter.Blur.NORMAL))
+                    }
                 }
             }
         }

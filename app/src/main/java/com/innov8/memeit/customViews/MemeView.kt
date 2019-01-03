@@ -298,7 +298,7 @@ class MemeView : FrameLayout {
                 }
                 val fileUri = FileProvider.getUriForFile(
                         context,
-                        "com.innov8.memeit.fileprovider",
+                        "${BuildConfig.APPLICATION_ID}.fileprovider",
                         file)
                 val intent = ShareCompat.IntentBuilder.from(context as Activity)
                         .setSubject("${MemeItApp.SERVER_DOMAIN}/share/${meme.id}")

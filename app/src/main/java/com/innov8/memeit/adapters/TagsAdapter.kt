@@ -48,6 +48,8 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
         return colors[i % colors.size]
     }
 
+    private fun getItemByTag(tag: String) = items.find { it.tag == tag }
+
     inner class TagsViewHolder(itemView: View) : MyViewHolder<Tag>(itemView) {
         private val overlay: View = itemView.findViewById(R.id.overlay)
         private val tagV: TextView = itemView.findViewById(R.id.tag)
@@ -68,8 +70,9 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
                     tagFollowV.text = "Unfollowing..."
                     MemeItUsers.unfollowTag(t.tag).call({
                         tagFollowV.text = "Follow"
+                        getItemByTag(t.tag)?.followed = false
                     }, {
-                        context.toast("Failed to Unfollow:- $it")
+                        context.toast("Failed to Unfollow")
                         tagFollowV.text = "Unfollow"
 
                     })
@@ -77,9 +80,12 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
                     tagFollowV.text = "Following..."
                     MemeItUsers.followTags(arrayOf(t.tag)).call({
                         tagFollowV.text = "Unfollow"
+                        getItemByTag(t.tag)?.followed = true
+
                     }, {
-                        context.toast("Failed to Follow:- $it")
+                        context.toast("Failed to Follow")
                         tagFollowV.text = "Follow"
+
                     })
                 }
 

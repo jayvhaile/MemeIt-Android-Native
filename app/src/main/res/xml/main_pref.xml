@@ -3,21 +3,15 @@
 
 
     <PreferenceCategory android:title="Account">
-        <Preference android:title="Username">
-            <intent
-                android:targetClass="com.innov8.memeit.Activities.UsernameSettingsActivity"
-                android:targetPackage="com.innov8.memeit" />
-        </Preference>
-        <Preference android:title="Password" android:key="pref_key_password">
-            <intent
-                android:targetClass="com.innov8.memeit.Activities.PasswordSettingsActivity"
-                android:targetPackage="com.innov8.memeit" />
-        </Preference>
-        <Preference android:title="Profile">
-            <intent
-                android:targetClass="com.innov8.memeit.Activities.ProfileSettingsActivity"
-                android:targetPackage="com.innov8.memeit" />
-        </Preference>
+        <Preference
+            android:key="pref_username"
+            android:title="Username" />
+        <Preference
+            android:key="pref_password"
+            android:title="Password" />
+        <Preference
+            android:key="pref_profile"
+            android:title="Profile" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Data Usage">
         <ListPreference
@@ -53,6 +47,7 @@
             android:key="pref_enable_notif_comment"
             android:title="Notify Comment on Upload" />
     </PreferenceCategory>
-    <Preference android:title="Logout"
-        android:key="pref_logout"/>
+    <Preference
+        android:key="pref_logout"
+        android:title="Logout" />
 </PreferenceScreen>

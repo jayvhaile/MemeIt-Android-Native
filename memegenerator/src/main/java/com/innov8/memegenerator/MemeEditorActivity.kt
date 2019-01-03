@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.media.MediaCodec.MetricsConstants.MODE_VIDEO
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
@@ -309,11 +310,12 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                     pd.show()
                     val overlay = memeEditorView.captureItems()
                     withContext(Dispatchers.Default) {
-                        gifToWebp(intent.getStringExtra(PARAM_GIF_PATH),
+                        compileGifMeme(GifInfo(intent.getStringExtra(PARAM_GIF_PATH),
                                 overlay,
                                 memeLayout.getMarginRect(),
                                 memeEditorView.paint,
                                 file.absolutePath)
+                        )
                     }
                     pd.dismiss()
                     startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {
@@ -323,7 +325,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                 }
             }
             MODE_VIDEO -> {
-                val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
+                /*val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
                 val file = File(filesDir, "${UUID.randomUUID()}_meme.webp")
                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                     val pd = MaterialDialog.Builder(this@MemeEditorActivity)
@@ -344,7 +346,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                         putExtra("gif", file.absolutePath)
                         putExtra("texts", memeEditorView.getTexts().toTypedArray())
                     })
-                }
+                }*/
             }
         }
     }

@@ -35,7 +35,7 @@ class BrushSizeChooserView : LinearLayout {
         }.forEach {
             addView(it, lp)
         }
-        choose(0)
+        choose(3)
         gravity = Gravity.CENTER
     }
 

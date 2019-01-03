@@ -53,7 +53,7 @@ class MemeTemplateHolderFragment : Fragment() {
         template_tabs.setupWithViewPager(template_pager)
         search_toolbar.inflateMenu(R.menu.template_menu)
         val sm = search_toolbar.menu.findItem(R.id.menu_template_search)
-        (sm.actionView as SearchToolbar).apply {
+        sm.actionView = SearchToolbar(context!!).apply {
             sm.setOnActionExpandListener(this)
             onSearch = {
                 currentFrag.setSearch(it, true, false)

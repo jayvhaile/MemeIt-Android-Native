@@ -59,7 +59,7 @@ class PaintHandler(val context: Context) {
 //        alpha = 0xff
     }
     //    val b = BlurMaskFilter(5f, BlurMaskFilter.Blur.NORMAL)
-    var paintProperty = PaintProperty(Color.BLACK, 4f.dp(context))
+    var paintProperty = PaintProperty(Color.BLACK, 16f.dp(context))
 
     var actionManager = ActionManager()
 

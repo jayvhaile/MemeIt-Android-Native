@@ -32,6 +32,20 @@ class SettingsActivity : PreferenceActivity() {
 
             true
         }
+        preferenceScreen.findPreference(PREF_KEY_USERNAME).setOnPreferenceClickListener {
+            startActivity(Intent(this, UsernameSettingsActivity::class.java))
+            true
+        }
+
+        preferenceScreen.findPreference(PREF_KEY_PASSWORD).setOnPreferenceClickListener {
+            startActivity(Intent(this, PasswordSettingsActivity::class.java))
+            true
+        }
+
+        preferenceScreen.findPreference(PREF_KEY_PROFILE).setOnPreferenceClickListener {
+            startActivity(Intent(this, ProfileSettingsActivity::class.java))
+            true
+        }
     }
 
     companion object {
@@ -41,6 +55,9 @@ class SettingsActivity : PreferenceActivity() {
         private const val PREF_KEY_ENABLE_NOTIF_REACTION = "pref_enable_notif_reaction"
         private const val PREF_KEY_ENABLE_NOTIF_COMMENT = "pref_enable_notif_comment"
         private const val PREF_KEY_LOGOUT = "pref_logout"
+        private const val PREF_KEY_USERNAME = "pref_username"
+        private const val PREF_KEY_PASSWORD = "pref_password"
+        private const val PREF_KEY_PROFILE = "pref_profile"
         private const val PREF_KEY_AUTO_LOAD_GIFS = "pref_load_gif"
         val quality = listOf(10, 25, 50, 75, 100)
         val factor = listOf(.4f, .6f, .8f, .9f, 1f)

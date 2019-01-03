@@ -26,9 +26,9 @@ class UsernameSettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val user = MemeItClient.myUser!!
         settings_username.editText?.append(user.username)
-        username_link.text ="https://memeit.innov8.io/un/${user.username}"
+        username_link.text = "https://memeitapp.com/user/${user.username}"
         settings_username.editText?.addOnTextChanged {
-            username_link.text ="https://memeitapp.com/link/$it"
+            username_link.text = "https://memeitapp.com/user/$it"
             if (it == user.username) status = STATUS_ORIGINAL
             if (isValid(it))
                 checkOnLocal()
