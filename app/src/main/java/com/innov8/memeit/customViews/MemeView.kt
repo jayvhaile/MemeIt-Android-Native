@@ -383,7 +383,7 @@ class MemeView : FrameLayout {
 
             if (m.myReaction == null) {
                 m.reactionCount++
-                if (m == meme) reactionCountV.text = String.format("%d reactions", m.reactionCount)
+                if (m == meme) reactionCountV.text = String.format("%d people reacted", m.reactionCount)
 
             }
             m.myReaction = reactionType.create()
@@ -456,7 +456,7 @@ class MemeView : FrameLayout {
         }
         posterNameV.text = meme.poster?.name
         posterPicV.setText(meme.poster?.name.prefix())
-        reactionCountV.text = String.format("%d reactions", meme.reactionCount)
+        reactionCountV.text = String.format("%d people reacted", meme.reactionCount)
         commentCountV.text = meme.commentCount.toString()
         posterPicV.loadImage(meme.poster?.imageUrl)
         memeDateV.text = meme.date?.formateAsDate()

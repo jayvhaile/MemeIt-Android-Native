@@ -21,7 +21,7 @@ class MemeItTextView : TextView {
     companion object {
         private val defColor = Color.parseColor("#1384fd")
         private const val defSelectedColor = Color.LTGRAY
-        private const val defFont = "Avenir"
+        private const val defFont = "regular"
         private const val MIN_PHONE_NUMBER_LENGTH = 8
 
         private val PHONE_PATTERN = Patterns.PHONE.pattern()

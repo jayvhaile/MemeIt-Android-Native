@@ -27,7 +27,7 @@ class FontEditText : androidx.appcompat.widget.AppCompatEditText {
     init {
         if (isInEditMode)
             TypefaceManager.init(context)
-        this.typeface = TypefaceManager.byName("Avenir")
+        this.typeface = TypefaceManager.byName("regular")
     }
 
     private fun handleActionBtnClick() {
