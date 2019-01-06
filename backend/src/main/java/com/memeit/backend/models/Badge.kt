@@ -160,7 +160,7 @@ data class Badge(val id: String,
                             "You've got a cult following",
                             "Get 100k Followers",
                             12
-                    ),
+                    )
                     /*Badge(
                             "invite_001",
                             "Let the word spread",
