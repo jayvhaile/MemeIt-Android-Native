@@ -51,11 +51,13 @@ import com.innov8.memeit.commons.views.MemeItTextView
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
+import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.memeit.backend.models.Meme
 import com.memeit.backend.models.Reaction
 import com.memeit.backend.models.Report
 import com.varunest.sparkbutton.SparkButton
+import kotlinx.android.synthetic.main.list_item_meme.view.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
 import java.io.File
@@ -64,6 +66,7 @@ import java.io.FileOutputStream
 class MemeView : FrameLayout {
     private lateinit var constraintSetDefault: ConstraintSet
 
+    var showFollowUser = false
     var resizeToFit = true
     var showCommentButton = true
         set(value) {
@@ -93,7 +96,7 @@ class MemeView : FrameLayout {
     }
 
     val itemView: ConstraintLayout = LayoutInflater.from(context).inflate(R.layout.list_item_meme, this, false) as ConstraintLayout
-    private val reactionArray = intArrayOf(R.id.react_funny, R.id.react_veryfunny, R.id.react_angry, R.id.react_stupid)
+    private val reactionArray = intArrayOf(R.id.react_funny, R.id.react_veryfunny, R.id.react_stupid, R.id.react_angry)
     private val posterPicV: ProfileDraweeView = itemView.findViewById(R.id.notif_icon)
     private val memeImageV: MemeDraweeView = itemView.findViewById(R.id.meme_image)
     private val commentBtnV: ImageButton = itemView.findViewById(R.id.meme_comment)
@@ -111,7 +114,9 @@ class MemeView : FrameLayout {
     private val reactionCountVeryFunny: TextView = itemView.findViewById(R.id.reacation_count_veryfunny)
     private val reactionCountAngry: TextView = itemView.findViewById(R.id.reacation_count_angry)
     private val reactionCountStupid: TextView = itemView.findViewById(R.id.reacation_count_stupid)
+    private val followUser: TextView = itemView.findViewById(R.id.follow_user)
 
+    private val myUser = MemeItClient.myUser!!
 
     var meme: Meme = Meme()
         set(value) {
@@ -187,6 +192,17 @@ class MemeView : FrameLayout {
 
         memeDescription.apply {
             onLinkClicked = generateTextLinkActions(context)
+        }
+        followUser.setOnClickListener {
+            val m = meme
+            followUser.text = "Following"
+            MemeItUsers.followUser(m.poster!!.uid!!).call({
+                m.poster!!.isFollowedByMe = true
+                followUser.text = "Followed"
+            }) {
+                snack("Failed to follow")
+                followUser.text = "Follow"
+            }
         }
     }
 
@@ -475,6 +491,10 @@ class MemeView : FrameLayout {
         }
         applyVisible(R.id.meme_gif, if (meme.getType() == Meme.MemeType.GIF) View.VISIBLE else View.GONE)
         applyVisible(R.id.description, if (meme.description.isNullOrBlank()) View.GONE else View.VISIBLE)
+        applyVisible(R.id.follow_user, if (showFollowUser && !meme.poster!!.isFollowedByMe) View.VISIBLE else View.GONE)
+        applyVisible(R.id.dot,
+                if (showFollowUser && !meme.poster!!.isFollowedByMe && meme.poster!!.uid != myUser.id)
+                    View.VISIBLE else View.GONE)
         constraintSetDefault.applyTo(itemView)
         if (!meme.description.isNullOrBlank()) {
             memeDescription.text = meme.description!!.trim()

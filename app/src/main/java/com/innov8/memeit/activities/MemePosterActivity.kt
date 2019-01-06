@@ -257,6 +257,5 @@ class MyControllerListener : BaseControllerListener<ImageInfo>() {
         super.onFinalImageSet(id, imageInfo, animatable)
         animatable?.start()
         rat = imageInfo!!.width.toFloat() / imageInfo.height
-
     }
 }

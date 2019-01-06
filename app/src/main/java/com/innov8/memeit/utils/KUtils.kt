@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.work.*
 import com.adroitandroid.chipcloud.ChipCloud
 import com.adroitandroid.chipcloud.ChipListener
+import com.cloudinary.Url
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.imagepipeline.request.ImageRequest
 import com.google.android.material.snackbar.Snackbar
@@ -126,11 +127,11 @@ fun getImageMemeUrl(id: String, ratio: Float = 1f, fac: Float, quality: Int): St
 }
 
 fun getGifMemeUrl(id: String, ratio: Float = 1f, fac: Float, quality: Int): String {
-    val w = (screenWidthOriented * fac) step 50
+    /*val w = (screenWidthOriented * fac) step 50
     val h = ((screenWidthOriented / ratio).toInt()
             .trim(200.dp, screenHeightOriented - 200.dp) * fac) step 50
-
-    return "https://res.cloudinary.com/innov8/image/fetch/c_fit,h_$h,q_$quality,w_$w/${id.full}"
+*/
+    return id.full
 }
 
 fun MemeTemplate.generatePreviewUrl(): String {

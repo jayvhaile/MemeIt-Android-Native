@@ -29,6 +29,28 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
 
     override fun getItemType(position: Int): Int = items[position].itemType
 
+
+    override fun onCreateHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
+        val memeViewHolder = createHolder(parent, viewType)
+        memeViewHolder.memeClickedListener = { memeID ->
+            val list: List<Meme> = items.filter { it is Meme }
+                    .map { it as Meme }
+                    .toList()
+            context.showMemeZoomView(list, memeID)
+        }
+        return memeViewHolder
+    }
+
+    override fun onBindHolder(holder: MemeViewHolder, position: Int) {
+        holder.itemPosition = position
+        holder.bind(items[position])
+    }
+
+    abstract fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder
+
+    open fun createLayoutManager(): RecyclerView.LayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+
+
     companion object {
         const val LIST_ADAPTER: Byte = 0
         const val LIST_ADAPTER_FOR_TAG: Byte = 7
@@ -38,6 +60,7 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
         const val GRID_ADAPTER_MY_POSTS: Byte = 4
         const val GRID_ADAPTER_USER_POSTS: Byte = 5
         const val HOME_ADAPTER: Byte = 6
+        const val TRENDING_ADAPTER: Byte = 8
         fun create(type: Byte, context: Context): MemeAdapter = when (type) {
             LIST_ADAPTER -> MemeListAdapter(context)
             LIST_ADAPTER_USER_POSTS -> MemeListAdapter(context).apply {
@@ -72,33 +95,11 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
                 showErrorAtTop = true
             }
             HOME_ADAPTER -> HomeMemeAdapter(context)
+            TRENDING_ADAPTER -> TrendingMemeAdapter(context)
             else ->
                 throw IllegalArgumentException("Use one of (LIST_ADAPTER,GRID_ADAPTER,HOME_ADAPTER)")
         }
 
-        const val LOADING_TYPE = 5864
     }
-
-
-    override fun onCreateHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
-        val memeViewHolder = createHolder(parent, viewType)
-        memeViewHolder.memeClickedListener = { memeID ->
-            val list: List<Meme> = items.filter { it is Meme }
-                    .map { it as Meme }
-                    .toList()
-            context.showMemeZoomView(list, memeID)
-        }
-        return memeViewHolder
-    }
-
-    override fun onBindHolder(holder: MemeViewHolder, position: Int) {
-        holder.itemPosition = position
-        holder.bind(items[position])
-    }
-
-    abstract fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder
-
-    open fun createLayoutManager(): RecyclerView.LayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-
 
 }

@@ -7,28 +7,14 @@
     tools:context=".fragments.BadgeFragment">
 
 
-    <com.innov8.memeit.commons.views.MemeItTextView
-        android:id="@+id/badge_count"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="2 Badges Awarded"
-        app:layout_constraintBottom_toBottomOf="@+id/badge_view_switch"
-        app:layout_constraintEnd_toStartOf="@+id/badge_view_switch"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/badge_view_switch" />
-
     <ImageView
         android:id="@+id/badge_view_switch"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="14dp"
         android:src="@drawable/ic_list"
+        app:layout_constraintBottom_toTopOf="@+id/badge_list"
+        app:layout_constraintDimensionRatio="h,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,9 +22,9 @@
         android:id="@+id/badge_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="42dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/badge_view_switch" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

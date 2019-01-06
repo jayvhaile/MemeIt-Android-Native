@@ -172,7 +172,7 @@ open class Notification(val type: Int = 0,
                     it["name"] as String? ?: "",
                     it["pic"] as String? ?: "",
                     it["uid"] as String,
-                    it["mid"] as String,
+                    it["mid"] as String? ?: "",
                     (it["date"] as Double).toLong(),
                     it["seen"] as Boolean
             )

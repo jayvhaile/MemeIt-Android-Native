@@ -20,8 +20,8 @@ fun SavedMemeTemplateProperty.loadImages(context: Context): LoadedMemeTemplatePr
         is SavedGifMemeTemplateProperty -> LoadedGifMemeTemplateProperty(
                 layoutProperty as SingleImageLayoutProperty,
                 memeItemsProperty,
-                loadGif(path),
-                path)
+                loadGif(images[0]),
+                images[0])
 
     }
 }
@@ -37,7 +37,6 @@ private fun loadGif(path: String): Bitmap {
     return i.next().bitmap
 }
 
-//todo handle the gif part
 fun LoadedMemeTemplateProperty.saveImages(dir: File): SavedMemeTemplateProperty {
     return when (this) {
         is LoadedImageMemeTemplateProperty -> {
@@ -56,6 +55,10 @@ fun LoadedMemeTemplateProperty.saveImages(dir: File): SavedMemeTemplateProperty 
                 previewImageBitmap!!.save(dir, 75, 500)
         )
     }
+}
+
+fun LoadedMemeTemplateProperty.asLoadedGifMemeTemplateProperty(gifPath: String): LoadedGifMemeTemplateProperty {
+    return LoadedGifMemeTemplateProperty(layoutProperty as SingleImageLayoutProperty, memeItemsProperty, images[0], gifPath, previewImageBitmap)
 }
 
 

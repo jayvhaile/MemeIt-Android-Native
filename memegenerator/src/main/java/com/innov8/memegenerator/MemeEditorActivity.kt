@@ -121,6 +121,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface, EditorSta
         }
     }
 
+
+    private var templateMemeType = Meme.MemeType.IMAGE
+    private var templateGifPath: String? = null
     private fun handleTemplateIntent(): Boolean {
         val json = intent.getStringExtra(PARAM_TEMPLATE)
         val mt = MemeTemplate.readFromString(json)
@@ -162,6 +165,10 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface, EditorSta
                     MemeTemplate.readFromFile(file)
                 }
                 result?.memeTemplateProperty?.let {
+                    if (it is SavedGifMemeTemplateProperty) {
+                        templateMemeType = Meme.MemeType.GIF
+                        templateGifPath = it.images[0]
+                    }
                     val loaded = withContext(Dispatchers.Default) {
                         it.loadImages(this@MemeEditorActivity)
                     }
@@ -182,9 +189,14 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface, EditorSta
                     SavedMemeTemplateProperty.readFromFile(file)
                 }
                 result?.let {
+                    if (it is SavedGifMemeTemplateProperty) {
+                        templateMemeType = Meme.MemeType.GIF
+                        templateGifPath = it.images[0]
+                    }
                     val loaded = withContext(Dispatchers.Default) {
                         it.loadImages(this@MemeEditorActivity)
                     }
+
                     memeEditorView.applyProperty(loaded)
                     layoutFrag?.memeLayout = memeEditorView.memeLayout!!
                 }
@@ -213,8 +225,6 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface, EditorSta
     private fun handleImagesIntent(): Boolean {
         val paths = intent.getStringArrayExtra(PARAM_MULTI_PATH) ?: null
         val lp: LayoutProperty = intent.getParcelableExtra(PARAM_MULTI_LAYOUT)
-
-
         return if (paths != null) {
             val (w, h) = calcReqSize(lp, paths.size)
             GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
@@ -287,111 +297,129 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface, EditorSta
 
     private fun onDone() {
         when (mode) {
-            MODE_DRAFT, MODE_TEMPLATE, MODE_SINGLE_IMAGE, MODE_MULTI_IMAGE -> {
-                val bitmap = memeEditorView.captureMeme()
-                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-                    val path = withContext(Dispatchers.Default) {
-                        bitmap.save(getTempMemeUploadDir(this@MemeEditorActivity), max = 1000, tag = "meme")
-                    }
-                    startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {
-                        putExtra("image", path)
-                        putExtra("texts", memeEditorView.getTexts().toTypedArray())
-                        putExtra("tid", templateID)
-                    })
-                }
+            MODE_DRAFT, MODE_TEMPLATE -> {
+                if (templateMemeType == Meme.MemeType.GIF)
+                    saveGifMeme(templateGifPath!!)
+                else
+                    saveImageMeme()
+            }
+            MODE_SINGLE_IMAGE, MODE_MULTI_IMAGE -> {
+                saveImageMeme()
             }
             MODE_GIF_IMAGE -> {
-                val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
-                val file = File(filesDir, "${UUID.randomUUID()}_meme.webp")
-                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-                    val pd = MaterialDialog.Builder(this@MemeEditorActivity)
-                            .title("Please wait a while")
-                            .content("Processing Gif")
-                            .progress(true, 0)
-                            .build()
-                    pd.show()
-                    val overlay = memeEditorView.captureItems()
-                    withContext(Dispatchers.Default) {
-                        compileGifMeme(GifInfo(intent.getStringExtra(PARAM_GIF_PATH),
-                                overlay,
-                                memeLayout.getMarginRect(),
-                                memeEditorView.paint,
-                                file.absolutePath)
-                        )
-                    }
-                    pd.dismiss()
-                    startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {
-                        putExtra("gif", file.absolutePath)
-                        putExtra("texts", memeEditorView.getTexts().toTypedArray())
-                    })
-                }
+                saveGifMeme(intent.getStringExtra(PARAM_GIF_PATH))
             }
-            MODE_VIDEO -> {
-                /*val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
-                val file = File(filesDir, "${UUID.randomUUID()}_meme.webp")
-                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-                    val pd = MaterialDialog.Builder(this@MemeEditorActivity)
-                            .title("Please wait a while")
-                            .content("Processing Gif")
-                            .progress(true, 0)
-                            .build()
-                    pd.show()
-                    val overlay = memeEditorView.captureItems()
-                    withContext(Dispatchers.Default) {
-                        mp4ToWebp(intent.getStringExtra(PARAM_VIDEO_PATH), overlay,
-                                memeLayout.getMarginRect(),
-                                memeEditorView.paint,
-                                file.absolutePath)
-                    }
-                    pd.dismiss()
-                    startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {
-                        putExtra("gif", file.absolutePath)
-                        putExtra("texts", memeEditorView.getTexts().toTypedArray())
-                    })
-                }*/
+        }
+    }
+
+    private fun saveGifMeme(gifPath: String) {
+        val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
+        val file = File(getTempMemeUploadDir(this@MemeEditorActivity), "${UUID.randomUUID()}_meme.gif")
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            val pd = MaterialDialog.Builder(this@MemeEditorActivity)
+                    .title("Please wait a while")
+                    .content("Processing Gif")
+                    .progress(true, 0)
+                    .build()
+            pd.show()
+            val overlay = memeEditorView.captureItems()
+            withContext(Dispatchers.Default) {
+                compileGifMeme(GifInfo(gifPath,
+                        overlay,
+                        memeLayout.getMarginRect(),
+                        memeEditorView.paint,
+                        file.absolutePath)
+                )
             }
+            pd.dismiss()
+            startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {
+                putExtra("gif", file.absolutePath)
+                putExtra("texts", memeEditorView.getTexts().toTypedArray())
+            })
+        }
+    }
+
+    private fun saveImageMeme() {
+        val bitmap = memeEditorView.captureMeme()
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+            val path = withContext(Dispatchers.Default) {
+                bitmap.save(getTempMemeUploadDir(this@MemeEditorActivity), max = 1000, tag = "meme")
+            }
+            startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {
+                putExtra("image", path)
+                putExtra("texts", memeEditorView.getTexts().toTypedArray())
+                putExtra("tid", templateID)
+            })
         }
     }
 
     private fun onDoneTemplate() {
-        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-            val p = memeEditorView.generateProperty()
-            val check = p
-                    .memeItemsProperty
-                    .filterIsInstance(MemeStickerItemProperty::class.java)
-                    .map { it.sticker }
-                    .any { it is UserSticker }
+        generateProperLoadedProperty(MemeTemplate.getTempUploadDir(this)) {
+            it?.let { p ->
+                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                    val check = p
+                            .memeItemsProperty
+                            .filterIsInstance(MemeStickerItemProperty::class.java)
+                            .map { it.sticker }
+                            .any { it is UserSticker }
 
-            if (check) {
-                toast("Templates cannot contain custom made stickers")
-                return@launch
-            }
-            val result = withContext(Dispatchers.Default) {
-                p.saveImages(MemeTemplate.getTempUploadDir(this@MemeEditorActivity))
-                        .saveToString()
-            }
-            startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemeTemplatePosterActivity")).apply {
-                putExtra("json", result)
-            })
+                    if (check) {
+                        toast("Templates cannot contain custom made stickers")
+                        return@launch
+                    }
+                    val result = withContext(Dispatchers.Default) {
+                        p.saveImages(MemeTemplate.getTempUploadDir(this@MemeEditorActivity))
+                                .saveToString()
+                    }
+                    startActivity(Intent(this@MemeEditorActivity,
+                            Class.forName("com.innov8.memeit.activities.MemeTemplatePosterActivity")).apply {
+                        putExtra("json", result)
+                    })
+                }
+            } ?: toast("Couldn't load gif file")
         }
 
     }
 
+
     private fun saveDraft(onFinished: () -> Unit) {
+        generateProperLoadedProperty(MemeTemplate.getDraftsDir(this)) {
+            it?.let { lp ->
+                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                    //todo don't re-save the images if it is started with draft mode
+                    val file = File(MemeTemplate.getDraftsJsonDir(this@MemeEditorActivity), "${UUID.randomUUID()}.json")
+                    file.createNewFile()
+                    val sp = withContext(Dispatchers.Default) { lp.saveImages(MemeTemplate.getDraftsDir(this@MemeEditorActivity)) }
+                    withContext(Dispatchers.Default) {
+                        sp.saveToFile(file)
+                    }
+                    memeEditorView.clearMemeItems()
+                    memeEditorView.setLayout(null)
+                    onFinished()
+                }
+            } ?: toast("Couldn't save draft")
+        }
+    }
+
+    private fun generateProperLoadedProperty(destDir: File, onFinished: (LoadedMemeTemplateProperty?) -> Unit) {
         val p = memeEditorView.generateProperty()
-        GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-            //todo don't re-save the images if it is started with draft mode
-            val file = File(MemeTemplate.getDraftsJsonDir(this@MemeEditorActivity), "${UUID.randomUUID()}.json")
-            file.createNewFile()
-
-            val sp = withContext(Dispatchers.Default) { p.saveImages(MemeTemplate.getDraftsDir(this@MemeEditorActivity)) }
-
-            withContext(Dispatchers.Default) {
-                sp.saveToFile(file)
+        when (mode) {
+            MODE_SINGLE_IMAGE, MODE_MULTI_IMAGE -> onFinished(p)
+            MODE_DRAFT, MODE_TEMPLATE -> {
+                if (templateMemeType == Meme.MemeType.GIF) {
+                    onFinished(p.asLoadedGifMemeTemplateProperty(templateGifPath!!))
+                } else
+                    onFinished(p)
             }
-            memeEditorView.clearMemeItems()
-            memeEditorView.setLayout(null)
-            onFinished()
+            MODE_GIF_IMAGE -> {
+                val path = File(destDir, "${UUID.randomUUID()}.gif").absolutePath
+                GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+                    withContext(Dispatchers.Default) {
+                        recompileGif(intent.getStringExtra(PARAM_GIF_PATH), path)
+                    }
+                    onFinished(p.asLoadedGifMemeTemplateProperty(path))
+                }
+            }
         }
     }
 

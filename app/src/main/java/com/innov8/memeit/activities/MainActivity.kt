@@ -218,7 +218,7 @@ abstract class MainActivity : AppCompatActivity() {
     private inner class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         override fun getItem(position: Int) = when (position) {
             0 -> MemeListFragment.newInstance(MemeAdapter.HOME_ADAPTER, HomeMemeLoader2())
-            1 -> MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, TrendingMemeLoader())
+            1 -> MemeListFragment.newInstance(MemeAdapter.TRENDING_ADAPTER, TrendingMemeLoader())
             2 -> MemeListFragment.newInstance(MemeAdapter.LIST_FAVORITE_ADAPTER, FavoriteMemeLoader())
             3 -> ProfileFragment.newInstance()
             else -> throw IllegalArgumentException()

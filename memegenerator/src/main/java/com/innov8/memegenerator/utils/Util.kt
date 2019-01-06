@@ -17,9 +17,13 @@ import com.memeit.backend.models.SingleImageLayoutProperty
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
+import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.nio.channels.FileChannel
 import java.util.*
 
 fun getTempMemeUploadDir(context: Context): File {
@@ -244,4 +248,28 @@ fun Bitmap.save(dir: File,
     val fos = FileOutputStream(file)
     limitBy(max).compress(Bitmap.CompressFormat.WEBP, quality, fos)
     return file.absolutePath
+}
+
+fun copyFile(srcPath: String, destPath: String, onFinished: (Boolean) -> Unit) {
+    GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
+        val saved = withContext(Dispatchers.Default) {
+            var channelIn: FileChannel? = null
+            var channelOut: FileChannel? = null
+            var status: Boolean
+            try {
+                channelIn = FileInputStream(srcPath).channel
+                channelOut = FileOutputStream(destPath).channel
+                channelIn.transferTo(0, channelIn.size(), channelOut)
+
+                status = true
+            } catch (e: Exception) {
+                status = false
+            } finally {
+                channelIn?.close()
+                channelOut?.close()
+            }
+            status
+        }
+        onFinished(saved)
+    }
 }

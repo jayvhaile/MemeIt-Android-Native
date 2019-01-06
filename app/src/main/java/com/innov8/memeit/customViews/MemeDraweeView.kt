@@ -156,7 +156,6 @@ class MemeDraweeView : SimpleDraweeView {
 
     inner class Listener(val iid: String) : BaseControllerListener<ImageInfo>() {
         override fun onFailure(id: String?, throwable: Throwable?) {
-
             if (imageId == iid) state = STATE_FAILED
         }
 

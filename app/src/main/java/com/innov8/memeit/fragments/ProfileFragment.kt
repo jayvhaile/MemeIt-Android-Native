@@ -120,7 +120,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     val failed = 2
 
     var needToRefresh = true
-    var loadedState = 0
+    var loadedState = loading
         set(value) {
             field = value
             if (field == loaded && needToRefresh) {

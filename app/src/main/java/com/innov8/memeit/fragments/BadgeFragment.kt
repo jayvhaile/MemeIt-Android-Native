@@ -50,10 +50,12 @@ class BadgeFragment : Fragment() {
                 lm.spanCount = 1
                 badgeAdapter.mode = BadgeAdapter.MODE_LIST
                 badgeAdapter.notifyItemRangeChanged(0, badgeAdapter.itemCount)
+                badge_view_switch.setImageResource(R.drawable.ic_grid)
             } else {
                 lm.spanCount = 5
                 badgeAdapter.mode = BadgeAdapter.MODE_GRID
                 badgeAdapter.notifyItemRangeChanged(0, badgeAdapter.itemCount)
+                badge_view_switch.setImageResource(R.drawable.ic_list)
             }
         }
         load()

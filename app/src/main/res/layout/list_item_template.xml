@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardElevation="1dp"
-    app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="true">
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="false">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,16 +25,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <ProgressBar
-            android:id="@+id/template_progress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/template_image" />
-
         <com.innov8.memeit.commons.views.MemeItTextView
             android:id="@+id/template_label"
             android:layout_width="0dp"
@@ -41,11 +32,31 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Label"
+            android:ellipsize="end"
+            android:lines="1"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/meme_gif"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/template_progress" />
+            app:layout_constraintTop_toBottomOf="@+id/template_image"
+            tools:text="Template labe goes here and the aslfk lsdjfn sldfnj lsdkfj sdlkfjksd sdlkfjslkdf" />
+
+        <com.innov8.memeit.commons.views.MemeItTextView
+            android:id="@+id/meme_gif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Gif"
+            android:textColor="#05d"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/template_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

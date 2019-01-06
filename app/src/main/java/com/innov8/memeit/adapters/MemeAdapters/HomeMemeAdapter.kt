@@ -14,10 +14,6 @@ class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
     val tagsPool = RecyclerView.RecycledViewPool()
     val templatesPool = RecyclerView.RecycledViewPool()
 
-    init {
-
-
-    }
 
     override fun createHolder(parent: ViewGroup, viewType: Int): MemeViewHolder {
         return when (viewType) {

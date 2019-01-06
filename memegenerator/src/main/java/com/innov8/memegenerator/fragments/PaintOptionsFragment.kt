@@ -14,8 +14,6 @@ import kotlinx.android.synthetic.main.paint_options_view.*
 class PaintOptionsFragment : Fragment() {
 
 
-    private val views = mutableListOf<View>()
-
     var paintEditInterface: PaintEditInterface? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.paint_options_view, container, false)

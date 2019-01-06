@@ -216,7 +216,7 @@ class SavedImageMemeTemplateProperty(
 class SavedGifMemeTemplateProperty(
         layoutProperty: SingleImageLayoutProperty,
         memeItemsProperty: List<MemeItemProperty>,
-        val path: String,
+        path: String,
         previewImageUrl: String
 ) : SavedMemeTemplateProperty(layoutProperty, memeItemsProperty, mutableListOf(path), previewImageUrl) {
     override fun getType(): Meme.MemeType = Meme.MemeType.GIF

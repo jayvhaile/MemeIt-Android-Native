@@ -26,11 +26,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        android:text="MemeFactory"
         android:textColor="#313131"
         android:textSize="16sp"
         app:layout_constraintLeft_toRightOf="@+id/notif_icon"
-        app:layout_constraintTop_toTopOf="@+id/notif_icon" />
+        app:layout_constraintTop_toTopOf="@+id/notif_icon"
+        tools:text="Name" />
 
     <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/meme_time"
@@ -290,8 +290,22 @@
         app:layout_constraintTop_toTopOf="@+id/meme_image"
         app:srcCompat="@drawable/ic_file_download_white_36dp" />
 
+    <View
+        android:id="@+id/dot"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:alpha="0.7"
+        android:background="@drawable/dot"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/follow_user"
+        app:layout_constraintStart_toEndOf="@+id/meme_poster_name"
+        app:layout_constraintTop_toTopOf="@+id/follow_user"
+        app:layout_constraintVertical_bias="0.7" />
+
     <com.innov8.memeit.commons.views.MemeItTextView
-        android:id="@+id/memeItTextView"
+        android:id="@+id/follow_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -300,12 +314,6 @@
         android:textColor="@color/colorAccent"
         android:visibility="gone"
         app:layout_constraintBaseline_toBaselineOf="@+id/meme_poster_name"
-        app:layout_constraintStart_toEndOf="@+id/meme_poster_name" />
+        app:layout_constraintStart_toEndOf="@+id/dot" />
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="right"
-        app:constraint_referenced_ids="meme_time,meme_poster_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

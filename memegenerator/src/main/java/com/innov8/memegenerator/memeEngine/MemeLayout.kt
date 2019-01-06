@@ -173,7 +173,7 @@ class SingleImageLayout(bitmap: Bitmap) : MemeLayout(listOf(bitmap)) {
     }
 
     override fun loadPresets(): Map<String, MemeLayout> {
-        val p25h = images[0].height.byMin(25, 150.dp(context))
+        val p25h = images[0].height.byMin(25, 150)
         return mapOf(
                 "Classic" to SingleImageLayout(images[0]),
                 "Modern" to SingleImageLayout(images[0]).apply {

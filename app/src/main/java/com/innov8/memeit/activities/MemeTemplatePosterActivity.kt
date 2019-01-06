@@ -1,6 +1,7 @@
 package com.innov8.memeit.activities
 
 import android.content.Intent
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -8,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.adroitandroid.chipcloud.ChipCloud
 import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.controller.BaseControllerListener
+import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.request.ImageRequest
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.models.TypefaceManager
@@ -43,6 +46,13 @@ class MemeTemplatePosterActivity : AppCompatActivity() {
         category_chips.setMode(ChipCloud.Mode.REQUIRED)
         category_chips.onChipSelected { selectedIndex = it }
         category_chips.setSelectedChip(chipCategories.lastIndex)
+    }
+
+    class MyControllerListener : BaseControllerListener<ImageInfo>() {
+        override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
+            super.onFinalImageSet(id, imageInfo, animatable)
+            animatable?.start()
+        }
     }
 
 

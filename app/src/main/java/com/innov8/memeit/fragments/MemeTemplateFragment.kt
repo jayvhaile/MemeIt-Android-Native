@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.fragment_meme_list.*
 
 class MemeTemplateFragment : Fragment() {
 
-
     private val templateLoader by lazy {
         arguments!!.getParcelable<TemplateLoader>("loader")!!
     }
