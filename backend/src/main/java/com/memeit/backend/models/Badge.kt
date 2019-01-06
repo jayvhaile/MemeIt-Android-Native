@@ -161,7 +161,7 @@ data class Badge(val id: String,
                             "Get 100k Followers",
                             12
                     ),
-                    Badge(
+                    /*Badge(
                             "invite_001",
                             "Let the word spread",
                             "Invite 10 Users",
@@ -190,7 +190,7 @@ data class Badge(val id: String,
                             "We owe you one!",
                             "Invite 1000 Users",
                             4
-                    )
+                    )*/
             )
         }
 
