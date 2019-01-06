@@ -13,6 +13,7 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessaging
 import com.innov8.memeit.commons.models.TypefaceManager
 import com.innov8.memeit.commons.notidChannelName
 import com.memeit.backend.MemeItClient
@@ -71,8 +72,9 @@ class MemeItApp : MultiDexApplication() {
                 .build())
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         initNotificationChannel()
-        initUser()
+//        initUser()
         TypefaceManager.init(this)
+        FirebaseMessaging.getInstance().subscribeToTopic("general")
     }
 
     private fun initNotificationChannel() {

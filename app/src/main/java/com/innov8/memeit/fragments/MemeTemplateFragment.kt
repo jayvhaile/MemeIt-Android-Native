@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.innov8.memeit.adapters.ELEAdapter
 import com.innov8.memeit.adapters.TemplateAdapter
 import com.innov8.memeit.loaders.Sorter
 import com.innov8.memeit.loaders.TemplateLoader
 import com.innov8.memeit.R
-import com.innov8.memeit.utils.FilterableLoaderAdapterHandler
+import com.innov8.memeit.commons.ELEAdapter
+import com.innov8.memeit.commons.FilterableLoaderAdapterHandler
 import com.innov8.memeit.commons.toast
 import kotlinx.android.synthetic.main.fragment_meme_list.*
 

@@ -1,6 +1,7 @@
 package com.innov8.memeit.fragments
 
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -12,22 +13,21 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.tabs.TabLayout
-import com.innov8.memeit.activities.ProfileSettingsActivity
-import com.innov8.memeit.activities.TagsActivity
-import com.innov8.memeit.activities.UserListActivity
-import com.innov8.memeit.activities.UserTagActivity
 import com.innov8.memeit.adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.utils.CustomMethods
 import com.innov8.memeit.loaders.FollowerLoader
 import com.innov8.memeit.loaders.FollowingLoader
 import com.innov8.memeit.R
+import com.innov8.memeit.activities.*
 import com.innov8.memeit.utils.loadImage
 import com.innov8.memeit.utils.prefix
 import com.innov8.memeit.commons.toast
+import com.innov8.memeit.utils.generateTextLinkActions
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
@@ -146,6 +146,7 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                 }
             }
         }
+        profile_bio.onLinkClicked = generateTextLinkActions(context!!)
 
         initListeners()
         toolbar.inflateMenu(R.menu.profile_page_menu)
@@ -230,14 +231,22 @@ class ProfileFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                 if (isMe)
                     startActivity(Intent(context, TagsActivity::class.java))
                 else {
-                    val intent = Intent(context, UserTagActivity::class.java)
-                    intent.putExtra("uid", userData.uid)
-                    startActivity(intent)
+                    startActivity(Intent(context, TagsChooserActivity::class.java).apply {
+                        putExtra("user", userData)
+                    })
                 }
                 return true
             }
             R.id.menu_profile_id -> {
                 startActivity(Intent(context, ProfileSettingsActivity::class.java))
+            }
+            R.id.menu_profile_share -> {
+                startActivity(ShareCompat.IntentBuilder.from(context as Activity)
+                        .setText("Check out ${userData.name}(@${userData.username}) on MemeIt, " +
+                                "https://memeitapp.com/user/${userData.username}")
+                        .setType("text/plain")
+                        .createChooserIntent()
+                )
             }
         }
         return false

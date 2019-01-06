@@ -44,8 +44,7 @@ class PersonalizeAuthMode(private val authActivity: AuthActivity) : AuthMode {
                 R.id.confirm_password_field,
                 R.id.password_field,
                 R.id.or_continue_with,
-                R.id.auth_question,
-                R.id.auth_question_action
+                R.id.auth_question
         )
         constraintSet.makeVisible(
                 R.id.app_title,
@@ -98,13 +97,12 @@ class PersonalizeAuthMode(private val authActivity: AuthActivity) : AuthMode {
 
     private fun uploadData(user: UserReq) {
         MemeItUsers.updateMyUser(user, {
-            val i = Intent(authActivity, TagsChooserActivity::class.java)
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            i.putExtra("choose", true)
-            authActivity.startActivity(i)
+            authActivity.startActivity(Intent(authActivity, TagsChooserActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                putExtra("choose", true)
+            })
         }, authActivity.onError)
     }
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

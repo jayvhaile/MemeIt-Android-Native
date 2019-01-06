@@ -7,12 +7,13 @@ import android.view.Gravity
 import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
+import androidx.core.view.children
 import com.innov8.memeit.commons.dp
 
 class ColorChooser : HorizontalScrollView {
 
 
-    var colorList = listOf(
+    private var colorList = listOf(
             Color.WHITE,
             Color.BLACK,
             Color.GRAY,
@@ -46,43 +47,36 @@ class ColorChooser : HorizontalScrollView {
     private val strokeWidth = 4f.dp(context)
     private val onClick: (View) -> Unit = {
         it as ColorView
-        choose(it.id)
-        onColorChoosed?.invoke(colorList[it.id])
+        chooseColor(it.color)
+        onColorChoosed?.invoke(it.color)
     }
-    val linearLayout=LinearLayout(context)
+    private val linearLayout = LinearLayout(context)
 
     private fun init() {
         linearLayout.orientation = LinearLayout.HORIZONTAL
 
         linearLayout.gravity = Gravity.CENTER_HORIZONTAL
-        colorList.forEach{create(it)}
+        colorList.forEach { addColorView(it) }
         addView(linearLayout)
     }
 
-    private fun create(color: Int, index: Int = linearLayout.childCount): ColorView {
-        val colorView = ColorView(context, color, radius = radius,strokeWidth = strokeWidth)
+    fun addColorView(color: Int, index: Int = linearLayout.childCount): ColorView {
+        val colorView = ColorView(context, color, radius = radius, strokeWidth = strokeWidth)
         colorView.setPadding(padding, padding, padding, padding)
-        colorView.id = index
-
         colorView.setOnClickListener(onClick)
-        linearLayout.addView(colorView, childParams)
+        linearLayout.addView(colorView, index, childParams)
         return colorView
     }
 
-    fun chooseColor(color: Int, addIfNone: Boolean = false) {
-        val index = colorList.indexOf(color)
-        if (index != -1) choose(index)
-        else if (addIfNone)
-            create(color).choosed = true
-
-    }
-
-    private fun choose(index: Int) {
+    fun chooseColor(color: Int) {
         for (i in 0 until linearLayout.childCount) {
             val view = linearLayout.getChildAt(i) as ColorView
-            view.choosed = view.id == index
+            view.choosed = view.color == color
         }
     }
+
+    fun getChoosedColor() =
+            children.map { it as ColorView }.find { it.choosed }?.color ?: Color.BLACK
 
 
 }

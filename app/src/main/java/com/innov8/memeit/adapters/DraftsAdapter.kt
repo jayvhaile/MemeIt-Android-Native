@@ -7,10 +7,11 @@ import android.view.View
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.request.ImageRequest
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memeit.commons.MyViewHolder
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.models.Draft
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.SimpleELEListAdapter
 import java.io.File
 
 class DraftsAdapter(context: Context) : SimpleELEListAdapter<Draft>(context, R.layout.list_item_draft) {

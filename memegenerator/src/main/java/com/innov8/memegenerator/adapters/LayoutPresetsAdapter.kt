@@ -6,6 +6,7 @@ import android.widget.TextView
 import com.innov8.memegenerator.customViews.LayoutPresetView
 import com.innov8.memegenerator.memeEngine.MemeLayout
 import com.innov8.memegenerator.R
+import com.innov8.memeit.commons.MyViewHolder
 
 class LayoutPresetsAdapter(context: Context) : ListAdapter<Pair<String, MemeLayout>>(context, R.layout.list_item_layout_presets) {
     var onItemClick: ((MemeLayout) -> Unit)? = null

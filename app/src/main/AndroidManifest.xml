@@ -75,11 +75,11 @@
 
                 <data
                     android:host="memeitapp.com"
-                    android:pathPrefix="/api/v1/user"
+                    android:pathPrefix="/api/v1/username"
                     android:scheme="https" />
                 <data
                     android:host="memeitapp.com"
-                    android:pathPrefix="/api/v1/user"
+                    android:pathPrefix="/api/v1/username"
                     android:scheme="http" />
             </intent-filter>
             <intent-filter android:autoVerify="true">

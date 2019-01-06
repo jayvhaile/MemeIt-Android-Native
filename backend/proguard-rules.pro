@@ -28,6 +28,7 @@
 
 
 #memeit backend
+
 -keep class com.memeit.backend.** { *; }
 -keep class com.memeit.backend.models.** { *; }
 

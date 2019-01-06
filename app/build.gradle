@@ -39,6 +39,12 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+    splits {
+        abi {
+            enable true
+            universalApk true
+        }
+    }
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

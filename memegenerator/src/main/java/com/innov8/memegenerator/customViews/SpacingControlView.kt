@@ -6,7 +6,12 @@ import android.view.LayoutInflater
 import android.widget.ScrollView
 import com.innov8.memegenerator.interfaces.LayoutEditInterface
 import com.innov8.memegenerator.R
+import com.innov8.memegenerator.memeEngine.LinearImageLayout
+import com.innov8.memegenerator.memeEngine.MemeLayout
 import com.innov8.memegenerator.utils.Listener
+import com.memeit.backend.models.GridImageLayoutProperty
+import com.memeit.backend.models.LayoutProperty
+import com.memeit.backend.models.LinearImageLayoutProperty
 import com.warkiz.widget.IndicatorSeekBar
 
 class SpacingControlView : ScrollView {
@@ -24,25 +29,41 @@ class SpacingControlView : ScrollView {
     }
 
 
-
-
+    private lateinit var horizontalSpacingSeek: IndicatorSeekBar
+    private lateinit var verticalSpacingSeek4: IndicatorSeekBar
     private fun init() {
         val v = LayoutInflater.from(context).inflate(R.layout.spacing_settings, this, false)
 
-        val spacing_h_seek = v.findViewById<IndicatorSeekBar>(R.id.spacing_h_seek)
-        val spacing_v_seek = v.findViewById<IndicatorSeekBar>(R.id.spacing_v_seek)
+        horizontalSpacingSeek = v.findViewById(R.id.spacing_h_seek)
+        verticalSpacingSeek4 = v.findViewById(R.id.spacing_v_seek)
 
-        spacing_h_seek.onSeekChangeListener = Listener(onSeek = {
+        horizontalSpacingSeek.onSeekChangeListener = Listener(onSeek = {
             if (it.fromUser) {
                 layoutEditInterface?.onHorizontalSpacing(it.progress)
             }
         })
-        spacing_v_seek.onSeekChangeListener = Listener(onSeek = {
+        verticalSpacingSeek4.onSeekChangeListener = Listener(onSeek = {
             if (it.fromUser) {
                 layoutEditInterface?.onVertivalSpacing(it.progress)
             }
         })
         addView(v)
     }
+
     var layoutEditInterface: LayoutEditInterface? = null
+
+    fun applySpacing(layoutProperty: LayoutProperty) {
+        when (layoutProperty) {
+            is LinearImageLayoutProperty -> {
+                if (layoutProperty.orientation == LinearImageLayout.HORIZONTAL)
+                    horizontalSpacingSeek.setProgress(layoutProperty.spacing.toFloat())
+                else if (layoutProperty.orientation == LinearImageLayout.VERTICAL)
+                    verticalSpacingSeek4.setProgress(layoutProperty.spacing.toFloat())
+            }
+            is GridImageLayoutProperty -> {
+                horizontalSpacingSeek.setProgress(layoutProperty.hSpacing.toFloat())
+                verticalSpacingSeek4.setProgress(layoutProperty.vSpacing.toFloat())
+            }
+        }
+    }
 }

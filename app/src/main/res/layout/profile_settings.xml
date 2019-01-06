@@ -40,8 +40,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
-            android:theme="@style/EditTextStyle" />
+            android:hint="Name" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -65,9 +64,7 @@
             android:layout_height="wrap_content"
             android:hint="Bio/Description"
             android:inputType="textMultiLine"
-            android:minHeight="50dp"
-            android:maxLength="70"
-            android:theme="@style/EditTextStyle" />
+            android:minHeight="50dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

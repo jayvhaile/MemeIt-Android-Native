@@ -8,6 +8,7 @@ import android.widget.ScrollView
 import com.innov8.memegenerator.interfaces.LayoutEditInterface
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.utils.Listener
+import com.memeit.backend.models.LayoutProperty
 import com.warkiz.widget.IndicatorSeekBar
 
 class MarginControlView : ScrollView {
@@ -22,6 +23,11 @@ class MarginControlView : ScrollView {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         init()
     }
+
+    private lateinit var marginLeftSeek: IndicatorSeekBar
+    private lateinit var marginRightSeek: IndicatorSeekBar
+    private lateinit var marginTopSeek: IndicatorSeekBar
+    private lateinit var marginBottomSeek: IndicatorSeekBar
 
     var mode = R.id.radio_none
         set(value) {
@@ -44,7 +50,7 @@ class MarginControlView : ScrollView {
                 }
             }
         }
-    lateinit var seekbars: List<IndicatorSeekBar>
+    private lateinit var seekbars: List<IndicatorSeekBar>
     private fun adjustAll(progress: Float, except: IndicatorSeekBar? = null) =
             seekbars.filter { it != except }
                     .forEach { it.setProgress(progress) }
@@ -57,47 +63,47 @@ class MarginControlView : ScrollView {
             mode = id
         }
 
-        val margin_left_seek = v.findViewById<IndicatorSeekBar>(R.id.margin_left_seek)
-        val margin_right_seek = v.findViewById<IndicatorSeekBar>(R.id.margin_right_seek)
-        val margin_top_seek = v.findViewById<IndicatorSeekBar>(R.id.margin_top_seek)
-        val margin_bottom_seek = v.findViewById<IndicatorSeekBar>(R.id.margin_bottom_seek)
-        seekbars = listOf(margin_left_seek, margin_right_seek, margin_top_seek, margin_bottom_seek)
+        marginLeftSeek = v.findViewById(R.id.margin_left_seek)
+        marginRightSeek = v.findViewById(R.id.margin_right_seek)
+        marginTopSeek = v.findViewById(R.id.margin_top_seek)
+        marginBottomSeek = v.findViewById(R.id.margin_bottom_seek)
+        seekbars = listOf(marginLeftSeek, marginRightSeek, marginTopSeek, marginBottomSeek)
 
 
-        margin_left_seek.onSeekChangeListener = Listener(onSeek = {
+        marginLeftSeek.onSeekChangeListener = Listener(onSeek = {
             if (it.fromUser) {
                 when (mode) {
-                    R.id.radio_left_right -> margin_right_seek.setProgress(it.progressFloat)
-                    R.id.radio_all -> adjustAll(it.progressFloat, margin_left_seek)
+                    R.id.radio_left_right -> marginRightSeek.setProgress(it.progressFloat)
+                    R.id.radio_all -> adjustAll(it.progressFloat, marginLeftSeek)
 
                 }
                 change(0, it.progressFloat)
             }
         })
-        margin_right_seek.onSeekChangeListener = Listener(onSeek = {
+        marginRightSeek.onSeekChangeListener = Listener(onSeek = {
             if (it.fromUser) {
                 when (mode) {
-                    R.id.radio_left_right -> margin_left_seek.setProgress(it.progressFloat)
-                    R.id.radio_all -> adjustAll(it.progressFloat, margin_right_seek)
+                    R.id.radio_left_right -> marginLeftSeek.setProgress(it.progressFloat)
+                    R.id.radio_all -> adjustAll(it.progressFloat, marginRightSeek)
 
                 }
                 change(1, it.progressFloat)
             }
         })
-        margin_top_seek.onSeekChangeListener = Listener(onSeek = {
+        marginTopSeek.onSeekChangeListener = Listener(onSeek = {
             if (it.fromUser) {
                 when (mode) {
-                    R.id.radio_top_bottom -> margin_bottom_seek.setProgress(it.progressFloat)
-                    R.id.radio_all -> adjustAll(it.progressFloat, margin_top_seek)
+                    R.id.radio_top_bottom -> marginBottomSeek.setProgress(it.progressFloat)
+                    R.id.radio_all -> adjustAll(it.progressFloat, marginTopSeek)
                 }
                 change(2, it.progressFloat)
             }
         })
-        margin_bottom_seek.onSeekChangeListener = Listener(onSeek = {
+        marginBottomSeek.onSeekChangeListener = Listener(onSeek = {
             if (it.fromUser) {
                 when (mode) {
-                    R.id.radio_top_bottom -> margin_top_seek.setProgress(it.progressFloat)
-                    R.id.radio_all -> adjustAll(it.progressFloat, margin_bottom_seek)
+                    R.id.radio_top_bottom -> marginTopSeek.setProgress(it.progressFloat)
+                    R.id.radio_all -> adjustAll(it.progressFloat, marginBottomSeek)
 
                 }
                 change(3, it.progressFloat)
@@ -135,10 +141,17 @@ class MarginControlView : ScrollView {
                 if (index > 1) {
                     layoutEditInterface?.onTopMargin(p)
                     layoutEditInterface?.onBottomMargin(p)
-                }else x()
+                } else x()
             }
 
         }
     }
 
+
+    fun applyMargin(layoutProperty: LayoutProperty) {
+        marginLeftSeek.setProgress(layoutProperty.leftMargin.toFloat())
+        marginRightSeek.setProgress(layoutProperty.rightMargin.toFloat())
+        marginTopSeek.setProgress(layoutProperty.topMargin.toFloat())
+        marginBottomSeek.setProgress(layoutProperty.bottomMargin.toFloat())
+    }
 }

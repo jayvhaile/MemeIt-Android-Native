@@ -12,8 +12,9 @@ import android.widget.TextView
 import androidx.core.text.set
 import androidx.core.text.toSpannable
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memeit.commons.MyViewHolder
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.ELEWordFilterableListAdapter
 import com.innov8.memeit.utils.color
 import com.innov8.memeit.utils.formatNumber
 import com.innov8.memeit.utils.loadImage

@@ -44,6 +44,7 @@ class TemplateImageUploader(context: Context, params: WorkerParameters) : Worker
                         b.putString(OUTPUT_IMAGE_NAME, "$index:$name")
 
                     this.outputData = b.build()
+                    file.delete()
                     Result.SUCCESS
                 } else
                     Result.RETRY
@@ -83,6 +84,7 @@ class TemplateUploader(context: Context, params: WorkerParameters) : Worker(cont
                     }
                     val response = MemeItMemes.postTemplate(this).execute()
                     if (response.isSuccessful) {
+                        temp.delete()
                         notifyFinished()
                         Result.SUCCESS
                     } else

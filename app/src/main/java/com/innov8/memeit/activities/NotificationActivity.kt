@@ -6,8 +6,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.adapters.NotificationAdapter
 import com.innov8.memeit.loaders.MyNotificationLoader
 import com.innov8.memeit.R
-import com.innov8.memeit.loaders.TestNotificationLoader
-import com.innov8.memeit.utils.LoaderAdapterHandler
+import com.innov8.memeit.commons.LoaderAdapterHandler
 import com.innov8.memeit.utils.makeLinear
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call

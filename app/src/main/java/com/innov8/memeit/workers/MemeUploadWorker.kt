@@ -32,6 +32,7 @@ class MemeImageUploadWorker(context: Context, params: WorkerParameters) : Worker
                             .putString(STATUS, "Image Uploaded,Posting Meme")
                             .putString(MemeUploadWorker.UPLOADED_MEME_NAME, name)
                             .build()
+                    file.delete()
                     Result.SUCCESS
                 } else
                     Result.RETRY

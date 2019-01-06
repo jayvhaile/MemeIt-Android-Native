@@ -131,11 +131,13 @@ class MemeView : FrameLayout {
         commentBtnV.setOnClickListener {
             CommentsActivity.startWithMeme(context, meme)
         }
-        posterPicV.setOnClickListener {
-            val i = Intent(context, ProfileActivity::class.java)
-            i.putExtra("user", meme.poster)
-            context.startActivity(i)
+        val onProfileClicked: (View) -> Unit = {
+            context.startActivity(Intent(context, ProfileActivity::class.java).apply {
+                putExtra("user", meme.poster)
+            })
         }
+        posterPicV.setOnClickListener(onProfileClicked)
+        posterNameV.setOnClickListener(onProfileClicked)
         reactionCountV.setOnClickListener {
             val i = Intent(context, ReactorListActivity::class.java)
             i.putExtra("mid", meme.id)
@@ -301,7 +303,7 @@ class MemeView : FrameLayout {
                         "${BuildConfig.APPLICATION_ID}.fileprovider",
                         file)
                 val intent = ShareCompat.IntentBuilder.from(context as Activity)
-                        .setSubject("${MemeItApp.SERVER_DOMAIN}/share/${meme.id}")
+                        .setSubject("${MemeItApp.SERVER_DOMAIN}/meme/${meme.id}")
                         .setStream(fileUri)
                         .setType("image/*")
                         .createChooserIntent()

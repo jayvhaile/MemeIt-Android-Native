@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.innov8.memegenerator.memeEngine.PaintHandler.PaintMode
 import com.innov8.memegenerator.R
+import com.innov8.memeit.commons.MyViewHolder
 
 data class PaintShapeInfo(val imageID: Int, val name: String, val paintMode: PaintMode) {
 

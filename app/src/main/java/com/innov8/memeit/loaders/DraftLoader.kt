@@ -3,6 +3,7 @@ package com.innov8.memeit.loaders
 import android.content.Context
 import com.google.gson.stream.JsonReader
 import com.innov8.memeit.MemeItApp
+import com.innov8.memeit.commons.Loader
 import com.innov8.memeit.models.Draft
 import com.memeit.backend.models.MemeTemplate
 import com.memeit.backend.models.SavedMemeTemplateProperty

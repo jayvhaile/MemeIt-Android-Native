@@ -1,10 +1,12 @@
 package com.innov8.memegenerator.utils
 
+import android.content.Context
 import android.graphics.*
 import android.graphics.Bitmap.CompressFormat.PNG
 import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
+import androidx.core.graphics.scale
 import androidx.core.graphics.withRotation
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
@@ -12,12 +14,17 @@ import com.memeit.backend.models.GridImageLayoutProperty
 import com.memeit.backend.models.LayoutProperty
 import com.memeit.backend.models.LinearImageLayoutProperty
 import com.memeit.backend.models.SingleImageLayoutProperty
-import com.memeit.backend.utils.RuntimeTypeAdapterFactory
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.util.*
 
+fun getTempMemeUploadDir(context: Context): File {
+    return File(context.filesDir, "uploads/").apply { this.mkdirs() }
+}
 
 fun TabLayout.onTabSelected(onSelected: (TabLayout.Tab) -> Unit) {
 
@@ -149,6 +156,22 @@ infix fun Pair<Float, Float>.maxBy(max: Float): Pair<Float, Float> {
     }
 }
 
+infix fun <T : Number> Pair<T, T>.maxBy(max: T): Pair<Float, Float> {
+    val f = first.toFloat()
+    val s = second.toFloat()
+    val m = max.toFloat()
+    if (f > s) {
+        if (f <= m) return f to s
+        val x = (m * s) / f
+        return m to x
+    } else {
+        if (s <= m) return f to s
+
+        val x = (m * f) / s
+        return x to m
+    }
+}
+
 fun RectF.scale(x: Float, y: Float) = RectF(left * x, top * y, right * x, bottom * y)
 
 fun calcReqSize(lp: LayoutProperty, count: Int): Pair<Int, Int> {
@@ -203,4 +226,22 @@ fun RectF.padded(leftP: Float = 0f, topP: Float = 0f, rightP: Float = 0f, bottom
 
 fun RectF.margined(leftP: Float = 0f, topP: Float = 0f, rightP: Float = 0f, bottomP: Float = 0f): RectF {
     return RectF(left - leftP, top - topP, right + rightP, bottom + bottomP)
+}
+
+fun Bitmap.limitBy(limit: Int): Bitmap {
+    if (limit <= 0) return this
+    val (w, h) = (width to height) maxBy limit
+    return if (w == width.toFloat() && h == height.toFloat()) this
+    else scale(w.toInt(), h.toInt())
+}
+
+fun Bitmap.save(dir: File,
+                quality: Int = 90,
+                max: Int = 0,
+                format: Bitmap.CompressFormat = Bitmap.CompressFormat.WEBP,
+                tag: String = ""): String {
+    val file = File(dir, "${UUID.randomUUID()}_$tag.${format.name.toLowerCase()}")
+    val fos = FileOutputStream(file)
+    limitBy(max).compress(Bitmap.CompressFormat.WEBP, quality, fos)
+    return file.absolutePath
 }

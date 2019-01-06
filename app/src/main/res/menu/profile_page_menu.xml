@@ -15,4 +15,8 @@
         android:iconTint="#fff"
         android:title="Profile"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_profile_share"
+        android:title="Share"
+        app:showAsAction="never" />
 </menu>

@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memeit.activities.MemeChooserActivity
-import com.innov8.memeit.adapters.ELEListAdapter
 import com.innov8.memeit.adapters.MemeAdapters.ViewHolders.MemeViewHolder
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.ELEListAdapter
 import com.innov8.memeit.utils.showMemeZoomView
 import com.memeit.backend.models.HomeElement
 import com.memeit.backend.models.Meme
@@ -49,7 +49,7 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
             }
             LIST_ADAPTER_MY_POSTS -> MemeListAdapter(context).apply {
                 emptyDescription = "Your meme uploads would appear here"
-                emptyActionText = "Tap here to create one"
+                emptyActionText = "Tap here to addColorView one"
                 onEmptyAction = {
                     this.context.startActivity(Intent(this.context, MemeChooserActivity::class.java))
                 }
@@ -65,7 +65,7 @@ abstract class MemeAdapter(context: Context) : ELEListAdapter<HomeElement, MemeV
             }
             GRID_ADAPTER_MY_POSTS -> GridMemeAdapter(context).apply {
                 emptyDescription = "Your meme uploads would appear here"
-                emptyActionText = "Tap here to create one"
+                emptyActionText = "Tap here to addColorView one"
                 onEmptyAction = {
                     this.context.startActivity(Intent(this.context, MemeChooserActivity::class.java))
                 }

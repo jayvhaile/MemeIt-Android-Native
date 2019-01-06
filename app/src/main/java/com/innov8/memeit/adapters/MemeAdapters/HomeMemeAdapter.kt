@@ -39,7 +39,7 @@ class HomeMemeAdapter(context: Context) : MemeAdapter(context) {
             HomeElement.AD_TYPE -> {
                 measure("ad whole") {
                     val v = inflater.inflate(R.layout.list_item_ad_holder, parent, false)
-                    measure("ad create") { AdHolder(v, this) }
+                    measure("ad addColorView") { AdHolder(v, this) }
                 }
             }
             else -> {

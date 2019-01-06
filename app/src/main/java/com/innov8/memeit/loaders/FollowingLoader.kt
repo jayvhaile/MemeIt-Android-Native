@@ -2,6 +2,7 @@ package com.innov8.memeit.loaders
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.memeit.backend.models.User
@@ -12,7 +13,7 @@ class FollowingLoader(val uid: String?) : UserListLoader {
     constructor(parcel: Parcel) : this(parcel.readString())
 
     override fun load(limit: Int, onSuccess: (List<User>) -> Unit, onError: (String) -> Unit) {
-        if (uid == null)
+        if (uid == null || MemeItClient.myUser!!.id == uid)
             MemeItUsers.getMyFollowingList(skip, limit).call(onSuccess, onError)
         else
             MemeItUsers.getFollowingListForUser(uid, skip, limit).call(onSuccess, onError)

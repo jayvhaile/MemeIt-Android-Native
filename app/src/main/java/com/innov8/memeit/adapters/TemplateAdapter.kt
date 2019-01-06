@@ -10,9 +10,10 @@ import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.request.ImageRequest
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memeit.commons.MyViewHolder
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.ELEFilterableListAdapter
 import com.innov8.memeit.utils.generatePreviewUrl
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.MemeTemplate

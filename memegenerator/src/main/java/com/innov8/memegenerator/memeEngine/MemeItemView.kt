@@ -2,10 +2,7 @@ package com.innov8.memegenerator.memeEngine
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -14,6 +11,7 @@ import com.memeit.backend.models.MemeItemProperty
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.utils.contains
 import com.innov8.memegenerator.utils.enlarge
+import com.innov8.memegenerator.utils.padded
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.loadBitmap
 
@@ -21,7 +19,7 @@ import com.innov8.memeit.commons.loadBitmap
 abstract class MemeItemView : View {
     protected val isInMemeEditor: Boolean
 
-    var controlsSize = 20f.dp(context)
+    private var controlsSize = 20f.dp(context)
     val leftResizeRectF by lazy { RectF() }
     val topResizeRectF by lazy { RectF() }
     val rightResizeRectF by lazy { RectF() }
@@ -46,7 +44,7 @@ abstract class MemeItemView : View {
             strokeWidth = 1f.dp(context)
             strokeJoin = Paint.Join.ROUND
             strokeCap = Paint.Cap.BUTT
-            color = Color.WHITE
+            color = Color.parseColor("#aaaaaa")
         }
     }
 
@@ -57,31 +55,12 @@ abstract class MemeItemView : View {
     var onClickListener: ((MemeItemView) -> Unit)? = null
     var onCopyListener: ((MemeItemView) -> Unit)? = null
     var onRemoveListener: ((MemeItemView) -> Unit)? = null
-    protected var onResize: ((width: Int, height: Int) -> Unit)? = null
     private var resizeOffset = 0
     private var topOffset = 0
     private val resizeRectSize = 8.dp(context)
 
     var maxWidth = 0
     var maxHeight = 0
-
-    /*open fun onMaxWidthChanged(old: Int, new: Int) {
-        if (old == 0 || new == 0) {
-            requestLayout()
-            return
-        }
-        itemWidth = (itemWidth * (new.toFloat() / old)).toInt()
-        requestLayout()
-    }
-
-    open fun onMaxHeightChanged(old: Int, new: Int) {
-        if (old == 0 || new == 0) {
-            requestLayout()
-            return
-        }
-        itemHeight = (itemHeight * (new.toFloat() / old)).toInt()
-        requestLayout()
-    }*/
 
     val itemX: Float
         get() = controlsSize / 2f
@@ -97,9 +76,9 @@ abstract class MemeItemView : View {
         init()
     }
 
-    constructor(context: Context, memeItemProperty: MemeItemProperty) : super(context) {
+    constructor(context: Context, memeItemProperty: MemeItemProperty, mw: Int = 0, mh: Int = 0) : super(context) {
         isInMemeEditor = true
-        applyProperty(memeItemProperty)
+        applyProperty(memeItemProperty, mw, mh)
         init()
     }
 
@@ -124,7 +103,9 @@ abstract class MemeItemView : View {
     }
 
     private var tempProperty: MemeItemProperty? = null
-    fun applyProperty(memeItemProperty: MemeItemProperty) {
+    private fun applyProperty(memeItemProperty: MemeItemProperty, mw: Int = 0, mh: Int = 0) {
+        if (mw != 0) maxWidth = mw
+        if (mh != 0) maxHeight = mh
         if (maxWidth == 0 || maxHeight == 0)
             tempProperty = memeItemProperty
         else {
@@ -284,10 +265,6 @@ abstract class MemeItemView : View {
                 onClickListener?.invoke(this@MemeItemView)
                 true
             }
-        }
-
-        override fun onDoubleTap(e: MotionEvent?): Boolean {
-            return super.onDoubleTap(e)
         }
 
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {

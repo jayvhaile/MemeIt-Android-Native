@@ -12,11 +12,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.innov8.memegenerator.customViews.CheckerBoardDrawable
 import com.innov8.memegenerator.memeEngine.PaintHandler
-import com.innov8.memegenerator.models.StickerPack
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.loadBitmapfromStream
 import com.innov8.memeit.commons.makeFullScreen
 import com.memeit.backend.MemeItClient.context
+import com.memeit.backend.models.UserSticker
 import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
@@ -115,7 +115,7 @@ class StickerEditorActivity : AppCompatActivity() {
         }
         done.setOnClickListener {
             val bitmap = bitmapEraserView.getEditedBitmap()
-            val file = File(StickerPack.myStickersDir(this), "${UUID.randomUUID()}_sticker.png")
+            val file = File(UserSticker.myStickersDir(this), "${UUID.randomUUID()}_sticker.png")
             GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
                 withContext(Dispatchers.Default) {
                     bitmap.compress(Bitmap.CompressFormat.PNG, 90, FileOutputStream(file))

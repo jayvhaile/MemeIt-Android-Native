@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.github.ybq.android.spinkit.style.Wave
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memeit.commons.MyViewHolder
 import com.innov8.memeit.utils.CustomMethods
 import com.innov8.memeit.R
 import com.innov8.memeit.activities.TagMemesActivity
+import com.innov8.memeit.commons.SimpleELEListAdapter
 import com.innov8.memeit.commons.toast
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call

@@ -10,13 +10,11 @@
         android:id="@+id/notif_icon"
         android:layout_width="@dimen/profile_mini_size"
         android:layout_height="@dimen/profile_mini_size"
-        android:layout_marginLeft="@dimen/left_margin"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="16dp"
         android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/follower_name"
@@ -34,19 +32,26 @@
         android:id="@+id/follower_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="3.4k posts"
         app:layout_constraintLeft_toLeftOf="@+id/follower_name"
         app:layout_constraintTop_toBottomOf="@+id/follower_name" />
 
-    <include layout="@layout/follow_button"
+    <com.innov8.memeit.commons.views.MemeItTextView
+        android:id="@+id/follow_user"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:paddingLeft="24dp"
+        android:paddingTop="4dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="4dp"
+        android:text="Follow"
+        android:textColor="#313131"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

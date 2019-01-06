@@ -1,5 +1,6 @@
 package com.innov8.memeit.loaders
 
+import com.innov8.memeit.commons.Loader
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
 import com.memeit.backend.models.Reaction

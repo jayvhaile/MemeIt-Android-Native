@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import com.innov8.memeit.adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.loaders.MemeLoader
 import com.innov8.memeit.loaders.UserMemePostsLoader
-import com.innov8.memeit.utils.LoaderAdapterHandler
+import com.innov8.memeit.commons.LoaderAdapterHandler
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.toast
 import com.memeit.backend.models.HomeElement

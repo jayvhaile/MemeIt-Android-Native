@@ -28,7 +28,6 @@ class SignUpAuthMode(private val authActivity: AuthActivity) : AuthMode {
                 R.id.confirm_password_field,
                 R.id.or_continue_with,
                 R.id.auth_question,
-                R.id.auth_question_action,
                 R.id.action_holder
         )
     }
@@ -37,8 +36,9 @@ class SignUpAuthMode(private val authActivity: AuthActivity) : AuthMode {
 
     override fun updateElements() {
         authActivity.action_btn.text = "Sign Up"
-        authActivity.auth_question.text = "Already have an account?"
-        authActivity.auth_question_action.text = "Login"
+        authActivity.auth_question.text = "Already have an account? Login".toUnderlinedLinkSpan("Login") {
+            authActivity.onGoto()
+        }
         authActivity.username_field.editText!!.hint = "Username"
         authActivity.username_field.clear()
         authActivity.email_field.clear()

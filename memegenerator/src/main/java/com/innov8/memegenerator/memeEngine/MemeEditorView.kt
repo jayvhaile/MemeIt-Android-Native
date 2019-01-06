@@ -2,10 +2,7 @@ package com.innov8.memegenerator.memeEngine
 
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -32,11 +29,11 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
 
         when (tag) {
             "text" -> {
-                if (focusedItem !is MemeTextView) {
+                if (focusedItem !is MemeTextItem) {
                     var selected = false
                     for (i in 0 until childCount) {
                         val it = getChildAt(i)
-                        if (it is MemeTextView) {
+                        if (it is MemeTextItem) {
                             it.requestFocus()
                             selected = true
                             break
@@ -76,7 +73,7 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
         setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 when (v) {
-                    is MemeTextView -> itemSelectedInterface?.onTextItemSelected(v.generateTextStyleProperty())
+                    is MemeTextItem -> itemSelectedInterface?.onTextItemSelected(v.generateTextStyleProperty())
                 }
             }
         }
@@ -127,13 +124,10 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
 
     override fun onDraw(canvas: Canvas) {
         background.draw(canvas)
-        memeLayout?.let {
-            canvas.drawRect(it.drawingRect, paint)
-            for (i in 0 until it.count) {
-                canvas.drawBitmap(it.images[i],
-                        null,
-                        it.getDrawingRectAt(i),
-                        null)
+        memeLayout?.run {
+            canvas.drawRect(drawingRect, paint)
+            images.forEachIndexed { i, bitmap ->
+                canvas.drawBitmap(bitmap, null, getDrawingRectAt(i), paint)
             }
             paintHandler.draw(canvas)
             super.onDraw(canvas)
@@ -156,7 +150,8 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
         var curTop: Int
         for (i in 0 until childCount) {
             val child = getChildAt(i)
-            child.measure(View.MeasureSpec.makeMeasureSpec(childWidth, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.AT_MOST))
+            child.measure(View.MeasureSpec.makeMeasureSpec(childWidth, View.MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.AT_MOST))
             curLeft = child.left
             curTop = child.top
             curRight = curLeft + child.measuredWidth
@@ -193,7 +188,7 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
             val rect = memeLayout.drawingRect
 
             memeTemplate.textProperties.forEach {
-                val memeTextView = MemeTextView(context)
+                val memeTextView = MemeTextItem(context)
                 memeTextView.applyTextProperty(it, rect.width(), rect.height(), rect.left, rect.top)
                 addMemeItemView(memeTextView)
             }
@@ -244,7 +239,7 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
         val texts = mutableListOf<String>()
         for (i in 0 until childCount) {
             val v = getChildAt(i)
-            if (v is MemeTextView) {
+            if (v is MemeTextItem) {
                 texts.add(v.text)
             }
         }
@@ -268,7 +263,7 @@ class MemeEditorView : ViewGroup, EditorStateChangedListener {
 
         memeTemplateProperty.memeItemsProperty.forEach {
             addMemeItemView(when (it) {
-                is MemeTextItemProperty -> MemeTextView(context, it)
+                is MemeTextItemProperty -> MemeTextItem(context, it)
                 is MemeStickerItemProperty -> MemeStickerView(context, it)
             })
         }

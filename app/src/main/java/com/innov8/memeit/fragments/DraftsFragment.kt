@@ -9,7 +9,7 @@ import com.innov8.memegenerator.utils.initWithGrid
 import com.innov8.memeit.adapters.DraftsAdapter
 import com.innov8.memeit.loaders.DraftLoader
 import com.innov8.memeit.R
-import com.innov8.memeit.utils.LoaderAdapterHandler
+import com.innov8.memeit.commons.LoaderAdapterHandler
 import com.innov8.memeit.commons.toast
 import kotlinx.android.synthetic.main.fragment_meme_list.*
 

@@ -13,7 +13,7 @@ import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.innov8.memegenerator.adapters.ListAdapter
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memeit.commons.MyViewHolder
 import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.adapters.GifAdapter.Gif
 import com.innov8.memeit.customViews.CountView

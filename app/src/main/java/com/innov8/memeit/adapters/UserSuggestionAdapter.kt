@@ -4,8 +4,9 @@ import android.content.Context
 import android.view.View
 import android.widget.TextView
 import com.innov8.memegenerator.adapters.ListAdapter
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memeit.commons.MyViewHolder
 import com.innov8.memeit.R
+import com.innov8.memeit.activities.ProfileActivity
 import com.innov8.memeit.commons.toast
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.utils.loadImage
@@ -26,8 +27,11 @@ class UserSuggestionAdapter(context: Context) : ListAdapter<User>(context, R.lay
         private val followV: TextView = itemView.findViewById(R.id.follow_user)
 
         init {
-            val uid = getItemAt(item_position).uid!!
+            itemView.setOnClickListener {
+                ProfileActivity.startWithUser(context, items[item_position])
+            }
             followV.setOnClickListener { _ ->
+                val uid = items[item_position].uid!!
                 if (followV.text == "Unfollow") {
                     followV.text = "Unfollowing..."
                     MemeItUsers.unfollowUser(uid).call({
@@ -51,7 +55,6 @@ class UserSuggestionAdapter(context: Context) : ListAdapter<User>(context, R.lay
         }
 
         override fun bind(t: User) {
-            profileV.hasBorder = false
             profileV.setText(t.name.prefix())
             profileV.loadImage(t.imageUrl)
             nameV.text = t.name

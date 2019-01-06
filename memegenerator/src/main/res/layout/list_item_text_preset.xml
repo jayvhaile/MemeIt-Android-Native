@@ -8,7 +8,7 @@
     android:layout_marginRight="2dp"
     android:orientation="vertical">
 
-    <com.innov8.memegenerator.memeEngine.MemeTextView
+    <com.innov8.memegenerator.memeEngine.MemeTextItem
         android:id="@+id/text_preset_view"
         android:layout_width="100dp"
         android:layout_height="50dp"

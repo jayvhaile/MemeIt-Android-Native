@@ -6,6 +6,7 @@ import android.os.Parcelable
 import com.google.gson.GsonBuilder
 import com.google.gson.stream.JsonReader
 import com.innov8.memeit.MemeItApp
+import com.innov8.memeit.commons.Loader
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call

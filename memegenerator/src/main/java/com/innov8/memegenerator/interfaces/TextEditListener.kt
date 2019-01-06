@@ -1,14 +1,15 @@
 package com.innov8.memegenerator.interfaces
 
 import android.graphics.Xfermode
+import android.text.Layout
 import com.innov8.memegenerator.memeEngine.MemeLayout
 import com.innov8.memegenerator.memeEngine.MemeStickerView
-import com.innov8.memegenerator.memeEngine.MemeTextView
+import com.innov8.memegenerator.memeEngine.MemeTextItem
 import com.innov8.memegenerator.memeEngine.PaintHandler
 import com.memeit.backend.models.MemeTextStyleProperty
 
 interface TextEditListener {
-    fun onAddText(memeTextView: MemeTextView)
+    fun onAddText(memeTextItem: MemeTextItem)
     fun onTextSizeChanged(size: Float)
     fun onTextColorChanged(color: Int)
     fun onTextFontChanged(font: String)
@@ -18,6 +19,8 @@ interface TextEditListener {
     fun onTextSetStroked(stroked: Boolean)
     fun onTextStrokeChanged(strokeSize: Float)
     fun onTextStrokrColorChanged(strokeColor: Int)
+    fun onTextBgColorChanged(bgColor: Int)
+    fun onTextAlignmentChanged(alignment: Layout.Alignment)
     fun onApplyAll(textStyleProperty: MemeTextStyleProperty, applySize: Boolean = true)
 }
 

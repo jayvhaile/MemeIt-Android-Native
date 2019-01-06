@@ -11,8 +11,9 @@ import androidx.work.WorkInfo
 import androidx.work.WorkInfo.*
 import androidx.work.WorkManager
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memeit.commons.MyViewHolder
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.SimpleELEListAdapter
 
 
 class MemeUploadTaskAdapter(context: Context) : SimpleELEListAdapter<WorkInfo>(context, R.layout.list_item_ongoing_uploads) {

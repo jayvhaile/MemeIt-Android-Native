@@ -79,7 +79,8 @@ class ProfileSettingsActivity : AppCompatActivity() {
         val newBio = settings_bio.text
 
         val user = UserReq()
-        if (settings_name.validateLength(2, 32, "Name")) {
+        if (settings_name.validateLength(2, 32, "Name") &&
+                settings_bio.validateLength(0, 70, "Bio")) {
             var changed = false
             if (newName != muser.name) {
                 user.name = newName

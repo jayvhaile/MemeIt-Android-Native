@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Parcel
 import android.os.Parcelable
+import android.text.Layout
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.stream.JsonReader
@@ -25,6 +26,7 @@ data class MemeTemplate(
         val usageCount: Long? = null,
         val createdDate: Long? = null,
         val tags: List<String>,
+        val examples: List<Array<String>> = listOf(),
         val memeTemplateProperty: SavedMemeTemplateProperty
 ) : HomeElement {
     override val itemType: Int = HomeElement.MEME_TEMPLATE_SUGGESTION_TYPE
@@ -61,18 +63,6 @@ data class MemeTemplate(
                             json,
                             MemeTemplate::class.java
                     )
-        }
-
-        fun isSaved(id: String, context: Context, onResult: (Boolean) -> Unit) {
-            GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-                withContext(Dispatchers.Default) {
-                    try {
-                        getSavedJsonDir(context).list { _, name -> name.startsWith(id) }
-                    } catch (e: Exception) {
-                        null
-                    }
-                }?.let { r -> onResult(r.isNotEmpty()) } ?: onResult(false)
-            }
         }
 
         fun readFromFile(file: File): MemeTemplate? {
@@ -117,16 +107,6 @@ data class MemeTemplate(
         fun getTempUploadJsonDir(context: Context): File {
             return File(context.filesDir, "templates/temp/upload/json/").apply { this.mkdirs() }
         }
-
-        fun getTempDownloadDir(context: Context): File {
-            return File(context.filesDir, "templates/temp/download/").apply { this.mkdirs() }
-        }
-
-        fun getTempDownloadJsonDir(context: Context): File {
-            return File(context.filesDir, "templates/temp/download/json/").apply { this.mkdirs() }
-        }
-
-
     }
 }
 
@@ -399,7 +379,7 @@ sealed class MemeItemProperty(
 }
 
 class MemeStickerItemProperty(
-        val stickerId: String,
+        val sticker: Sticker,
         x: Float,
         y: Float,
         w: Float,
@@ -419,18 +399,24 @@ class MemeTextItemProperty(
 
 data class MemeTextStyleProperty(val textSize: Float = 0f,
                                  val textColor: Int = Color.BLACK,
-                                 val font: String,
+                                 val font: String = "default",
                                  val bold: Boolean = false,
                                  val italic: Boolean = false,
                                  val allCap: Boolean = false,
                                  val stroked: Boolean = false,
                                  val strokeColor: Int = Color.BLACK,
-                                 val strokeWidth: Float = 0f)
+                                 val strokeWidth: Float = 0f,
+                                 val bgColor: Int = Color.TRANSPARENT,
+                                 val align: Layout.Alignment = Layout.Alignment.ALIGN_CENTER) {
+
+    var alignment: Layout.Alignment = align ?: Layout.Alignment.ALIGN_CENTER
+}
 
 
 fun buildGson(): Gson {
     return GsonBuilder().registerTypeAdapterFactory(SavedMemeTemplateProperty.getRuntimeTypeAdapterFactory())
             .registerTypeAdapterFactory(LayoutProperty.getRuntimeTypeAdapterFactory())
             .registerTypeAdapterFactory(MemeItemProperty.getRuntimeTypeAdapterFactory())
+            .registerTypeAdapterFactory(Sticker.getRuntimeTypeAdapterFactory())
             .create()
 }

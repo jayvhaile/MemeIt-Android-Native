@@ -107,7 +107,7 @@ public class CustomMethods {
      * This method gives the login activity that scrolling effect
      *
      * @param first,second : The consecutive imageviews that follow each other and loop
-     *                     to create an animation.
+     *                     to addColorView an animation.
      */
 
     public static void makeBackgroundScrollAnimate(Activity a, @IdRes int first, @IdRes int second) {

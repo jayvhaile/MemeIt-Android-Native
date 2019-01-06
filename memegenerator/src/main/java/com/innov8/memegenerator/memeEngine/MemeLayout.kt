@@ -6,6 +6,8 @@ import android.graphics.Rect
 import android.graphics.RectF
 import androidx.core.graphics.toRectF
 import com.innov8.memegenerator.utils.fitCenter
+import com.innov8.memeit.commons.dp
+import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.models.GridImageLayoutProperty
 import com.memeit.backend.models.LayoutProperty
 import com.memeit.backend.models.LinearImageLayoutProperty
@@ -77,7 +79,7 @@ abstract class MemeLayout(val images: List<Bitmap>) {
     var hr = 1f
     var vr = 1f
 
-    fun getMarginRect()= Rect(leftMargin,topMargin,rightMargin,bottomMargin).toRectF()
+    fun getMarginRect() = Rect(leftMargin, topMargin, rightMargin, bottomMargin).toRectF()
 
     var leftMarginCalc = 0
         get() = ((leftMargin * innerWidth() / 100) * hr).toInt()
@@ -166,15 +168,20 @@ class SingleImageLayout(bitmap: Bitmap) : MemeLayout(listOf(bitmap)) {
         }
     }
 
+    private fun Int.byMin(percent: Int, min: Int): Int {
+        return Math.max(this.percent(percent.toFloat()).toInt(), min).percentOf(this.toFloat()).toInt()
+    }
+
     override fun loadPresets(): Map<String, MemeLayout> {
+        val p25h = images[0].height.byMin(25, 150.dp(context))
         return mapOf(
                 "Classic" to SingleImageLayout(images[0]),
                 "Modern" to SingleImageLayout(images[0]).apply {
-                    leftMargin = 2; rightMargin = 2; topMargin = 25; bottomMargin = 2
+                    leftMargin = 2; rightMargin = 2; topMargin = p25h; bottomMargin = 2
                 },
                 "Top Bottom" to SingleImageLayout(images[0]).apply {
-                    topMargin = 25
-                    bottomMargin = 25
+                    topMargin = p25h
+                    bottomMargin = p25h
                 },
                 "Left" to SingleImageLayout(images[0]).apply {
                     leftMargin = 100

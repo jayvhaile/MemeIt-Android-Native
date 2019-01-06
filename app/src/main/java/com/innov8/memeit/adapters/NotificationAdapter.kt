@@ -18,14 +18,13 @@ import androidx.core.text.set
 import androidx.core.text.toSpannable
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
-import com.facebook.internal.ImageRequest
 import com.github.ybq.android.spinkit.style.CubeGrid
+import com.innov8.memeit.R
 import com.innov8.memeit.activities.CommentsActivity
 import com.innov8.memeit.activities.ProfileActivity
-import com.innov8.memeit.R
-import com.innov8.memeit.commons.TouchableSpan
-import com.innov8.memeit.utils.*
+import com.innov8.memeit.commons.ELEListAdapter
 import com.innov8.memeit.commons.views.ProfileDraweeView
+import com.innov8.memeit.utils.*
 import com.memeit.backend.models.*
 
 class NotificationAdapter(context: Context) : ELEListAdapter<Notification, NotificationViewHolder>(context) {

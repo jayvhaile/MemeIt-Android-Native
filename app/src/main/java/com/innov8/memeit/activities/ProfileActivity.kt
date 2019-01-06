@@ -6,12 +6,11 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
-
-import com.innov8.memeit.fragments.ProfileFragment
-import com.memeit.backend.models.User
-
 import androidx.appcompat.app.AppCompatActivity
 import com.innov8.memeit.R
+import com.innov8.memeit.fragments.ProfileFragment
+import com.memeit.backend.MemeItClient
+import com.memeit.backend.models.User
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -24,20 +23,30 @@ class ProfileActivity : AppCompatActivity() {
             window.statusBarColor = Color.RED
         }
         setContentView(R.layout.activity_profile)
+        intent?.data?.lastPathSegment?.let {
+            if (MemeItClient.myUser != null) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.profile_frag_holder, ProfileFragment.byUsername(it))
+                        .commit()
+            } else {
+                startActivity(Intent(this, AuthActivity::class.java))
+            }
+        } ?: let {
+            val uid = intent.getStringExtra(PARAM_USER_ID)
+            val user = intent.getParcelableExtra<User>(PARAM_USER)
+            val username = intent.getStringExtra(PARAM_USERNAME)
 
-
-        val uid = intent.getStringExtra(PARAM_USER_ID)
-        val user = intent.getParcelableExtra<User>(PARAM_USER)
-        val username = intent.getStringExtra(PARAM_USERNAME)
-
-        val pf = when {
-            user != null -> ProfileFragment.byUser(user)
-            username != null -> ProfileFragment.byUsername(username)
-            else -> ProfileFragment.byID(uid)
+            val pf = when {
+                user != null -> ProfileFragment.byUser(user)
+                username != null -> ProfileFragment.byUsername(username)
+                else -> ProfileFragment.byID(uid)
+            }
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.profile_frag_holder, pf)
+                    .commit()
         }
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.profile_frag_holder, pf)
-                .commit()
+
+
     }
 
     companion object {

@@ -3,6 +3,7 @@ package com.innov8.memeit.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
@@ -62,14 +63,7 @@ class AuthActivity : AppCompatActivity() {
         action_btn.setOnClickListener {
             execOnAction()
         }
-        auth_question_action.setOnClickListener {
-            if (mLoading) {
-                showError("Please wait a bit")
-                return@setOnClickListener
-            }
-            currentMode.onGoto()
-        }
-
+        auth_question.movementMethod = LinkMovementMethod()
 
         signup_facebook.setOnClickListener {
             if (mLoading) {
@@ -99,6 +93,14 @@ class AuthActivity : AppCompatActivity() {
         confirm_password_field.editText!!.setOnEditorActionListener(function)
         val modeInt = intent?.getIntExtra(STARTING_MODE_PARAM, MODE_INTRO) ?: MODE_INTRO
         setMode(getModeForInt(modeInt), withAnimation = false)
+    }
+
+    fun onGoto() {
+        if (mLoading) {
+            showError("Please wait a bit")
+            return
+        }
+        currentMode.onGoto()
     }
 
     private fun execOnAction() {

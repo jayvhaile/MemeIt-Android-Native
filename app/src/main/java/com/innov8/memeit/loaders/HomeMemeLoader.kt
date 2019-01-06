@@ -46,7 +46,6 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
     private var tagsLoaded = false
     private var templateLoaded = false
     private var index = 0
-    var type = 0
     private var usersIndex = 0
     private var tagsIndex = 0
     private var templateIndex = 0
@@ -130,7 +129,6 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
         tagsLoaded = parcel.readByte() != 0.toByte()
         templateLoaded = parcel.readByte() != 0.toByte()
         index = parcel.readInt()
-        type = parcel.readInt()
         usersIndex = parcel.readInt()
         tagsIndex = parcel.readInt()
         templateIndex = parcel.readInt()
@@ -179,7 +177,6 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
         tagsLoaded = false
         templateLoaded = false
         index = 0
-        type = 0
         templateIndex = 0
         usersIndex = 0
         tagsIndex = 0
@@ -191,7 +188,6 @@ class HomeMemeLoader() : MemeLoader<HomeElement> {
         parcel.writeByte(if (tagsLoaded) 1 else 0)
         parcel.writeByte(if (templateLoaded) 1 else 0)
         parcel.writeInt(index)
-        parcel.writeInt(type)
         parcel.writeInt(usersIndex)
         parcel.writeInt(tagsIndex)
         parcel.writeInt(templateIndex)

@@ -16,6 +16,7 @@ import com.innov8.memegenerator.interfaces.LayoutEditInterface
 import com.innov8.memegenerator.memeEngine.MemeLayout
 import com.innov8.memegenerator.R
 import com.innov8.memegenerator.utils.ViewAdapter
+import com.memeit.backend.models.LayoutProperty
 import kotlinx.android.synthetic.main.bottom_tab.*
 import kotlinx.android.synthetic.main.layout_pager.*
 
@@ -28,19 +29,25 @@ class LayoutEditorFragment : Fragment() {
         set(value) {
             field = value
             apply()
+
         }
 
 
     fun apply() {
         context ?: return
-        memeLayout ?: return
+        memeLayout?.let {
+            adapter.setAll(it.loadPresets().toList())
+            applyLayoutProperty(it.generateProperty())
+        }
 
-        adapter.setAll(memeLayout!!.loadPresets().toList())
     }
 
     val adapter by lazy {
         LayoutPresetsAdapter(context!!).apply {
-            onItemClick = { layoutEditListener?.onLayoutSet(it) }
+            onItemClick = {
+                layoutEditListener?.onLayoutSet(it)
+                applyLayoutProperty(it.generateProperty())
+            }
         }
     }
 
@@ -48,6 +55,9 @@ class LayoutEditorFragment : Fragment() {
         return inflater.inflate(R.layout.layout_pager, container, false)
     }
 
+    private lateinit var marginControlView: MarginControlView
+    private lateinit var spacingControlView: SpacingControlView
+    private lateinit var colorChooser: ColorChooser
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         views.add(RecyclerView(context!!).apply {
@@ -56,27 +66,47 @@ class LayoutEditorFragment : Fragment() {
             apply()
         })
 
-        val mc = MarginControlView(context!!)
-        mc.layoutEditInterface = layoutEditListener
-        views.add(mc)
-
-        val sc = SpacingControlView(context!!)
-        sc.layoutEditInterface = layoutEditListener
-        views.add(sc)
-
-        val cc = ColorChooser(context!!)
-        cc.onColorChoosed = {
-            layoutEditListener?.onBackgroundColorChanged(it)
+        marginControlView = MarginControlView(context!!).apply {
+            layoutEditInterface = layoutEditListener
+            views.add(this)
         }
-        views.add(cc)
+        spacingControlView = SpacingControlView(context!!).apply {
+            layoutEditInterface = layoutEditListener
+            views.add(this)
+        }
+        colorChooser = ColorChooser(context!!).apply {
+            onColorChoosed = {
+                layoutEditListener?.onBackgroundColorChanged(it)
+            }
+            views.add(this)
+        }
 
         text_pager.adapter = Adapter(context!!)
         pager_tab.setupWithViewPager(text_pager)
+
+        tempProperty?.let {
+            applyLayoutProperty(it)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         views.clear()
+    }
+
+    private var tempProperty: LayoutProperty? = null
+    fun applyLayoutProperty(layoutProperty: LayoutProperty) {
+        views.takeIf { it.isNotEmpty() }?.let {
+            val temp = layoutEditListener
+            layoutEditListener = null
+            marginControlView.applyMargin(layoutProperty)
+            spacingControlView.applySpacing(layoutProperty)
+            colorChooser.chooseColor(layoutProperty.bgColor)
+            layoutEditListener = temp
+            tempProperty = null
+        } ?: let {
+            tempProperty = layoutProperty
+        }
     }
 
 

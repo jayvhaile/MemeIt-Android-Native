@@ -2,7 +2,6 @@ package com.innov8.memeit.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.Spannable
@@ -16,9 +15,10 @@ import androidx.core.text.set
 import androidx.core.text.toSpannable
 import com.afollestad.materialdialogs.MaterialDialog
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memeit.commons.MyViewHolder
 import com.innov8.memeit.R
 import com.innov8.memeit.activities.ProfileActivity
+import com.innov8.memeit.commons.SimpleELEListAdapter
 import com.innov8.memeit.commons.min
 import com.innov8.memeit.commons.views.MemeItTextView
 import com.innov8.memeit.commons.views.ProfileDraweeView
@@ -27,7 +27,6 @@ import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
 import com.memeit.backend.models.Comment
-import kotlinx.android.synthetic.main.list_item_meme.view.*
 
 /**
  * Created by Jv on 7/5/2018.
@@ -45,9 +44,7 @@ class CommentsAdapter(context: Context) : SimpleELEListAdapter<Comment>(context,
     override var errorDescription: String = "Couldn't load comments"
     override var emptyActionText: String? = ""
     override var errorActionText: String? = "Try Again"
-    override val loadingDrawable = CubeGrid().apply {
-        color = Color.rgb(255, 100, 0)
-    }
+
 
     internal val linkActions by lazy {
         generateTextLinkActions(context)

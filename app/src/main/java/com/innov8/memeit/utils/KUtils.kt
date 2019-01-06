@@ -17,6 +17,7 @@ import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +41,7 @@ import com.innov8.memeit.activities.SettingsActivity
 import com.innov8.memeit.activities.TagMemesActivity
 import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.TouchableSpan
 import com.innov8.memeit.workers.ProfileImageUploadWorker
 import com.innov8.memeit.workers.ProfileUploadWorker
 import com.innov8.memeit.commons.log
@@ -248,15 +250,15 @@ fun <T> measure(tag: String = "", block: () -> T): T {
 
 fun String.validateLength(min: Int, max: Int, tag: String): String? {
     return when {
-        this.trim().length < min -> "$tag should at least be $min in length"
-        this.trim().length > max -> "$tag should be less than $max in length"
+        this.trim().length < min -> "$tag should at least be $min characters long"
+        this.trim().length > max -> "$tag should be less than $max characters long"
         else -> null
     }
 }
 
 fun String.validateMatch(s2: String, tag: String): String? {
     return when {
-        this != s2 -> "$tag doesn't match"
+        this != s2 -> "${tag}s don't match"
         else -> null
     }
 }
@@ -412,10 +414,9 @@ fun generateTextLinkActions(context: Context): (MemeItTextView.LinkMode, String)
         MemeItTextView.LinkMode.PHONE -> context.startActivity(Intent(Intent.ACTION_DIAL).apply {
             data = Uri.parse("tel:${text.trim()}")
         })
-        MemeItTextView.LinkMode.EMAIL -> context.startActivity(Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_EMAIL, text.trim())
-            putExtra(Intent.EXTRA_SUBJECT, "From MemeIt")
+        MemeItTextView.LinkMode.EMAIL -> context.startActivity(Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(text.trim()))
         })
         MemeItTextView.LinkMode.HASHTAG -> TagMemesActivity.startWithTag(context, text.trim().substring(1))
         MemeItTextView.LinkMode.MENTION -> ProfileActivity.startWithUsername(context, text.trim().substring(1))
@@ -435,4 +436,9 @@ fun ChipCloud.onChipSelected(onChipSelected: (Int) -> Unit) {
             onChipSelected(p0)
         }
     })
+}
+
+fun String.toUnderlinedLinkSpan(word: String, onClick: () -> Unit) = toSpannable().apply {
+    val i = indexOf(word)
+    this[i..i + word.length] = TouchableSpan(Color.WHITE, Color.LTGRAY, true) { onClick() }
 }

@@ -2,17 +2,18 @@ package com.innov8.memeit.loaders
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.memeit.backend.models.User
 
-class FollowerLoader( val uid: String?) : UserListLoader {
+class FollowerLoader(val uid: String?) : UserListLoader {
     override var skip: Int = 0
 
     constructor(parcel: Parcel) : this(parcel.readString())
 
     override fun load(limit: Int, onSuccess: (List<User>) -> Unit, onError: (String) -> Unit) {
-        if (uid == null)
+        if (uid == null || MemeItClient.myUser!!.id == uid)
             MemeItUsers.getMyFollowersList(skip, limit).call(onSuccess, onError)
         else
             MemeItUsers.getFollowersListForUser(uid, skip, limit).call(onSuccess, onError)

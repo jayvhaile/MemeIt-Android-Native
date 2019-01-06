@@ -8,28 +8,20 @@ import android.graphics.Typeface
 object TypefaceManager {
     private lateinit var context: Context
 
-    private data class MyTypeface(val name: String, val filename: String) {
+    private data class TypefaceFile(val name: String, val filename: String) {
         val typeface: Typeface by lazy {
             Typeface.createFromAsset(context.assets, filename)
         }
     }
 
-    private val myTypefaces by lazy {
+    private val typefaceFiles by lazy {
         val prefix = "fonts/"
-        val ttf = ".ttf"
-        listOf(
-                MyTypeface("Agane", "${prefix}agane_bold$ttf"),
-                MyTypeface("Arial", "${prefix}arial$ttf"),
-                MyTypeface("Avenir", "${prefix}avenir$ttf"),
-                MyTypeface("Helvetica", "${prefix}helvetica$ttf"),
-                MyTypeface("Impact", "${prefix}impact$ttf"),
-                MyTypeface("Lyric", "${prefix}lyric_font$ttf"),
-                MyTypeface("Pacifico", "${prefix}Pacifico$ttf"),
-                MyTypeface("Ubuntu", "${prefix}ubuntu$ttf")
-        )
+        context.assets.list("fonts")!!.map {
+            TypefaceFile(it.split(".")[0], "$prefix$it")
+        }
     }
     val fonts by lazy {
-        myTypefaces.map { it.name }
+        typefaceFiles.map { it.name }
     }
 
     fun init(context: Context) {
@@ -37,7 +29,7 @@ object TypefaceManager {
     }
 
     fun byName(name: String): Typeface {
-        return myTypefaces.find {
+        return typefaceFiles.find {
             it.name == name
         }?.typeface ?: Typeface.DEFAULT
     }

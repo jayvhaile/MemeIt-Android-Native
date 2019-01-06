@@ -15,7 +15,7 @@ import com.innov8.memeit.loaders.FollowerLoader
 import com.innov8.memeit.loaders.FollowingLoader
 import com.innov8.memeit.loaders.UserListLoader
 import com.innov8.memeit.R
-import com.innov8.memeit.utils.LoaderAdapterHandler
+import com.innov8.memeit.commons.LoaderAdapterHandler
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.User
 import kotlinx.android.synthetic.main.fragment_user_list.*
@@ -25,11 +25,10 @@ class UserListFragment : Fragment() {
     companion object {
         const val PARAM_LOADER = "loader"
         const val PARAM_SHOW_FOLLOW = "show follow"
-        fun newInstance(userListLoader: UserListLoader, showFollow: Boolean = true): UserListFragment {
+        fun newInstance(userListLoader: UserListLoader): UserListFragment {
             return UserListFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(PARAM_LOADER, userListLoader)
-                    putBoolean(PARAM_SHOW_FOLLOW, showFollow)
                 }
             }
         }
@@ -56,7 +55,7 @@ class UserListFragment : Fragment() {
             }
             else -> ""
         }
-        UserListAdapter(this.context!!, desc, arguments?.getBoolean(PARAM_SHOW_FOLLOW) ?: true)
+        UserListAdapter(this.context!!, desc)
     }
     private val loaderAdapter by lazy {
         LoaderAdapterHandler(userListAdapter, userListLoader).apply {
@@ -71,27 +70,7 @@ class UserListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val myUID = MemeItClient.myUser!!.id
-        val ull = userListLoader
-        val desc = when (ull) {
-            is FollowerLoader -> {
-                if (ull.uid == myUID) {
-                    "You have no followers"
-                } else "User have no followers"
-            }
-            is FollowingLoader -> {
-                if (ull.uid == myUID) {
-                    "You are not following anyone"
-                } else "User not following anyone"
-            }
-            else -> ""
-        }
-        if (savedInstanceState != null) {
-            val users: Array<User> = savedInstanceState.getParcelableArray("users") as Array<User>
-            userListAdapter.setAll(users.toList())
-        } else
-            loaderAdapter.load()
-
+        loaderAdapter.load()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -115,8 +94,4 @@ class UserListFragment : Fragment() {
 
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArray("users", userListAdapter.items.toTypedArray())
-        super.onSaveInstanceState(outState)
-    }
 }

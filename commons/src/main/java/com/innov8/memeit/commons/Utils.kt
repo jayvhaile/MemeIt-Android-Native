@@ -188,9 +188,17 @@ fun Context.sendUserNotification(data: NotifData, notifyID: Int) {
     val manager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     manager.notify(notifyID, builder.build())
+
+    val x = "a"
+    val y = x.mapTo { this to this }
+    y
 }
 
 data class NotifData(val title: String,
                      val message: String,
                      val icon: Int,
                      val intent: Intent)
+
+fun <T, R> T.mapTo(mappper: T.() -> R): R {
+    return mappper()
+}

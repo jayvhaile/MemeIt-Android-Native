@@ -5,10 +5,10 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.media.MediaCodec.MetricsConstants.MODE_VIDEO
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
+import android.text.Layout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
@@ -17,10 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memegenerator.fragments.*
 import com.innov8.memegenerator.interfaces.*
 import com.innov8.memegenerator.memeEngine.*
-import com.innov8.memegenerator.utils.CloseableFragment
-import com.innov8.memegenerator.utils.calcReqSize
-import com.innov8.memegenerator.utils.loadImages
-import com.innov8.memegenerator.utils.saveImages
+import com.innov8.memegenerator.utils.*
 import com.innov8.memegenerator.workers.startTemplateDownload
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.loadBitmapfromStream
@@ -32,10 +29,9 @@ import kotlinx.android.synthetic.main.meme_editor.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
 import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 
-class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
+class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface, EditorStateChangedListener {
 
     private val constraintSet1 = ConstraintSet()
     private val opened
@@ -79,6 +75,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
             (closeableFragments["paint"]?.bottomFragment as? PaintOptionsFragment)?.updateUndoState()
         }
         onEditorStateChangedListeners.add(memeEditorView)
+        onEditorStateChangedListeners.add(this)
         layout.setOnClickListener {
             open("layout")
         }
@@ -101,6 +98,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         done.setOnLongClickListener {
             onDoneTemplate()
             true
+        }
+        add_text.setOnClickListener {
+            memeEditorView.addMemeItemView(MemeTextItem(this, 400, 150))
         }
 
     }
@@ -139,6 +139,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                                 it.loadImages(this@MemeEditorActivity)
                             }
                             memeEditorView.applyProperty(loaded)
+                            layoutFrag?.memeLayout = memeEditorView.memeLayout!!
                             dialog.dismiss()
                         }
                     }
@@ -165,6 +166,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                         it.loadImages(this@MemeEditorActivity)
                     }
                     memeEditorView.applyProperty(loaded)
+                    layoutFrag?.memeLayout = memeEditorView.memeLayout!!
                 }
             }
             true
@@ -184,6 +186,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
                         it.loadImages(this@MemeEditorActivity)
                     }
                     memeEditorView.applyProperty(loaded)
+                    layoutFrag?.memeLayout = memeEditorView.memeLayout!!
                 }
             }
             true
@@ -286,13 +289,12 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         when (mode) {
             MODE_DRAFT, MODE_TEMPLATE, MODE_SINGLE_IMAGE, MODE_MULTI_IMAGE -> {
                 val bitmap = memeEditorView.captureMeme()
-                val file = File(filesDir, "${UUID.randomUUID()}_meme.jpg")
                 GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-                    withContext(Dispatchers.Default) {
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, FileOutputStream(file))
+                    val path = withContext(Dispatchers.Default) {
+                        bitmap.save(getTempMemeUploadDir(this@MemeEditorActivity), max = 1000, tag = "meme")
                     }
                     startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {
-                        putExtra("image", file.absolutePath)
+                        putExtra("image", path)
                         putExtra("texts", memeEditorView.getTexts().toTypedArray())
                         putExtra("tid", templateID)
                     })
@@ -354,6 +356,16 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
     private fun onDoneTemplate() {
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             val p = memeEditorView.generateProperty()
+            val check = p
+                    .memeItemsProperty
+                    .filterIsInstance(MemeStickerItemProperty::class.java)
+                    .map { it.sticker }
+                    .any { it is UserSticker }
+
+            if (check) {
+                toast("Templates cannot contain custom made stickers")
+                return@launch
+            }
             val result = withContext(Dispatchers.Default) {
                 p.saveImages(MemeTemplate.getTempUploadDir(this@MemeEditorActivity))
                         .saveToString()
@@ -484,6 +496,18 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface {
         (closeableFragments["text"]?.bottomFragment as? TextEditorFragment)?.textStyleProperty = textStyleProperty
     }
 
+    override fun onEditorOpened(tag: String, cf: CloseableFragment) {
+        if (tag == "layout")
+            memeEditorView.memeLayout?.generateProperty()?.let {
+                layoutFrag?.applyLayoutProperty(it)
+            }
+
+    }
+
+    override fun onEditorClosed() {
+
+    }
+
     companion object {
         private const val MODE_DRAFT = 0
         private const val MODE_TEMPLATE = 1
@@ -557,51 +581,58 @@ class EditorHandler(private val memeEditorView: MemeEditorView) :
         PaintEditInterface {
 
 
-    override fun onAddText(memeTextView: MemeTextView) {
-        memeEditorView.addMemeItemView(memeTextView)
+    override fun onAddText(memeTextItem: MemeTextItem) {
+        memeEditorView.addMemeItemView(memeTextItem)
     }
 
     override fun onApplyAll(textStyleProperty: MemeTextStyleProperty, applySize: Boolean) {
-        (memeEditorView.focusedItem as? MemeTextView)?.applyTextStyleProperty(textStyleProperty, applySize)
+        (memeEditorView.focusedItem as? MemeTextItem)?.applyTextStyleProperty(textStyleProperty, applySize)
     }
 
     override fun onTextColorChanged(color: Int) {
-        (memeEditorView.focusedItem as? MemeTextView)?.setTextColor(color)
+        (memeEditorView.focusedItem as? MemeTextItem)?.setTextColor(color)
     }
 
     override fun onTextFontChanged(font: String) {
-        (memeEditorView.focusedItem as? MemeTextView)
+        (memeEditorView.focusedItem as? MemeTextItem)
                 ?.setTypeface(font)
     }
 
     override fun onTextSetBold(bold: Boolean) {
-
+        (memeEditorView.focusedItem as? MemeTextItem)?.setBold(bold)
     }
 
     override fun onTextSetItalic(italic: Boolean) {
-
+        (memeEditorView.focusedItem as? MemeTextItem)?.setItalic(italic)
     }
 
     override fun onTextSetAllCap(allCap: Boolean) {
-        (memeEditorView.focusedItem as? MemeTextView)?.setAllCaps(allCap)
+        (memeEditorView.focusedItem as? MemeTextItem)?.setAllCaps(allCap)
     }
 
     override fun onTextSetStroked(stroked: Boolean) {
-        (memeEditorView.focusedItem as? MemeTextView)?.setStroke(stroked)
+        (memeEditorView.focusedItem as? MemeTextItem)?.setStroke(stroked)
     }
 
     override fun onTextStrokeChanged(strokeSize: Float) {
-        (memeEditorView.focusedItem as? MemeTextView)?.setStrokeWidth(strokeSize)
+        (memeEditorView.focusedItem as? MemeTextItem)?.setStrokeWidth(strokeSize)
     }
 
     override fun onTextStrokrColorChanged(strokeColor: Int) {
-        (memeEditorView.focusedItem as? MemeTextView)?.setStrokeColor(strokeColor)
+        (memeEditorView.focusedItem as? MemeTextItem)?.setStrokeColor(strokeColor)
     }
 
     override fun onTextSizeChanged(size: Float) {
-        (memeEditorView.focusedItem as? MemeTextView)?.setTextSize(size)
+        (memeEditorView.focusedItem as? MemeTextItem)?.setTextSize(size)
     }
 
+    override fun onTextBgColorChanged(bgColor: Int) {
+        (memeEditorView.focusedItem as? MemeTextItem)?.setBgColor(bgColor)
+    }
+
+    override fun onTextAlignmentChanged(alignment: Layout.Alignment) {
+        (memeEditorView.focusedItem as? MemeTextItem)?.setAlignment(alignment)
+    }
     //==============================================================================================
 
     override fun onLayoutSet(memeLayout: MemeLayout) {

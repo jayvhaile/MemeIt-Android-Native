@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import com.innov8.memeit.commons.dp
@@ -14,7 +15,8 @@ class ColorView : View {
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val innerPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var radius: Float = 0f
-    private var enlarge=0f
+    private var enlarge = 0f
+    val color get() = innerPaint.color
     var choosed = false
         set(value) {
             if (value != field) {
@@ -51,9 +53,10 @@ class ColorView : View {
         strokePaint.strokeWidth = strokeWidth
         innerPaint.color = color
         this.radius = radius
-        enlarge=min(paddingLeft,paddingRight,paddingTop,paddingBottom)/2f
+        enlarge = min(paddingLeft, paddingRight, paddingTop, paddingBottom) / 2f
     }
-    private fun min(vararg i:Int):Int=i.min()?:0
+
+    private fun min(vararg i: Int): Int = i.min() ?: 0
 
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -72,7 +75,7 @@ class ColorView : View {
         val cy = paddingTop + ph / 2f
 
 
-        val r = ((Math.min(pw, ph)+ if(choosed)enlarge else 0f) / 2f) - strokePaint.strokeWidth
+        val r = ((Math.min(pw, ph) + if (choosed) enlarge else 0f) / 2f) - strokePaint.strokeWidth
         if (choosed) {
 
             canvas?.drawCircle(cx, cy, r, strokePaint)

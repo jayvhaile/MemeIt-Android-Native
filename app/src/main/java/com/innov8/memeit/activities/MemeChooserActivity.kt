@@ -1,7 +1,6 @@
 package com.innov8.memeit.activities
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.database.Cursor
 import android.os.Bundle
@@ -41,7 +40,7 @@ import com.innov8.memeit.fragments.MemeTemplateHolderFragment
 import com.innov8.memeit.fragments.PhotosChooserFragment
 import com.innov8.memeit.loaders.DraftLoader
 import com.innov8.memeit.R
-import com.innov8.memeit.utils.LoaderAdapterHandler
+import com.innov8.memeit.commons.LoaderAdapterHandler
 import com.innov8.memeit.utils.makeLinear
 import com.innov8.memeit.commons.dp
 import com.memeit.backend.models.MemeTemplate

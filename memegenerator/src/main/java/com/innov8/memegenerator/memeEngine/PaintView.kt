@@ -2,6 +2,7 @@ package com.innov8.memegenerator.memeEngine
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
 import android.view.GestureDetector
 import android.view.MotionEvent
 import com.innov8.memegenerator.utils.Action
@@ -36,7 +37,7 @@ class PaintHandler(val context: Context) {
         abstract fun makePaintable(paintProperty: PaintProperty): TouchPaintable
     }
 
-    class PaintAction(val paintHandler: PaintHandler, val paintable: TouchPaintable) : Action("") {
+    class PaintAction(private val paintHandler: PaintHandler, private val paintable: TouchPaintable) : Action("") {
         override fun `do`() {
             paintHandler.addPaintable(paintable, false)
         }
@@ -47,7 +48,7 @@ class PaintHandler(val context: Context) {
 
     }
 
-    val paintables = mutableListOf<TouchPaintable>()
+    private val paintables = mutableListOf<TouchPaintable>()
     var onInvalidate: (() -> Unit)? = null
 
     var paintMode = PaintMode.DOODLE
@@ -62,6 +63,8 @@ class PaintHandler(val context: Context) {
     var paintProperty = PaintProperty(Color.BLACK, 16f.dp(context))
 
     var actionManager = ActionManager()
+    val handler = Handler(context.mainLooper)
+
 
     init {
 
@@ -83,14 +86,16 @@ class PaintHandler(val context: Context) {
         lateinit var touchPaintable: TouchPaintable
         override fun onDown(e: MotionEvent): Boolean {
             touchPaintable = paintMode.makePaintable(paintProperty)
-            touchPaintable.start(e)
+            touchPaintable.start(e.x, e.y)
             addPaintable(touchPaintable)
             return true
         }
 
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
-            touchPaintable.update(e2)
-            onInvalidate?.invoke()
+            touchPaintable.update(e2.x, e2.y)
+            handler.post {
+                onInvalidate?.invoke()
+            }
             return true
         }
 
@@ -116,8 +121,8 @@ interface Paintable {
 }
 
 interface TouchPaintable : Paintable {
-    fun start(event: MotionEvent)
-    fun update(event: MotionEvent)
+    fun start(x: Float, y: Float)
+    fun update(x: Float, y: Float)
 
 }
 
@@ -134,12 +139,12 @@ class Doodle(override var paintProperty: PaintProperty) : TouchPaintable {
     val path: Path = Path()
 
 
-    override fun start(event: MotionEvent) {
-        path.moveTo(event.x, event.y)
+    override fun start(x: Float, y: Float) {
+        path.moveTo(x, y)
     }
 
-    override fun update(event: MotionEvent) {
-        path.lineTo(event.x, event.y)
+    override fun update(x: Float, y: Float) {
+        path.lineTo(x, y)
     }
 
     override fun paint(canvas: Canvas, paint: Paint) {
@@ -153,16 +158,16 @@ class Line(override var paintProperty: PaintProperty) : TouchPaintable {
     val end = PointF()
 
 
-    override fun start(event: MotionEvent) {
-        start.x = event.x
-        start.y = event.y
-        end.x = event.x
-        end.y = event.y
+    override fun start(x: Float, y: Float) {
+        start.x = x
+        start.y = y
+        end.x = x
+        end.y = y
     }
 
-    override fun update(event: MotionEvent) {
-        end.x = event.x
-        end.y = event.y
+    override fun update(x: Float, y: Float) {
+        end.x = x
+        end.y = y
     }
 
     override fun paint(canvas: Canvas, paint: Paint) {
@@ -176,16 +181,16 @@ class Arrow(override var paintProperty: PaintProperty) : TouchPaintable {
 
     private val sweepAngle = 45.toRad()
 
-    override fun start(event: MotionEvent) {
-        start.x = event.x
-        start.y = event.y
-        end.x = event.x
-        end.y = event.y
+    override fun start(x: Float, y: Float) {
+        start.x = x
+        start.y = y
+        end.x = x
+        end.y = y
     }
 
-    override fun update(event: MotionEvent) {
-        end.x = event.x
-        end.y = event.y
+    override fun update(x: Float, y: Float) {
+        end.x = x
+        end.y = y
     }
 
 
@@ -209,20 +214,20 @@ class Arrow(override var paintProperty: PaintProperty) : TouchPaintable {
 fun Int.toRad() = Math.toRadians(this.toDouble())
 
 class RectPaint(override var paintProperty: PaintProperty) : TouchPaintable {
-    val rectF = RectF()
+    private val rectF = RectF()
 
 
-    override fun start(event: MotionEvent) {
-        rectF.left = event.x
-        rectF.right = event.x + 10
-        rectF.top = event.y
-        rectF.bottom = event.y + 10
+    override fun start(x: Float, y: Float) {
+        rectF.left = x
+        rectF.right = x + 10
+        rectF.top = y
+        rectF.bottom = y + 10
 
     }
 
-    override fun update(event: MotionEvent) {
-        rectF.right = event.x
-        rectF.bottom = event.y
+    override fun update(x: Float, y: Float) {
+        rectF.right = x
+        rectF.bottom = y
     }
 
     override fun paint(canvas: Canvas, paint: Paint) {
@@ -233,14 +238,14 @@ class RectPaint(override var paintProperty: PaintProperty) : TouchPaintable {
 class CirclePaint(override var paintProperty: PaintProperty) : TouchPaintable {
     var radius = 0f
     val center = PointF()
-    override fun start(event: MotionEvent) {
-        center.x = event.x
-        center.y = event.y
+    override fun start(x: Float, y: Float) {
+        center.x = x
+        center.y = y
         radius = 10f
     }
 
-    override fun update(event: MotionEvent) {
-        radius = center.distance(event.x, event.y)
+    override fun update(x: Float, y: Float) {
+        radius = center.distance(x, y)
     }
 
     override fun paint(canvas: Canvas, paint: Paint) {
@@ -249,21 +254,20 @@ class CirclePaint(override var paintProperty: PaintProperty) : TouchPaintable {
 }
 
 class OvalPaint(override var paintProperty: PaintProperty) : TouchPaintable {
-    val rectF = RectF()
+    private val rectF = RectF()
 
 
-    override fun start(event: MotionEvent) {
-        rectF.left = event.x
-        rectF.right = event.x + 10
-        rectF.top = event.y
-        rectF.bottom = event.y + 10
+    override fun start(x: Float, y: Float) {
+        rectF.left = x
+        rectF.right = x + 10
+        rectF.top = y
+        rectF.bottom = y + 10
 
     }
 
-    override fun update(event: MotionEvent) {
-
-        rectF.right = event.x
-        rectF.bottom = event.y
+    override fun update(x: Float, y: Float) {
+        rectF.right = x
+        rectF.bottom = y
     }
 
 

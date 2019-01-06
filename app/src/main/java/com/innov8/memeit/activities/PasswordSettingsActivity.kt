@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.R
 import com.innov8.memeit.utils.snack
@@ -44,10 +45,16 @@ class PasswordSettingsActivity : AppCompatActivity() {
                 (settings_password_new to settings_password_confirm).validateMatch("Password")).all { it }
 
         if (validate) {
+            val dialog = MaterialDialog.Builder(this)
+                    .title("Changing password...")
+                    .progress(true, 0)
+                    .show()
             MemeItClient.Auth.changePassword(ChangePasswordRequest(oldPassword, newPassword), {
+                dialog.dismiss()
                 toast("Password Changed")
                 finish()
             }) {
+                dialog.dismiss()
                 settings_password_current.snack(it, duration = Snackbar.LENGTH_LONG)
             }
         }

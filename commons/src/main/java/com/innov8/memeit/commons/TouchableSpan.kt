@@ -7,6 +7,7 @@ import android.view.View
 
 class TouchableSpan(private val normalTextColor: Int,
                     private val pressedTextColor: Int,
+                    private val underline: Boolean = false,
                     private val onClickCallback: (View) -> Unit) : ClickableSpan() {
     override fun onClick(widget: View) {
         onClickCallback(widget)
@@ -23,6 +24,6 @@ class TouchableSpan(private val normalTextColor: Int,
         val textColor = if (isPressed) pressedTextColor else normalTextColor
         textPaint.color = textColor
         textPaint.bgColor = Color.TRANSPARENT
-        textPaint.isUnderlineText = false
+        textPaint.isUnderlineText = underline
     }
 }

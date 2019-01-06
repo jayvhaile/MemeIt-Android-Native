@@ -12,7 +12,8 @@ class ToggleImageButton : AppCompatImageButton {
     private var checkedColor: Int = Color.RED
     private var uncheckedColor: Int = Color.WHITE
 
-    var onCheckChanged:((checked:Boolean,fromUser:Boolean)->Unit)?=null
+    var onCheckChanged: ((checked: Boolean, fromUser: Boolean) -> Unit)? = null
+
     constructor(context: Context) : super(context) {
         init(null)
     }
@@ -26,7 +27,7 @@ class ToggleImageButton : AppCompatImageButton {
     }
 
     private fun init(attrs: AttributeSet?) {
-        if(attrs!=null){
+        if (attrs != null) {
             val a = context.theme.obtainStyledAttributes(
                     attrs,
                     R.styleable.ToggleImageButton,
@@ -46,16 +47,20 @@ class ToggleImageButton : AppCompatImageButton {
         }
         setBackgroundColor(Color.TRANSPARENT)
     }
-    fun setChecked(checked: Boolean, fromUser: Boolean=false) {
-        this.isChecked = checked
-        if (checked) {
-            setColorFilter(checkedColor)
-        } else {
-            setColorFilter(uncheckedColor)
+
+    fun setChecked(checked: Boolean, fromUser: Boolean = false) {
+        if (this.isChecked != checked) {
+            this.isChecked = checked
+            if (checked) {
+                setColorFilter(checkedColor)
+            } else {
+                setColorFilter(uncheckedColor)
+            }
+            onCheckChanged?.invoke(checked, fromUser)
         }
-        onCheckChanged?.invoke(checked,fromUser)
     }
-    fun toggleCheck(fromUser: Boolean=false) {
+
+    private fun toggleCheck(fromUser: Boolean = false) {
         setChecked(!isChecked, fromUser)
     }
 }

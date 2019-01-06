@@ -163,6 +163,19 @@ interface MemeItService {
     fun getHomeMemes(@Query("skip") skip: Int,
                      @Query("limit") limit: Int): Call<List<Meme>>
 
+    @GET("meme/home/full")
+    fun getHomeFullMemes(
+            @Query("skip") skip: Int,
+            @Query("limit") limit: Int,
+            @Query("offsetUserSug") offsetUserSug: Int,
+            @Query("offsetTagSug ") offsetTagSug: Int,
+            @Query("offsetTemplateSug") offsetTemplateSug: Int,
+            @Query("periodUserSug ") periodUserSug: Int,
+            @Query("periodTagSug") periodTagSug: Int,
+            @Query("periodTemplateSug") periodTemplateSug: Int,
+            @Query("sizeSug") sizeSug: Int = 10
+    ): Call<MergedHomeElements>
+
     @GET("meme/trending/guest")
     fun getTrendingMemesForGuest(@Query("skip") skip: Int,
                                  @Query("limit") limit: Int): Call<List<Meme>>

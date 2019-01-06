@@ -21,8 +21,7 @@ abstract class RequestUsernameMode(private val authActivity: AuthActivity) : Aut
                 R.id.confirm_password_field,
                 R.id.profile_pic,
                 R.id.or_continue_with,
-                R.id.auth_question,
-                R.id.auth_question_action
+                R.id.auth_question
         )
         constraintSet.makeVisible(
                 R.id.app_title,

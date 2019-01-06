@@ -26,28 +26,28 @@ class TextStyleView : LinearLayout {
 
     init {
         orientation = HORIZONTAL
-        val size=40.dp(context)
-        val param=LayoutParams(size,size)
-        gravity=Gravity.CENTER_HORIZONTAL
+        val size = 40.dp(context)
+        val param = LayoutParams(size, size)
+        gravity = Gravity.CENTER_HORIZONTAL
         addView(ToggleImageButton(context).apply {
             setImageResource(R.drawable.ic_format_bold)
-            onCheckChanged= { checked, fromUser ->
+            onCheckChanged = { checked, fromUser ->
                 if (fromUser) textEditListener?.onTextSetBold(checked)
             }
-        },param)
+        }, param)
         addView(ToggleImageButton(context).apply {
             setImageResource(R.drawable.ic_format_italic)
-            onCheckChanged= { checked, fromUser ->
+            onCheckChanged = { checked, fromUser ->
                 if (fromUser) textEditListener?.onTextSetItalic(checked)
             }
-        },param)
+        }, param)
         addView(ToggleImageButton(context).apply {
             setImageResource(R.drawable.ic_text_fields_black_24dp)
-            onCheckChanged= { checked, fromUser ->
+            onCheckChanged = { checked, fromUser ->
                 if (fromUser) textEditListener?.onTextSetAllCap(checked)
             }
-        },param)
-        layoutParams=ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,size)
+        }, param)
+        layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, size)
     }
 
     private fun init() {
@@ -57,11 +57,14 @@ class TextStyleView : LinearLayout {
     var textEditListener: TextEditListener? = null
 
 
-
     fun setProperty(textStyleProperty: MemeTextStyleProperty) {
         (getChildAt(0) as ToggleImageButton).setChecked(textStyleProperty.bold)
         (getChildAt(1) as ToggleImageButton).setChecked(textStyleProperty.italic)
         (getChildAt(2) as ToggleImageButton).setChecked(textStyleProperty.allCap)
     }
+
+    val bold get() = (getChildAt(0) as ToggleImageButton).isChecked
+    val italic get() = (getChildAt(1) as ToggleImageButton).isChecked
+    val allCap get() = (getChildAt(2) as ToggleImageButton).isChecked
 
 }

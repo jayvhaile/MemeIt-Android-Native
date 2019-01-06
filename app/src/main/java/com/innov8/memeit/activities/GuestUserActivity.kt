@@ -13,7 +13,7 @@ import com.innov8.memeit.adapters.MemeAdapters.ViewHolders.MemeViewHolder
 import com.innov8.memeit.customViews.MemeDraweeView
 import com.innov8.memeit.loaders.GuestMemeLoader
 import com.innov8.memeit.R
-import com.innov8.memeit.utils.LoaderAdapterHandler
+import com.innov8.memeit.commons.LoaderAdapterHandler
 import com.innov8.memeit.commons.toast
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes

@@ -12,8 +12,9 @@ import android.widget.TextView
 import androidx.core.text.set
 import androidx.core.text.toSpannable
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memeit.commons.MyViewHolder
 import com.innov8.memeit.R
+import com.innov8.memeit.commons.ELEWordFilterableListAdapter
 import com.innov8.memeit.utils.color
 import com.innov8.memeit.utils.formatNumber
 import com.memeit.backend.models.Tag
@@ -37,7 +38,7 @@ class TagSearchAdapter(context: Context) : ELEWordFilterableListAdapter<Tag, Tag
     }
 
     override fun onBindHolder(holder: TagViewHolder, position: Int) {
-        holder.item_position=position
+        holder.item_position = position
         holder.bind(getItemAt(position))
     }
 
@@ -62,13 +63,13 @@ class TagSearchAdapter(context: Context) : ELEWordFilterableListAdapter<Tag, Tag
         @SuppressLint("SetTextI18n")
         override fun bind(t: Tag) {
             val s = t.tag.toLowerCase()
-            val span = s.toSpannable()
+            val span = t.tag.toSpannable()
 
             val i = s.indexOf(filterWord)
 
             if (i >= 0) {
-                span[i..i+filterWord.length] = ForegroundColorSpan(R.color.colorAccent.color())
-                span[i..i+filterWord.length] = StyleSpan(Typeface.BOLD)
+                span[i..i + filterWord.length] = ForegroundColorSpan(R.color.colorAccent.color())
+                span[i..i + filterWord.length] = StyleSpan(Typeface.BOLD)
             }
             tagV.text = span
             tagCountV.text = "${t.count.formatNumber()} posts"

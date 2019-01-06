@@ -1,5 +1,6 @@
 package com.innov8.memeit.activities
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -11,11 +12,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ShareCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.innov8.memeit.BuildConfig
+import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
 import com.innov8.memeit.adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.customViews.DrawableBadge
@@ -23,8 +26,10 @@ import com.innov8.memeit.fragments.MemeListFragment
 import com.innov8.memeit.fragments.ProfileFragment
 import com.innov8.memeit.loaders.FavoriteMemeLoader
 import com.innov8.memeit.loaders.HomeMemeLoader
+import com.innov8.memeit.loaders.HomeMemeLoader2
 import com.innov8.memeit.loaders.TrendingMemeLoader
 import com.memeit.backend.MemeItClient
+import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
@@ -90,14 +95,14 @@ abstract class MainActivity : AppCompatActivity() {
             rootNav.closeMenu(false)
         }
         findViewById<View>(R.id.menu_invite).setOnClickListener {
-            val intent = AppInviteInvitation.IntentBuilder("MemeIt")
-                    .setMessage("Hey , It's ${MemeItClient.myUser!!.name},let make and share memes on MemeIt!" +
-                            "download it here ")
-                    .setDeepLink(Uri.parse("https://memeitapp.com"))
-                    .setCallToActionText("Download")
-                    .setEmailHtmlContent("")
-                    .build()
-            startActivityForResult(intent, 101)
+            val invite = """Hey, let's make and share memes on MemeIt!
+                |Download it here https://play.google.com/store/apps/details?id=com.innov8.memeit
+            """.trimMargin()
+            startActivity(ShareCompat.IntentBuilder.from(this)
+                    .setText(invite)
+                    .setType("text/plain")
+                    .createChooserIntent()
+            )
             rootNav.closeMenu(false)
         }
         changeStatColor()
@@ -212,7 +217,7 @@ abstract class MainActivity : AppCompatActivity() {
 
     private inner class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         override fun getItem(position: Int) = when (position) {
-            0 -> MemeListFragment.newInstance(MemeAdapter.HOME_ADAPTER, HomeMemeLoader())
+            0 -> MemeListFragment.newInstance(MemeAdapter.HOME_ADAPTER, HomeMemeLoader2())
             1 -> MemeListFragment.newInstance(MemeAdapter.LIST_ADAPTER, TrendingMemeLoader())
             2 -> MemeListFragment.newInstance(MemeAdapter.LIST_FAVORITE_ADAPTER, FavoriteMemeLoader())
             3 -> ProfileFragment.newInstance()

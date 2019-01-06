@@ -10,14 +10,15 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.innov8.memeit.adapters.ELEAdapter
 import com.innov8.memeit.adapters.TagsAdapter
 import com.innov8.memeit.loaders.*
 import com.innov8.memeit.R
-import com.innov8.memeit.utils.LoaderAdapterHandler
+import com.innov8.memeit.commons.ELEAdapter
+import com.innov8.memeit.commons.LoaderAdapterHandler
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.memeit.backend.models.Tag
+import com.memeit.backend.models.User
 import kotlinx.android.synthetic.main.activity_tags.*
 import kotlinx.android.synthetic.main.activity_user_tag.*
 import kotlinx.android.synthetic.main.fragment_meme_list.*
@@ -43,25 +44,19 @@ class TagsActivity : AppCompatActivity() {
 }
 
 class UserTagActivity : AppCompatActivity() {
-    private lateinit var uid: String
-    private lateinit var name: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val id = intent?.getStringExtra("uid")
-        if (id == null) {
+        val user = intent?.getParcelableExtra<User>("user")
+        if (user == null) {
             finish()
             return
         }
-        uid = id
-        name = intent?.getStringExtra("name") ?: "..."
         setContentView(R.layout.activity_user_tag)
-        supportFragmentManager.beginTransaction().replace(R.id.holder, TagFragment.newInstance(UserTagLoader(uid)))
         setSupportActionBar(tags_toolbar)
-        supportActionBar?.title = "Tags Followed by $name"
-        if (name == "...")
-            MemeItUsers.getUserById(uid).call {
-                supportActionBar?.title = "Tags Followed by ${it.name}"
-            }
+        supportActionBar?.title = "Tags Followed by ${user.name}"
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.holder, TagFragment.newInstance(UserTagLoader(user.uid!!)))
+                .commit()
     }
 }
 

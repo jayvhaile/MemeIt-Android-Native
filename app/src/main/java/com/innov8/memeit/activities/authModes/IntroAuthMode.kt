@@ -6,11 +6,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
 import com.innov8.memegenerator.utils.ViewAdapter
+import com.innov8.memeit.R
 import com.innov8.memeit.activities.AuthActivity
 import com.innov8.memeit.adapters.IntroTransformer
-import com.innov8.memeit.R
 import com.innov8.memeit.utils.makeGone
 import com.innov8.memeit.utils.makeVisible
+import com.innov8.memeit.utils.toUnderlinedLinkSpan
 import kotlinx.android.synthetic.main.activity_auth.*
 
 class IntroAuthMode(private val authActivity: AuthActivity) : AuthMode {
@@ -60,7 +61,6 @@ class IntroAuthMode(private val authActivity: AuthActivity) : AuthMode {
         constraintSet.makeVisible(
                 R.id.intro_pager,
                 R.id.auth_question,
-                R.id.auth_question_action,
                 R.id.action_holder
         )
     }
@@ -73,8 +73,9 @@ class IntroAuthMode(private val authActivity: AuthActivity) : AuthMode {
         authActivity.intro_pager.adapter = pager
         authActivity.intro_pager.setPageTransformer(false, transformer)
         authActivity.action_btn.text = "Create Account"
-        authActivity.auth_question.text = "Already have an account?"
-        authActivity.auth_question_action.text = "Login"
+        authActivity.auth_question.text = "Already have an account? Login".toUnderlinedLinkSpan("Login") {
+            authActivity.onGoto()
+        }
     }
 
     override fun onAction() {

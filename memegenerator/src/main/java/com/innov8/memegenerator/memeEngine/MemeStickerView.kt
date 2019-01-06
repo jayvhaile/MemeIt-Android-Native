@@ -3,6 +3,7 @@ package com.innov8.memegenerator.memeEngine
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import com.memeit.backend.models.Sticker
 import com.memeit.backend.models.MemeItemProperty
 import com.memeit.backend.models.MemeStickerItemProperty
 import com.innov8.memeit.commons.dp
@@ -12,7 +13,7 @@ import kotlinx.coroutines.android.Main
 class MemeStickerView : MemeItemView {
     override fun generateProperty(): MemeItemProperty {
         return MemeStickerItemProperty(
-                stickerId,
+                sticker,
                 x / maxWidth,
                 y / maxHeight,
                 itemWidth.toFloat() / maxWidth,
@@ -32,38 +33,33 @@ class MemeStickerView : MemeItemView {
             invalidate()
         }
 
-    private lateinit var stickerId: String
+    private lateinit var sticker: Sticker
 
-    constructor(context: Context, bitmap: Bitmap, id: String, width: Int = 200, height: Int = 200) : super(context, width, height) {
+    constructor(context: Context, bitmap: Bitmap, sticker: Sticker, width: Int = 200, height: Int = 200) : super(context, width, height) {
         this.bitmap = bitmap
-        this.stickerId = id
+        this.sticker = sticker
     }
 
-    constructor(context: Context, id: String, width: Int = 200, height: Int = 200) : super(context, width, height) {
-        this.stickerId = id
+    constructor(context: Context, sticker: Sticker, width: Int = 200, height: Int = 200) : super(context, width, height) {
+        this.sticker = sticker
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-            bitmap = withContext(Dispatchers.Default) {
-                BitmapFactory.decodeStream(context.assets.open(stickerId.substring(9)))
-            }
+            bitmap = withContext(Dispatchers.Default) { sticker.load(context.applicationContext) }
         }
     }
 
-    constructor(context: Context, memeStickerItemProperty: MemeStickerItemProperty) : super(context, memeStickerItemProperty) {
-        this.stickerId = memeStickerItemProperty.stickerId
+    constructor(context: Context, memeStickerItemProperty: MemeStickerItemProperty, mw: Int = 0, mh: Int = 0) : super(context, memeStickerItemProperty, mw, mh) {
+        this.sticker = memeStickerItemProperty.sticker
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-            bitmap = withContext(Dispatchers.Default) {
-                BitmapFactory.decodeStream(context.assets.open(stickerId.substring(9)))
-            }
+            bitmap = withContext(Dispatchers.Default) { sticker.load(context.applicationContext) }
         }
     }
 
-    constructor(context: Context, bitmap: Bitmap, memeStickerItemProperty: MemeStickerItemProperty) : super(context, memeStickerItemProperty) {
-        this.stickerId = memeStickerItemProperty.stickerId
+    constructor(context: Context, bitmap: Bitmap, memeStickerItemProperty: MemeStickerItemProperty, mw: Int = 0, mh: Int = 0) : super(context, memeStickerItemProperty, mw, mh) {
+        this.sticker = memeStickerItemProperty.sticker
         this.bitmap = bitmap
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     override fun onDraw(canvas: Canvas) {
@@ -82,9 +78,9 @@ class MemeStickerView : MemeItemView {
     }
 
     override fun copy(): MemeStickerView {
-        val nt = MemeStickerView(context, bitmap!!, generateProperty() as MemeStickerItemProperty)
-        nt.x = x + 10.dp(context)
-        nt.y = y + 10.dp(context)
-        return nt
+        return MemeStickerView(context, bitmap!!, generateProperty() as MemeStickerItemProperty, maxWidth, maxHeight).apply {
+            x += 10.dp(context)
+            y += 10.dp(context)
+        }
     }
 }

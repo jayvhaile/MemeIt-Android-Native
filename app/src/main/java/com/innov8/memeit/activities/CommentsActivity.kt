@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.innov8.memeit.adapters.CommentsAdapter
 import com.innov8.memeit.loaders.CommentLoader
 import com.innov8.memeit.R
-import com.innov8.memeit.utils.LoaderAdapterHandler
+import com.innov8.memeit.commons.LoaderAdapterHandler
 import com.innov8.memeit.utils.loadImage
 import com.innov8.memeit.utils.snack
 import com.memeit.backend.MemeItClient

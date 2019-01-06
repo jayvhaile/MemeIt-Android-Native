@@ -29,7 +29,6 @@ class LogInAuthMode(private val authActivity: AuthActivity) : AuthMode {
                 R.id.password_field,
                 R.id.or_continue_with,
                 R.id.auth_question,
-                R.id.auth_question_action,
                 R.id.action_holder
         )
 
@@ -39,8 +38,9 @@ class LogInAuthMode(private val authActivity: AuthActivity) : AuthMode {
 
     override fun updateElements() {
         authActivity.action_btn.text = "Log In"
-        authActivity.auth_question.text = "Don't have an account?"
-        authActivity.auth_question_action.text = "Sign up"
+        authActivity.auth_question.text = "Don't have an account? Sign up".toUnderlinedLinkSpan("Sign up") {
+            authActivity.onGoto()
+        }
         authActivity.username_field.editText!!.hint = "Username"
 
         authActivity.username_field.clear()

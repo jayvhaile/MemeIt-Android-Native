@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.innov8.memegenerator.adapters.MyViewHolder
+import com.innov8.memeit.commons.MyViewHolder
 
 abstract class CursorAdapter<T>(val context: Context, val layoutID: Int) : RecyclerView.Adapter<MyViewHolder<T>>() {
     var cursor: Cursor? = null

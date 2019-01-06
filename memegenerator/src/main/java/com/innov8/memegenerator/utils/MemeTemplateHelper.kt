@@ -7,8 +7,6 @@ import com.memeit.backend.models.*
 import com.waynejo.androidndkgif.GifDecoder
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.util.*
 
 
 fun SavedMemeTemplateProperty.loadImages(context: Context): LoadedMemeTemplateProperty {
@@ -43,26 +41,21 @@ private fun loadGif(path: String): Bitmap {
 fun LoadedMemeTemplateProperty.saveImages(dir: File): SavedMemeTemplateProperty {
     return when (this) {
         is LoadedImageMemeTemplateProperty -> {
-            val urls = images.map { saveBitmap(dir, it) }.toMutableList()
+            val urls = images.map { it.save(dir, 90, 1000) }.toMutableList()
             SavedImageMemeTemplateProperty(
                     layoutProperty,
                     memeItemsProperty,
                     urls,
-                    saveBitmap(dir, previewImageBitmap!!)
+                    previewImageBitmap!!.save(dir, 75, 500)
             )
         }
         is LoadedGifMemeTemplateProperty -> SavedGifMemeTemplateProperty(
                 layoutProperty as SingleImageLayoutProperty,
                 memeItemsProperty,
                 originalPath,
-                saveBitmap(dir, previewImageBitmap!!)
+                previewImageBitmap!!.save(dir, 75, 500)
         )
     }
 }
 
-private fun saveBitmap(dir: File, bitmap: Bitmap): String {
-    val file = File(dir, "${UUID.randomUUID()}.jpg")
-    val fos = FileOutputStream(file)
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos)
-    return file.absolutePath
-}
+

@@ -83,6 +83,7 @@ fun RectF.actual(width: Int, height: Int) = RectF(
 )
 
 fun Int.percent(percent: Float) = (percent / 100f) * this
+fun Int.percentOf(total: Float) = (this / total) * 100
 
 
 var ms = 0L
