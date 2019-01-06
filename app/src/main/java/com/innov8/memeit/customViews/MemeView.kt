@@ -491,7 +491,7 @@ class MemeView : FrameLayout {
         }
         applyVisible(R.id.meme_gif, if (meme.getType() == Meme.MemeType.GIF) View.VISIBLE else View.GONE)
         applyVisible(R.id.description, if (meme.description.isNullOrBlank()) View.GONE else View.VISIBLE)
-        applyVisible(R.id.follow_user, if (showFollowUser && !meme.poster!!.isFollowedByMe) View.VISIBLE else View.GONE)
+        applyVisible(R.id.follow_user, if (showFollowUser && !meme.poster!!.isFollowedByMe && meme.poster!!.uid != myUser.id) View.VISIBLE else View.GONE)
         applyVisible(R.id.dot,
                 if (showFollowUser && !meme.poster!!.isFollowedByMe && meme.poster!!.uid != myUser.id)
                     View.VISIBLE else View.GONE)

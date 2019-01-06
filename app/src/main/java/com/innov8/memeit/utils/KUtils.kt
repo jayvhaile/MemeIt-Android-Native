@@ -199,18 +199,18 @@ fun Int.formatNumber() = when {
 
 
 fun Int.formatNumber(suffix: String = "", suffixPlural: String = ""): String {
-    if (this >= 1000000) {
+    return if (this >= 1000000) {
         val d = this / 1000000.0f
-        return String.format("%.2fm %s", d, suffixPlural)
+        String.format("%.2fm %s", d, suffixPlural)
     } else if (this >= 1000) {
         val d = this / 1000.0f
-        return String.format("%.2fk %s", d, suffixPlural)
-    } else return if (this > 1) {
+        String.format("%.2fk %s", d, suffixPlural)
+    } else if (this > 1) {
         String.format("%d %s", this, suffixPlural)
     } else if (this == 1) {
         String.format("%d %s", this, suffix)
     } else {
-        String.format("no %s", this, suffix)
+        "no $suffixPlural"
     }
 
 }

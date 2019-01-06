@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.drawee.view.SimpleDraweeView
+import com.facebook.imagepipeline.request.ImageRequest
 import com.innov8.memeit.commons.MyViewHolder
 import com.innov8.memeit.R
 import com.memeit.backend.models.Badge
@@ -74,9 +76,9 @@ class BadgeAdapter(val context: Context) : RecyclerView.Adapter<MyViewHolder<Bad
     }
 
     internal inner class BadgeGridListViewHolder(itemView: View) : MyViewHolder<Badge>(itemView) {
-        val badgeIconV = itemView.findViewById<ImageView>(R.id.badge_icon)
-        val badgeLabelV = itemView.findViewById<TextView>(R.id.badge_label)
-        val badgeDescV = itemView.findViewById<TextView>(R.id.badge_description)
+        private val badgeIconV: SimpleDraweeView = itemView.findViewById(R.id.badge_icon)
+        private val badgeLabelV: TextView = itemView.findViewById(R.id.badge_label)
+        private val badgeDescV: TextView = itemView.findViewById(R.id.badge_description)
 
         override fun bind(t: Badge) {
             if (mode == MODE_GRID) {
@@ -86,11 +88,11 @@ class BadgeAdapter(val context: Context) : RecyclerView.Adapter<MyViewHolder<Bad
                 badgeLabelV.visibility = View.VISIBLE
                 badgeDescV.visibility = View.VISIBLE
             }
-            badgeIconV.setImageResource(t.getDrawableId(context))
+            badgeIconV.setActualImageResource(t.getDrawableId(context))
             if (awardedBadges.contains(t)) {
-                badgeIconV.setColorFilter(Color.parseColor("#559955"))
+                itemView.alpha = 1f
             } else {
-                badgeIconV.setColorFilter(Color.parseColor("#aaaabb"))
+                itemView.alpha = 0.8f
             }
             badgeLabelV.text = t.label
             badgeDescV.text = t.description

@@ -16,14 +16,20 @@
         <item name="colorControlNormal">#dedede</item>
         <item name="colorControlActivated">#eaeaea</item>
     </style>
+
     <style name="memeit_toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColorPrimary">?attr/colorAccent</item>
         <item name="colorControlNormal">?attr/colorAccent</item>
         <item name="android:textAppearance">@style/memeit_text</item>
     </style>
+
     <style name="memeit_text" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
 </resources>

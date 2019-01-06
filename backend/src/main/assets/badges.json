@@ -108,24 +108,6 @@
     "level": 12
   },
   {
-    "id": "trending_001",
-    "label":" ",
-    "desc": "Get Meme in Top 10 Trending",
-    "level": 4
-  },
-  {
-    "id": "trending_002",
-    "label":" ",
-    "desc": "Get Meme in Top 5 Trending",
-    "level": 7
-  },
-  {
-    "id": "trending_003",
-    "label":" ",
-    "desc": "Get Meme in Top 3 Trending",
-    "level": 10
-  },
-  {
     "id": "invite_001",
     "label":"Let the word spread",
     "desc": "Invite 10 Users",

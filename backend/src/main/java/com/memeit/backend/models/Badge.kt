@@ -91,7 +91,7 @@ data class Badge(val id: String,
                     ),
                     Badge(
                             "react_004",
-                            " ",
+                            "Reaction King",
                             "Get 10k reactions",
                             9
                     ),
@@ -160,24 +160,6 @@ data class Badge(val id: String,
                             "You've got a cult following",
                             "Get 100k Followers",
                             12
-                    ),
-                    Badge(
-                            "trending_001",
-                            " ",
-                            "Get Meme in Top 10 Trending",
-                            4
-                    ),
-                    Badge(
-                            "trending_002",
-                            " ",
-                            "Get Meme in Top 5 Trending",
-                            7
-                    ),
-                    Badge(
-                            "trending_003",
-                            " ",
-                            "Get Meme in Top 3 Trending",
-                            10
                     ),
                     Badge(
                             "invite_001",

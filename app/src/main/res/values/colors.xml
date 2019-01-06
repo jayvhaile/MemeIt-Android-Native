@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#eee</color>
     <color name="colorPrimaryDark">#ddd</color>
-    <color name="colorAccent">#ff5656</color>
+    <color name="colorAccent">#FF5656</color>
     <color name="bottom_nav_items_gray">#aeaeae</color>
 
 

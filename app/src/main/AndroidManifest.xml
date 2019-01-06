@@ -16,7 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.PhotoChooserActivity"></activity>
+        <activity
+            android:name=".activities.BadgeAwardDialogActivity"
+            android:theme="@style/Theme.AppCompat.Dialog.Alert" />
+        <activity android:name=".activities.PhotoChooserActivity" />
         <activity android:name=".activities.MemeTemplatePosterActivity" />
         <activity android:name=".activities.TagsActivity" />
         <activity android:name=".activities.MemeChooserActivity" />

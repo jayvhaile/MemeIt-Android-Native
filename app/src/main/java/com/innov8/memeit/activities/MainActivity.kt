@@ -1,10 +1,8 @@
 package com.innov8.memeit.activities
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -15,21 +13,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.innov8.memeit.BuildConfig
-import com.innov8.memeit.MemeItApp
 import com.innov8.memeit.R
 import com.innov8.memeit.adapters.MemeAdapters.MemeAdapter
 import com.innov8.memeit.customViews.DrawableBadge
 import com.innov8.memeit.fragments.MemeListFragment
 import com.innov8.memeit.fragments.ProfileFragment
 import com.innov8.memeit.loaders.FavoriteMemeLoader
-import com.innov8.memeit.loaders.HomeMemeLoader
 import com.innov8.memeit.loaders.HomeMemeLoader2
 import com.innov8.memeit.loaders.TrendingMemeLoader
 import com.memeit.backend.MemeItClient
-import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
@@ -69,12 +63,13 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun initUI(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
+
         initToolbar()
         initBottomNav()
         main_viewpager.adapter = pagerAdapter
         val sbd = SlidingRootNavBuilder(this)
                 .withSavedState(savedInstanceState)
-                .withContentClickableWhenMenuOpened(false)
+                .withContentClickableWhenMenuOpened(true)
                 .withRootViewElevationPx(5)
                 .withRootViewScale(0.65f)
                 .withMenuLayout(R.layout.drawer_menu_main)
@@ -105,7 +100,12 @@ abstract class MainActivity : AppCompatActivity() {
             )
             rootNav.closeMenu(false)
         }
-        changeStatColor()
+        changeStatColor()/*
+        Handler().postDelayed({
+            startActivity(Intent(this, BadgeAwardDialogActivity::class.java).apply {
+                putExtra("badge", Badge.ofID("react_001"))
+            })
+        }, 3000)*/
     }
 
     abstract fun onFeedbackMenu()

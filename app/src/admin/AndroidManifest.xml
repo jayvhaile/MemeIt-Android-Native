@@ -3,11 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:label="MemeIt Admin"
         android:icon="@mipmap/icon_admin"
+        android:label="MemeIt Admin"
         tools:replace="android:label,android:icon">
 
-        <activity android:name="com.innov8.memeit.admin.MainActivity">
+        <activity
+            android:name="com.innov8.memeit.admin.MainActivity"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

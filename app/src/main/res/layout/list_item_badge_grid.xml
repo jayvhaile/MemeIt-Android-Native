@@ -6,7 +6,7 @@
     android:layout_height="56dp">
 
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/badge_icon"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -48,6 +48,7 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/badge_icon"
         app:layout_constraintTop_toBottomOf="@+id/badge_label" />
 </androidx.constraintlayout.widget.ConstraintLayout>

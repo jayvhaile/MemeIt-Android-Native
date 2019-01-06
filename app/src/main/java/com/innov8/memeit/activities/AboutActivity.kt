@@ -20,7 +20,7 @@ class AboutActivity : AppCompatActivity() {
                 .addWebsite("www.memeitapp.com")
                 .setImage(R.mipmap.icon)
                 .setDescription("MemeIt\nVersion ${BuildConfig.VERSION_NAME}\nBy Innov8 Apps")
-                .addItem(Element().setIconDrawable(R.drawable.ic_telegram).setTitle("Telegram").setIntent(Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/joinchat/D8nyzkIBl9N2YWJnsF1w-A"))))
+                .addItem(Element().setTitle("Telegram").setIntent(Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/joinchat/D8nyzkIBl9N2YWJnsF1w-A"))))
                 .create()
 
         setContentView(aboutPage)
