@@ -61,6 +61,7 @@
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:mfont="semi"
         android:text="Alicia"
         android:textSize="@dimen/profile_name_expanded_textsize"
         app:layout_behavior="com.innov8.memeit.utils.ProfileNameViewBehavior" />

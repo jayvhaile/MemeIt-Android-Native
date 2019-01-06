@@ -25,12 +25,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
+        android:text="MemeFactory"
         android:textColor="#313131"
         android:textSize="16sp"
         app:layout_constraintLeft_toRightOf="@+id/notif_icon"
         app:layout_constraintTop_toTopOf="@+id/notif_icon"
-        tools:text="Name" />
+        app:mfont="bold" />
 
     <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/meme_time"
@@ -177,7 +178,7 @@
         android:id="@+id/react_button"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginLeft="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -193,12 +194,13 @@
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:textColor="#313131"
+        app:mfont="semi"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/meme_image"
@@ -210,6 +212,7 @@
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:gravity="center"
+        android:textColor="#313131"
         android:paddingLeft="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/react_button"
         app:layout_constraintStart_toEndOf="@+id/react_button"
@@ -245,12 +248,13 @@
         app:layout_constraintTop_toTopOf="@+id/react_button"
         app:srcCompat="@drawable/ic_comment" />
 
-    <TextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/meme_comment_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
         android:text="0"
+        android:textColor="#313131"
         app:layout_constraintBottom_toBottomOf="@+id/meme_comment"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/meme_comment" />
