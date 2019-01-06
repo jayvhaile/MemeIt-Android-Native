@@ -10,7 +10,7 @@ class MemeListViewHolder(itemView: View, memeAdapter: MemeAdapter, showFollow: B
     init {
         (itemView as MemeView).apply {
             memeClickedListener = {
-                memeClickedListener?.invoke(it)
+                this@MemeListViewHolder.memeClickedListener?.invoke(it)
             }
             onRemoveMeme = {
                 memeAdapter.remove(it)
