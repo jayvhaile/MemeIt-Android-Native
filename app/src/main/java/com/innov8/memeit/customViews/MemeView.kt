@@ -57,11 +57,12 @@ import com.memeit.backend.models.Meme
 import com.memeit.backend.models.Reaction
 import com.memeit.backend.models.Report
 import com.varunest.sparkbutton.SparkButton
-import kotlinx.android.synthetic.main.list_item_meme.view.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
 import java.io.File
 import java.io.FileOutputStream
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 class MemeView : FrameLayout {
     private lateinit var constraintSetDefault: ConstraintSet
@@ -399,12 +400,31 @@ class MemeView : FrameLayout {
 
             if (m.myReaction == null) {
                 m.reactionCount++
-                if (m == meme) reactionCountV.text = String.format("%d people reacted", m.reactionCount)
-
+                if (m == meme) reactionCountV.text = peopleString(m.reactionCount)
             }
             m.myReaction = reactionType.create()
             if (m == meme) reactButton.setActiveImage(m.myReaction!!.getDrawableID())
         }, onError("Reaction Failed"))
+    }
+
+    private fun peopleString(a: Long) : String{
+        var suffix = "";
+        if (a==1L) return "$a person reacted"
+        else if(a>=1000 && a<1000000) {
+            suffix = "K"
+            val df = DecimalFormat("#.#")
+            df.roundingMode = RoundingMode.CEILING
+            val roundedNumber = df.format(a/1000)
+            return "$roundedNumber$suffix people reacted."
+        }
+        else if(a>=1000000){
+            suffix = "M"
+            val df = DecimalFormat("#.#")
+            df.roundingMode = RoundingMode.CEILING
+            val roundedNumber = df.format(a/1000000)
+            return "$roundedNumber$suffix people reacted."
+        }
+        else return "$a people reacted"
     }
 
     private fun reportMeme(message: String) {
@@ -472,7 +492,7 @@ class MemeView : FrameLayout {
         }
         posterNameV.text = meme.poster?.name
         posterPicV.setText(meme.poster?.name.prefix())
-        reactionCountV.text = String.format("%d people reacted", meme.reactionCount)
+        reactionCountV.text = peopleString(meme.reactionCount)
         commentCountV.text = meme.commentCount.toString()
         posterPicV.loadImage(meme.poster?.imageUrl)
         memeDateV.text = meme.date?.formateAsDate()
