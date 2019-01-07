@@ -12,6 +12,7 @@ import com.innov8.memeit.loaders.CommentLoader
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.LoaderAdapterHandler
 import com.innov8.memeit.utils.loadImage
+import com.innov8.memeit.utils.showMemeZoomView
 import com.innov8.memeit.utils.snack
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
@@ -106,6 +107,11 @@ class CommentsActivity : AppCompatActivity() {
         comment_meme_image.showCommentButton = false
         comment_meme_image.resizeToFit = false
         comment_meme_image.meme = meme
+        comment_meme_image.memeClickedListener ={
+
+            showMemeZoomView(listOf(meme))
+        }
+
     }
 
     companion object {

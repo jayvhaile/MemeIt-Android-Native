@@ -23,6 +23,7 @@ import com.innov8.memeit.R
 import com.innov8.memeit.activities.CommentsActivity
 import com.innov8.memeit.activities.ProfileActivity
 import com.innov8.memeit.commons.ELEListAdapter
+import com.innov8.memeit.commons.views.MemeItTextView
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.utils.*
 import com.memeit.backend.models.*
@@ -120,14 +121,17 @@ class NotificationAdapter(context: Context) : ELEListAdapter<Notification, Notif
 
 
 open class NotificationViewHolder(val notifAdapter: NotificationAdapter, itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val back: View = itemView.findViewById(R.id.notif_back)
     val dot: ImageView = itemView.findViewById(R.id.notif_dot)
     val icon: SimpleDraweeView = itemView.findViewById(R.id.notif_icon)
     val date: TextView = itemView.findViewById(R.id.notif_date)
     val title: TextView = itemView.findViewById(R.id.notif_title)
-    val message: TextView? = itemView.findViewById(R.id.notif_message)
+    val message: MemeItTextView? = itemView.findViewById(R.id.notif_message)
     val context = notifAdapter.context
     val d: GradientDrawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle, null) as GradientDrawable
+
+    init {
+        message?.onLinkClicked = generateTextLinkActions(notifAdapter.context)
+    }
 
     var itemPosition: Int = 0
     open fun bind(notif: Notification) {

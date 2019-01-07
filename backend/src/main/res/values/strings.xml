@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Backend</string>
+    <string name="app_name">MemeIt</string>
 
     <string name="facebook_app_id">262717847755102</string>
     <string name="fb_login_protocol_scheme">fb262717847755102</string>

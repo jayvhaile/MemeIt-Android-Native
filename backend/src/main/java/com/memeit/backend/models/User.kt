@@ -75,6 +75,14 @@ data class User(var uid: String? = null,
             return arrayOfNulls(size)
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        return (other as? User)?.uid == uid
+    }
+
+    override fun hashCode(): Int {
+        return uid.hashCode()?:0
+    }
 }
 
 data class UserReq(var uid: String? = null,

@@ -447,7 +447,7 @@ inline fun <T : Any> Call<T>.call(crossinline onSuccess: ((T) -> Unit), crossinl
         }
 
         override fun onFailure(call: Call<T>, t: Throwable) {
-            onError(if (BuildConfig.DEBUG) t.localizedMessage else "Connection Error")
+            onError(if (BuildConfig.DEBUG) t.localizedMessage else "Connection Failed.")
 
             MemeItClient.calls -= call
         }

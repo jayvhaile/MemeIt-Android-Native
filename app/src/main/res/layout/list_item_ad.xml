@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/native_ad_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         app:layout_constraintStart_toEndOf="@+id/native_ad_icon"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/native_ad_sponsored_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@+id/native_ad_sponsored_label"
         tools:showIn="@layout/list_item_ad" />
 
-    <TextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/native_ad_social_context"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
         app:layout_constraintTop_toBottomOf="@+id/native_ad_media"
         tools:text="Get it on Google Play" />
 
-    <TextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/native_ad_body"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

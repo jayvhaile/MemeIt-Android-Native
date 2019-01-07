@@ -133,6 +133,9 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface, EditorSta
                 val dialog = MaterialDialog.Builder(this)
                         .title("Downloading Template...")
                         .progress(true, 100)
+                        .cancelListener {
+                            finish()
+                        }
                         .build()
                 dialog.show()
                 startTemplateDownload(this, mt, { savedTemplate ->

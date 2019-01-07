@@ -13,6 +13,7 @@ import com.innov8.memegenerator.MemeEditorActivity
 import com.innov8.memeit.commons.MyViewHolder
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.SimpleELEListAdapter
+import com.innov8.memeit.utils.LoadingDrawable
 import com.innov8.memeit.utils.generatePreviewUrl
 import com.memeit.backend.models.MemeTemplate
 
@@ -43,6 +44,8 @@ class TemplateSuggestionAdapter(context: Context) : SimpleELEListAdapter<MemeTem
             itemView.setOnClickListener {
                 MemeEditorActivity.startWithTemplate(context as Activity, getItemAt(item_position))
             }
+            templateImageV.hierarchy.setProgressBarImage(LoadingDrawable(context))
+
         }
 
 

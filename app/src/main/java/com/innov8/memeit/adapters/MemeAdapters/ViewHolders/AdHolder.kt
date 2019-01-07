@@ -45,26 +45,26 @@ class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemVi
         }
         listener = object : NativeAdListener {
             override fun onAdClicked(p0: Ad) {
-                memeAdapter.context.toast("clicked")
+//                memeAdapter.context.toast("clicked")
             }
 
             override fun onMediaDownloaded(p0: Ad) {
-                memeAdapter.context.toast("media downloaded")
+//                memeAdapter.context.toast("media downloaded")
 
             }
 
             override fun onError(p0: Ad, p1: AdError) {
-                memeAdapter.context.toast("ad error ${p1.errorCode}\n ${p1.errorMessage}",Toast.LENGTH_LONG)
+//                memeAdapter.context.toast("ad error ${p1.errorCode}\n ${p1.errorMessage}",Toast.LENGTH_LONG)
 
             }
 
             override fun onLoggingImpression(p0: Ad) {
-                memeAdapter.context.toast("logging impression")
+//                memeAdapter.context.toast("logging impression")
 
             }
 
             override fun onAdLoaded(ad: Ad) {
-                memeAdapter.context.toast("loaded")
+//                memeAdapter.context.toast("loaded")
 
                 bindAd((memeAdapter.items[itemPosition] as AdElement).nativeAd)
             }
