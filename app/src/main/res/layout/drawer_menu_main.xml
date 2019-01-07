@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#f5f5f5">
 
-    <TextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/settings"
         android:layout_width="0dp"
         android:layout_height="64dp"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <TextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/menu_invite"
         android:layout_width="0dp"
         android:layout_height="64dp"
@@ -50,7 +50,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settings" />
 
-    <TextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/menu_feedback"
         android:layout_width="0dp"
         android:layout_height="64dp"
@@ -65,6 +65,8 @@
         android:gravity="center_vertical"
         android:paddingLeft="40dp"
         android:paddingTop="0dp"
+        android:textColor="#313131"
+        android:drawableTint="@color/colorAccent"
         android:text="  Feedback"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/aboutus"
@@ -73,7 +75,7 @@
         app:layout_constraintTop_toBottomOf="@+id/menu_invite" />
 
 
-    <TextView
+    <com.innov8.memeit.commons.views.MemeItTextView
         android:id="@+id/aboutus"
         android:layout_width="0dp"
         android:layout_height="64dp"

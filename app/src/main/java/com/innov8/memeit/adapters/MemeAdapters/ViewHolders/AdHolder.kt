@@ -1,5 +1,6 @@
 package com.innov8.memeit.adapters.MemeAdapters.ViewHolders
 
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater
@@ -45,12 +46,12 @@ class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemVi
         }
         listener = object : NativeAdListener {
             override fun onAdClicked(p0: Ad) {
-                memeAdapter.context.toast("clicked")
+                Log.w("Ad","Clicked")
+
             }
 
             override fun onMediaDownloaded(p0: Ad) {
-                memeAdapter.context.toast("media downloaded")
-
+                Log.w("Ad","Media downloaded")
             }
 
             override fun onError(p0: Ad, p1: AdError) {
@@ -59,12 +60,11 @@ class AdHolder(itemView: View, memeAdapter: MemeAdapter) : MemeViewHolder(itemVi
             }
 
             override fun onLoggingImpression(p0: Ad) {
-                memeAdapter.context.toast("logging impression")
-
+                Log.w("Ad","logging impression")
             }
 
             override fun onAdLoaded(ad: Ad) {
-                memeAdapter.context.toast("loaded")
+                Log.w("Ad","Loaded")
 
                 bindAd((memeAdapter.items[itemPosition] as AdElement).nativeAd)
             }
