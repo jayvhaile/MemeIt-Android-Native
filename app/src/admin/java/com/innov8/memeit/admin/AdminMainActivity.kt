@@ -1,12 +1,14 @@
 package com.innov8.memeit.admin
 
+import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import com.innov8.memeit.R
 import kotlinx.android.synthetic.admin.activity_admin_main.*
 
-class AdminMainActivity : AppCompatActivity() {
+class AdminMainActivity : SuperActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,4 +19,7 @@ class AdminMainActivity : AppCompatActivity() {
         }
 
     }
+
+
+
 }

@@ -5,7 +5,7 @@ import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.adroitandroid.chipcloud.ChipCloud
 import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -24,7 +24,7 @@ import com.memeit.backend.models.SavedMemeTemplateProperty
 import kotlinx.android.synthetic.main.activity_meme_template_poster.*
 import java.io.File
 
-class MemeTemplatePosterActivity : AppCompatActivity() {
+class MemeTemplatePosterActivity : SuperActivity() {
     companion object {
         const val PARAM_TEMPLATE_JSON = "json"
 

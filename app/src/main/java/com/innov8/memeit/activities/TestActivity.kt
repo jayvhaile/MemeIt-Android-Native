@@ -1,14 +1,14 @@
 package com.innov8.memeit.activities
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.innov8.memeit.R
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.call
 import com.memeit.backend.models.Meme
 import kotlinx.android.synthetic.main.activity_test.*
 
-class TestActivity : AppCompatActivity() {
+class TestActivity : SuperActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

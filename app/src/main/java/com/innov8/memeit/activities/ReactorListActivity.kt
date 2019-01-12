@@ -1,7 +1,7 @@
 package com.innov8.memeit.activities
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.innov8.memeit.adapters.ReactorAdapter
 import com.innov8.memeit.R
 import com.innov8.memeit.loaders.ReactorLoader
@@ -10,7 +10,7 @@ import com.innov8.memeit.utils.makeLinear
 import kotlinx.android.synthetic.main.activity_reactor_list.*
 import java.lang.IllegalStateException
 
-class ReactorListActivity : AppCompatActivity() {
+class ReactorListActivity : SuperActivity() {
 
     private val adapter by lazy {
         ReactorAdapter(this)

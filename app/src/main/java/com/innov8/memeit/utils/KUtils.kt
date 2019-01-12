@@ -197,20 +197,25 @@ fun Int.formatNumber() = when {
     else -> String.format("%.2fb", this / 1000_000_000.0f)
 }
 
+fun Int.formatNumber(suffix: String = "", suffixPlural: String = "") = this.toLong().formatNumber(suffix, suffixPlural)
 
-fun Int.formatNumber(suffix: String = "", suffixPlural: String = ""): String {
-    return if (this >= 1000000) {
-        val d = this / 1000000.0f
-        String.format("%.2fm %s", d, suffixPlural)
-    } else if (this >= 1000) {
-        val d = this / 1000.0f
-        String.format("%.2fk %s", d, suffixPlural)
-    } else if (this > 1) {
-        String.format("%d %s", this, suffixPlural)
-    } else if (this == 1) {
-        String.format("%d %s", this, suffix)
-    } else {
-        "no $suffixPlural"
+fun Long.formatNumber(suffix: String = "", suffixPlural: String = ""): String {
+    return when {
+        this >= 1000_000_000L -> {
+            val d = this / 1_000_000_000.0f
+            String.format("%.2fB %s", d, suffixPlural)
+        }
+        this >= 1000_000L -> {
+            val d = this / 1_000_000.0f
+            String.format("%.2fB %s", d, suffixPlural)
+        }
+        this >= 1_000L -> {
+            val d = this / 1_000.0f
+            String.format("%.2fK %s", d, suffixPlural)
+        }
+        this > 1L -> "$this $suffixPlural"
+        this == 1L -> "1 $suffix"
+        else -> "0 $suffixPlural"
     }
 
 }
@@ -227,7 +232,7 @@ val Float.dp: Float
     get() {
         return this * it.resources.displayMetrics.density
     }
-val Float.SP: Float
+val Float.sp: Float
     get() {
         return this * it.resources.displayMetrics.scaledDensity
     }

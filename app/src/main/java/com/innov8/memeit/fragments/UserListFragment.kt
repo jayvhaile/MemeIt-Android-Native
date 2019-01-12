@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -86,7 +86,7 @@ class UserListFragment : Fragment() {
         followers_recycler_view.itemAnimator = animator
         followers_recycler_view.adapter = userListAdapter
 
-        (activity as? AppCompatActivity)?.apply {
+        (activity as? SuperActivity)?.apply {
             setSupportActionBar(toolbar_user_list)
             supportActionBar?.title = if (userListLoader is FollowingLoader) "Followings" else "Followers"
             supportActionBar?.setDisplayHomeAsUpEnabled(true)

@@ -1,14 +1,14 @@
 package com.innov8.memegenerator
 
 import android.media.MediaMetadataRetriever
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_video_to_gif.*
 import java.io.File
 import java.io.FileDescriptor
 import java.io.FileInputStream
 
-class VideoToGifActivity : AppCompatActivity() {
+class VideoToGifActivity : SuperActivity() {
 
     val retriever by lazy { MediaMetadataRetriever() }
     override fun onCreate(savedInstanceState: Bundle?) {

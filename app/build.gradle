@@ -3,12 +3,16 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
     defaultConfig {
         applicationId "com.innov8.memeit"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 6
-        versionName "1.0-beta-05"
+        versionCode 7
+        versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
     }
@@ -42,6 +46,8 @@ android {
     splits {
         abi {
             enable true
+            reset()
+            include 'x86', 'armeabi','armeabi-v7a','mips'
             universalApk true
         }
     }

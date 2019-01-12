@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.innov8.memeit.R
 import com.innov8.memeit.utils.snack
 import com.innov8.memeit.utils.text
@@ -16,7 +16,7 @@ import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import kotlinx.android.synthetic.main.username_settings.*
 
-class UsernameSettingsActivity : AppCompatActivity() {
+class UsernameSettingsActivity : SuperActivity() {
     private val usernameMap = mutableMapOf<String, Boolean>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

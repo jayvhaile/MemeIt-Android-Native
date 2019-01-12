@@ -3,7 +3,7 @@ package com.innov8.memeit.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +23,7 @@ import com.memeit.backend.models.MyUser
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.loading_view_layout.*
 
-class CommentsActivity : AppCompatActivity() {
+class CommentsActivity : SuperActivity() {
     private var isPostingComment: Boolean = false
     private val commentsAdapter by lazy {
         CommentsAdapter(this).apply {

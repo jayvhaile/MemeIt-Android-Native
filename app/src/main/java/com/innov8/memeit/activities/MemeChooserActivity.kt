@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
@@ -41,6 +40,7 @@ import com.innov8.memeit.fragments.PhotosChooserFragment
 import com.innov8.memeit.loaders.DraftLoader
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.LoaderAdapterHandler
+import com.innov8.memeit.commons.SuperActivity
 import com.innov8.memeit.utils.makeLinear
 import com.innov8.memeit.commons.dp
 import com.memeit.backend.models.MemeTemplate
@@ -48,7 +48,7 @@ import kotlinx.android.synthetic.main.activity_meme_chooser.*
 import kotlinx.android.synthetic.main.fragment_meme_templates.*
 import kotlinx.android.synthetic.main.fragment_ongoing_upload.*
 
-class MemeChooserActivity : AppCompatActivity() {
+class MemeChooserActivity : SuperActivity() {
     private lateinit var pagerAdapter: MemeChooserPagerAdapter
     private lateinit var fileObserver: FileObserver
     private lateinit var closedSet: ConstraintSet

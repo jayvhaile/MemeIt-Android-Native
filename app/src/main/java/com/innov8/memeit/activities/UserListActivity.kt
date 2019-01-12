@@ -4,12 +4,12 @@ package com.innov8.memeit.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.innov8.memeit.fragments.UserListFragment
 import com.innov8.memeit.loaders.UserListLoader
 import com.innov8.memeit.R
 
-class UserListActivity : AppCompatActivity() {
+class UserListActivity : SuperActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

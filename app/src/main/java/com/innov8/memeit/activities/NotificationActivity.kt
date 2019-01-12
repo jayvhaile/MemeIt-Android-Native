@@ -1,7 +1,7 @@
 package com.innov8.memeit.activities
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.adapters.NotificationAdapter
 import com.innov8.memeit.loaders.MyNotificationLoader
@@ -12,7 +12,7 @@ import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import kotlinx.android.synthetic.main.activity_notification.*
 
-class NotificationActivity : AppCompatActivity() {
+class NotificationActivity : SuperActivity() {
     private val notificationAdapter by lazy {
         NotificationAdapter(this)
     }

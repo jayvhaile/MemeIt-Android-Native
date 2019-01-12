@@ -1,6 +1,6 @@
 package com.innov8.memeit.admin
 
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import android.os.Bundle
 import com.innov8.memeit.loaders.UnapprovedTemplateLoader
 import com.innov8.memeit.R
@@ -10,7 +10,7 @@ import com.innov8.memeit.admin.Adapters.TemplateManagerAdapter
 import com.innov8.memeit.commons.toast
 import kotlinx.android.synthetic.admin.activity_template_manager.*
 
-class TemplateManagerActivity : AppCompatActivity() {
+class TemplateManagerActivity : SuperActivity() {
     private val loader by lazy {
         UnapprovedTemplateLoader()
     }

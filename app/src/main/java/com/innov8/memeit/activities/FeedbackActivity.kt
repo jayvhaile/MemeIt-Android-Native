@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import androidx.core.content.edit
 import com.innov8.memeit.R
 import com.innov8.memeit.utils.snack
@@ -13,7 +13,7 @@ import com.memeit.backend.call
 import com.memeit.backend.models.Feedback
 import kotlinx.android.synthetic.main.activity_feedback.*
 
-class FeedbackActivity : AppCompatActivity() {
+class FeedbackActivity : SuperActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

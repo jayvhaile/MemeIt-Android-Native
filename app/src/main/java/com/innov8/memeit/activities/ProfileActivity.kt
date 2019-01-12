@@ -6,13 +6,13 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.innov8.memeit.R
 import com.innov8.memeit.fragments.ProfileFragment
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.User
 
-class ProfileActivity : AppCompatActivity() {
+class ProfileActivity : SuperActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

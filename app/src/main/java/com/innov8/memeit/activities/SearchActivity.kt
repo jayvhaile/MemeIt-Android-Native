@@ -1,7 +1,7 @@
 package com.innov8.memeit.activities
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.innov8.memeit.adapters.MemeAdapters.MemeAdapter
@@ -15,7 +15,7 @@ import com.innov8.memeit.utils.addOnTabSelected
 import com.innov8.memeit.commons.addOnTextChanged
 import kotlinx.android.synthetic.main.activity_search.*
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : SuperActivity() {
 
     private val pagerAdapter by lazy {
         SearchPagerAdapter(supportFragmentManager)

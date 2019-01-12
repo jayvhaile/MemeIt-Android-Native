@@ -9,7 +9,7 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
 import android.text.Layout
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.transition.TransitionManager
@@ -31,7 +31,7 @@ import kotlinx.coroutines.android.Main
 import java.io.File
 import java.util.*
 
-class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface, EditorStateChangedListener {
+class MemeEditorActivity : SuperActivity(), ItemSelectedInterface, EditorStateChangedListener {
 
     private val constraintSet1 = ConstraintSet()
     private val opened
@@ -318,6 +318,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface, EditorSta
     private fun saveGifMeme(gifPath: String) {
         val memeLayout = (memeEditorView.memeLayout as? SingleImageLayout)!!
         val file = File(getTempMemeUploadDir(this@MemeEditorActivity), "${UUID.randomUUID()}_meme.gif")
+        val file2 = File(getTempMemeUploadDir(this@MemeEditorActivity), "${UUID.randomUUID()}_meme.mp4")
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
             val pd = MaterialDialog.Builder(this@MemeEditorActivity)
                     .title("Please wait a while")
@@ -333,6 +334,7 @@ class MemeEditorActivity : AppCompatActivity(), ItemSelectedInterface, EditorSta
                         memeEditorView.paint,
                         file.absolutePath)
                 )
+                gifToMp4(gifPath, file2.absolutePath, this@MemeEditorActivity)
             }
             pd.dismiss()
             startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {

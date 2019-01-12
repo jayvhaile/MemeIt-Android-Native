@@ -3,7 +3,7 @@ package com.innov8.memeit.activities
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.snackbar.Snackbar
 import com.innov8.memeit.R
@@ -16,7 +16,7 @@ import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.ChangePasswordRequest
 import kotlinx.android.synthetic.main.password_settings.*
 
-class PasswordSettingsActivity : AppCompatActivity() {
+class PasswordSettingsActivity : SuperActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

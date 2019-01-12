@@ -3,7 +3,7 @@ package com.innov8.memeit.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_tags.*
 import kotlinx.android.synthetic.main.activity_user_tag.*
 import kotlinx.android.synthetic.main.fragment_meme_list.*
 
-class TagsActivity : AppCompatActivity() {
+class TagsActivity : SuperActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tags)
@@ -43,7 +43,7 @@ class TagsActivity : AppCompatActivity() {
     }
 }
 
-class UserTagActivity : AppCompatActivity() {
+class UserTagActivity : SuperActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val user = intent?.getParcelableExtra<User>("user")
@@ -60,7 +60,7 @@ class UserTagActivity : AppCompatActivity() {
     }
 }
 
-class TagsChooserActivity : AppCompatActivity() {
+class TagsChooserActivity : SuperActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

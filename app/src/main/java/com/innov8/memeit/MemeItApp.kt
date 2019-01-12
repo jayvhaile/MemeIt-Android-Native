@@ -72,7 +72,7 @@ class MemeItApp : MultiDexApplication() {
                 .build())
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         initNotificationChannel()
-//        initUser()
+        initUser()
         TypefaceManager.init(this)
         FirebaseMessaging.getInstance().subscribeToTopic("general")
     }

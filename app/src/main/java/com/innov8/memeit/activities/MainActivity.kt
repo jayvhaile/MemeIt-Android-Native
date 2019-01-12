@@ -9,7 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -29,7 +29,7 @@ import com.memeit.backend.call
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 
-abstract class MainActivity : AppCompatActivity() {
+abstract class MainActivity : SuperActivity() {
     private val titles = arrayOf("MemeIt", "Trending", "Favorites")
     private var searchItem: MenuItem? = null
     private var notifItem: MenuItem? = null

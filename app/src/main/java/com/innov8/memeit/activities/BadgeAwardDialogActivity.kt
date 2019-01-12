@@ -5,14 +5,14 @@ import android.text.style.ForegroundColorSpan
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import androidx.core.text.set
 import androidx.core.text.toSpannable
 import com.innov8.memeit.R
 import com.innov8.memeit.utils.color
 import com.memeit.backend.models.Badge
 
-class BadgeAwardDialogActivity : AppCompatActivity() {
+class BadgeAwardDialogActivity : SuperActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

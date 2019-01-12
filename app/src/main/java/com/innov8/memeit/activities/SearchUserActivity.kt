@@ -3,13 +3,13 @@ package com.innov8.memeit.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.innov8.memeit.fragments.UserSearchFragment
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.addOnTextChanged
 import kotlinx.android.synthetic.main.activity_search_user.*
 
-class SearchUserActivity : AppCompatActivity() {
+class SearchUserActivity : SuperActivity() {
     companion object {
         const val REQUEST_CODE = 200
         const val RESULT_CODE_SELECTED = 201

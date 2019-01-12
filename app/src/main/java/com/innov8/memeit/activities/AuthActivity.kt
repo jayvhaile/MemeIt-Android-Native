@@ -7,7 +7,7 @@ import android.text.method.LinkMovementMethod
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.transition.TransitionManager
 import com.facebook.CallbackManager
@@ -20,7 +20,7 @@ import com.innov8.memeit.utils.*
 import com.innov8.memeit.activities.authModes.*
 import kotlinx.android.synthetic.main.activity_auth.*
 
-class AuthActivity : AppCompatActivity() {
+class AuthActivity : SuperActivity() {
     private var mLoading: Boolean = false
     fun setLoading(loading: Boolean, then: () -> Unit = {}) {
         mLoading = loading

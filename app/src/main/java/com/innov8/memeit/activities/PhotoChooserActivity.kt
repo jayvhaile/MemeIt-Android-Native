@@ -1,12 +1,12 @@
 package com.innov8.memeit.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import android.os.Bundle
 import com.innov8.memeit.R
 import com.innov8.memeit.fragments.PhotosChooserFragment
 
-class PhotoChooserActivity : AppCompatActivity() {
+class PhotoChooserActivity : SuperActivity() {
     companion object {
         const val REQUEST_CODE = 260
         const val RESULT_CODE = 265

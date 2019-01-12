@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.imagepipeline.request.ImageRequest
 import com.innov8.memeit.R
@@ -18,7 +18,7 @@ import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.profile_settings.*
 
-class ProfileSettingsActivity : AppCompatActivity() {
+class ProfileSettingsActivity : SuperActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.profile_settings)

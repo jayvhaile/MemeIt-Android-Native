@@ -3,13 +3,13 @@ package com.innov8.memeit.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.innov8.memeit.BuildConfig
 import com.innov8.memeit.R
 import mehdi.sakout.aboutpage.AboutPage
 import mehdi.sakout.aboutpage.Element
 
-class AboutActivity : AppCompatActivity() {
+class AboutActivity : SuperActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

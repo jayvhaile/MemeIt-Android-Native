@@ -2,7 +2,7 @@ package com.innov8.memeit.activities
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,7 +14,7 @@ import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
 import kotlinx.android.synthetic.main.activity_tag_memes.*
 
-class TagMemesActivity : AppCompatActivity() {
+class TagMemesActivity : SuperActivity() {
     private val tag: String by lazy { intent.getStringExtra(PARAM_TAG) }
     private var isFollowed = false
         set(value) {

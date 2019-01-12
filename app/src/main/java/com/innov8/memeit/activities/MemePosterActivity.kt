@@ -10,7 +10,7 @@ import android.os.Environment.DIRECTORY_PICTURES
 import android.os.Environment.getExternalStoragePublicDirectory as externalStorage
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import androidx.work.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -33,7 +33,7 @@ import java.io.FileOutputStream
 import java.nio.channels.FileChannel
 
 
-class MemePosterActivity : AppCompatActivity() {
+class MemePosterActivity : SuperActivity() {
     private var texts: Array<String>? = null
     private lateinit var memeType: Meme.MemeType
     private var gif: String? = null

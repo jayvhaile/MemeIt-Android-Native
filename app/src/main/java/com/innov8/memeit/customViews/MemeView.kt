@@ -1,14 +1,12 @@
 package com.innov8.memeit.customViews
 
-import android.Manifest
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.os.Handler
 import android.util.AttributeSet
@@ -25,7 +23,6 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ShareCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -37,18 +34,21 @@ import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.innov8.memegenerator.utils.addWaterMark
-import com.innov8.memeit.*
-import com.innov8.memeit.adapters.MemeAdapters.MemeListAdapter
-import com.innov8.memeit.utils.*
+import com.innov8.memeit.BuildConfig
+import com.innov8.memeit.MemeItApp
+import com.innov8.memeit.R
 import com.innov8.memeit.activities.CommentsActivity
 import com.innov8.memeit.activities.MemeUpdateActivity
 import com.innov8.memeit.activities.ProfileActivity
 import com.innov8.memeit.activities.ReactorListActivity
+import com.innov8.memeit.adapters.MemeAdapters.MemeListAdapter
+import com.innov8.memeit.commons.SuperActivity
 import com.innov8.memeit.commons.dp
 import com.innov8.memeit.commons.models.TypefaceManager
 import com.innov8.memeit.commons.toast
 import com.innov8.memeit.commons.views.MemeItTextView
 import com.innov8.memeit.commons.views.ProfileDraweeView
+import com.innov8.memeit.utils.*
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
 import com.memeit.backend.MemeItUsers
@@ -61,8 +61,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
 import java.io.File
 import java.io.FileOutputStream
-import java.math.RoundingMode
-import java.text.DecimalFormat
 
 class MemeView : FrameLayout {
     private lateinit var constraintSetDefault: ConstraintSet
@@ -89,10 +87,8 @@ class MemeView : FrameLayout {
     }
 
     private fun initC() {
-        com.innov8.memeit.utils.measure("constraint") {
-            constraintSetDefault = ConstraintSet().apply {
-                clone(itemView)
-            }
+        constraintSetDefault = ConstraintSet().apply {
+            clone(itemView)
         }
     }
 
@@ -132,7 +128,7 @@ class MemeView : FrameLayout {
     init {
 
         memeImageV.onClick = {
-            memeClickedListener?.invoke(meme.id!!)
+            if (reactTint.visibility != View.VISIBLE) memeClickedListener?.invoke(meme.id!!)
         }
         commentBtnV.setOnClickListener {
             CommentsActivity.startWithMeme(context, meme)
@@ -374,16 +370,11 @@ class MemeView : FrameLayout {
 
     private val reqCode = 154
     private fun onSave() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val wes = ContextCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-
-            if (wes) {
+        (context as SuperActivity).requestPerm(arrayOf(WRITE_EXTERNAL_STORAGE), reqCode) { _, granted ->
+            if (granted) {
                 saveToGallery()
-            } else {
-                (context as Activity).requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), reqCode)
             }
-        } else saveToGallery()
-
+        }
     }
 
     fun onError(message: String = "", action: (() -> Unit)? = null): (String) -> Unit = {
@@ -400,31 +391,11 @@ class MemeView : FrameLayout {
 
             if (m.myReaction == null) {
                 m.reactionCount++
-                if (m == meme) reactionCountV.text = peopleString(m.reactionCount)
+                if (m == meme) reactionCountV.text = m.reactionCount.formatNumber("person reacted", "people reacted")
             }
             m.myReaction = reactionType.create()
             if (m == meme) reactButton.setActiveImage(m.myReaction!!.getDrawableID())
         }, onError("Reaction Failed"))
-    }
-
-    private fun peopleString(a: Long) : String{
-        var suffix = "";
-        if (a==1L) return "$a person reacted"
-        else if(a>=1000 && a<1000000) {
-            suffix = "K"
-            val df = DecimalFormat("#.#")
-            df.roundingMode = RoundingMode.CEILING
-            val roundedNumber = df.format(a/1000)
-            return "$roundedNumber$suffix people reacted."
-        }
-        else if(a>=1000000){
-            suffix = "M"
-            val df = DecimalFormat("#.#")
-            df.roundingMode = RoundingMode.CEILING
-            val roundedNumber = df.format(a/1000000)
-            return "$roundedNumber$suffix people reacted."
-        }
-        else return "$a people reacted"
     }
 
     private fun reportMeme(message: String) {
@@ -492,7 +463,7 @@ class MemeView : FrameLayout {
         }
         posterNameV.text = meme.poster?.name
         posterPicV.setText(meme.poster?.name.prefix())
-        reactionCountV.text = peopleString(meme.reactionCount)
+        reactionCountV.text = meme.reactionCount.formatNumber("person reacted", "people reacted")
         commentCountV.text = meme.commentCount.toString()
         posterPicV.loadImage(meme.poster?.imageUrl)
         memeDateV.text = meme.date?.formateAsDate()

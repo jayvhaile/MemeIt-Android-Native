@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import com.innov8.memeit.commons.SuperActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.toast
@@ -14,7 +14,7 @@ import com.memeit.backend.call
 import com.memeit.backend.models.Meme
 import kotlinx.android.synthetic.main.activity_meme_update.*
 
-class MemeUpdateActivity : AppCompatActivity() {
+class MemeUpdateActivity : SuperActivity() {
 
     companion object {
         const val PARAM_MEME = "meme"

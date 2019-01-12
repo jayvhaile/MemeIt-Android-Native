@@ -117,15 +117,12 @@ fun Int.dp(context: Context): Int {
     return (this * context.resources.displayMetrics.density).toInt()
 }
 
-fun Context.goTo(clazz: Class<out Activity>) {
-    startActivity(Intent(this, clazz))
+fun Activity.startActivity(clazz: Class<out Activity>, finish: Boolean = false, apply: Intent.() -> Unit = {}) {
+    startActivity(Intent(this, clazz).apply(apply))
+    if (finish) finish()
 }
 
-fun Activity.goTo(clazz: Class<out Activity>, finish: Boolean = false) {
-    startActivity(Intent(this, clazz))
-    if (finish)
-        finish()
-}
+
 
 fun Activity.goToWithString(clazz: Class<out Activity>, data: String, finish: Boolean = false) {
     val intent = Intent(this, clazz)
@@ -188,10 +185,6 @@ fun Context.sendUserNotification(data: NotifData, notifyID: Int) {
     val manager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     manager.notify(notifyID, builder.build())
-
-    val x = "a"
-    val y = x.mapTo { this to this }
-    y
 }
 
 data class NotifData(val title: String,
@@ -202,3 +195,5 @@ data class NotifData(val title: String,
 fun <T, R> T.mapTo(mappper: T.() -> R): R {
     return mappper()
 }
+
+fun <T : Any> Any.cast(): T? = this as? T
