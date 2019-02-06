@@ -4,9 +4,6 @@ import android.content.Context
 import android.graphics.*
 import android.net.Uri
 import androidx.core.graphics.*
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg
-import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler
-import com.github.hiteshsondhi88.libffmpeg.FFmpegLoadBinaryResponseHandler
 import com.innov8.memegenerator.utils.maxBy
 import com.innov8.memegenerator.utils.scale
 import com.innov8.memeit.commons.log
@@ -131,6 +128,7 @@ private fun draw(b: Bitmap, imageBitmap: Bitmap, overlayBitmap: Bitmap, idr: Rec
     canvas.drawBitmap(overlayBitmap, null, dr, null)
     return b
 }
+/*
 
 fun gifToMp4(gifpath: String, destpath: String, context: Context) {
     val fFmpeg = FFmpeg.getInstance(context)
@@ -169,4 +167,4 @@ fun gifToMp4(gifpath: String, destpath: String, context: Context) {
         }
     })
 
-}
+}*/

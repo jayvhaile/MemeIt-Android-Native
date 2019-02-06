@@ -28,10 +28,10 @@ class UserSuggestionAdapter(context: Context) : ListAdapter<User>(context, R.lay
 
         init {
             itemView.setOnClickListener {
-                ProfileActivity.startWithUser(context, items[item_position])
+                ProfileActivity.startWithUser(context, items[adapterPosition])
             }
             followV.setOnClickListener { _ ->
-                val uid = items[item_position].uid!!
+                val uid = items[adapterPosition].uid!!
                 if (followV.text == "Unfollow") {
                     followV.text = "Unfollowing..."
                     MemeItUsers.unfollowUser(uid).call({

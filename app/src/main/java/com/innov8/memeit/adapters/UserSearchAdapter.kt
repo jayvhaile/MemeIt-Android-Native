@@ -46,7 +46,7 @@ class UserSearchAdapter(context: Context) : ELEWordFilterableListAdapter<User, U
     }
 
     override fun onBindHolder(holder: UserViewHolder, position: Int) {
-        holder.item_position=position
+        holder.adapterPosition=position
         holder.bind(getItemAt(position))
     }
 
@@ -66,7 +66,7 @@ class UserSearchAdapter(context: Context) : ELEWordFilterableListAdapter<User, U
         private val postCountV: TextView = itemView.findViewById(R.id.post_count)
 
         init {
-            itemView.setOnClickListener { onItemClicked?.invoke(getItemAt(item_position)) }
+            itemView.setOnClickListener { onItemClicked?.invoke(getItemAt(adapterPosition)) }
         }
 
         @SuppressLint("SetTextI18n")

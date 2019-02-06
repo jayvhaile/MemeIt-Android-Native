@@ -5,8 +5,7 @@ import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.innov8.memeit.activities.CommentsActivity
-import com.innov8.memeit.R
-import com.innov8.memeit.commons.NotifData
+import com.innov8.memeit.commons.PushNotification
 import com.innov8.memeit.commons.sendUserNotification
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
@@ -94,10 +93,12 @@ class MemeUploadWorker(context: Context, params: WorkerParameters) : Worker(cont
 
     private fun notify(postResponse: Response<Meme>) {
         applicationContext.sendUserNotification(
-                NotifData("Your Meme has Been Uploaded",
+                PushNotification(
+                        21,
+                        null,
+                        "Your Meme has Been Uploaded",
                         "Click here to check it out",
-                        R.mipmap.icon,
-                        CommentsActivity.startWithMemeIdIntent(applicationContext, postResponse.body()!!.id!!))
-                , 578)
+                        intent = CommentsActivity.startWithMemeIdIntent(applicationContext, postResponse.body()!!.id!!))
+        )
     }
 }

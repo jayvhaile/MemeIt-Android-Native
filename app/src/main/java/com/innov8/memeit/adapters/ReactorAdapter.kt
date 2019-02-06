@@ -42,7 +42,7 @@ class ReactorAdapter(context: Context) : SimpleELEListAdapter<Reaction>(context,
         init {
             reactorPPV.setOnClickListener {
                 val i = Intent(context, ProfileActivity::class.java)
-                i.putExtra("user", getItemAt(item_position).poster!!)
+                i.putExtra("user", getItemAt(adapterPosition).poster!!)
                 context.startActivity(i)
             }
         }

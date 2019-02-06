@@ -32,7 +32,7 @@ class StickersAdapter(context: Context) : SimpleELEListAdapter<Sticker>(context,
 
         init {
             itemView.setOnClickListener {
-                onItemClick?.invoke(items[item_position])
+                onItemClick?.invoke(items[adapterPosition])
             }
         }
 

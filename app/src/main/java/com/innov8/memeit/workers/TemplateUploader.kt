@@ -5,8 +5,7 @@ import android.content.Intent
 import androidx.work.*
 import com.innov8.memeit.activities.MemeChooserActivity
 import com.innov8.memeit.MemeItApp
-import com.innov8.memeit.R
-import com.innov8.memeit.commons.NotifData
+import com.innov8.memeit.commons.PushNotification
 import com.innov8.memeit.commons.sendUserNotification
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.MemeItMemes
@@ -101,11 +100,13 @@ class TemplateUploader(context: Context, params: WorkerParameters) : Worker(cont
 
     private fun notifyFinished() {
         applicationContext.sendUserNotification(
-                NotifData("Your Meme Template has Been Uploaded.",
+                PushNotification(
+                        20, null,
+                        "Your Meme Template has Been Uploaded.",
                         "We will let you know when it is approved.",
-                        R.mipmap.icon,
-                        Intent(applicationContext, MemeChooserActivity::class.java))
-                , 579)
+                        intent = Intent(applicationContext, MemeChooserActivity::class.java)
+                )
+        )
     }
 }
 

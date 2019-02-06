@@ -5,10 +5,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memeit.commons.MyViewHolder
-import com.innov8.memegenerator.loading_button_lib.customViews.CircularProgressButton
 import com.innov8.memeit.activities.ProfileActivity
 import com.innov8.memeit.R
 import com.innov8.memeit.commons.SimpleELEListAdapter
@@ -18,14 +16,10 @@ import com.innov8.memeit.utils.formatNumber
 import com.innov8.memeit.utils.loadImage
 import com.innov8.memeit.utils.prefix
 import com.memeit.backend.MemeItClient
-import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
-import com.memeit.backend.OnCompleted
 import com.memeit.backend.call
-import com.memeit.backend.models.Meme
 import com.memeit.backend.models.MyUser
 import com.memeit.backend.models.User
-import okhttp3.ResponseBody
 
 class UserListAdapter(mContext: Context, override var emptyDescription: String) : SimpleELEListAdapter<User>(mContext, R.layout.list_item_follower) {
     override var emptyDrawableId: Int = R.drawable.empty_list
@@ -67,7 +61,7 @@ class UserListAdapter(mContext: Context, override var emptyDescription: String) 
 
             followV.visibility = View.VISIBLE
             followV.setOnClickListener { _ ->
-                val uid = items[item_position].uid!!
+                val uid = items[adapterPosition].uid!!
                 if (followV.text == "Unfollow") {
                     followV.text = "Unfollowing..."
                     MemeItUsers.unfollowUser(uid).call({
@@ -90,7 +84,7 @@ class UserListAdapter(mContext: Context, override var emptyDescription: String) 
             }
 
             itemView.setOnClickListener {
-                onItemClicked?.invoke(items[item_position])
+                onItemClicked?.invoke(items[adapterPosition])
             }
         }
 

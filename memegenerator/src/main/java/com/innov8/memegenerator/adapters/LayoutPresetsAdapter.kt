@@ -22,7 +22,7 @@ class LayoutPresetsAdapter(context: Context) : ListAdapter<Pair<String, MemeLayo
 
         init {
             presetV.setOnClickListener {
-                onItemClick?.invoke(getItemAt(item_position).second)
+                onItemClick?.invoke(getItemAt(adapterPosition).second)
             }
         }
 

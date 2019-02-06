@@ -37,14 +37,14 @@ class TemplateManagerAdapter(context: Context) : SimpleELEListAdapter<MemeTempla
 
         init {
             approve.setOnClickListener { view ->
-                MemeItMemes.approveTemplate(getItemAt(item_position)._id!!).call({
+                MemeItMemes.approveTemplate(getItemAt(adapterPosition)._id!!).call({
                     context.toast("Approved")
                 }) {
                     context.toast("Approve Failed, $it")
                 }
             }
             decline.setOnClickListener {
-                MemeItMemes.declineTemplate(getItemAt(item_position)._id!!).call({
+                MemeItMemes.declineTemplate(getItemAt(adapterPosition)._id!!).call({
                     context.toast("Declined")
                 }) {
                     context.toast("Decline Failed, $it")

@@ -38,7 +38,7 @@ class TagSearchAdapter(context: Context) : ELEWordFilterableListAdapter<Tag, Tag
     }
 
     override fun onBindHolder(holder: TagViewHolder, position: Int) {
-        holder.item_position = position
+        holder.adapterPosition = position
         holder.bind(getItemAt(position))
     }
 
@@ -57,7 +57,7 @@ class TagSearchAdapter(context: Context) : ELEWordFilterableListAdapter<Tag, Tag
         private val tagCountV: TextView = itemView.findViewById(R.id.post_count)
 
         init {
-            itemView.setOnClickListener { onItemClicked?.invoke(getItemAt(item_position)) }
+            itemView.setOnClickListener { onItemClicked?.invoke(getItemAt(adapterPosition)) }
         }
 
         @SuppressLint("SetTextI18n")

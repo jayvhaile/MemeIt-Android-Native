@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
@@ -123,7 +124,6 @@ fun Activity.startActivity(clazz: Class<out Activity>, finish: Boolean = false, 
 }
 
 
-
 fun Activity.goToWithString(clazz: Class<out Activity>, data: String, finish: Boolean = false) {
     val intent = Intent(this, clazz)
     intent.putExtra("string", data)
@@ -147,7 +147,7 @@ fun Activity.makeFullScreen() {
 }
 
 fun String?.prefix(): String {
-    return if (this.isNullOrEmpty()) "..." else this!![0].toString()
+    return if (this.isNullOrEmpty()) "..." else this[0].toString()
 }
 
 fun EditText.addOnTextChanged(listener: (String) -> Unit) {
@@ -168,29 +168,58 @@ fun EditText.addOnTextChanged(listener: (String) -> Unit) {
 infix fun Long.min(min: Long) = if (this < min) min else this
 infix fun Long.max(max: Long) = if (this > max) max else this
 const val notidChannelName = "MemeIt Events Notification"
-fun Context.sendUserNotification(data: NotifData, notifyID: Int) {
-
-    val pendingIntent = PendingIntent.getActivity(this, 0, data.intent, PendingIntent.FLAG_UPDATE_CURRENT)
+fun Context.sendUserNotification(pushNotification: PushNotification) {
+    val pendingIntent = PendingIntent.getActivity(this, 0, pushNotification.getIntent(this), PendingIntent.FLAG_UPDATE_CURRENT)
     val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         android.app.Notification.Builder(this, notidChannelName)
     } else {
         android.app.Notification.Builder(this)
     }
-    builder.setContentTitle(data.title)
+    builder.setContentTitle(pushNotification.title)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
-            .setStyle(android.app.Notification.BigTextStyle().bigText(data.message))
-            .setContentText(data.message)
-            .setSmallIcon(data.icon)
+            .setStyle(android.app.Notification.BigTextStyle().bigText(pushNotification.message))
+            .setContentText(pushNotification.message)
+            .setSmallIcon(pushNotification.getIcon())
     val manager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    manager.notify(notifyID, builder.build())
+    manager.notify(pushNotification.getNotifyID(), builder.build())
 }
 
-data class NotifData(val title: String,
-                     val message: String,
-                     val icon: Int,
-                     val intent: Intent)
+data class PushNotification(
+        val type: Int,
+        val notifiedUserId: String?,
+        val title: String?,
+        val message: String? = null,
+        val link: String? = null,
+        val awardID: String? = null,
+        val intent: Intent? = null
+) {
+
+    fun getIntent(context: Context) = intent ?: link?.let {
+        Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse(it.trim())
+        }
+    } ?: Intent(context, Class.forName("com.innov8.memeit.activities.NotificationActivity")).apply {
+        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    }
+
+    fun getIcon() = R.drawable.logo_vector
+
+    fun getNotifyID() = type + 107
+
+    companion object {
+        fun parse(data: Map<String, String?>) =
+                PushNotification(
+                        data["type"]?.toInt() ?: 0,
+                        data["nuid"],
+                        data["title"],
+                        data["message"],
+                        data["link"],
+                        data["awardId"]
+                )
+    }
+}
 
 fun <T, R> T.mapTo(mappper: T.() -> R): R {
     return mappper()

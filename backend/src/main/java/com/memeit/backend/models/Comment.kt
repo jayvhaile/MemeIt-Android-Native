@@ -14,6 +14,7 @@ data class Comment(
         @SerializedName("poster") var poster: User? = null,
         @SerializedName("comment") var comment: String? = null,
         @SerializedName("date") var date: Long? = null,
+        @SerializedName("replyCount") var replyCount: Long = 0,
         @SerializedName("likeCount") var likeCount: Long = 0,
         @SerializedName("dislikeCount") var dislikeCount: Long = 0,
         @SerializedName("isLikedByMe") var isLikedByMe: Boolean = false,
@@ -27,6 +28,7 @@ data class Comment(
             parcel.readValue(Long::class.java.classLoader) as? Long,
             parcel.readLong(),
             parcel.readLong(),
+            parcel.readLong(),
             parcel.readByte() != 0.toByte(),
             parcel.readByte() != 0.toByte())
 
@@ -36,6 +38,7 @@ data class Comment(
         parcel.writeParcelable(poster, flags)
         parcel.writeString(comment)
         parcel.writeValue(date)
+        parcel.writeLong(replyCount)
         parcel.writeLong(likeCount)
         parcel.writeLong(dislikeCount)
         parcel.writeByte(if (isLikedByMe) 1 else 0)

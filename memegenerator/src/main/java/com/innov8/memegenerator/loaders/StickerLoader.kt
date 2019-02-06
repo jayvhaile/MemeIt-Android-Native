@@ -6,7 +6,6 @@ import com.memeit.backend.models.Sticker
 import com.memeit.backend.models.UserSticker
 import com.innov8.memeit.commons.Loader
 import kotlinx.coroutines.*
-import kotlinx.coroutines.android.Main
 
 interface StickerLoader : Loader<Sticker>
 

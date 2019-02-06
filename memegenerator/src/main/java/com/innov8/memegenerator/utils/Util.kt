@@ -18,7 +18,6 @@ import com.warkiz.widget.IndicatorSeekBar
 import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
 import kotlinx.coroutines.*
-import kotlinx.coroutines.android.Main
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream

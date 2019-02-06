@@ -21,7 +21,6 @@ abstract class ListAdapter<T>(protected var context: Context, private val mLayou
     }
 
     override fun onBindViewHolder(holder: MyViewHolder<T>, position: Int) {
-        holder.item_position = position
         holder.bind(items[position])
     }
 

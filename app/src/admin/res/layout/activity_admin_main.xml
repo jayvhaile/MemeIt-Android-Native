@@ -6,171 +6,204 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/total_user_count"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:textColor="#313131"
+        android:textColor="@color/dodger_blue"
         android:textSize="32sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/textView6"
+        app:layout_constraintEnd_toStartOf="@+id/today_user_count"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline7"
         tools:text="24k" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/today_user_count"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:textColor="#313131"
+        android:textColor="@color/purple"
         android:textSize="32sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/textView7"
+        app:layout_constraintEnd_toStartOf="@+id/total_meme_count"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/total_user_count"
+        app:layout_constraintTop_toTopOf="@+id/guideline7"
+        tools:text="24k" />
+
+    <TextView
+        android:id="@+id/total_meme_count"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textColor="@color/orange"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/today_meme_count"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/today_user_count"
+        app:layout_constraintTop_toTopOf="@+id/guideline7"
         tools:text="180k" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/today_meme_count"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:gravity="center"
-        android:textColor="#313131"
+        android:textColor="@color/greeny"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/total_meme_count"
+        app:layout_constraintTop_toTopOf="@+id/guideline7"
         tools:text="2k" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:text="total user"
+        android:textSize="12sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="21dp"
-        tools:layout_editor_absoluteY="51dp"
-        tools:text="users" />
+        app:layout_constraintEnd_toEndOf="@+id/total_user_count"
+        app:layout_constraintStart_toStartOf="@+id/total_user_count"
+        app:layout_constraintTop_toBottomOf="@+id/total_user_count" />
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:text="new users today"
+        android:textSize="12sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="77dp"
-        tools:layout_editor_absoluteY="51dp"
-        tools:text="total memes" />
+        app:layout_constraintEnd_toEndOf="@+id/today_user_count"
+        app:layout_constraintStart_toStartOf="@+id/today_user_count"
+        app:layout_constraintTop_toBottomOf="@+id/today_user_count" />
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:text="total memes"
+        android:textSize="12sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="155dp"
-        tools:layout_editor_absoluteY="51dp"
-        tools:text="posted today" />
+        app:layout_constraintEnd_toEndOf="@+id/today_meme_count"
+        app:layout_constraintStart_toStartOf="@+id/today_meme_count"
+        app:layout_constraintTop_toBottomOf="@+id/today_meme_count" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/textView9"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:text="meme posted today"
+        android:textSize="12sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="247dp"
-        tools:layout_editor_absoluteY="51dp"
-        tools:text="crashes" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="#313131"
-        android:textSize="25sp"
-        tools:layout_editor_absoluteX="97dp"
-        tools:layout_editor_absoluteY="131dp"
-        tools:text="Version 1.3" />
+        app:layout_constraintEnd_toEndOf="@+id/total_meme_count"
+        app:layout_constraintStart_toStartOf="@+id/total_meme_count"
+        app:layout_constraintTop_toBottomOf="@+id/total_meme_count" />
 
     <Button
         android:id="@+id/home_template_manager"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="60dp"
-        android:background="#00000000"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="#eee"
         android:text="Template Manager"
         android:textSize="17sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="179dp" />
-
-    <View
-        android:id="@+id/divider_1"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#28000000"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="525dp" />
+        app:layout_constraintBottom_toTopOf="@+id/home_report_manager"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
         android:id="@+id/home_report_manager"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="60dp"
-        android:background="#00000000"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="#eee"
         android:text="Report Manager"
         android:textSize="17sp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="527dp" />
-
-    <View
-        android:id="@+id/divider_2"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#28000000"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="587dp" />
+        app:layout_constraintBottom_toTopOf="@+id/home_view_feedback"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/home_template_manager"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
         android:id="@+id/home_view_feedback"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="60dp"
-        android:background="#00000000"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="#eee"
         android:text="View Feedbacks"
         android:textSize="17sp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="589dp" />
-
-    <View
-        android:id="@+id/divider_3"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#28000000"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="649dp" />
+        app:layout_constraintBottom_toTopOf="@+id/home_notify"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/home_report_manager"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
-        android:id="@+id/home_todos"
-        android:layout_width="match_parent"
+        android:id="@+id/home_notify"
+        android:layout_width="0dp"
         android:layout_height="60dp"
-        android:background="#00000000"
-        android:text="ToDos"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="#eee"
+        android:text="Notify"
         android:textSize="17sp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="651dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/home_view_feedback"
+        app:layout_constraintVertical_chainStyle="packed" />
 
-    <View
-        android:id="@+id/divider_4"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#28000000"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="711dp" />
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="textView4,textView3,textView9,textView2"
+        tools:layout_editor_absoluteY="731dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="56dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="56dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

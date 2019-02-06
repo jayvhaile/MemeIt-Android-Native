@@ -23,7 +23,7 @@ abstract class CursorAdapter<T>(val context: Context, val layoutID: Int) : Recyc
 
 
     override fun onBindViewHolder(holder: MyViewHolder<T>, position: Int) {
-        holder.item_position = position
+        holder.adapterPosition = position
         holder.bind(getItem(position))
     }
 

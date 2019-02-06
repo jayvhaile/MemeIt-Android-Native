@@ -27,7 +27,6 @@ import com.memeit.backend.models.*
 import com.waynejo.androidndkgif.GifDecoder
 import kotlinx.android.synthetic.main.meme_editor.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.android.Main
 import java.io.File
 import java.util.*
 
@@ -333,8 +332,9 @@ class MemeEditorActivity : SuperActivity(), ItemSelectedInterface, EditorStateCh
                         memeLayout.getMarginRect(),
                         memeEditorView.paint,
                         file.absolutePath)
+
                 )
-                gifToMp4(gifPath, file2.absolutePath, this@MemeEditorActivity)
+//                gifToMp4(gifPath, file2.absolutePath, this@MemeEditorActivity)
             }
             pd.dismiss()
             startActivity(Intent(this@MemeEditorActivity, Class.forName("com.innov8.memeit.activities.MemePosterActivity")).apply {
@@ -491,7 +491,7 @@ class MemeEditorActivity : SuperActivity(), ItemSelectedInterface, EditorStateCh
         if (hasFocus) makeFullScreen()
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         makeFullScreen()
     }
@@ -520,9 +520,9 @@ class MemeEditorActivity : SuperActivity(), ItemSelectedInterface, EditorStateCh
         open(savedInstanceState?.getString("current") ?: "none")
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putString("current", current)
+        outState.putString("current", current)
     }
 
     override fun onTextItemSelected(textStyleProperty: MemeTextStyleProperty) {

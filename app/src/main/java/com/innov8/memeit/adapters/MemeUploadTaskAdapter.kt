@@ -43,7 +43,7 @@ class MemeUploadTaskAdapter(context: Context) : SimpleELEListAdapter<WorkInfo>(c
 
         init {
             cancelV.setOnClickListener {
-                WorkManager.getInstance().cancelWorkById(items[item_position].id)
+                WorkManager.getInstance().cancelWorkById(items[adapterPosition].id)
             }
         }
 

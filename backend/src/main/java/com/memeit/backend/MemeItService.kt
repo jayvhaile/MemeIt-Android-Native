@@ -90,7 +90,7 @@ interface MemeItService {
 
     @GET("user/me/notifications")
     fun getMyNotifications(@Query("skip") skip: Int,
-                           @Query("limit") limit: Int): Call<List<Map<String, Any>>>
+                           @Query("limit") limit: Int): Call<List<Notification>>
 
     @GET("user/me/notifications/count")
     fun getNotifCount(): Call<Int>
@@ -250,6 +250,25 @@ interface MemeItService {
 
     @PUT("meme/comment")
     fun updateComment(@Body comment: Comment): Call<ResponseBody>
+
+
+    @GET("meme/comment/{cid}/reply")
+    fun getRepliesForComment(@Path("cid") commentID: String,
+                             @Query("skip") skip: Int,
+                             @Query("limit") limit: Int): Call<List<Reply>>
+
+    @POST("meme/comment/{cid}/reply")
+    fun postReply(@Path("cid") commentID: String,
+                  @Body reply: Reply): Call<Comment>
+
+
+    @PUT("meme/comment/{cid}/reply")
+    fun updateReply(@Path("cid") commentID: String,
+                    @Body reply: Reply): Call<ResponseBody>
+
+    @DELETE("meme/comment/{cid}/reply")
+    fun deleteReply(@Path("cid") commentID: String,
+                    @Query("rid") replyID: String): Call<ResponseBody>
 
 
     @POST("meme/comment/{cid}/like")

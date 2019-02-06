@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#fff"
     android:orientation="vertical">
 
     <com.innov8.memeit.commons.views.ProfileDraweeView
@@ -27,6 +28,7 @@
         android:layout_marginRight="16dp"
         android:textColor="#313131"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/comment_poster_pp"
         app:layout_constraintTop_toTopOf="@+id/comment_poster_pp"
         app:linkModes="all"
@@ -97,11 +99,32 @@
 
 
         <ImageView
+            android:id="@+id/reply"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:tint="#999"
+            app:srcCompat="@drawable/ic_reply_black_24dp" />
+
+        <com.innov8.memeit.commons.views.MemeItTextView
+            android:id="@+id/reply_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:text="10k Replies"
+            android:textColor="#999"
+            android:textSize="12sp" />
+
+        <ImageView
             android:id="@+id/delete"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginRight="16dp"
             android:tint="#999"
+            tools:visibility="visible"
+            android:visibility="gone"
             app:srcCompat="@drawable/ic_delete_black_24dp" />
 
         <ImageView
@@ -109,6 +132,8 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:tint="#999"
+            android:visibility="gone"
+            tools:visibility="visible"
             app:srcCompat="@drawable/ic_mode_edit_black_24dp" />
 
     </LinearLayout>

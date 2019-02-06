@@ -18,7 +18,7 @@ class TextPresetsAdapter(context: Context) : ListAdapter<Pair<MemeTextStylePrope
 
         init {
             presetV.onClickListener = {
-                onItemClick?.invoke(getItemAt(item_position).first)
+                onItemClick?.invoke(getItemAt(adapterPosition).first)
             }
         }
 

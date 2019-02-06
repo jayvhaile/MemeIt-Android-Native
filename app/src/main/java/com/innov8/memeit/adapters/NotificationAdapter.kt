@@ -1,9 +1,11 @@
 package com.innov8.memeit.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.text.Spannable
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
@@ -16,19 +18,30 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.set
 import androidx.core.text.toSpannable
-import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.github.ybq.android.spinkit.style.CubeGrid
 import com.innov8.memeit.R
+import com.innov8.memeit.activities.CommentRepliesActivity
 import com.innov8.memeit.activities.CommentsActivity
 import com.innov8.memeit.activities.ProfileActivity
 import com.innov8.memeit.commons.ELEListAdapter
+import com.innov8.memeit.commons.MyViewHolder
+import com.innov8.memeit.commons.prefix
 import com.innov8.memeit.commons.views.MemeItTextView
 import com.innov8.memeit.commons.views.ProfileDraweeView
 import com.innov8.memeit.utils.*
 import com.memeit.backend.models.*
+import com.memeit.backend.models.Notification.Companion.AWARd_TYPE
+import com.memeit.backend.models.Notification.Companion.COMMENT_MENTION_TYPE
+import com.memeit.backend.models.Notification.Companion.COMMENT_REPLY_TYPE
+import com.memeit.backend.models.Notification.Companion.COMMENT_TYPE
+import com.memeit.backend.models.Notification.Companion.FOLLOWING_TYPE
+import com.memeit.backend.models.Notification.Companion.GENERAL_TYPE
+import com.memeit.backend.models.Notification.Companion.MEME_MENTION_TYPE
+import com.memeit.backend.models.Notification.Companion.REACTION_TYPE
 
-class NotificationAdapter(context: Context) : ELEListAdapter<Notification, NotificationViewHolder>(context) {
+class NotificationAdapter(context: Context) : ELEListAdapter<Notification, NotificationViewHolder<out Notification>>(context) {
+
     override var emptyDrawableId: Int = R.drawable.ic_notifications_black_24dp
     override var errorDrawableId: Int = R.drawable.ic_no_internet
     override var emptyDescription: String = "You have no notifications"
@@ -39,88 +52,66 @@ class NotificationAdapter(context: Context) : ELEListAdapter<Notification, Notif
         color = Color.rgb(255, 100, 0)
     }
 
-    fun getDrawableIDForNotificationType(type: Int): Int {
-        return when (type) {
-            Notification.FOLLOWING_TYPE -> R.drawable.user_icon
-            Notification.MEME_MENTION_TYPE -> R.drawable.ic_at
-            Notification.COMMENT_MENTION_TYPE -> R.drawable.ic_at
-            Notification.REACTION_TYPE -> R.drawable.laughing_inactive
 
-            Notification.COMMENT_TYPE -> R.drawable.ic_comment
-
-            Notification.AWARd_TYPE -> R.drawable.ic_badges
-            else -> R.drawable.ic_notifications_black_24dp
-        }
-    }
-
-    fun getColorForNotificationType(type: Int): Int {
-        return when (type) {
-            Notification.FOLLOWING_TYPE -> R.color.dodger_blue.color(context)
-            Notification.MEME_MENTION_TYPE -> R.color.purple.color(context)
-            Notification.COMMENT_MENTION_TYPE -> R.color.greeny.color(context)
-            Notification.REACTION_TYPE -> R.color.blue.color(context)
-            Notification.COMMENT_TYPE -> R.color.brown.color(context)
-            Notification.AWARd_TYPE -> R.color.golden.color(context)
-            else -> R.color.orange.color(context)
-        }
-    }
-
-
-    override fun onCreateHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
+    override fun onCreateHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder<out Notification> {
         return when (viewType) {
-            Notification.GENERAL_TYPE -> {
+            GENERAL_TYPE -> {
                 val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif, parent, false)
-                NotificationViewHolder(this, v)
+                GeneralNotifHolder(this, v)
             }
 
-            Notification.FOLLOWING_TYPE -> {
+            FOLLOWING_TYPE -> {
                 val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif_follower, parent, false)
                 FollowingNotifHolder(this, v)
             }
-            Notification.MEME_MENTION_TYPE -> {
+            MEME_MENTION_TYPE -> {
                 val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif_follower, parent, false)
                 MemeMentionNotifHolder(this, v)
             }
-            Notification.COMMENT_MENTION_TYPE -> {
+            COMMENT_MENTION_TYPE -> {
                 val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif, parent, false)
                 CommentMentionNotifHolder(this, v)
             }
 
-            Notification.REACTION_TYPE -> {
+            REACTION_TYPE -> {
                 val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif_reaction, parent, false)
                 ReactionNotifHolder(this, v)
             }
 
-            Notification.COMMENT_TYPE -> {
+            COMMENT_TYPE -> {
                 val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif_comment, parent, false)
                 CommentNotifHolder(this, v)
             }
-
-            Notification.AWARd_TYPE -> {
+            COMMENT_REPLY_TYPE -> {
+                val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif_comment, parent, false)
+                CommentReplyNotifHolder(this, v)
+            }
+            AWARd_TYPE -> {
                 val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif, parent, false)
                 AwardNotifHolder(this, v)
             }
             else -> {
-                val v = LayoutInflater.from(context).inflate(R.layout.list_item_notif, parent, false)
-                NotificationViewHolder(this, v)
+                throw IllegalArgumentException()
             }
         }
     }
 
-    override fun onBindHolder(holder: NotificationViewHolder, position: Int) {
-        holder.itemPosition = position
+    override fun onBindHolder(holder: NotificationViewHolder<out Notification>, position: Int) {
         holder.bind(items[position])
     }
 
 
     override fun getCount(): Int = items.count()
-    override fun getItemType(position: Int): Int = items[position].type
+    override fun getItemType(position: Int): Int = items[position].getViewType()
 
 
 }
 
+private val defColor = Color.parseColor("#ff5656")
+private const val defSelectedColor = Color.LTGRAY
 
-open class NotificationViewHolder(val notifAdapter: NotificationAdapter, itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+sealed class NotificationViewHolder<T : Notification>(val notifAdapter: NotificationAdapter, itemView: View) : MyViewHolder<Notification>(itemView) {
     val dot: ImageView = itemView.findViewById(R.id.notif_dot)
     val icon: SimpleDraweeView = itemView.findViewById(R.id.notif_icon)
     val date: TextView = itemView.findViewById(R.id.notif_date)
@@ -130,161 +121,179 @@ open class NotificationViewHolder(val notifAdapter: NotificationAdapter, itemVie
     val d: GradientDrawable = ResourcesCompat.getDrawable(context.resources, R.drawable.circle, null) as GradientDrawable
 
     init {
+        itemView.setOnClickListener {
+            onItemClicked()
+        }
         message?.onLinkClicked = generateTextLinkActions(notifAdapter.context)
     }
 
-    var itemPosition: Int = 0
-    open fun bind(notif: Notification) {
-        d.setColor(notifAdapter.getColorForNotificationType(notif.type))
+    protected val currentItem: T
+        @Suppress("UNCHECKED_CAST")
+        get() = notifAdapter.items[adapterPosition] as T
+
+
+    override fun bind(t: Notification) {
+        d.setColor(t.getColorForNotificationType(notifAdapter.context))
         dot.background = d
-        dot.setImageResource(notifAdapter.getDrawableIDForNotificationType(notif.type))
-        date.text = notif.date.formateAsDate()
-        title.text = notif.title
-        message?.text = notif.message
+        dot.setImageResource(t.getDrawableIDForNotificationType())
+        date.text = t.date.formateAsDate()
+        title.text = t.title
+        message?.text = t.message
+        bindItem(t as T)
+    }
+
+    abstract fun bindItem(t: T)
+
+    abstract fun onItemClicked()
+}
+
+class GeneralNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder<GeneralNotification>(notifAdapter, itemView) {
+
+    override fun bindItem(t: GeneralNotification) {
+        super.bind(t)
+        icon.visibleBy(false)
+    }
+
+    override fun onItemClicked() {
+        currentItem.link?.let {
+            context.startActivity(Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(it.trim())
+            })
+        }
     }
 
 }
 
-private val defColor = Color.parseColor("#ff5656")
-private const val defSelectedColor = Color.LTGRAY
+class FollowingNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder<FollowingNotification>(notifAdapter, itemView) {
 
-class FollowingNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
-    init {
-        itemView.setOnClickListener {
-            val user = User(currentItem.followerId, currentItem.followerName, imageUrl = currentItem.followerPic)
-            ProfileActivity.startWithUser(notifAdapter.context, user)
-        }
-    }
-
-    private val currentItem: FollowingNotification
-        get() = notifAdapter.items[itemPosition] as FollowingNotification
-
-    override fun bind(notif: Notification) {
-        super.bind(notif)
-        notif as FollowingNotification
+    override fun bindItem(t: FollowingNotification) {
         icon as ProfileDraweeView
-        title.text = applySpan(notif.title, notif.followerName)
-        icon.setText(notif.title.prefix())
-        icon.loadImage(notif.followerPic)
+        title.text = applySpan(t.title, t.followerUser.name!!)
+        icon.setText(t.title.prefix())
+        icon.loadImage(t.followerUser.imageUrl)
+    }
+
+    override fun onItemClicked() {
+        ProfileActivity.startWithUser(notifAdapter.context, currentItem.followerUser)
     }
 
 }
 
-class MemeMentionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
+class MemeMentionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder<MemeMentionNotification>(notifAdapter, itemView) {
     init {
-        itemView.setOnClickListener {
-            CommentsActivity.startWithMemeId(notifAdapter.context, currentItem.memeId)
-        }
         icon.setOnClickListener {
-            val user = User(currentItem.mentionerId, currentItem.mentionerName, imageUrl = currentItem.mentionerPic)
-            ProfileActivity.startWithUser(notifAdapter.context, user)
+            ProfileActivity.startWithUser(notifAdapter.context, currentItem.mentionerUser)
         }
     }
 
-    private val currentItem: MemeMentionNotification
-        get() = notifAdapter.items[itemPosition] as MemeMentionNotification
-
-    override fun bind(notif: Notification) {
-        super.bind(notif)
-        notif as MemeMentionNotification
-        title.text = applySpan(notif.title, notif.mentionerName, "post")
+    override fun bindItem(t: MemeMentionNotification) {
+        title.text = applySpan(t.title, t.mentionerUser.name!!, "post")
         icon as ProfileDraweeView
-        icon.setText(notif.title.prefix())
-        icon.loadImage(notif.mentionerPic)
+        icon.setText(t.title.prefix())
+        icon.loadImage(t.mentionerUser.imageUrl)
     }
 
+    override fun onItemClicked() {
+        CommentsActivity.startWithMeme(notifAdapter.context, currentItem.meme)
+    }
 }
 
-class CommentMentionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
+class CommentMentionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder<CommentMentionNotification>(notifAdapter, itemView) {
     init {
-        itemView.setOnClickListener {
-            CommentsActivity.startWithMemeId(notifAdapter.context, currentItem.memeId)
-        }
         icon.setOnClickListener {
-            val user = User(currentItem.mentionerId, currentItem.mentionerName, imageUrl = currentItem.mentionerPic)
-            ProfileActivity.startWithUser(notifAdapter.context, user)
+            ProfileActivity.startWithUser(notifAdapter.context, currentItem.mentionerUser)
         }
     }
 
-    private val currentItem: CommentMentionNotification
-        get() = notifAdapter.items[itemPosition] as CommentMentionNotification
-
-    override fun bind(notif: Notification) {
-        super.bind(notif)
-        notif as CommentMentionNotification
-        title.text = applySpan(notif.title, notif.mentionerName, "comment")
+    override fun bindItem(t: CommentMentionNotification) {
+        title.text = applySpan(t.title, t.mentionerUser.name!!, "comment")
 
         icon as ProfileDraweeView
-        icon.setText(notif.title.prefix())
-        icon.loadImage(notif.mentionerPic)
+        icon.setText(t.title.prefix())
+        icon.loadImage(t.mentionerUser.imageUrl)
+    }
+
+    override fun onItemClicked() {
+        CommentRepliesActivity.start(notifAdapter.context, currentItem.comment)
     }
 
 }
 
-class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
+class ReactionNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder<ReactionNotification>(notifAdapter, itemView) {
     private val reactionImage: ImageView = itemView.findViewById(R.id.notif_reaction_image)
 
     init {
-        itemView.setOnClickListener { goToComment() }
         icon.setOnClickListener {
-            val user = User(currentItem.reactorId, currentItem.reactorName, imageUrl = currentItem.reactorPic)
-            ProfileActivity.startWithUser(notifAdapter.context, user)
+            ProfileActivity.startWithUser(notifAdapter.context, currentItem.reactorUser)
         }
     }
 
-    private fun goToComment() {
-        CommentsActivity.startWithMemeId(notifAdapter.context, currentItem.memeId)
+    override fun onItemClicked() {
+        CommentsActivity.startWithMeme(notifAdapter.context, currentItem.meme)
     }
 
-    private val currentItem: ReactionNotification
-        get() = notifAdapter.items[itemPosition] as ReactionNotification
-
-    override fun bind(notif: Notification) {
-        super.bind(notif)
-        notif as ReactionNotification
-
-
-        title.text = applySpan(notif.title, notif.reactorName, "meme")
+    override fun bindItem(t: ReactionNotification) {
+        title.text = applySpan(t.title, t.reactorUser.name!!, "meme")
         icon as ProfileDraweeView
-        icon.setText(notif.reactorName.prefix())
-        icon.loadImage(notif.reactorPic)
-        reactionImage.setImageDrawable(notif.getReaction().getDrawable())
+        icon.setText(t.reactorUser.name.prefix())
+        icon.loadImage(t.reactorUser.imageUrl)
+        reactionImage.setImageDrawable(t.reaction.getDrawable())
     }
 
 }
 
-class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
+class CommentNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder<CommentNotification>(notifAdapter, itemView) {
 
     init {
-        itemView.setOnClickListener { goToComment() }
         icon.setOnClickListener {
-            val user = User(currentItem.commentorId, currentItem.commenterName, imageUrl = currentItem.commenterPic)
-            ProfileActivity.startWithUser(notifAdapter.context, user)
+            ProfileActivity.startWithUser(notifAdapter.context, currentItem.commenterUser)
         }
     }
 
-    private fun goToComment() {
-        CommentsActivity.startWithMemeId(notifAdapter.context, currentItem.memeId)
+    override fun onItemClicked() {
+        CommentsActivity.startWithMeme(notifAdapter.context, currentItem.meme)
     }
 
-
-    private val currentItem: CommentNotification
-        get() = notifAdapter.items[itemPosition] as CommentNotification
-
-    override fun bind(notif: Notification) {
-        super.bind(notif)
-        notif as CommentNotification
-
-        title.text = applySpan(notif.title, notif.commenterName, "meme")
-
+    override fun bindItem(t: CommentNotification) {
+        title.text = applySpan(t.title, t.commenterUser.name!!, "meme")
         icon as ProfileDraweeView
-        icon.setText(notif.commenterName.prefix())
-        icon.loadImage(notif.commenterPic)
+        icon.setText(t.commenterUser.name.prefix())
+        icon.loadImage(t.commenterUser.imageUrl)
     }
-
 }
 
-fun applySpan(text: String, vararg words: String): Spannable =
+class CommentReplyNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder<CommentReplyNotification>(notifAdapter, itemView) {
+
+    init {
+        icon.setOnClickListener {
+            ProfileActivity.startWithUser(notifAdapter.context, currentItem.replierUser)
+        }
+    }
+
+    override fun onItemClicked() {
+        CommentRepliesActivity.start(notifAdapter.context, currentItem.comment)
+    }
+
+    override fun bindItem(t: CommentReplyNotification) {
+        title.text = applySpan(t.title, t.replierUser.name!!, "comment")
+        icon as ProfileDraweeView
+        icon.setText(t.replierUser.name.prefix())
+        icon.loadImage(t.replierUser.imageUrl)
+    }
+}
+
+class AwardNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder<AwardNotification>(notifAdapter, itemView) {
+    override fun onItemClicked() {
+
+    }
+
+    override fun bindItem(t: AwardNotification) {
+        icon.setImageResource(t.badge.getDrawableId(notifAdapter.context))
+    }
+}
+
+
+private fun applySpan(text: String, vararg words: String): Spannable =
         text.toSpannable().apply {
             words.forEach {
                 val i = text.indexOf(it)
@@ -294,12 +303,40 @@ fun applySpan(text: String, vararg words: String): Spannable =
             }
         }
 
+private fun Notification.getDrawableIDForNotificationType(): Int {
+    return when (this) {
+        is FollowingNotification -> R.drawable.user_icon
+        is MemeMentionNotification, is CommentMentionNotification -> R.drawable.ic_at
+        is ReactionNotification -> R.drawable.laughing_inactive
+        is CommentNotification -> R.drawable.ic_comment
+        is CommentReplyNotification -> R.drawable.ic_reply_black_24dp
+        is AwardNotification -> R.drawable.ic_badges
+        is GeneralNotification -> R.drawable.ic_notifications_black_24dp
+    }
+}
 
-class AwardNotifHolder(notifAdapter: NotificationAdapter, itemView: View) : NotificationViewHolder(notifAdapter, itemView) {
-    override fun bind(notif: Notification) {
-        super.bind(notif)
-        notif as AwardNotification
+private fun Notification.getColorForNotificationType(context: Context): Int {
+    return when (this) {
+        is FollowingNotification -> R.color.dodger_blue.color(context)
+        is MemeMentionNotification -> R.color.purple.color(context)
+        is CommentMentionNotification -> R.color.purple.color(context)
+        is ReactionNotification -> R.color.greeny.color(context)
+        is CommentNotification -> R.color.blue.color(context)
+        is CommentReplyNotification -> R.color.brown.color(context)
+        is AwardNotification -> R.color.golden.color(context)
+        is GeneralNotification -> R.color.orange.color(context)
+    }
+}
 
-        icon.setImageResource(notif.badge.getDrawableId(notifAdapter.context))
+private fun Notification.getViewType(): Int {
+    return when (this) {
+        is FollowingNotification -> FOLLOWING_TYPE
+        is MemeMentionNotification -> MEME_MENTION_TYPE
+        is CommentMentionNotification -> COMMENT_MENTION_TYPE
+        is ReactionNotification -> REACTION_TYPE
+        is CommentNotification -> COMMENT_TYPE
+        is CommentReplyNotification -> COMMENT_REPLY_TYPE
+        is AwardNotification -> AWARd_TYPE
+        is GeneralNotification -> GENERAL_TYPE
     }
 }

@@ -13,7 +13,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import com.github.ybq.android.spinkit.style.CubeGrid
-import com.innov8.memeit.commons.R
 
 @Suppress("UNCHECKED_CAST")
 abstract class ELEAdapter<T : RecyclerView.ViewHolder>(val context: Context)
@@ -334,7 +333,6 @@ abstract class SimpleELEListAdapter<T>(context: Context, private val mLayoutID: 
     }
 
     override fun onBindHolder(holder: MyViewHolder<T>, position: Int) {
-        holder.position = position
         holder.bind(items[position])
     }
 

@@ -16,7 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.gson.Gson
-import com.google.gson.TypeAdapter
+import com.google.gson.GsonBuilder
 import com.memeit.backend.models.*
 import okhttp3.*
 import retrofit2.Call
@@ -455,3 +455,11 @@ inline fun <T : Any> Call<T>.call(crossinline onSuccess: ((T) -> Unit), crossinl
     return this
 }
 
+fun buildGson(): Gson {
+    return GsonBuilder().registerTypeAdapterFactory(SavedMemeTemplateProperty.getRuntimeTypeAdapterFactory())
+            .registerTypeAdapterFactory(LayoutProperty.getRuntimeTypeAdapterFactory())
+            .registerTypeAdapterFactory(MemeItemProperty.getRuntimeTypeAdapterFactory())
+            .registerTypeAdapterFactory(Sticker.getRuntimeTypeAdapterFactory())
+            .registerTypeAdapterFactory(Notification.getRuntimeTypeAdapterFactory())
+            .create()
+}

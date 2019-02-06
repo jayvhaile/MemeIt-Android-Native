@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <com.innov8.memeit.commons.views.ProfileDraweeView
+        android:id="@+id/reply_poster_pp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@mipmap/icon" />
+
+    <com.innov8.memeit.commons.views.MemeItTextView
+        android:id="@+id/reply_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:textColor="#313131"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/reply_poster_pp"
+        app:layout_constraintTop_toTopOf="@+id/reply_poster_pp"
+        app:linkModes="all"
+        app:mfont="default"
+        tools:text="skjdfj sldnfslsjd fsldknsfsdjf kjsjdnf skjjfnsd fjkshdf kjsjhdf ksjndf kcxjnv kjcjvn xcj xckjv kxcv hs kzjcnv skhdf  skjdfh k nvsdh fsdf " />
+
+    <LinearLayout
+        android:id="@+id/reply_action_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/reply_textview"
+        app:layout_constraintTop_toBottomOf="@+id/reply_textview">
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginRight="16dp"
+            android:tint="#999"
+            app:srcCompat="@drawable/ic_delete_black_24dp" />
+
+        <ImageView
+            android:id="@+id/edit"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:tint="#999"
+            app:srcCompat="@drawable/ic_mode_edit_black_24dp" />
+
+    </LinearLayout>
+
+    <com.innov8.memeit.commons.views.MemeItTextView
+        android:id="@+id/reply_date_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="#999"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reply_textview"
+        app:mfont="default"
+        tools:text="2 hours ago" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -97,7 +97,7 @@ class CommentsActivity : SuperActivity() {
                 loaderAdapter.refresh()
                 isPostingComment = false
             }, {
-                comments_list.snack("Failed to load Comments")
+                comments_list.snack("Couldn't post comment")
             })
         }
         loaderAdapter.load()
@@ -107,7 +107,7 @@ class CommentsActivity : SuperActivity() {
         comment_meme_image.showCommentButton = false
         comment_meme_image.resizeToFit = false
         comment_meme_image.meme = meme
-        comment_meme_image.memeClickedListener ={
+        comment_meme_image.memeClickedListener = {
 
             showMemeZoomView(listOf(meme))
         }

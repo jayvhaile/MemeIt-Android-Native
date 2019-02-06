@@ -47,12 +47,12 @@ class PaintShapesListAdapter(context: Context) : ListAdapter<PaintShapeInfo>(con
 
         init {
             itemView.setOnClickListener {
-                selectedIndex = item_position
+                selectedIndex = adapterPosition
             }
         }
 
         override fun bind(t: PaintShapeInfo) {
-            imageV.setBackgroundColor(if (selectedIndex == item_position) selectedColor else defaultColor)
+            imageV.setBackgroundColor(if (selectedIndex == adapterPosition) selectedColor else defaultColor)
             imageV.setImageResource(t.imageID)
             textV.text = t.name
         }

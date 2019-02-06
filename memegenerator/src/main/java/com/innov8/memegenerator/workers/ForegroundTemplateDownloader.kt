@@ -4,7 +4,6 @@ import android.content.Context
 import com.memeit.backend.MemeItClient
 import com.memeit.backend.models.MemeTemplate
 import kotlinx.coroutines.*
-import kotlinx.coroutines.android.Main
 import okhttp3.ResponseBody
 import java.io.*
 

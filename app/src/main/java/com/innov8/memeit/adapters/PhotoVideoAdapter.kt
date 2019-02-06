@@ -52,23 +52,23 @@ class PhotosAdapter(context: Context) : CursorAdapter<String>(context, R.layout.
         init {
             thumbnailV.setOnClickListener {
                 if (!multiSelectMode)
-                    onPhotoChoosed?.invoke(getItem(item_position))
+                    onPhotoChoosed?.invoke(getItem(adapterPosition))
             }
             cropView.setOnClickListener {
-                onCropListener?.invoke(getItem(item_position))
+                onCropListener?.invoke(getItem(adapterPosition))
             }
             countView.setOnClickListener {
                 if (countView.choosed) {
-                    val t = getItem(item_position)
+                    val t = getItem(adapterPosition)
                     val index = selectedItems.indexOf(t)
                     val last = index == selectedItems.size - 1
                     selectedItems.remove(t)
-                    if (last) notifyItemChanged(item_position)
+                    if (last) notifyItemChanged(adapterPosition)
                     else
                         notifyDataSetChanged()
                 } else {
-                    selectedItems.add(getItem(item_position))
-                    notifyItemChanged(item_position)
+                    selectedItems.add(getItem(adapterPosition))
+                    notifyItemChanged(adapterPosition)
                 }
                 onSelectedItemChanged?.invoke(selectedItems)
             }
@@ -116,10 +116,10 @@ class PhotosAdapterList(context: Context) : ListAdapter<String>(context, R.layou
 
         init {
             thumbnailV.setOnClickListener {
-                //MemeEditorActivity.startWithImage(context, items[item_position])
+                //MemeEditorActivity.startWithImage(context, items[adapterPosition])
             }
             cropView.setOnClickListener {
-                onCropListener?.invoke(items[item_position])
+                onCropListener?.invoke(items[adapterPosition])
             }
         }
 
@@ -156,9 +156,9 @@ class GifAdapter(context: Context) : CursorAdapter<Gif>(context, R.layout.list_i
 
             thumbnailV.setOnClickListener {
                 //                context.startActivity(Intent(context, MemePosterActivity::class.java).apply {
-//                    putExtra("gif", getItem(item_position).data)
+//                    putExtra("gif", getItem(adapterPosition).data)
 //                })
-                MemeEditorActivity.startWithGif(context as Activity, getItem(item_position).data)
+                MemeEditorActivity.startWithGif(context as Activity, getItem(adapterPosition).data)
             }
         }
 
@@ -196,9 +196,9 @@ class VideoAdapter(context: Context) : CursorAdapter<VideoAdapter.Video>(context
 
             thumbnailV.setOnClickListener {
                 //                context.startActivity(Intent(context, MemePosterActivity::class.java).apply {
-//                    putExtra("gif", getItem(item_position).data)
+//                    putExtra("gif", getItem(adapterPosition).data)
 //                })
-                MemeEditorActivity.startWithVideo(context as Activity, getItem(item_position).data)
+                MemeEditorActivity.startWithVideo(context as Activity, getItem(adapterPosition).data)
             }
         }
 

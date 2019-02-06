@@ -63,7 +63,7 @@ class TemplateAdapter(context: Context,
     }
 
     override fun onBindHolder(holder: TemplateViewHolder, position: Int) {
-        holder.item_position = position
+        holder.adapterPosition = position
         holder.bind(getItemAt(position))
     }
 
@@ -75,7 +75,7 @@ class TemplateAdapter(context: Context,
 
         init {
             itemView.setOnClickListener {
-                MemeEditorActivity.startWithTemplate(context as Activity, getItemAt(item_position))
+                MemeEditorActivity.startWithTemplate(context as Activity, getItemAt(adapterPosition))
             }
             templateImageV.hierarchy.setProgressBarImage(LoadingDrawable(context))
         }

@@ -92,9 +92,6 @@ fun formatDate(date: Long): String {
 
 fun Long.formateAsDate(): String = formatDate(this)
 
-fun String?.prefix(): String {
-    return if (this.isNullOrEmpty()) "..." else this[0].toString()
-}
 
 val screenWidth get() = it.resources.displayMetrics.widthPixels
 val screenHeight get() = it.resources.displayMetrics.heightPixels
@@ -447,4 +444,8 @@ fun ChipCloud.onChipSelected(onChipSelected: (Int) -> Unit) {
 fun String.toUnderlinedLinkSpan(word: String, onClick: () -> Unit) = toSpannable().apply {
     val i = indexOf(word)
     this[i..i + word.length] = TouchableSpan(Color.WHITE, Color.LTGRAY, true) { onClick() }
+}
+
+fun View.visibleBy(constraint: Boolean) {
+    visibility = if (constraint) View.VISIBLE else View.INVISIBLE
 }

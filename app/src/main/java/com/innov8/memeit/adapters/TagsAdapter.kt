@@ -42,10 +42,7 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
             .map { Color.parseColor(it) }
 
     private fun getColor(tag: String): Int {
-        val i = tag.toCharArray()
-                .map { it.toInt() }
-                .toIntArray()
-                .sum()
+        val i = tag.sumBy { it.toInt() }
         return colors[i % colors.size]
     }
 
@@ -63,10 +60,10 @@ class TagsAdapter(context: Context) : SimpleELEListAdapter<Tag>(context, R.layou
                     width = ViewGroup.LayoutParams.WRAP_CONTENT
                 }
             itemView.setOnClickListener {
-                TagMemesActivity.startWithTag(context, getItemAt(item_position).tag)
+                TagMemesActivity.startWithTag(context, getItemAt(adapterPosition).tag)
             }
             tagFollowV.setOnClickListener { _ ->
-                val t = getItemAt(item_position)
+                val t = getItemAt(adapterPosition)
                 if (tagFollowV.text == "Unfollow") {
                     tagFollowV.text = "Unfollowing..."
                     MemeItUsers.unfollowTag(t.tag).call({

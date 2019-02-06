@@ -42,7 +42,7 @@ class TemplateSuggestionAdapter(context: Context) : SimpleELEListAdapter<MemeTem
 
         init {
             itemView.setOnClickListener {
-                MemeEditorActivity.startWithTemplate(context as Activity, getItemAt(item_position))
+                MemeEditorActivity.startWithTemplate(context as Activity, getItemAt(adapterPosition))
             }
             templateImageV.hierarchy.setProgressBarImage(LoadingDrawable(context))
 

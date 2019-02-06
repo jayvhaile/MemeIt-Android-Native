@@ -8,11 +8,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
  */
 
 abstract class MyViewHolder<T>(itemView: View) : ViewHolder(itemView) {
-    var item_position: Int = 0
 
     abstract fun bind(t: T)
 
-    fun setPosition(position: Int) {
-        this.item_position = position
-    }
 }

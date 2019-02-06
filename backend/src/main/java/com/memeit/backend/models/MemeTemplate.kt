@@ -6,13 +6,10 @@ import android.graphics.Color
 import android.os.Parcel
 import android.os.Parcelable
 import android.text.Layout
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
+import com.memeit.backend.buildGson
 import com.memeit.backend.utils.generateFactory
-import kotlinx.coroutines.*
-import kotlinx.coroutines.android.Main
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
@@ -249,8 +246,6 @@ sealed class LayoutProperty(
                                 LinearImageLayoutProperty::class.java,
                                 GridImageLayoutProperty::class.java
                         ))
-
-
     }
 
 }
@@ -413,10 +408,3 @@ data class MemeTextStyleProperty(val textSize: Float = 0f,
 }
 
 
-fun buildGson(): Gson {
-    return GsonBuilder().registerTypeAdapterFactory(SavedMemeTemplateProperty.getRuntimeTypeAdapterFactory())
-            .registerTypeAdapterFactory(LayoutProperty.getRuntimeTypeAdapterFactory())
-            .registerTypeAdapterFactory(MemeItemProperty.getRuntimeTypeAdapterFactory())
-            .registerTypeAdapterFactory(Sticker.getRuntimeTypeAdapterFactory())
-            .create()
-}

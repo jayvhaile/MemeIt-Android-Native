@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
+        <activity android:name=".activities.CommentRepliesActivity"></activity>
         <activity
             android:name=".activities.BadgeAwardDialogActivity"
             android:theme="@style/Theme.AppCompat.Dialog.Alert" />

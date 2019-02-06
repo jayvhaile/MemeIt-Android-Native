@@ -14,7 +14,7 @@ import com.innov8.memeit.commons.models.TypefaceManager
 import java.util.regex.Pattern
 
 /**
- * Created by Biruk on 5/11/2018.
+ * Created by Jv on 5/11/2018.
  */
 
 class MemeItTextView : TextView {

@@ -22,7 +22,6 @@ import com.warkiz.widget.OnSeekChangeListener
 import com.warkiz.widget.SeekParams
 import kotlinx.android.synthetic.main.activity_sticker_editor.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.android.Main
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -172,7 +171,7 @@ class StickerEditorActivity : SuperActivity() {
         if (hasFocus) makeFullScreen()
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         makeFullScreen()
     }

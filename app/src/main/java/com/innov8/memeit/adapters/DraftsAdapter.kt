@@ -36,14 +36,14 @@ class DraftsAdapter(context: Context) : SimpleELEListAdapter<Draft>(context, R.l
 
         init {
             draftDeleteV.setOnClickListener {
-                getItemAt(item_position).let { draft ->
+                getItemAt(adapterPosition).let { draft ->
                     draft.delete()
                     remove(draft)
                     onDelete?.invoke(getCount())
                 }
             }
             draftImageV.setOnClickListener {
-                MemeEditorActivity.startWithDraft(context as Activity, getItemAt(item_position).filePath)
+                MemeEditorActivity.startWithDraft(context as Activity, getItemAt(adapterPosition).filePath)
             }
         }
 

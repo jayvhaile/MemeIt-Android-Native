@@ -8,7 +8,6 @@ import com.memeit.backend.models.MemeItemProperty
 import com.memeit.backend.models.MemeStickerItemProperty
 import com.innov8.memeit.commons.dp
 import kotlinx.coroutines.*
-import kotlinx.coroutines.android.Main
 
 class MemeStickerView : MemeItemView {
     override fun generateProperty(): MemeItemProperty {

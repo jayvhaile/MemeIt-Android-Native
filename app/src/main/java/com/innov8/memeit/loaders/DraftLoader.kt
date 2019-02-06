@@ -7,7 +7,7 @@ import com.innov8.memeit.commons.Loader
 import com.innov8.memeit.models.Draft
 import com.memeit.backend.models.MemeTemplate
 import com.memeit.backend.models.SavedMemeTemplateProperty
-import com.memeit.backend.models.buildGson
+import com.memeit.backend.buildGson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
 import java.io.FileReader
