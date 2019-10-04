@@ -350,4 +350,7 @@ interface MemeItService {
 
     @DELETE("template/{id}")
     fun deleteTemplate(@Path("id") tid: String): Call<ResponseBody>
+
+    @PUT("")
+    fun editTemplate()
 }

@@ -4,4 +4,6 @@
     android:id="@+id/profile_frag_holder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.innov8.memeit.activities.ProfileActivity"/>
+    tools:context="com.innov8.memeit.activities.ProfileActivity">
+
+</FrameLayout>

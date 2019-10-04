@@ -1,6 +1,7 @@
 package com.innov8.memeit.commons
 
 import android.app.Activity
+import android.app.FragmentManager
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -15,7 +16,6 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
-import androidx.fragment.app.FragmentManager
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 
@@ -27,7 +27,7 @@ fun log(vararg messages: Any) {
     Log.d("#MemeIt", messages.joinToString(" , "))
 }
 
-fun FragmentManager.replace(id: Int, fragment: androidx.fragment.app.Fragment) {
+fun FragmentManager.replace(id: Int, fragment: Fragment) {
     beginTransaction().replace(id, fragment).commit()
 }
 
